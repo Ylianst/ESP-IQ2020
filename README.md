@@ -14,7 +14,7 @@ Create a new ESP-Home device and copy the `logger` and `uart` section. In the `u
 esphome:
   name: hot-tub
   friendly_name: Hot Tub
-  comment: "HotSpring Luxury Spa"
+  comment: "Luxury Spa"
 
 esp32:
   board: m5stack-atom
