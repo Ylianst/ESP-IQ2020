@@ -8,7 +8,7 @@ If you want my exact hardware, but many alternatives exist:
 
 I am using Home Assistant with ESP-Home and using the following configuration YAML file to build the device firmware. This firmware will just display all RS485 traffic to the log file and do nothing else. Once the IQ2020 commands are decoded, we can create a correct ESP-Home firmware that will control the hot tub. For now, this is what we need for development.
 
-Create a new ESP-Home device and copy the "logger" and "uart" section. In the "uart" section, tx_pin and rx_pin may need to be adjusted for your device's RS485 interface. Here, I have have WIFI SSID and password in my secrets.yaml file.
+Create a new ESP-Home device and copy the `logger` and `uart` section. In the `uart` section, `tx_pin` and `rx_pin` may need to be adjusted for your device's RS485 interface. Here, I have have WIFI SSID and password in my secrets.yaml file.
 
 ```
 esphome:
