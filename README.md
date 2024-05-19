@@ -1,7 +1,7 @@
 # ESP-IQ2020
 Connect a ESP-Home device to a Hot Tub with a IQ2020 control board. This project intends to connect the the hot tub to Home Assistant. First you will need a ESP32 device with a RS485 interface. For this project I recommand a M5Stack device since they are simple to connect and come in a small case. I am using Home Assistant with ESP-Home and using the following configuration YAML file to build the device firmware. This firmware will just display all RS485 traffic to the log file and do nothing else. Once the IQ2020 commands are decoded, we can create a correct ESP-Home firmware that will control the hot tub. For now, this is what we need for development.
 
-Create a new ESP-Home device and copy the "logger" and "uart" section. In the "uart" section, tx_pin and rx_pin may need to be adjusted for your device's RS485 interface.
+Create a new ESP-Home device and copy the "logger" and "uart" section. In the "uart" section, tx_pin and rx_pin may need to be adjusted for your device's RS485 interface. Here, I have have WIFI SSID and password in my secrets.yaml file.
 
 ```
 esphome:
@@ -51,7 +51,9 @@ Then connect the ESP32 to the tub. In the picture below you will notice I have t
 
 Once you power the hot tub back on, the ESP32 device will power on and connect to your network and Home Assistant using WIFI. At this point, you can go in the ESP-Home panel and take a look at the device logs. They will show all traffic on the RS485 bus in Hex format.
 
-A quick look at the packets I see show the following encoding.
+![IQ2020-ESP5](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/93539d99-bc69-487a-a1dc-cb6d2bc41422)
+
+A quick look at the packets show the following probable encoding. If the packets don't look like this, you may have the RS485 A and B wires reversed.
 
 ![IQ2020-ESP4](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/dde784aa-72f5-4315-a671-147064789ff4)
 
