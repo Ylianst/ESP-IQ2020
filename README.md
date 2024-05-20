@@ -1,5 +1,5 @@
 # ESP-IQ2020
-Connect a ESP-Home device to a Hot Tub with a IQ2020 control board. This project intends to connect the hot tub to Home Assistant. First you will need a ESP32 device with a RS485 interface. For this project I recommand a M5Stack device since they are simple to connect and come in a small case.
+Connect a ESP-Home device to a Hot Tub with a IQ2020 control board. This project intends to connect these hot tubs to Home Assistant. First you will need a ESP32 device with a RS485 interface. For this project I recommand a M5Stack device since they are simple to connect and come in a small case.
 
 If you want my exact hardware, but many alternatives exist:
 - [ATOM Lite ESP32 IoT Development Kit](https://shop.m5stack.com/products/atom-lite-esp32-development-kit)
