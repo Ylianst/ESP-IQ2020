@@ -61,7 +61,7 @@ Connect 4 male-to-female 1 pin jumper wires to the ESP32 device. It's best to us
 
 Then connect the ESP32 to the tub. In the picture below you will notice I have the expansion board attached with 8 expension connectors. This expansion board is not needed unless you are out of free connectors. I have a salt-water device that I don't use, but I will keep it connected here so that some RS485 traffic can be seen by the ESP32 device. To be safe, turn off your hot tub first and double check all the wires. Note that the ESP32 device will be powered from the hot tub connector, so no other wires are required.
 
-![IQ2020-ESP3](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/15f23030-fa9b-4f05-bbbb-0723c9e79cda)
+![IQ2020-ESP3](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/c52b676b-e35c-474c-8919-2fc57302d0fb)
 
 Once you power the hot tub back on, the ESP32 device will power on and connect to your network and Home Assistant using WIFI. At this point, you can go in the ESP-Home panel and take a look at the device logs. They will show all traffic on the RS485 bus in Hex format.
 
