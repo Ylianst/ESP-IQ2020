@@ -69,6 +69,6 @@ Once you power the hot tub back on, the ESP32 device will power on and connect t
 
 A quick look at the packets show the following probable encoding. If the packets don't look like this, you may have the RS485 A and B wires reversed.
 
-![IQ2020-ESP4](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/4dc4e734-7a01-4437-a13c-dd70c2e47e6f)
+![IQ2020-ESP4](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/1e278c78-4f45-4b57-9bb0-9ab4ed5304b8)
 
 This is the start of the project. If anyone can get gather more packets and help with decoding that would be great. Open an issue in this GitHub project and provide any added data or help that you can.
