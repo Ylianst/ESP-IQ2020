@@ -71,4 +71,7 @@ A quick look at the packets show the following probable encoding. If the packets
 
 ![IQ2020-ESP4](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/1e278c78-4f45-4b57-9bb0-9ab4ed5304b8)
 
-This is the start of the project. If anyone can get gather more packets and help with decoding that would be great. Open an issue in this GitHub project and provide any added data or help that you can.
+This is the start of the project. If anyone can get gather more packets and help with decoding that would be great. Open an issue in this GitHub project and provide any added data or help that you can. This repo includes a DataViewer tool that can connect to the ESP32 using TCP and encode/decode serial packets in real time. Perfect to see exactly that is going on without a wired connection.
+
+![image](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/53f3eaf8-0f2d-4a54-883d-b178e3b27f50)
+
