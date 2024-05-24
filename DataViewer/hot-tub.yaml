@@ -1,0 +1,68 @@
+esphome:
+  name: hot-tub
+  friendly_name: Hot Tub
+  comment: "HotSpring Luxury Spa"
+
+esp32:
+  board: m5stack-atom
+
+logger:
+  baud_rate: 0
+  level: DEBUG
+
+web_server:
+  
+# Enable Home Assistant API
+api:
+  encryption:
+    key: "QK9dv1R4fx4uZIFhrI+xki4G0Vo5o0rRGVwD5zysxN8="
+  services:
+    - service: log_message
+      variables:
+        message: string
+      then:
+        - logger.log: "This is a test"
+        - logger.log:
+            format: "HA MSG: [%s]"
+            args: [ 'message' ]
+
+ota:
+  password: "f972e51c3caeb78e0fca3fc9f779905b"
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Hot-Tub Fallback Hotspot"
+    password: "qXb9g8eNRAmM"
+
+external_components:
+  - source: github://oxan/esphome-stream-server
+
+uart:
+  id: tubbus
+  tx_pin: GPIO26
+  rx_pin: GPIO32
+  baud_rate: 38400
+  debug:
+    direction: BOTH
+    dummy_receiver: false
+#    after:
+#      timeout: 100ms
+#    sequence:
+#      - lambda: ESP_LOGI("Serial", "GotData");
+#      - lambda: UARTDebug::log_string(direction, bytes);
+
+# Relay UART messages over TCP
+stream_server:
+   uart_id: tubbus
+   port: 1234
+
+#time:
+#  - platform: sntp
+#    on_time:
+#      - seconds: /2
+#        then:
+#          - uart.write: "Hi People\n"
