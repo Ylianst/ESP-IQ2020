@@ -201,6 +201,11 @@ int IQ2020Component::processIQ2020Command() {
 	unsigned char checksum = 0;
 	for (int i = 1; i < (cmdlen - 2); i++) { checksum += processingBuffer[i]; }
 	if (processingBuffer[cmdlen - 1] != (checksum ^ 0xFF)) {
+		checksum = 0;
+		for (int i = 1; i < (cmdlen - 2); i++) {
+			checksum += processingBuffer[i];
+			ESP_LOGW(TAG, "Value 0x%02x, Sum 0x%02x.", processingBuffer[i], checksum);
+		}
 		ESP_LOGW(TAG, "Invalid checksum. Got 0x%02x, expected 0x%02x.", processingBuffer[cmdlen - 1], (checksum ^ 0xFF));
 		return 1;
 	}
