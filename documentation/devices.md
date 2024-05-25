@@ -28,6 +28,7 @@ The second device I tried and confirm to be working well is the M5StickC PLUS ES
 
 Once assembled with the wires, the device looks like this:
 
+![image](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/f02fd62a-e8ac-497d-a5d7-e9208d35bb3d)
 
 In the ESP-Home configuration, you will need to use the following settings. Note the GPIO pin numbers. The TX Pin is on GPIO 0.
 
