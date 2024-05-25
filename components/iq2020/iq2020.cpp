@@ -175,6 +175,7 @@ void IQ2020Component::write() {
 
 void IQ2020Component::processRawIQ2020Data(char *data, int len) {
 	ESP_LOGW(TAG, "Processing IQ2020 data, len = %d.", len);
+	rrrrr
 }
 
 IQ2020Component::Client::Client(std::unique_ptr<esphome::socket::Socket> socket, std::string identifier, size_t position)
