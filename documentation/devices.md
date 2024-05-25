@@ -1,6 +1,6 @@
 # M5Stack ATOM Lite ESP32 IoT Development Kit
 
-I have tried two ESP32 devices with the IQ2020. The device I recommand for most people is the M5Stack ATOM Lite ESP32 IoT Development Kit. It's very small and is perfect for this usage. The part you need are:
+I have tried two ESP32 devices with the IQ2020. The device I recommand for most people is the M5Stack ATOM Lite ESP32 IoT Development Kit. It's very small and is perfect for this usage. The parts you need are:
 
 - [ATOM Lite ESP32 IoT Development Kit](https://shop.m5stack.com/products/atom-lite-esp32-development-kit)
 - [ATOM Tail485 - RS485 Converter for ATOM](https://shop.m5stack.com/products/atom-tail485)
@@ -22,7 +22,7 @@ uart:
 
 # M5StickC PLUS ESP32-PICO Mini IoT Development Kit
 
-The second device I tried and confirm to be working well is the M5StickC PLUS ESP32-PICO Mini IoT Development Kit. I don't recommand this device as it's more expensive and has a display which is not useful for this project. We could show hot tub data on the display, but if your going to leave it in the IQ2020 enclosure, no one will see it and there is probably an added power draw to the display. One benefit for me is that I can power this device using USB before powering the hot tub and so, I can capture the initial messages sent on the RS485 bus by the controller. However, this is not the device I use day to day.
+The second device I tried and confirm to be working well is the M5StickC PLUS ESP32-PICO Mini IoT Development Kit. I don't recommand this device as it's more expensive and has a display which is not useful for this project. We could show hot tub data on the display, but if your going to leave it in the IQ2020 enclosure, no one will see it and there is probably an added power draw to the display. One benefit for me is that I can power this device using USB before powering the hot tub and so, I can capture the initial messages sent on the RS485 bus by the controller. However, this is not the device I use day to day. Here are the parts:
 
 - [M5StickC PLUS ESP32-PICO Mini IoT Development Kit](https://shop.m5stack.com/products/m5stickc-plus-esp32-pico-mini-iot-development-kit)
 - [M5StickC RS485 HAT AOZ1282CI](https://shop.m5stack.com/products/m5stickc-rs485-hat-aoz1282ci)
