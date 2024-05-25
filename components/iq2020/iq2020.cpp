@@ -175,7 +175,7 @@ void IQ2020Component::write() {
 
 void IQ2020Component::processRawIQ2020Data(unsigned char *data, int len) {
 	ESP_LOGW(TAG, "Processing IQ2020 raw data, len = %d.", len);
-	ESP_LOGW(TAG, "BUF: %02x:%02x:%02x:%02x", data[0], data[1], data[2], data[3]);
+	ESP_LOGW(TAG, "BUF: %02x:%02x:%02x:%02x:%02x:%02x:%02x:%02x:%02x:%02x:%02x:%02x...", data[-1], data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8], data[9], data[10]);
 
 	if ((len > 1024) || ((processingBufferLen + len) > 1024)) {
 		ESP_LOGW(TAG, "Receive buffer is overflowing!");
@@ -197,7 +197,7 @@ void IQ2020Component::processRawIQ2020Data(unsigned char *data, int len) {
 int IQ2020Component::processIQ2020Command() {
 	if (processingBufferLen < 6) return 0; // Need more data
 	ESP_LOGW(TAG, "BUF2: %02x:%02x:%02x:%02x:%02x:%02x...", processingBuffer[0], processingBuffer[1], processingBuffer[2], processingBuffer[3], processingBuffer[4], processingBuffer[5]);
-	if (processingBuffer[0] != 0x1C) { ESP_LOGW(TAG, "Receive buffer out of sync!"); return 1; } // Out of sync
+	if (processingBuffer[0] != 0x1C) { ESP_LOGW(TAG, "Receive buffer out of sync!"); return processingBufferLen;; } // Out of sync
 	int cmdlen = 6 + processingBuffer[3];
 	if (processingBufferLen < cmdlen) return 0; // Need more data
 	int checksum = 0;
