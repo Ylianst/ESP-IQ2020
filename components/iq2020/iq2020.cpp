@@ -207,7 +207,7 @@ void IQ2020Component::sendIQ2020Command(unsigned char dst, unsigned char src, un
 	outboundBuffer[4] = op;
 	memcpy(outboundBuffer + 5, data, len);
 	unsigned char checksum = 0; // Compute the checksum
-	for (int i = 1; i < (cmdlen - 1); i++) { checksum += processingBuffer[i]; }
+	for (int i = 1; i < (len + 5); i++) { checksum += processingBuffer[i]; }
 	outboundBuffer[len + 5] = (checksum ^ 0xFF);
 	this->stream_->write_array(outboundBuffer, len + 6);
 	ESP_LOGW(TAG, "IQ2020 transmit, dst:%02x src:%02x op:%02x datalen:%d", outboundBuffer[1], outboundBuffer[2], outboundBuffer[4], outboundBuffer[3]);
