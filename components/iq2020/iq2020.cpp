@@ -174,7 +174,37 @@ void IQ2020Component::write() {
 }
 
 void IQ2020Component::processRawIQ2020Data(unsigned char *data, int len) {
-	ESP_LOGW(TAG, "Processing IQ2020 data, len = %d.", len);
+	ESP_LOGW(TAG, "Processing IQ2020 raw data, len = %d.", len);
+	if ((len > 1024) || (processingBufferLen + len > 1 - 24)) {
+		ESP_LOGW(TAG, "Receive buffer is overflowing!");
+		processingBufferLen = 0;
+		return;
+	}
+	memcpy(processingBuffer + processingBufferLen, data, len);
+	processingBufferLen += len;
+	int processedData = 0;
+	while ((processedData = processIQ2020Command()) > 0) {
+		if (processedData < processingBufferLen) { // Move the remaining data to the front of the buffer
+			memcpy(processingBuffer, processingBuffer + processedData, processingBufferLen - processedData);
+		}
+		processingBufferLen -= processedData;
+	}
+}
+
+int IQ2020Component::processIQ2020Command() {
+	if (processingBufferLen < 6) return 0; // Need more data
+	if (processingBuffer[0] != 0x1C) { ESP_LOGW(TAG, "Receive buffer out of sync!"); return 1; } // Out of sync
+	int cmdlen = 6 + processingBuffer[3];
+	if (processingBufferLen < cmdlen) return 0; // Need more data
+	int checksum = 0;
+	for (int i = 1; i < (cmdlen - 2); i++) { checksum += processingBuffer[i]; }
+	if (processingBuffer[cmdlen - 1] != (checksum ^ 0xFF)) {
+		ESP_LOGW(TAG, "Invalid checksum. Got %d, expected %d.", processingBuffer[cmdlen - 1], (checksum ^ 0xFF));
+		return 1;
+	}
+
+	ESP_LOGW(TAG, "Processing IQ2020 data, len = %d.", processingBufferLen);
+	return processingBufferLen;
 }
 
 IQ2020Component::Client::Client(std::unique_ptr<esphome::socket::Socket> socket, std::string identifier, size_t position)
