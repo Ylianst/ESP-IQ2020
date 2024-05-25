@@ -174,8 +174,8 @@ void IQ2020Component::write() {
 }
 
 void IQ2020Component::processRawIQ2020Data(unsigned char *data, int len) {
-	if ((len > processingBufferTotalLen) || ((processingBufferLen + len) > processingBufferTotalLen)) { ESP_LOGW(TAG, "Receive buffer is overflowing!"); processingBufferLen = 0; return; }
-	if (processingBufferLen == 0) { memset(processingBuffer, 0, processingBufferTotalLen);  }
+	if ((len > IQ202BUFLEN) || ((processingBufferLen + len) > IQ202BUFLEN)) { ESP_LOGW(TAG, "Receive buffer is overflowing!"); processingBufferLen = 0; return; }
+	if (processingBufferLen == 0) { memset(processingBuffer, 0, IQ202BUFLEN);  }
 	memcpy(processingBuffer + processingBufferLen, data, len);
 	processingBufferLen += len;
 	int processedData = 0;

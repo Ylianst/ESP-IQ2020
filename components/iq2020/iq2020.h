@@ -15,6 +15,8 @@
 #include <string>
 #include <vector>
 
+#define IQ202BUFLEN 512;
+
 class IQ2020Component : public esphome::Component {
 public:
     IQ2020Component() = default;
@@ -79,8 +81,7 @@ protected:
     std::vector<Client> clients_{};
 
 	// IQ2020 processing
-	const int processingBufferTotalLen = 512;
-	unsigned char processingBuffer[processingBufferTotalLen];
+	unsigned char processingBuffer[IQ202BUFLEN];
 	unsigned char outboundBuffer[64];
 	int processingBufferLen = 0;
 	void processRawIQ2020Data(unsigned char *data, int len);
