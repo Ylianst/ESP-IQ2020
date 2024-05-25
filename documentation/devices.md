@@ -19,9 +19,12 @@ uart:
   baud_rate: 38400
 ```
 
-# M5Stack ATOM Lite ESP32 IoT Development Kit
+# M5StickC PLUS ESP32-PICO Mini IoT Development Kit
 
 The second device I tried and confirm to be working well is the M5StickC PLUS ESP32-PICO Mini IoT Development Kit. I don't recommand this device as it's more expensive and has a display with this not useful for this project. We could show hot tub data on the display, but it's not very useful if your going to leave it in the IQ2020 enclosure and there is probably an added power draw to the display that is not useful. One benefit for me is that I can power this device using USB before powering the hot tub and so, I can capture the initial messages sent on the RS485 bus by the controller. However, this is not the device I use day to day.
+
+- [M5StickC PLUS ESP32-PICO Mini IoT Development Kit](https://shop.m5stack.com/products/m5stickc-plus-esp32-pico-mini-iot-development-kit)
+- [M5StickC RS485 HAT AOZ1282CI](https://shop.m5stack.com/products/m5stickc-rs485-hat-aoz1282ci)
 
 Once assembled with the wires, the device looks like this:
 
