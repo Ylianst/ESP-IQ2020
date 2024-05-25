@@ -195,7 +195,7 @@ int IQ2020Component::processIQ2020Command() {
 	for (int i = 1; i < (cmdlen - 1); i++) { checksum += processingBuffer[i]; }
 	if (processingBuffer[cmdlen - 1] != (checksum ^ 0xFF)) { ESP_LOGW(TAG, "Invalid checksum. Got 0x%02x, expected 0x%02x.", processingBuffer[cmdlen - 1], (checksum ^ 0xFF)); return processingBufferLen; }
 	ESP_LOGW(TAG, "IQ2020 data, dst:%02x src:%02x op:%02x datalen:%d", processingBuffer[1], processingBuffer[2], processingBuffer[4], processingBuffer[3]);
-	if (processingBuffer[1] == 0x33) { unsigned char senddata[1]; sendIQ2020Command(0x29, 0x99, 0x40, senddata, 1); }
+	//if (processingBuffer[1] == 0x33) { unsigned char senddata[1]; sendIQ2020Command(0x29, 0x99, 0x40, senddata, 1); }
 	return cmdlen;
 }
 
@@ -209,9 +209,6 @@ void IQ2020Component::sendIQ2020Command(unsigned char dst, unsigned char src, un
 	unsigned char checksum = 0; // Compute the checksum
 	for (int i = 1; i < (len + 5); i++) { checksum += outboundBuffer[i]; }
 	outboundBuffer[len + 5] = (checksum ^ 0xFF);
-
-	ESP_LOGW(TAG, "Transmit: %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x", outboundBuffer[0], outboundBuffer[1], outboundBuffer[2], outboundBuffer[3], outboundBuffer[4], outboundBuffer[5], outboundBuffer[6], outboundBuffer[7], outboundBuffer[8], outboundBuffer[9]);
-
 	this->stream_->write_array(outboundBuffer, len + 6);
 	ESP_LOGW(TAG, "IQ2020 transmit, dst:%02x src:%02x op:%02x datalen:%d", outboundBuffer[1], outboundBuffer[2], outboundBuffer[4], outboundBuffer[3]);
 }
