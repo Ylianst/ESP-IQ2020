@@ -1,12 +1,9 @@
 import esphome.codegen as cg
 import esphome.config_validation as cv
 from esphome.components import uart
-from esphome.const import CONF_ID, CONF_BUFFER_SIZE
-#from esphome.const import CONF_ID, CONF_PORT, CONF_BUFFER_SIZE
+from esphome.const import CONF_ID, CONF_PORT, CONF_BUFFER_SIZE
 
 # ESPHome doesn't know the Stream abstraction yet, so hardcode to use a UART for now.
-
-CONF_XPORT = "PORT"
 
 AUTO_LOAD = ["socket"]
 
@@ -29,7 +26,7 @@ CONFIG_SCHEMA = cv.All(
     cv.Schema(
         {
             cv.GenerateID(): cv.declare_id(IQ2020Component),
-            cv.Optional(CONF_XPORT, default=0): cv.port,
+            cv.Optional(CONF_PORT, default=6638): cv.port,
             cv.Optional(CONF_BUFFER_SIZE, default=128): cv.All(
                 cv.positive_int, validate_buffer_size
             ),
