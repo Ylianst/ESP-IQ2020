@@ -79,5 +79,5 @@ protected:
     std::vector<Client> clients_{};
 
 	// IQ2020 processing
-	void processRawIQ2020Data(char *data, int len);
+	void processRawIQ2020Data(unsigned char *data, int len);
 };
