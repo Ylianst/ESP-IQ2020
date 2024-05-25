@@ -12,6 +12,7 @@ Once assembled with the wires, the device looks like this:
 In the ESP-Home configuration, you will need to use the following settings. Note the GPIO pin numbers.
 
 ```
+# M5Stack ATOM Lite
 uart:
   id: SpaConnection
   tx_pin: GPIO26
@@ -33,6 +34,7 @@ Once assembled with the wires, the device looks like this:
 In the ESP-Home configuration, you will need to use the following settings. Note the GPIO pin numbers. The TX Pin is on GPIO 0.
 
 ```
+# M5StickC PLUS ESP32-PICO Mini
 uart:
   id: SpaConnection
   tx_pin: GPIO0
