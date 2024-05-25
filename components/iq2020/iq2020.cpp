@@ -180,6 +180,7 @@ void IQ2020Component::processRawIQ2020Data(unsigned char *data, int len) {
 		processingBufferLen = 0;
 		return;
 	}
+	if (processingBufferLen == 0) { memset(processingBuffer, 0, 1024);  }
 	memcpy(processingBuffer + processingBufferLen, data, len);
 	processingBufferLen += len;
 	int processedData = 0;
