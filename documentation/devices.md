@@ -1,2 +1,37 @@
-# Devices you can connect to the IQ2020
+# M5Stack ATOM Lite ESP32 IoT Development Kit
 
+I have tried two ESP32 devices with the IQ2020. The device I recommand for most people is the M5Stack ATOM Lite ESP32 IoT Development Kit. It's very small and is perfect for this usage. The part you need are:
+
+- [ATOM Lite ESP32 IoT Development Kit](https://shop.m5stack.com/products/atom-lite-esp32-development-kit)
+- [ATOM Tail485 - RS485 Converter for ATOM](https://shop.m5stack.com/products/atom-tail485)
+
+Once assembled with the wires, the device looks like this:
+
+
+
+In the ESP-Home configuration, you will need to use the following settings. Note the GPIO pin numbers.
+
+```
+uart:
+  id: SpaConnection
+  tx_pin: GPIO26
+  rx_pin: GPIO32
+  baud_rate: 38400
+```
+
+# M5Stack ATOM Lite ESP32 IoT Development Kit
+
+The second device I tried and confirm to be working well is the M5StickC PLUS ESP32-PICO Mini IoT Development Kit. I don't recommand this device as it's more expensive and has a display with this not useful for this project. We could show hot tub data on the display, but it's not very useful if your going to leave it in the IQ2020 enclosure and there is probably an added power draw to the display that is not useful. One benefit for me is that I can power this device using USB before powering the hot tub and so, I can capture the initial messages sent on the RS485 bus by the controller. However, this is not the device I use day to day.
+
+Once assembled with the wires, the device looks like this:
+
+
+In the ESP-Home configuration, you will need to use the following settings. Note the GPIO pin numbers. The TX Pin is on GPIO 0.
+
+```
+uart:
+  id: SpaConnection
+  tx_pin: GPIO0
+  rx_pin: GPIO26
+  baud_rate: 38400
+```
