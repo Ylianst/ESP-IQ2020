@@ -77,4 +77,7 @@ protected:
 
     std::unique_ptr<esphome::socket::Socket> socket_{};
     std::vector<Client> clients_{};
+
+	// IQ2020 processing
+	void processRawIQ2020Data(char *data, int len);
 };

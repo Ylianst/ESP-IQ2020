@@ -33,12 +33,14 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.logToFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
             this.clearToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.actionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.scanToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.mainToolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.topPanel = new System.Windows.Forms.Panel();
             this.connectButton = new System.Windows.Forms.Button();
             this.addressTextBox = new System.Windows.Forms.TextBox();
@@ -53,12 +55,10 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.rawSendButton = new System.Windows.Forms.Button();
             this.rawSendTextBox = new System.Windows.Forms.TextBox();
-            this.scanTimer = new System.Windows.Forms.Timer(this.components);
-            this.mainToolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.storeTabPage = new System.Windows.Forms.TabPage();
             this.packetsListView = new System.Windows.Forms.ListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
+            this.scanTimer = new System.Windows.Forms.Timer(this.components);
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.topPanel.SuspendLayout();
@@ -97,26 +97,31 @@
             // logToFileToolStripMenuItem
             // 
             this.logToFileToolStripMenuItem.Name = "logToFileToolStripMenuItem";
-            this.logToFileToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
+            this.logToFileToolStripMenuItem.Size = new System.Drawing.Size(154, 26);
             this.logToFileToolStripMenuItem.Text = "Log to &File";
             this.logToFileToolStripMenuItem.Click += new System.EventHandler(this.logToFileToolStripMenuItem_Click);
+            // 
+            // toolStripMenuItem2
+            // 
+            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(151, 6);
             // 
             // clearToolStripMenuItem
             // 
             this.clearToolStripMenuItem.Name = "clearToolStripMenuItem";
-            this.clearToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
+            this.clearToolStripMenuItem.Size = new System.Drawing.Size(154, 26);
             this.clearToolStripMenuItem.Text = "C&lear";
             this.clearToolStripMenuItem.Click += new System.EventHandler(this.clearToolStripMenuItem_Click);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(178, 6);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(151, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(154, 26);
             this.exitToolStripMenuItem.Text = "E&xit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -145,6 +150,12 @@
             this.statusStrip1.Size = new System.Drawing.Size(704, 25);
             this.statusStrip1.TabIndex = 1;
             this.statusStrip1.Text = "statusStrip1";
+            // 
+            // mainToolStripStatusLabel
+            // 
+            this.mainToolStripStatusLabel.Name = "mainToolStripStatusLabel";
+            this.mainToolStripStatusLabel.Size = new System.Drawing.Size(18, 20);
+            this.mainToolStripStatusLabel.Text = "...";
             // 
             // topPanel
             // 
@@ -190,9 +201,9 @@
             // sendButton
             // 
             this.sendButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.sendButton.Location = new System.Drawing.Point(577, 13);
+            this.sendButton.Location = new System.Drawing.Point(577, 9);
             this.sendButton.Name = "sendButton";
-            this.sendButton.Size = new System.Drawing.Size(101, 23);
+            this.sendButton.Size = new System.Drawing.Size(101, 30);
             this.sendButton.TabIndex = 1;
             this.sendButton.Text = "Send";
             this.sendButton.UseVisualStyleBackColor = true;
@@ -202,17 +213,18 @@
             // 
             this.hexTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.hexTextBox.Location = new System.Drawing.Point(12, 13);
+            this.hexTextBox.Font = new System.Drawing.Font("Courier New", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.hexTextBox.Location = new System.Drawing.Point(5, 9);
             this.hexTextBox.Name = "hexTextBox";
-            this.hexTextBox.Size = new System.Drawing.Size(559, 22);
+            this.hexTextBox.Size = new System.Drawing.Size(559, 30);
             this.hexTextBox.TabIndex = 0;
-            this.hexTextBox.Text = "29, 99, 40, 1E010000FFFFFF00FF04FFFFFFFFFF";
+            this.hexTextBox.Text = "29 99 40 1E010000FFFFFF00FF04FFFFFFFFFF";
             // 
             // mainDataPacketTextBox
             // 
             this.mainDataPacketTextBox.BackColor = System.Drawing.Color.PapayaWhip;
             this.mainDataPacketTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.mainDataPacketTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.mainDataPacketTextBox.Font = new System.Drawing.Font("Courier New", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.mainDataPacketTextBox.Location = new System.Drawing.Point(3, 3);
             this.mainDataPacketTextBox.Multiline = true;
             this.mainDataPacketTextBox.Name = "mainDataPacketTextBox";
@@ -262,7 +274,7 @@
             // 
             this.mainRawDataTextBox.BackColor = System.Drawing.Color.PapayaWhip;
             this.mainRawDataTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.mainRawDataTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.mainRawDataTextBox.Font = new System.Drawing.Font("Courier New", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.mainRawDataTextBox.Location = new System.Drawing.Point(3, 3);
             this.mainRawDataTextBox.Multiline = true;
             this.mainRawDataTextBox.Name = "mainRawDataTextBox";
@@ -285,9 +297,9 @@
             // rawSendButton
             // 
             this.rawSendButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.rawSendButton.Location = new System.Drawing.Point(577, 13);
+            this.rawSendButton.Location = new System.Drawing.Point(577, 9);
             this.rawSendButton.Name = "rawSendButton";
-            this.rawSendButton.Size = new System.Drawing.Size(101, 23);
+            this.rawSendButton.Size = new System.Drawing.Size(101, 30);
             this.rawSendButton.TabIndex = 1;
             this.rawSendButton.Text = "Send";
             this.rawSendButton.UseVisualStyleBackColor = true;
@@ -297,22 +309,12 @@
             // 
             this.rawSendTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.rawSendTextBox.Location = new System.Drawing.Point(12, 13);
+            this.rawSendTextBox.Font = new System.Drawing.Font("Courier New", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rawSendTextBox.Location = new System.Drawing.Point(5, 9);
             this.rawSendTextBox.Name = "rawSendTextBox";
-            this.rawSendTextBox.Size = new System.Drawing.Size(559, 22);
+            this.rawSendTextBox.Size = new System.Drawing.Size(559, 30);
             this.rawSendTextBox.TabIndex = 0;
             this.rawSendTextBox.Text = "1C2101034021010078";
-            // 
-            // scanTimer
-            // 
-            this.scanTimer.Interval = 500;
-            this.scanTimer.Tick += new System.EventHandler(this.scanTimer_Tick);
-            // 
-            // mainToolStripStatusLabel
-            // 
-            this.mainToolStripStatusLabel.Name = "mainToolStripStatusLabel";
-            this.mainToolStripStatusLabel.Size = new System.Drawing.Size(151, 20);
-            this.mainToolStripStatusLabel.Text = "toolStripStatusLabel1";
             // 
             // storeTabPage
             // 
@@ -329,6 +331,7 @@
             this.packetsListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader1});
             this.packetsListView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.packetsListView.Font = new System.Drawing.Font("Courier New", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.packetsListView.FullRowSelect = true;
             this.packetsListView.GridLines = true;
             this.packetsListView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
@@ -345,10 +348,10 @@
             this.columnHeader1.Text = "Packet";
             this.columnHeader1.Width = 651;
             // 
-            // toolStripMenuItem2
+            // scanTimer
             // 
-            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(178, 6);
+            this.scanTimer.Interval = 500;
+            this.scanTimer.Tick += new System.EventHandler(this.scanTimer_Tick);
             // 
             // MainForm
             // 

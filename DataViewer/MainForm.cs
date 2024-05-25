@@ -166,7 +166,7 @@ namespace DataViewer
             //AppendText("Checksum " + checksum + " / " + data[datalenpadded + 4] + ", len: " + datalenpadded);
             //AppendText(" <-- " + ConvertByteArrayToHexString(data, 1, datalen + 3));
             //if ((data[1] == 0x99) || (data[2] == 0x99)) {
-            string t = ConvertByteArrayToHexString(data, 1, 1) + ", " + ConvertByteArrayToHexString(data, 2, 1) + ", " + ConvertByteArrayToHexString(data, 4, 1) + ", " + ConvertByteArrayToHexString(data, 5, datalen);
+            string t = ConvertByteArrayToHexString(data, 1, 1) + " " + ConvertByteArrayToHexString(data, 2, 1) + " " + ConvertByteArrayToHexString(data, 4, 1) + " " + ConvertByteArrayToHexString(data, 5, datalen);
             addPacketToStore(t);
             AppendPacketDataText(" <-- " + t);
             //}
@@ -177,31 +177,26 @@ namespace DataViewer
         {
             if (stream == null) return;
 
-            /*
-            byte[] data = ConvertHexStringToByteArray(hexTextBox.Text);
-            AppendText(" --> " + ConvertByteArrayToHexString(data, 0, data.Length));
-            stream.WriteAsync(data, 0, data.Length);
-            */
             string t = hexTextBox.Text;
-            t = t.Replace("<", "").Replace("-", "").Replace(":", "").Replace(" ", "");
-            string[] tx = t.Split(',');
-            if (tx.Length != 4) return;
-            byte[] dst = ConvertHexStringToByteArray(tx[0]);
-            byte[] src = ConvertHexStringToByteArray(tx[1]);
-            byte[] op = ConvertHexStringToByteArray(tx[2]);
-            byte[] data = ConvertHexStringToByteArray(tx[3]);
-            if ((dst.Length != 1) || (src.Length != 1) || (op.Length != 1) || (data.Length < 1) || (data.Length > 255)) return;
+            t = t.Replace("<", "").Replace("-", "").Replace(":", "").Replace(" ", "").Replace(",", "");
+            byte[] raw = ConvertHexStringToByteArray(t);
+            if (raw.Length < 4) return;
+            byte dst = raw[0];
+            byte src = raw[1];
+            byte op = raw[2];
+            byte[] data = new byte[raw.Length - 3];
+            Array.Copy(raw, 3, data, 0, raw.Length - 3);
             int totallen = 6 + data.Length;
             byte[] packet = new byte[totallen];
             packet[0] = 0x1C;
-            packet[1] = dst[0];
-            packet[2] = src[0];
+            packet[1] = dst;
+            packet[2] = src;
             packet[3] = (byte)(data.Length);
-            packet[4] = op[0];
+            packet[4] = op;
             data.CopyTo(packet, 5);
             packet[packet.Length - 1] = ComputeChecksum(packet, 1, packet.Length - 1);
             //AppendText(" RAW --> " + ConvertByteArrayToHexString(packet, 0, packet.Length));
-            AppendPacketDataText(" --> " + ConvertByteArrayToHexString(packet, 1, 1) + ", " + ConvertByteArrayToHexString(packet, 2, 1) + ", " + ConvertByteArrayToHexString(packet, 4, 1) + ", " + ConvertByteArrayToHexString(packet, 5, data.Length));
+            AppendPacketDataText(" --> " + ConvertByteArrayToHexString(packet, 1, 1) + " " + ConvertByteArrayToHexString(packet, 2, 1) + " " + ConvertByteArrayToHexString(packet, 4, 1) + " " + ConvertByteArrayToHexString(packet, 5, data.Length));
             AppendRawDataText(" --> " + ConvertByteArrayToHexString(packet, 0, packet.Length));
             stream.WriteAsync(packet, 0, packet.Length);
         }
@@ -275,7 +270,7 @@ namespace DataViewer
             if (stream == null) return;
 
             string t = rawSendTextBox.Text;
-            t = t.Replace("<", "").Replace("-", "").Replace(":", "").Replace(" ", "");
+            t = t.Replace("<", "").Replace("-", "").Replace(":", "").Replace(" ", "").Replace(",", "");
             byte[] packet = ConvertHexStringToByteArray(t);
             AppendRawDataText(" --> " + ConvertByteArrayToHexString(packet, 0, packet.Length));
             stream.WriteAsync(packet, 0, packet.Length);
@@ -315,7 +310,7 @@ namespace DataViewer
             data.CopyTo(packet, 5);
             packet[packet.Length - 1] = ComputeChecksum(packet, 1, packet.Length - 1);
             //AppendText(" RAW --> " + ConvertByteArrayToHexString(packet, 0, packet.Length));
-            AppendPacketDataText(" --> " + ConvertByteArrayToHexString(packet, 1, 1) + ", " + ConvertByteArrayToHexString(packet, 2, 1) + ", " + ConvertByteArrayToHexString(packet, 4, 1) + ", " + ConvertByteArrayToHexString(packet, 5, data.Length));
+            AppendPacketDataText(" --> " + ConvertByteArrayToHexString(packet, 1, 1) + " " + ConvertByteArrayToHexString(packet, 2, 1) + " " + ConvertByteArrayToHexString(packet, 4, 1) + " " + ConvertByteArrayToHexString(packet, 5, data.Length));
             AppendRawDataText(" --> " + ConvertByteArrayToHexString(packet, 0, packet.Length));
             stream.WriteAsync(packet, 0, packet.Length);
 

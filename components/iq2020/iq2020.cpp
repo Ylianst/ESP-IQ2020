@@ -116,6 +116,9 @@ void IQ2020Component::read() {
         len = std::min<size_t>(available, std::min<size_t>(this->buf_ahead(this->buf_head_), free));
         this->stream_->read_array(&this->buf_[this->buf_index(this->buf_head_)], len);
         this->buf_head_ += len;
+
+		// Process incoming IQ2020 data
+		processRawIQ2020Data(&this->buf_[this->buf_index(this->buf_head_)], len)
     }
 }
 
@@ -168,6 +171,10 @@ void IQ2020Component::write() {
             ESP_LOGW(TAG, "Failed to read from client %s with error %d!", client.identifier.c_str(), errno);
         }
     }
+}
+
+void IQ2020Component::processRawIQ2020Data(char *data, int len) {
+	ESP_LOGW(TAG, "Processing IQ2020 data, len = %d.", len);
 }
 
 IQ2020Component::Client::Client(std::unique_ptr<esphome::socket::Socket> socket, std::string identifier, size_t position)
