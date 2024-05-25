@@ -174,8 +174,8 @@ void IQ2020Component::write() {
 }
 
 void IQ2020Component::processRawIQ2020Data(unsigned char *data, int len) {
-	if ((len > 1024) || ((processingBufferLen + len) > 1024)) { ESP_LOGW(TAG, "Receive buffer is overflowing!"); processingBufferLen = 0; return; }
-	if (processingBufferLen == 0) { memset(processingBuffer, 0, 1024);  }
+	if ((len > processingBufferTotalLen) || ((processingBufferLen + len) > processingBufferTotalLen)) { ESP_LOGW(TAG, "Receive buffer is overflowing!"); processingBufferLen = 0; return; }
+	if (processingBufferLen == 0) { memset(processingBuffer, 0, processingBufferTotalLen);  }
 	memcpy(processingBuffer + processingBufferLen, data, len);
 	processingBufferLen += len;
 	int processedData = 0;
@@ -195,7 +195,22 @@ int IQ2020Component::processIQ2020Command() {
 	for (int i = 1; i < (cmdlen - 1); i++) { checksum += processingBuffer[i]; }
 	if (processingBuffer[cmdlen - 1] != (checksum ^ 0xFF)) { ESP_LOGW(TAG, "Invalid checksum. Got 0x%02x, expected 0x%02x.", processingBuffer[cmdlen - 1], (checksum ^ 0xFF)); return processingBufferLen; }
 	ESP_LOGW(TAG, "IQ2020 data, dst:%02x src:%02x op:%02x datalen:%d", processingBuffer[1], processingBuffer[2], processingBuffer[4], processingBuffer[3]);
+	if (processingBuffer[1] = 0x33) { unsigned char senddata[1]; sendIQ2020Command(0x29, 0x99, 1, 0x40, senddata, 1); }
 	return cmdlen;
+}
+
+void IQ2020Component::sendIQ2020Command(unsigned char dst, unsigned char src, unsigned char op, unsigned char *data, int len) {
+	outboundBuffer[0] = 0x1C;
+	outboundBuffer[1] = dst;
+	outboundBuffer[2] = src;
+	outboundBuffer[3] = len;
+	outboundBuffer[4] = op;
+	memcpy(outboundBuffer + 5, data, len);
+	unsigned char checksum = 0; // Compute the checksum
+	for (int i = 1; i < (cmdlen - 1); i++) { checksum += processingBuffer[i]; }
+	outboundBuffer[len + 5] = (checksum ^ 0xFF);
+	this->stream_->write_array(outboundBuffer, len + 6);
+	ESP_LOGW(TAG, "IQ2020 transmit, dst:%02x src:%02x op:%02x datalen:%d", outboundBuffer[1], outboundBuffer[2], outboundBuffer[4], outboundBuffer[3]);
 }
 
 IQ2020Component::Client::Client(std::unique_ptr<esphome::socket::Socket> socket, std::string identifier, size_t position)

@@ -79,8 +79,11 @@ protected:
     std::vector<Client> clients_{};
 
 	// IQ2020 processing
-	unsigned char processingBuffer[1024];
+	const int processingBufferTotalLen = 512;
+	unsigned char processingBuffer[processingBufferTotalLen];
+	unsigned char outboundBuffer[64];
 	int processingBufferLen = 0;
 	void processRawIQ2020Data(unsigned char *data, int len);
 	int processIQ2020Command();
+	void sendIQ2020Command(unsigned char dst, unsigned char src, unsigned char op, unsigned char *data, int len);
 };
