@@ -118,7 +118,7 @@ void IQ2020Component::read() {
         this->buf_head_ += len;
 
 		// Process incoming IQ2020 data
-		processRawIQ2020Data(&this->buf_[this->buf_index(this->buf_head_)], len);
+		processRawIQ2020Data(this->buf_[this->buf_index(this->buf_head_)].get(), len);
     }
 }
 
