@@ -175,7 +175,7 @@ void IQ2020Component::write() {
 
 void IQ2020Component::processRawIQ2020Data(unsigned char *data, int len) {
 	ESP_LOGW(TAG, "Processing IQ2020 raw data, len = %d.", len);
-	ESP_LOGW(TAG, "BUF: %02x:%02x:%02x:%02x:%02x:%02x:%02x:%02x:%02x:%02x:%02x:%02x...", data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8], data[9], data[10], data[11]);
+	ESP_LOGW(TAG, "BUF: %02x:%02x:%02x:%02x", data[0], data[1], data[2], data[3]);
 
 	if ((len > 1024) || ((processingBufferLen + len) > 1024)) {
 		ESP_LOGW(TAG, "Receive buffer is overflowing!");
