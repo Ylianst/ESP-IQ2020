@@ -193,13 +193,14 @@ void IQ2020Component::processRawIQ2020Data(unsigned char *data, int len) {
 
 int IQ2020Component::processIQ2020Command() {
 	if (processingBufferLen < 6) return 0; // Need more data
+	ESP_LOGW(TAG, "BUF: %02x:%02x:%02x:%02x:%02x:%02x...", processingBuffer[0], processingBuffer[1], processingBuffer[2], processingBuffer[3], processingBuffer[4], processingBuffer[5]);
 	if (processingBuffer[0] != 0x1C) { ESP_LOGW(TAG, "Receive buffer out of sync!"); return 1; } // Out of sync
 	int cmdlen = 6 + processingBuffer[3];
 	if (processingBufferLen < cmdlen) return 0; // Need more data
 	int checksum = 0;
 	for (int i = 1; i < (cmdlen - 2); i++) { checksum += processingBuffer[i]; }
 	if (processingBuffer[cmdlen - 1] != (checksum ^ 0xFF)) {
-		ESP_LOGW(TAG, "Invalid checksum. Got %d, expected %d.", processingBuffer[cmdlen - 1], (checksum ^ 0xFF));
+		ESP_LOGW(TAG, "Invalid checksum. Got 0x%02x, expected 0x%02x.", processingBuffer[cmdlen - 1], (checksum ^ 0xFF));
 		return 1;
 	}
 
