@@ -35,19 +35,16 @@ wifi:
   password: !secret wifi_password
 
 external_components:
-  - source: github://oxan/esphome-stream-server
+  - source: github://ylianst/esp-iq2020
 
 uart:
-  id: hottub_uart
+  id: tubbus
   tx_pin: GPIO26
   rx_pin: GPIO32
   baud_rate: 38400
-  debug:
-    direction: BOTH
 
-# Relay UART messages over TCP port 1234
-stream_server:
-   uart_id: hottub_uart
+iq2020:
+   uart_id: tubbus
    port: 1234
 ```
 
