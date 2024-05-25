@@ -18,17 +18,19 @@ void IQ2020Component::setup() {
     // The make_unique() wrapper doesn't like arrays, so initialize the unique_ptr directly.
     this->buf_ = std::unique_ptr<uint8_t[]>{new uint8_t[this->buf_size_]};
 
-    struct sockaddr_storage bind_addr;
+	if (this->port_ != 0) {
+		struct sockaddr_storage bind_addr;
 #if ESPHOME_VERSION_CODE >= VERSION_CODE(2023, 4, 0)
-    socklen_t bind_addrlen = socket::set_sockaddr_any(reinterpret_cast<struct sockaddr *>(&bind_addr), sizeof(bind_addr), this->port_);
+		socklen_t bind_addrlen = socket::set_sockaddr_any(reinterpret_cast<struct sockaddr *>(&bind_addr), sizeof(bind_addr), this->port_);
 #else
-    socklen_t bind_addrlen = socket::set_sockaddr_any(reinterpret_cast<struct sockaddr *>(&bind_addr), sizeof(bind_addr), htons(this->port_));
+		socklen_t bind_addrlen = socket::set_sockaddr_any(reinterpret_cast<struct sockaddr *>(&bind_addr), sizeof(bind_addr), htons(this->port_));
 #endif
 
-    this->socket_ = socket::socket_ip(SOCK_STREAM, PF_INET);
-    this->socket_->setblocking(false);
-    this->socket_->bind(reinterpret_cast<struct sockaddr *>(&bind_addr), bind_addrlen);
-    this->socket_->listen(8);
+		this->socket_ = socket::socket_ip(SOCK_STREAM, PF_INET);
+		this->socket_->setblocking(false);
+		this->socket_->bind(reinterpret_cast<struct sockaddr *>(&bind_addr), bind_addrlen);
+		this->socket_->listen(8);
+	}
 
     this->publish_sensor();
 }
@@ -172,8 +174,6 @@ void IQ2020Component::write() {
 }
 
 void IQ2020Component::processRawIQ2020Data(unsigned char *data, int len) {
-	//ESP_LOGW(TAG, "Processing IQ2020 raw data, len = %d.", len);
-	//ESP_LOGW(TAG, "BUF: %02x:%02x:%02x:%02x:%02x:%02x:%02x:%02x:%02x:%02x:%02x:%02x...", data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8], data[9], data[10], data[11]);
 	if ((len > 1024) || ((processingBufferLen + len) > 1024)) { ESP_LOGW(TAG, "Receive buffer is overflowing!"); processingBufferLen = 0; return; }
 	if (processingBufferLen == 0) { memset(processingBuffer, 0, 1024);  }
 	memcpy(processingBuffer + processingBufferLen, data, len);
@@ -188,14 +188,13 @@ void IQ2020Component::processRawIQ2020Data(unsigned char *data, int len) {
 
 int IQ2020Component::processIQ2020Command() {
 	if (processingBufferLen < 6) return 0; // Need more data
-	//ESP_LOGW(TAG, "BUF2: %02x:%02x:%02x:%02x:%02x:%02x...", processingBuffer[0], processingBuffer[1], processingBuffer[2], processingBuffer[3], processingBuffer[4], processingBuffer[5]);
 	if (processingBuffer[0] != 0x1C) { ESP_LOGW(TAG, "Receive buffer out of sync!"); return processingBufferLen; } // Out of sync
 	int cmdlen = 6 + processingBuffer[3];
 	if (processingBufferLen < cmdlen) return 0; // Need more data
 	unsigned char checksum = 0; // Compute the checksum
 	for (int i = 1; i < (cmdlen - 1); i++) { checksum += processingBuffer[i]; }
 	if (processingBuffer[cmdlen - 1] != (checksum ^ 0xFF)) { ESP_LOGW(TAG, "Invalid checksum. Got 0x%02x, expected 0x%02x.", processingBuffer[cmdlen - 1], (checksum ^ 0xFF)); return processingBufferLen; }
-	ESP_LOGW(TAG, "Processing IQ2020 data, src:%02x dst:%02x, op:%02x, datalen:%d", processingBuffer[1], processingBuffer[2], processingBuffer[4], processingBuffer[3]);
+	ESP_LOGW(TAG, "IQ2020 data, dst:%02x src:%02x op:%02x datalen:%d", processingBuffer[1], processingBuffer[2], processingBuffer[4], processingBuffer[3]);
 	return cmdlen;
 }
 
