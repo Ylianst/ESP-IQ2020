@@ -7,7 +7,7 @@ I have tried two ESP32 devices with the IQ2020. The device I recommand for most 
 
 Once assembled with the wires, the device looks like this:
 
-
+![image](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/07834e9c-5ef3-4304-add4-3f378a2ccf0a)
 
 In the ESP-Home configuration, you will need to use the following settings. Note the GPIO pin numbers.
 
