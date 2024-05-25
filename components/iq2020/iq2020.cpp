@@ -115,10 +115,8 @@ void IQ2020Component::read() {
         // Fill all available contiguous space in the ring buffer.
         len = std::min<size_t>(available, std::min<size_t>(this->buf_ahead(this->buf_head_), free));
         this->stream_->read_array(&this->buf_[this->buf_index(this->buf_head_)], len);
-        this->buf_head_ += len;
-
-		// Process incoming IQ2020 data
-		processRawIQ2020Data(&this->buf_[this->buf_index(this->buf_head_)], len);
+		processRawIQ2020Data(&this->buf_[this->buf_index(this->buf_head_)], len); // Process incoming IQ2020 data
+		this->buf_head_ += len;
     }
 }
 
@@ -175,7 +173,7 @@ void IQ2020Component::write() {
 
 void IQ2020Component::processRawIQ2020Data(unsigned char *data, int len) {
 	ESP_LOGW(TAG, "Processing IQ2020 raw data, len = %d.", len);
-	ESP_LOGW(TAG, "BUF: %02x:%02x:%02x:%02x:%02x:%02x:%02x:%02x:%02x:%02x:%02x:%02x...", data[-1], data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8], data[9], data[10]);
+	ESP_LOGW(TAG, "BUF: %02x:%02x:%02x:%02x:%02x:%02x:%02x:%02x:%02x:%02x:%02x:%02x...", data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8], data[9], data[10], data[11]);
 
 	if ((len > 1024) || ((processingBufferLen + len) > 1024)) {
 		ESP_LOGW(TAG, "Receive buffer is overflowing!");
