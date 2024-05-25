@@ -198,7 +198,7 @@ int IQ2020Component::processIQ2020Command() {
 	if (processingBuffer[0] != 0x1C) { ESP_LOGW(TAG, "Receive buffer out of sync!"); return processingBufferLen;; } // Out of sync
 	int cmdlen = 6 + processingBuffer[3];
 	if (processingBufferLen < cmdlen) return 0; // Need more data
-	int checksum = 0;
+	unsigned char checksum = 0;
 	for (int i = 1; i < (cmdlen - 2); i++) { checksum += processingBuffer[i]; }
 	if (processingBuffer[cmdlen - 1] != (checksum ^ 0xFF)) {
 		ESP_LOGW(TAG, "Invalid checksum. Got 0x%02x, expected 0x%02x.", processingBuffer[cmdlen - 1], (checksum ^ 0xFF));
