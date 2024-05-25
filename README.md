@@ -38,13 +38,13 @@ external_components:
   - source: github://ylianst/esp-iq2020
 
 uart:
-  id: tubbus
+  id: SpaConnection
   tx_pin: GPIO26
   rx_pin: GPIO32
   baud_rate: 38400
 
 iq2020:
-   uart_id: tubbus
+   uart_id: SpaConnection
    port: 1234
 ```
 
