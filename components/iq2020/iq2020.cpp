@@ -195,7 +195,7 @@ int IQ2020Component::processIQ2020Command() {
 	for (int i = 1; i < (cmdlen - 1); i++) { checksum += processingBuffer[i]; }
 	if (processingBuffer[cmdlen - 1] != (checksum ^ 0xFF)) { ESP_LOGW(TAG, "Invalid checksum. Got 0x%02x, expected 0x%02x.", processingBuffer[cmdlen - 1], (checksum ^ 0xFF)); return processingBufferLen; }
 	ESP_LOGW(TAG, "IQ2020 data, dst:%02x src:%02x op:%02x datalen:%d", processingBuffer[1], processingBuffer[2], processingBuffer[4], processingBuffer[3]);
-	if (processingBuffer[1] == 0x33) { unsigned char senddata[1]; sendIQ2020Command(0x29, 0x99, 0x40, senddata, 1); }
+	//if (processingBuffer[1] == 0x33) { unsigned char senddata[1]; sendIQ2020Command(0x29, 0x99, 0x40, senddata, 1); }
 	return cmdlen;
 }
 
