@@ -15,7 +15,7 @@
 #include <string>
 #include <vector>
 
-#define IQ202BUFLEN 512;
+#define IQ202BUFLEN 512
 
 class IQ2020Component : public esphome::Component {
 public:
