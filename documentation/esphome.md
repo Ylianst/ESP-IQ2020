@@ -21,4 +21,4 @@ iq2020:
 
 When specified the ESP32 device will listen to this port for incoming TCP connection and will send all RS485 traffic to connected clients and also take and traffic from clients and send it on the bus. You can then use the IQ2020 Data Viewer tool to connect to your device on this port and see the traffic.
 
-This makes it easy to contribute data captures to this project.
+This makes it easy to contribute data captures to this project. For example, I don't have a music module on my hot tub, but if someone has one and can figure out the protocol, I would like to have this ESP-Home integration to optionally be able to impersonate a music device and so, you could control the volume of music being played by Home Assistant.
