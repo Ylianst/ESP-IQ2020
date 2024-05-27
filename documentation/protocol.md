@@ -60,7 +60,7 @@ I happen to own the Salt Water device (0x29), however I don't use the salt water
 
 Above, I use 0x99 as by source address and send a request to 0x29. The salt water system will respond to 0x99. It does not seem to matter what data I provide, it always responds the same. Looking at the Salt Water device, here is my first try at the protocol decoding:
 
-![IQ2020-ESP6](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/08bfedeb-2f7b-41b9-adbb-fd7b7b47f5d0)
+![IQ2020-ESP6](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/662a59c9-f473-450a-a7df-adae60d68dd2)
 
 The echanges between the IQ2020 and this Salt Water device on address 0x29 always contain 15 bytes of data. The IQ2020 device will send requests to the module every few seconds and sometimes even faster.
 
