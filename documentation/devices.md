@@ -41,3 +41,25 @@ uart:
   rx_pin: GPIO26
   baud_rate: 38400
 ```
+
+# M5Stack ATOM Lite ESP32 IoT Development Kit (2)
+
+Same device at the first option, but a different RS485 interface.
+
+- [ATOM Lite ESP32 IoT Development Kit](https://shop.m5stack.com/products/atom-lite-esp32-development-kit)
+- [ATOMIC RS485 Base]([https://shop.m5stack.com/products/atom-tail485](https://shop.m5stack.com/products/atomic-rs485-base))
+
+I use this device and interface for a different project and it works great. Once assembled, the device looks like this.
+
+![m5stack-atom-rs485-atom-lite-development-kit-rs485-converter-k045-2158034089](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/5f81d5d2-d047-4ceb-b9f0-aef23833bf64)
+
+In the ESP-Home configuration, you will need to use the following settings. Note the GPIO pin numbers.
+
+```
+# M5Stack ATOM Lite
+uart:
+  id: SpaConnection
+  tx_pin: GPIO19
+  rx_pin: GPIO22
+  baud_rate: 38400
+```
