@@ -46,7 +46,6 @@
             this.addressTextBox = new System.Windows.Forms.TextBox();
             this.bottomPanel = new System.Windows.Forms.Panel();
             this.sendButton = new System.Windows.Forms.Button();
-            this.hexTextBox = new System.Windows.Forms.TextBox();
             this.mainDataPacketTextBox = new System.Windows.Forms.TextBox();
             this.mainTabControl = new System.Windows.Forms.TabControl();
             this.dataPacketsTabPage = new System.Windows.Forms.TabPage();
@@ -59,6 +58,9 @@
             this.packetsListView = new System.Windows.Forms.ListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.scanTimer = new System.Windows.Forms.Timer(this.components);
+            this.logSaveFileDialog = new System.Windows.Forms.SaveFileDialog();
+            this.annotateLogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.hexComboBox = new System.Windows.Forms.ComboBox();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.topPanel.SuspendLayout();
@@ -97,37 +99,38 @@
             // logToFileToolStripMenuItem
             // 
             this.logToFileToolStripMenuItem.Name = "logToFileToolStripMenuItem";
-            this.logToFileToolStripMenuItem.Size = new System.Drawing.Size(154, 26);
-            this.logToFileToolStripMenuItem.Text = "Log to &File";
+            this.logToFileToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
+            this.logToFileToolStripMenuItem.Text = "Log to &File...";
             this.logToFileToolStripMenuItem.Click += new System.EventHandler(this.logToFileToolStripMenuItem_Click);
             // 
             // toolStripMenuItem2
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(151, 6);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(178, 6);
             // 
             // clearToolStripMenuItem
             // 
             this.clearToolStripMenuItem.Name = "clearToolStripMenuItem";
-            this.clearToolStripMenuItem.Size = new System.Drawing.Size(154, 26);
+            this.clearToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
             this.clearToolStripMenuItem.Text = "C&lear";
             this.clearToolStripMenuItem.Click += new System.EventHandler(this.clearToolStripMenuItem_Click);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(151, 6);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(178, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(154, 26);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
             this.exitToolStripMenuItem.Text = "E&xit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
             // actionsToolStripMenuItem
             // 
             this.actionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.annotateLogToolStripMenuItem,
             this.scanToolStripMenuItem});
             this.actionsToolStripMenuItem.Name = "actionsToolStripMenuItem";
             this.actionsToolStripMenuItem.Size = new System.Drawing.Size(70, 24);
@@ -136,7 +139,7 @@
             // scanToolStripMenuItem
             // 
             this.scanToolStripMenuItem.Name = "scanToolStripMenuItem";
-            this.scanToolStripMenuItem.Size = new System.Drawing.Size(115, 26);
+            this.scanToolStripMenuItem.Size = new System.Drawing.Size(183, 26);
             this.scanToolStripMenuItem.Text = "&Scan";
             this.scanToolStripMenuItem.Click += new System.EventHandler(this.scanToolStripMenuItem_Click);
             // 
@@ -170,9 +173,9 @@
             // connectButton
             // 
             this.connectButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.connectButton.Location = new System.Drawing.Point(591, 13);
+            this.connectButton.Location = new System.Drawing.Point(591, 10);
             this.connectButton.Name = "connectButton";
-            this.connectButton.Size = new System.Drawing.Size(101, 23);
+            this.connectButton.Size = new System.Drawing.Size(101, 30);
             this.connectButton.TabIndex = 1;
             this.connectButton.Text = "Connect";
             this.connectButton.UseVisualStyleBackColor = true;
@@ -182,16 +185,18 @@
             // 
             this.addressTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.addressTextBox.Location = new System.Drawing.Point(12, 13);
+            this.addressTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.addressTextBox.Location = new System.Drawing.Point(12, 10);
             this.addressTextBox.Name = "addressTextBox";
-            this.addressTextBox.Size = new System.Drawing.Size(573, 22);
+            this.addressTextBox.Size = new System.Drawing.Size(573, 30);
             this.addressTextBox.TabIndex = 0;
             this.addressTextBox.Text = "192.168.2.184:1234";
+            this.addressTextBox.TextChanged += new System.EventHandler(this.addressTextBox_TextChanged);
             // 
             // bottomPanel
             // 
+            this.bottomPanel.Controls.Add(this.hexComboBox);
             this.bottomPanel.Controls.Add(this.sendButton);
-            this.bottomPanel.Controls.Add(this.hexTextBox);
             this.bottomPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.bottomPanel.Location = new System.Drawing.Point(3, 358);
             this.bottomPanel.Name = "bottomPanel";
@@ -201,24 +206,13 @@
             // sendButton
             // 
             this.sendButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.sendButton.Location = new System.Drawing.Point(577, 9);
+            this.sendButton.Location = new System.Drawing.Point(584, 7);
             this.sendButton.Name = "sendButton";
             this.sendButton.Size = new System.Drawing.Size(101, 30);
             this.sendButton.TabIndex = 1;
             this.sendButton.Text = "Send";
             this.sendButton.UseVisualStyleBackColor = true;
             this.sendButton.Click += new System.EventHandler(this.sendButton_Click);
-            // 
-            // hexTextBox
-            // 
-            this.hexTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.hexTextBox.Font = new System.Drawing.Font("Courier New", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.hexTextBox.Location = new System.Drawing.Point(5, 9);
-            this.hexTextBox.Name = "hexTextBox";
-            this.hexTextBox.Size = new System.Drawing.Size(559, 30);
-            this.hexTextBox.TabIndex = 0;
-            this.hexTextBox.Text = "29 99 40 1E010000FFFFFF00FF04FFFFFFFFFF";
             // 
             // mainDataPacketTextBox
             // 
@@ -353,6 +347,31 @@
             this.scanTimer.Interval = 500;
             this.scanTimer.Tick += new System.EventHandler(this.scanTimer_Tick);
             // 
+            // logSaveFileDialog
+            // 
+            this.logSaveFileDialog.DefaultExt = "txt";
+            this.logSaveFileDialog.FileName = "logfile.txt";
+            this.logSaveFileDialog.Filter = "Text File|*.txt|All Files|*.*";
+            this.logSaveFileDialog.OverwritePrompt = false;
+            this.logSaveFileDialog.Title = "Capture Traffic";
+            // 
+            // annotateLogToolStripMenuItem
+            // 
+            this.annotateLogToolStripMenuItem.Name = "annotateLogToolStripMenuItem";
+            this.annotateLogToolStripMenuItem.Size = new System.Drawing.Size(183, 26);
+            this.annotateLogToolStripMenuItem.Text = "&Annotate Log...";
+            this.annotateLogToolStripMenuItem.Click += new System.EventHandler(this.annotateLogToolStripMenuItem_Click);
+            // 
+            // hexComboBox
+            // 
+            this.hexComboBox.Font = new System.Drawing.Font("Courier New", 12F);
+            this.hexComboBox.FormattingEnabled = true;
+            this.hexComboBox.Location = new System.Drawing.Point(5, 7);
+            this.hexComboBox.Name = "hexComboBox";
+            this.hexComboBox.Size = new System.Drawing.Size(573, 30);
+            this.hexComboBox.TabIndex = 2;
+            this.hexComboBox.Text = "29 99 40 1E010000FFFFFF00FF04FFFFFFFFFF";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -375,7 +394,6 @@
             this.topPanel.ResumeLayout(false);
             this.topPanel.PerformLayout();
             this.bottomPanel.ResumeLayout(false);
-            this.bottomPanel.PerformLayout();
             this.mainTabControl.ResumeLayout(false);
             this.dataPacketsTabPage.ResumeLayout(false);
             this.dataPacketsTabPage.PerformLayout();
@@ -400,7 +418,6 @@
         private System.Windows.Forms.TextBox addressTextBox;
         private System.Windows.Forms.Panel bottomPanel;
         private System.Windows.Forms.Button sendButton;
-        private System.Windows.Forms.TextBox hexTextBox;
         private System.Windows.Forms.TextBox mainDataPacketTextBox;
         private System.Windows.Forms.ToolStripMenuItem clearToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
@@ -420,6 +437,9 @@
         private System.Windows.Forms.ListView packetsListView;
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
+        private System.Windows.Forms.SaveFileDialog logSaveFileDialog;
+        private System.Windows.Forms.ToolStripMenuItem annotateLogToolStripMenuItem;
+        private System.Windows.Forms.ComboBox hexComboBox;
     }
 }
 

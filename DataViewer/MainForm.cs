@@ -10,6 +10,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Microsoft.Win32;
 
 namespace DataViewer
 {
@@ -22,6 +23,7 @@ namespace DataViewer
         private StreamWriter outputFile = null;
         private int scanAddress = 0;
         private int connectionState = 0;
+        private FileInfo logFileInfo;
 
         public MainForm()
         {
@@ -30,6 +32,8 @@ namespace DataViewer
 
         private void MainForm_Load(object sender, EventArgs e)
         {
+            addressTextBox.Text = (string)Registry.GetValue(@"HKEY_CURRENT_USER\SOFTWARE\Open Source\IQ2020DataViewer", "address", "1.2.3.4:1234");
+            if (addressTextBox.Text == "") { addressTextBox.Text = "1.2.3.4:1234"; }
             UpdateInfo();
         }
 
@@ -83,7 +87,7 @@ namespace DataViewer
             //if (outputFile != null) { outputFile.WriteLine(DateTime.Now.ToString() + " " + msg); outputFile.Flush(); }
         }
 
-        private void AppendPacketDataText(string msg)
+        public void AppendPacketDataText(string msg)
         {
             if (InvokeRequired) { try { Invoke(new AppendTextHandler(AppendPacketDataText), msg); } catch (Exception) { } return; }
             mainDataPacketTextBox.AppendText(msg + "\r\n");
@@ -96,11 +100,15 @@ namespace DataViewer
             if (InvokeRequired) { Invoke(new UpdateInfoHandler(UpdateInfo)); return; }
             connectButton.Text = (stream == null) ? "Connect" : "Disconnect";
             addressTextBox.Enabled = (stream == null);
-            hexTextBox.Enabled = sendButton.Enabled = (stream != null);
+            hexComboBox.Enabled = sendButton.Enabled = (stream != null);
             rawSendTextBox.Enabled = rawSendButton.Enabled = (stream != null);
-            if (connectionState == 0) { mainToolStripStatusLabel.Text = "Disconnected"; }
-            if (connectionState == 1) { mainToolStripStatusLabel.Text = "Connecting"; }
-            if (connectionState == 2) { mainToolStripStatusLabel.Text = "Connected"; }
+            string extra = "";
+            if (outputFile != null) { extra = ", Capturing to " + logFileInfo.Name; }
+            if (connectionState == 0) { mainToolStripStatusLabel.Text = "Disconnected" + extra; }
+            if (connectionState == 1) { mainToolStripStatusLabel.Text = "Connecting" + extra; }
+            if (connectionState == 2) { mainToolStripStatusLabel.Text = "Connected" + extra; }
+            logToFileToolStripMenuItem.Checked = (outputFile != null);
+            annotateLogToolStripMenuItem.Enabled = (outputFile != null);
         }
 
         public delegate void DisconnectHandler();
@@ -170,14 +178,17 @@ namespace DataViewer
             addPacketToStore(t);
             AppendPacketDataText(" <-- " + t);
             //}
+
+            //if (data[1] == 0x29) { sendButton_Click(this, null); }
             return totallen;
         }
 
         private void sendButton_Click(object sender, EventArgs e)
         {
             if (stream == null) return;
+            if (InvokeRequired) { try { Invoke(new EventHandler(sendButton_Click), sender, e); } catch (Exception) { } return; }
 
-            string t = hexTextBox.Text;
+            string t = hexComboBox.Text;
             t = t.Replace("<", "").Replace("-", "").Replace(":", "").Replace(" ", "").Replace(",", "");
             byte[] raw = ConvertHexStringToByteArray(t);
             if (raw.Length < 4) return;
@@ -198,16 +209,17 @@ namespace DataViewer
             //AppendText(" RAW --> " + ConvertByteArrayToHexString(packet, 0, packet.Length));
             AppendPacketDataText(" --> " + ConvertByteArrayToHexString(packet, 1, 1) + " " + ConvertByteArrayToHexString(packet, 2, 1) + " " + ConvertByteArrayToHexString(packet, 4, 1) + " " + ConvertByteArrayToHexString(packet, 5, data.Length));
             AppendRawDataText(" --> " + ConvertByteArrayToHexString(packet, 0, packet.Length));
-            stream.WriteAsync(packet, 0, packet.Length);
+            try { stream.WriteAsync(packet, 0, packet.Length); } catch (Exception) { Disconnect(); return; }
+
+            // Add this packet to the combo box
+            var exist = false;
+            foreach (string i in hexComboBox.Items) { if (i == hexComboBox.Text) { exist = true; return; } }
+            if (exist == false) { hexComboBox.Items.Add(hexComboBox.Text); }
         }
 
         private byte[] ConvertHexStringToByteArray(string hex)
         {
-            if (hex.Length % 2 != 0)
-            {
-                throw new ArgumentException("Hex string must have an even length.");
-            }
-
+            if (hex.Length % 2 != 0) return new byte[0];
             byte[] bytes = new byte[hex.Length / 2];
             for (int i = 0; i < hex.Length; i += 2)
             {
@@ -244,7 +256,11 @@ namespace DataViewer
         {
             if (outputFile == null)
             {
-                outputFile = new StreamWriter(Path.Combine(Application.StartupPath, "LogFile.txt"));
+                if (logSaveFileDialog.ShowDialog(this) == DialogResult.OK)
+                {
+                    logFileInfo = new FileInfo(logSaveFileDialog.FileName);
+                    outputFile = new StreamWriter(logSaveFileDialog.FileName);
+                }
             }
             else
             {
@@ -252,7 +268,7 @@ namespace DataViewer
                 outputFile.Dispose();
                 outputFile = null;
             }
-            logToFileToolStripMenuItem.Checked = (outputFile != null);
+            UpdateInfo();
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -292,7 +308,7 @@ namespace DataViewer
             stream.WriteAsync(data, 0, data.Length);
             */
 
-            string t = hexTextBox.Text;
+            string t = hexComboBox.Text;
             t = t.Replace("<", "").Replace("-", "").Replace(":", "").Replace(" ", "").Replace(",", "");
             byte[] raw = ConvertHexStringToByteArray(t);
             if (raw.Length < 4) return;
@@ -318,6 +334,16 @@ namespace DataViewer
             stream.WriteAsync(packet, 0, packet.Length);
 
             scanAddress++;
+        }
+
+        private void annotateLogToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new LogAnnotationForm(this).ShowDialog(this);
+        }
+
+        private void addressTextBox_TextChanged(object sender, EventArgs e)
+        {
+            Registry.SetValue(@"HKEY_CURRENT_USER\SOFTWARE\Open Source\IQ2020DataViewer", "address", addressTextBox.Text);
         }
     }
 }
