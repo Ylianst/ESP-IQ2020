@@ -43,10 +43,10 @@ The source address is 0x01 which is the address of the IQ2020 controller on the 
 
 ```
 0x01 - IQ2020 controller
-0x21 - Unknown device 1
-0x24 - Salt water system 1
-0x29 - Salt water system 2
-0x33 - Unknown device 2
+0x21 - Unknown device 1 (Audio or Coolzone)
+0x24 - ACE Salt System
+0x29 - Freshwater Salt System (This is the one I have)
+0x33 - Unknown device 2 (Audio or Coolzone)
 ```
 
 I happen to own the Salt Water device (0x29), however I don't use the salt water system so I normally keep it disconnected. It has been useful as a way to generate added traffic on the bus. I can send data frames to the salt water module from and address and it will answer back to that address. For example:
