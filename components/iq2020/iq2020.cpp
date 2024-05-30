@@ -68,6 +68,10 @@ void IQ2020Component::publish_sensor() {
     if (this->connection_count_sensor_)
         this->connection_count_sensor_->publish_state(this->clients_.size());
 #endif
+#ifdef USE_TEXT_SENSOR
+	if (this->sample_text_sensor_)
+		this->sample_text_sensor_->publish_state("Sample123");
+#endif
 }
 
 void IQ2020Component::accept() {
