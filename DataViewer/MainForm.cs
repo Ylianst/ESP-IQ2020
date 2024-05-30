@@ -24,6 +24,7 @@ namespace DataViewer
         private int scanAddress = 0;
         private int connectionState = 0;
         private FileInfo logFileInfo;
+        private int Filter = 0;
 
         public MainForm()
         {
@@ -46,6 +47,7 @@ namespace DataViewer
         {
             mainDataPacketTextBox.Clear();
             mainRawDataTextBox.Clear();
+            packetsListView.Items.Clear();
         }
 
         private void addPacketToStore(string packet)
@@ -173,11 +175,11 @@ namespace DataViewer
             if (checksum != data[datalen + 5]) { AppendPacketDataText("Invalid checksum: " + ConvertByteArrayToHexString(data, 0, len)); return len; }
             //AppendText("Checksum " + checksum + " / " + data[datalenpadded + 4] + ", len: " + datalenpadded);
             //AppendText(" <-- " + ConvertByteArrayToHexString(data, 1, datalen + 3));
-            //if ((data[1] == 0x99) || (data[2] == 0x99)) {
+            if ((Filter != 0) && (data[1] != Filter) && (data[2] != Filter)) return totallen;
+
             string t = ConvertByteArrayToHexString(data, 1, 1) + " " + ConvertByteArrayToHexString(data, 2, 1) + " " + ConvertByteArrayToHexString(data, 4, 1) + " " + ConvertByteArrayToHexString(data, 5, datalen);
             addPacketToStore(t);
             AppendPacketDataText(" <-- " + t);
-            //}
 
             //if (data[1] == 0x29) { sendButton_Click(this, null); }
             return totallen;
@@ -344,6 +346,35 @@ namespace DataViewer
         private void addressTextBox_TextChanged(object sender, EventArgs e)
         {
             Registry.SetValue(@"HKEY_CURRENT_USER\SOFTWARE\Open Source\IQ2020DataViewer", "address", addressTextBox.Text);
+        }
+
+        private void noneToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Filter = 0;
+            noneToolStripMenuItem.Checked = true;
+            connectionKitToolStripMenuItem.Checked = false;
+            freshWaterToolStripMenuItem.Checked = false;
+        }
+
+        private void connectionKitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Filter = 0x1F;
+            noneToolStripMenuItem.Checked = false;
+            connectionKitToolStripMenuItem.Checked = true;
+            freshWaterToolStripMenuItem.Checked = false;
+        }
+
+        private void freshWaterToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Filter = 0x29;
+            noneToolStripMenuItem.Checked = false;
+            connectionKitToolStripMenuItem.Checked = false;
+            freshWaterToolStripMenuItem.Checked = true;
+        }
+
+        private void MainForm_Resize(object sender, EventArgs e)
+        {
+            packetsListView.Columns[0].Width = this.Width - 45;
         }
     }
 }

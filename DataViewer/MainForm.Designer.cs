@@ -38,6 +38,7 @@
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.actionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.annotateLogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.scanToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.mainToolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
@@ -45,6 +46,7 @@
             this.connectButton = new System.Windows.Forms.Button();
             this.addressTextBox = new System.Windows.Forms.TextBox();
             this.bottomPanel = new System.Windows.Forms.Panel();
+            this.hexComboBox = new System.Windows.Forms.ComboBox();
             this.sendButton = new System.Windows.Forms.Button();
             this.mainDataPacketTextBox = new System.Windows.Forms.TextBox();
             this.mainTabControl = new System.Windows.Forms.TabControl();
@@ -59,8 +61,10 @@
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.scanTimer = new System.Windows.Forms.Timer(this.components);
             this.logSaveFileDialog = new System.Windows.Forms.SaveFileDialog();
-            this.annotateLogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.hexComboBox = new System.Windows.Forms.ComboBox();
+            this.filterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.connectionKitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.freshWaterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.noneToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.topPanel.SuspendLayout();
@@ -77,7 +81,8 @@
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
-            this.actionsToolStripMenuItem});
+            this.actionsToolStripMenuItem,
+            this.filterToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(704, 28);
@@ -135,6 +140,13 @@
             this.actionsToolStripMenuItem.Name = "actionsToolStripMenuItem";
             this.actionsToolStripMenuItem.Size = new System.Drawing.Size(70, 24);
             this.actionsToolStripMenuItem.Text = "&Actions";
+            // 
+            // annotateLogToolStripMenuItem
+            // 
+            this.annotateLogToolStripMenuItem.Name = "annotateLogToolStripMenuItem";
+            this.annotateLogToolStripMenuItem.Size = new System.Drawing.Size(183, 26);
+            this.annotateLogToolStripMenuItem.Text = "&Annotate Log...";
+            this.annotateLogToolStripMenuItem.Click += new System.EventHandler(this.annotateLogToolStripMenuItem_Click);
             // 
             // scanToolStripMenuItem
             // 
@@ -202,6 +214,18 @@
             this.bottomPanel.Name = "bottomPanel";
             this.bottomPanel.Size = new System.Drawing.Size(690, 45);
             this.bottomPanel.TabIndex = 3;
+            // 
+            // hexComboBox
+            // 
+            this.hexComboBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.hexComboBox.Font = new System.Drawing.Font("Courier New", 12F);
+            this.hexComboBox.FormattingEnabled = true;
+            this.hexComboBox.Location = new System.Drawing.Point(5, 7);
+            this.hexComboBox.Name = "hexComboBox";
+            this.hexComboBox.Size = new System.Drawing.Size(573, 30);
+            this.hexComboBox.TabIndex = 2;
+            this.hexComboBox.Text = "29 99 40 1E010000FFFFFF00FF04FFFFFFFFFF";
             // 
             // sendButton
             // 
@@ -355,24 +379,38 @@
             this.logSaveFileDialog.OverwritePrompt = false;
             this.logSaveFileDialog.Title = "Capture Traffic";
             // 
-            // annotateLogToolStripMenuItem
+            // filterToolStripMenuItem
             // 
-            this.annotateLogToolStripMenuItem.Name = "annotateLogToolStripMenuItem";
-            this.annotateLogToolStripMenuItem.Size = new System.Drawing.Size(183, 26);
-            this.annotateLogToolStripMenuItem.Text = "&Annotate Log...";
-            this.annotateLogToolStripMenuItem.Click += new System.EventHandler(this.annotateLogToolStripMenuItem_Click);
+            this.filterToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.noneToolStripMenuItem,
+            this.connectionKitToolStripMenuItem,
+            this.freshWaterToolStripMenuItem});
+            this.filterToolStripMenuItem.Name = "filterToolStripMenuItem";
+            this.filterToolStripMenuItem.Size = new System.Drawing.Size(54, 24);
+            this.filterToolStripMenuItem.Text = "F&ilter";
             // 
-            // hexComboBox
+            // connectionKitToolStripMenuItem
             // 
-            this.hexComboBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.hexComboBox.Font = new System.Drawing.Font("Courier New", 12F);
-            this.hexComboBox.FormattingEnabled = true;
-            this.hexComboBox.Location = new System.Drawing.Point(5, 7);
-            this.hexComboBox.Name = "hexComboBox";
-            this.hexComboBox.Size = new System.Drawing.Size(573, 30);
-            this.hexComboBox.TabIndex = 2;
-            this.hexComboBox.Text = "29 99 40 1E010000FFFFFF00FF04FFFFFFFFFF";
+            this.connectionKitToolStripMenuItem.Name = "connectionKitToolStripMenuItem";
+            this.connectionKitToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
+            this.connectionKitToolStripMenuItem.Text = "Connection Kit";
+            this.connectionKitToolStripMenuItem.Click += new System.EventHandler(this.connectionKitToolStripMenuItem_Click);
+            // 
+            // freshWaterToolStripMenuItem
+            // 
+            this.freshWaterToolStripMenuItem.Name = "freshWaterToolStripMenuItem";
+            this.freshWaterToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
+            this.freshWaterToolStripMenuItem.Text = "Fresh Water";
+            this.freshWaterToolStripMenuItem.Click += new System.EventHandler(this.freshWaterToolStripMenuItem_Click);
+            // 
+            // noneToolStripMenuItem
+            // 
+            this.noneToolStripMenuItem.Checked = true;
+            this.noneToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.noneToolStripMenuItem.Name = "noneToolStripMenuItem";
+            this.noneToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
+            this.noneToolStripMenuItem.Text = "None";
+            this.noneToolStripMenuItem.Click += new System.EventHandler(this.noneToolStripMenuItem_Click);
             // 
             // MainForm
             // 
@@ -389,6 +427,7 @@
             this.Text = "IQ2020 Data Viewer";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.Load += new System.EventHandler(this.MainForm_Load);
+            this.Resize += new System.EventHandler(this.MainForm_Resize);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.statusStrip1.ResumeLayout(false);
@@ -442,6 +481,10 @@
         private System.Windows.Forms.SaveFileDialog logSaveFileDialog;
         private System.Windows.Forms.ToolStripMenuItem annotateLogToolStripMenuItem;
         private System.Windows.Forms.ComboBox hexComboBox;
+        private System.Windows.Forms.ToolStripMenuItem filterToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem noneToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem connectionKitToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem freshWaterToolStripMenuItem;
     }
 }
 
