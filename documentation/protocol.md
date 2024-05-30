@@ -70,7 +70,7 @@ The echanges between the IQ2020 and this Salt Water device on address 0x29 alway
 
 # Spa Connection Kit
 
-The Spa Connection Kit sends all it's commands from address 0x1F. Here are 
+The Spa Connection Kit sends all it's commands from address 0x1F. Sending the commands from a different address will not work.
 
 Read FreshWater Salt Module Data (Polled)
 ```
@@ -141,7 +141,7 @@ Read temperature (Polling)
 <-- 1F 01 80 02560008000400000604000A0622F21100201C201C201C840360540000000031303346C87D740048C70A007944DB054500000000000000B2CB0C0000000000000000005C870F0002005F0BDB050000000052720A0031303146313032467B00FC00FC000000000000000000000000004D0000000000013C001E00005F7900331F061200D40701
                                                                                                                                                                                        XXXXXXXXXXXXXXXX
 ```
-The X values encode the temperature set point and current temprature in ASCII encoding. The number is followed by the unit F (o)
+The X values encode the temperature set point and current temprature in ASCII encoding. The F indicates fahrenheit.
 
 For example:
 ```
@@ -157,7 +157,7 @@ Get Lights Status
 <-- 01 1F 40 1705
 <-- 1F 01 80 17050005020202000000000000000005010101010000
                    AABBCCDD                WWXXYYZZOO
-```
+
 AA = Underwater light intensity (0x05 = High ... 0x01 = Low, 0x00 = Off)
 BB = Bartop light intensity
 CC = Pillow light intensity
@@ -167,6 +167,7 @@ XX = Bartop light color
 YY = Pillow light color
 ZZ = Exterior light color
 OO = 00 for lights are off, 01 for lights are on.
+```
 
 
 Other Unknown Periodic Polling
