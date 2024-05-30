@@ -146,15 +146,40 @@ XX = 0x01 for +1, 0x02 for +2, 0xFF for -1, 0xFE for -2...
 <-- 1F 01 80 010906
 ```
 
-Read temperature (Polling)
+Read main status (Polling)
 ```
 <-- 01 1F 40 0256
 <-- 1F 01 80 02560008000400000604000A0622F21100201C201C201C840360540000000031303346C87D740048C70A007944DB054500000000000000B2CB0C0000000000000000005C870F0002005F0BDB050000000052720A0031303146313032467B00FC00FC000000000000000000000000004D0000000000013C001E00005F7900331F061200D40701
                                                                                                                                                                                        XXXXXXXXXXXXXXXX
 ```
-The X values encode the temperature set point and current temprature in ASCII encoding. The F indicates fahrenheit.
 
-For example:
+Main status decoding
+```
+1F                - Destination Spa Connection Kit (0x1F).
+01                - Source IQ2020 (0x01).
+80                - Response (0x40 = Request, 0x80 = Response).
+0256              - Main Status Data.
+0008              - ?
+0004              - Jets active & cleaning cycle status.
+00000604000A0622F21100201C201C201C8403605400000000  - ?
+31303346          - "103F" ASCII string, not sure what this is. See temprature string below.
+02937400ABC90A00  - ?
+033CDC05          - Big endian counter
+45000000000000007BD30C000000000000000000B8AF0F000200  - ?
+E902DC05          - Big endian counter
+00000000C2790A00  - ?
+3130314631303246  - "101F102F" ASCII String, the target temp and current temp.
+7800F900F900000000000000000000000000   - ?
+5C                - Variable from 0x4D to 0xEA, changes almost at every poll.
+00                - ? Could be part of the previous byte.
+00                - Mostly 0x00, but occasionaly changes to 0x01 and 0x02.
+000000013C001E00006A6F00  - ?
+080800            - SS:MM:HH Seconds (0 to 59), Minutes (0 to 59), Hours (0 to 24).
+13                - Number of days.
+00D40701          - Maybe months and years?
+```
+
+Temprature string. The value encode the temperature set point and current temprature in ASCII encoding. The F indicates fahrenheit. For example:
 ```
 " 92F102F" = 2039324631303246 (fahrenheit)
 " 99F102F" = 2039394631303246 (fahrenheit)

@@ -186,15 +186,28 @@ namespace DataViewer
         {
             //AppendText(" <-- " + ConvertByteArrayToHexString(data, 0, len));
             if (len < 5) return 0;
-            if (data[0] != 0x1c) { AppendPacketDataText("Invalid data: " + ConvertByteArrayToHexString(data, 0, len)); return len; }
+
+
+            if ((data[0] != 0x1c) && ((data[1] != 0x01) || (data[2] != 0x01)) && ((data[4] != 0x40) || (data[4] != 0x80))) {
+                AppendPacketDataText("Out of sync: " + ConvertByteArrayToHexString(data, 0, len));
+                for (var i = 1; i < len; i++) { if (data[i] == 0x1c) { return i; } }
+                return len;
+            }
+
             int datalen = data[3];
             int totallen = datalen + 6;
-            if (len < (datalen + 6)) { AppendPacketDataText("Incomplete data: " + ConvertByteArrayToHexString(data, 0, len)); return len; }
+            if (len < (datalen + 6)) { /*AppendPacketDataText("Incomplete data: " + ConvertByteArrayToHexString(data, 0, len));*/ return 0; }
             byte checksum = ComputeChecksum(data, 1, datalen + 5);
-            if (checksum != data[datalen + 5]) { AppendPacketDataText("Invalid checksum: " + ConvertByteArrayToHexString(data, 0, len)); return len; }
+            if (checksum != data[datalen + 5]) {
+                AppendPacketDataText("Invalid checksum: " + ConvertByteArrayToHexString(data, 0, len));
+                for (var i = 1; i < len; i++) { if (data[i] == 0x1c) { return i; } }
+                return len;
+            }
             //AppendText("Checksum " + checksum + " / " + data[datalenpadded + 4] + ", len: " + datalenpadded);
             //AppendText(" <-- " + ConvertByteArrayToHexString(data, 1, datalen + 3));
             if ((Filter != 0) && (data[1] != Filter) && (data[2] != Filter)) return totallen;
+
+            if ((data[5] != 0x02) || (data[6] != 0x56) || (totallen < 20)) return totallen; // DEBUG
 
             string t = ConvertByteArrayToHexString(data, 1, 1) + " " + ConvertByteArrayToHexString(data, 2, 1) + " " + ConvertByteArrayToHexString(data, 4, 1) + " " + ConvertByteArrayToHexString(data, 5, datalen);
             addPacketToStore(t);
@@ -214,6 +227,13 @@ namespace DataViewer
                 {
                     addDecodedData("Temp Set", UTF8Encoding.Default.GetString(data, 90, 4));
                     addDecodedData("Temp Current", UTF8Encoding.Default.GetString(data, 94, 4));
+                    addDecodedData("Time", data[133].ToString("D2") + ":" + data[132].ToString("D2") + ":" + data[131].ToString("D2"));
+                    addDecodedData("JetInfo1", Convert.ToString(data[9], 2));
+                    addDecodedData("JetInfo2", Convert.ToString(data[10], 2));
+                    int timer1 = data[48] + (data[49] << 8) + (data[50] << 16) + (data[51] << 24);
+                    addDecodedData("Timer1", timer1.ToString());
+                    int timer2 = data[78] + (data[79] << 8) + (data[80] << 16) + (data[81] << 24);
+                    addDecodedData("Timer2", timer2.ToString());
                 }
             }
 
@@ -300,7 +320,7 @@ namespace DataViewer
                 if (logSaveFileDialog.ShowDialog(this) == DialogResult.OK)
                 {
                     logFileInfo = new FileInfo(logSaveFileDialog.FileName);
-                    outputFile = new StreamWriter(logSaveFileDialog.FileName);
+                    outputFile = new StreamWriter(logSaveFileDialog.FileName, true);
                 }
             }
             else
