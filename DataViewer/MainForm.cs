@@ -48,6 +48,7 @@ namespace DataViewer
             mainDataPacketTextBox.Clear();
             mainRawDataTextBox.Clear();
             packetsListView.Items.Clear();
+            dataListView.Items.Clear();
         }
 
         private void addPacketToStore(string packet)
@@ -56,6 +57,20 @@ namespace DataViewer
             foreach (ListViewItem i in packetsListView.Items) { if (i.Text == packet) { return; } }
             ListViewItem l = new ListViewItem(packet);
             packetsListView.Items.Add(l);
+        }
+
+        public delegate void AddDecodedDataHandler(string name, string value);
+        private void addDecodedData(string name, string value)
+        {
+            if (InvokeRequired) { try { Invoke(new AddDecodedDataHandler(addDecodedData), name, value); } catch (Exception) { } return; }
+            foreach (ListViewItem i in dataListView.Items) {
+                if (i.Text == name) { i.SubItems[1].Text = value; return; }
+            }
+            string[] x = new string[2];
+            x[0] = name;
+            x[1] = value;
+            ListViewItem l = new ListViewItem(x);
+            dataListView.Items.Add(l);
         }
 
         private void connectButton_Click(object sender, EventArgs e)
@@ -160,7 +175,11 @@ namespace DataViewer
             }
 
             // Read again
-            stream.BeginRead(readBuffer, readBufferLen, readBuffer.Length - readBufferLen, new AsyncCallback(ResponseSink), this);
+            try
+            {
+                stream.BeginRead(readBuffer, readBufferLen, readBuffer.Length - readBufferLen, new AsyncCallback(ResponseSink), this);
+            }
+            catch (Exception) { Disconnect(); }
         }
 
         private int processData(byte[] data, int len)
@@ -181,6 +200,23 @@ namespace DataViewer
             addPacketToStore(t);
             AppendPacketDataText(" <-- " + t);
 
+            // Responses directed at the connection kit
+            if ((data[1] == 0x1F) && (data[2] == 0x01) && (data[4] == 0x80))
+            {
+                // Lights status
+                if ((data[5] == 0x17) && (data[6] == 0x05))
+                {
+                    addDecodedData("Lights", (data[24] == 0x01) ? "Enabled" : "Disabled");
+                }
+
+                // Temprature status
+                if ((data[5] == 0x02) && (data[6] == 0x56))
+                {
+                    addDecodedData("Temp Set", UTF8Encoding.Default.GetString(data, 90, 4));
+                    addDecodedData("Temp Current", UTF8Encoding.Default.GetString(data, 94, 4));
+                }
+            }
+
             //if (data[1] == 0x29) { sendButton_Click(this, null); }
             return totallen;
         }
@@ -189,10 +225,13 @@ namespace DataViewer
         {
             if (stream == null) return;
             if (InvokeRequired) { try { Invoke(new EventHandler(sendButton_Click), sender, e); } catch (Exception) { } return; }
+            SendPacket(hexComboBox.Text);
+        }
 
-            string t = hexComboBox.Text;
-            t = t.Replace("<", "").Replace("-", "").Replace(":", "").Replace(" ", "").Replace(",", "");
-            byte[] raw = ConvertHexStringToByteArray(t);
+        private void SendPacket(string textPacket)
+        {
+            textPacket = textPacket.Replace("<", "").Replace("-", "").Replace(":", "").Replace(" ", "").Replace(",", "");
+            byte[] raw = ConvertHexStringToByteArray(textPacket);
             if (raw.Length < 4) return;
             byte dst = raw[0];
             byte src = raw[1];
@@ -375,6 +414,28 @@ namespace DataViewer
         private void MainForm_Resize(object sender, EventArgs e)
         {
             packetsListView.Columns[0].Width = this.Width - 45;
+        }
+
+        private void askLightsStatusToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SendPacket("01 1F 40 1705"); // Ask lights status
+        }
+
+        private void askTempStatusToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SendPacket("01 1F 40 0256"); // Ask temp status
+        }
+
+        private void lightsOnToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SendPacket("01 1F 40 1702041100"); // Turn on lights
+            SendPacket("01 1F 40 1705"); // Ask lights status
+        }
+
+        private void lightsOffToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SendPacket("01 1F 40 1702041000"); // Turn on lights
+            SendPacket("01 1F 40 1705"); // Ask lights status
         }
     }
 }

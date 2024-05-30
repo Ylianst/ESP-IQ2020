@@ -65,6 +65,15 @@
             this.connectionKitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.freshWaterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.noneToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.dataTabPage = new System.Windows.Forms.TabPage();
+            this.dataListView = new System.Windows.Forms.ListView();
+            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.commandsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.askLightsStatusToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.askTempStatusToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.lightsOnToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.lightsOffToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.topPanel.SuspendLayout();
@@ -74,6 +83,7 @@
             this.rawDataTabPage.SuspendLayout();
             this.panel1.SuspendLayout();
             this.storeTabPage.SuspendLayout();
+            this.dataTabPage.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -82,7 +92,8 @@
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
             this.actionsToolStripMenuItem,
-            this.filterToolStripMenuItem});
+            this.filterToolStripMenuItem,
+            this.commandsToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(704, 28);
@@ -257,6 +268,7 @@
             this.mainTabControl.Controls.Add(this.dataPacketsTabPage);
             this.mainTabControl.Controls.Add(this.rawDataTabPage);
             this.mainTabControl.Controls.Add(this.storeTabPage);
+            this.mainTabControl.Controls.Add(this.dataTabPage);
             this.mainTabControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.mainTabControl.Location = new System.Drawing.Point(0, 78);
             this.mainTabControl.Name = "mainTabControl";
@@ -412,6 +424,82 @@
             this.noneToolStripMenuItem.Text = "None";
             this.noneToolStripMenuItem.Click += new System.EventHandler(this.noneToolStripMenuItem_Click);
             // 
+            // dataTabPage
+            // 
+            this.dataTabPage.Controls.Add(this.dataListView);
+            this.dataTabPage.Location = new System.Drawing.Point(4, 25);
+            this.dataTabPage.Name = "dataTabPage";
+            this.dataTabPage.Size = new System.Drawing.Size(696, 406);
+            this.dataTabPage.TabIndex = 3;
+            this.dataTabPage.Text = "Decoded Data";
+            this.dataTabPage.UseVisualStyleBackColor = true;
+            // 
+            // dataListView
+            // 
+            this.dataListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader2,
+            this.columnHeader3});
+            this.dataListView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataListView.Font = new System.Drawing.Font("Courier New", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.dataListView.FullRowSelect = true;
+            this.dataListView.GridLines = true;
+            this.dataListView.Location = new System.Drawing.Point(0, 0);
+            this.dataListView.Name = "dataListView";
+            this.dataListView.Size = new System.Drawing.Size(696, 406);
+            this.dataListView.Sorting = System.Windows.Forms.SortOrder.Ascending;
+            this.dataListView.TabIndex = 1;
+            this.dataListView.UseCompatibleStateImageBehavior = false;
+            this.dataListView.View = System.Windows.Forms.View.Details;
+            // 
+            // columnHeader2
+            // 
+            this.columnHeader2.Text = "Name";
+            this.columnHeader2.Width = 321;
+            // 
+            // columnHeader3
+            // 
+            this.columnHeader3.Text = "Value";
+            this.columnHeader3.Width = 336;
+            // 
+            // commandsToolStripMenuItem
+            // 
+            this.commandsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.askLightsStatusToolStripMenuItem,
+            this.askTempStatusToolStripMenuItem,
+            this.lightsOnToolStripMenuItem,
+            this.lightsOffToolStripMenuItem});
+            this.commandsToolStripMenuItem.Name = "commandsToolStripMenuItem";
+            this.commandsToolStripMenuItem.Size = new System.Drawing.Size(96, 24);
+            this.commandsToolStripMenuItem.Text = "&Commands";
+            // 
+            // askLightsStatusToolStripMenuItem
+            // 
+            this.askLightsStatusToolStripMenuItem.Name = "askLightsStatusToolStripMenuItem";
+            this.askLightsStatusToolStripMenuItem.Size = new System.Drawing.Size(194, 26);
+            this.askLightsStatusToolStripMenuItem.Text = "Ask Lights Status";
+            this.askLightsStatusToolStripMenuItem.Click += new System.EventHandler(this.askLightsStatusToolStripMenuItem_Click);
+            // 
+            // askTempStatusToolStripMenuItem
+            // 
+            this.askTempStatusToolStripMenuItem.Name = "askTempStatusToolStripMenuItem";
+            this.askTempStatusToolStripMenuItem.Size = new System.Drawing.Size(194, 26);
+            this.askTempStatusToolStripMenuItem.Text = "Ask Temp Status";
+            this.askTempStatusToolStripMenuItem.Click += new System.EventHandler(this.askTempStatusToolStripMenuItem_Click);
+            // 
+            // lightsOnToolStripMenuItem
+            // 
+            this.lightsOnToolStripMenuItem.Name = "lightsOnToolStripMenuItem";
+            this.lightsOnToolStripMenuItem.Size = new System.Drawing.Size(194, 26);
+            this.lightsOnToolStripMenuItem.Text = "Lights On";
+            this.lightsOnToolStripMenuItem.Click += new System.EventHandler(this.lightsOnToolStripMenuItem_Click);
+            // 
+            // lightsOffToolStripMenuItem
+            // 
+            this.lightsOffToolStripMenuItem.Name = "lightsOffToolStripMenuItem";
+            this.lightsOffToolStripMenuItem.Size = new System.Drawing.Size(194, 26);
+            this.lightsOffToolStripMenuItem.Text = "Lights Off";
+            this.lightsOffToolStripMenuItem.Click += new System.EventHandler(this.lightsOffToolStripMenuItem_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -443,6 +531,7 @@
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.storeTabPage.ResumeLayout(false);
+            this.dataTabPage.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -485,6 +574,15 @@
         private System.Windows.Forms.ToolStripMenuItem noneToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem connectionKitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem freshWaterToolStripMenuItem;
+        private System.Windows.Forms.TabPage dataTabPage;
+        private System.Windows.Forms.ListView dataListView;
+        private System.Windows.Forms.ColumnHeader columnHeader2;
+        private System.Windows.Forms.ColumnHeader columnHeader3;
+        private System.Windows.Forms.ToolStripMenuItem commandsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem askLightsStatusToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem askTempStatusToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem lightsOnToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem lightsOffToolStripMenuItem;
     }
 }
 
