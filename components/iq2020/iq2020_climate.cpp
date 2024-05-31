@@ -26,6 +26,8 @@ namespace iq2020_climate {
 		//current_temperature = fahrenheit_to_celsius(72);
 		//target_temperature = fahrenheit_to_celsius(82);
 		//publish_state();
+		set_visual_min_temperature(26.5);
+		set_visual_max_temperature(40);
 	}
 
 	void IQ2020Climate::control(const climate::ClimateCall &call) {
