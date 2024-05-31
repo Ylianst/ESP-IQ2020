@@ -16,4 +16,3 @@ def to_code(config):
     server = cg.new_Pvariable(config[CONF_ID])
     yield cg.register_component(server, config)
     yield switch.register_switch(server, config)
-	cg.add(server.set_lights_switch(config[CONF_SWITCH_LIGHTS]))
