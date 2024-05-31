@@ -18,6 +18,9 @@ namespace iq2020_climate {
 	void IQ2020Climate::setup() {
 		g_iq2020_climate = this;
 		ESP_LOGD(TAG, "Climate Setup");
+
+		current_temperature = 72;
+		publish_state();
 	}
 
 	void IQ2020Climate::control(const climate::ClimateCall &call) {
