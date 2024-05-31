@@ -7,7 +7,7 @@ CONF_IQ2020_SERVER = "IQ2020Component"
 CONF_CLIMATE = "iq2020_climate"
 
 iq2020_switch_ns = cg.esphome_ns.namespace('iq2020_climate')
-IQ2020Climate = iq2020_switch_ns.class_('IQ2020Climate', climate.Switch, cg.Component)
+IQ2020Climate = iq2020_switch_ns.class_('IQ2020Climate', climate.Climate, cg.Component)
 
 CONFIG_SCHEMA = climate.CLIMATE_SCHEMA.extend({
     cv.GenerateID(): cv.declare_id(IQ2020Climate)
