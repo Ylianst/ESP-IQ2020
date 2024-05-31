@@ -273,6 +273,16 @@ int IQ2020Component::processIQ2020Command() {
 			// Confirmation that the pending temprature change command was received
 			target_temp = pending_temp;
 			pending_temp = -1;
+			pending_temp_retry = 0;
+			ESP_LOGW(TAG, "Temp Set Confirmation, Target Temp: %.1f", _target_temp);
+#ifdef USE_SENSOR
+			if (temp_celsius) {
+				if (this->target_c_temp_sensor_) this->target_c_temp_sensor_->publish_state(target_temp);
+			}
+			else {
+				if (this->target_f_temp_sensor_) this->target_f_temp_sensor_->publish_state(target_temp);
+			}
+#endif
 			if (g_iq2020_climate != NULL) {
 				if (temp_celsius) { g_iq2020_climate->updateTempsC(target_temp, current_temp); }
 				else { g_iq2020_climate->updateTempsF(target_temp, current_temp); }
@@ -293,9 +303,7 @@ int IQ2020Component::processIQ2020Command() {
 				_target_temp = ((processingBuffer[90] - '0') * 10) + (processingBuffer[91] - '0') + ((processingBuffer[92] - '0') * 0.1);
 				_current_temp = ((processingBuffer[94] - '0') * 10) + (processingBuffer[95] - '0') + ((processingBuffer[96] - '0') * 0.1);
 			}
-			pending_temp = -1;
 			ESP_LOGW(TAG, "Reported Current Temp: %.1f, Target Temp: %.1f", _current_temp, _target_temp);
-
 
 			// If temperatures have changed, publish the change
 			if ((_target_temp != target_temp) || (_current_temp != current_temp)) {
@@ -315,6 +323,23 @@ int IQ2020Component::processIQ2020Command() {
 					else { g_iq2020_climate->updateTempsF(target_temp, current_temp); }
 				}
 				ESP_LOGW(TAG, "Changed Current Temp: %.1f, Target Temp: %.1f", current_temp, target_temp);
+			}
+
+			if (pending_temp != -1) {
+				if (pending_temp == target_temp) {
+					pending_temp = -1;
+				} else {
+					if (pending_temp_retry > 0) { // Try to adjust the temperature again
+						unsigned char deltaSteps = ((temp_celsius ? 2 : 1) * (pending_temp - target_temp));
+						ESP_LOGW(TAG, "Retry SetTempAction: new=%f, target=%f, deltasteps=%d", pending_temp, target_temp, deltaSteps);
+						if (deltaSteps == 0) return;
+						unsigned char changeTempCmd[] = { 0x01, 0x09, 0xFF, deltaSteps };
+						sendIQ2020Command(0x01, 0x1F, 0x40, changeTempCmd, 4); // Adjust temp
+						pending_temp_retry--;
+					} else {
+						pending_temp = -1; // Give up
+					}
+				}
 			}
 		}
 	}
@@ -352,7 +377,8 @@ void IQ2020Component::SetTempAction(float newtemp) {
 	if (temp_celsius) { pending_temp = newtemp; } else { pending_temp = esphome::celsius_to_fahrenheit(newtemp); }
 	unsigned char deltaSteps = ((temp_celsius ? 2 : 1) * (pending_temp - target_temp));
 	ESP_LOGW(TAG, "SetTempAction: new=%f, target=%f, deltasteps=%d", pending_temp, target_temp, deltaSteps);
-	if (deltaSteps == 0) return;
+	if (deltaSteps == 0) { pending_temp = -1; return; }
+	pending_temp_retry = 2;
 	unsigned char changeTempCmd[] = { 0x01, 0x09, 0xFF, deltaSteps };
 	sendIQ2020Command(0x01, 0x1F, 0x40, changeTempCmd, 4); // Adjust temp
 }

@@ -103,6 +103,7 @@ protected:
 	float target_temp = -1;
 	float current_temp = -1;
 	float pending_temp = -1;
+	int pending_temp_retry = 0;
 
 	// IQ2020 processing
 	int nextPossiblePacket();
