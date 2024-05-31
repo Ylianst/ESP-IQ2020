@@ -1,7 +1,7 @@
 #pragma once
 
 #include "esphome/core/component.h"
-#include "esphome/components/climate/climate.h"
+#include "esphome/components/climate/iq2020_climate.h"
 
 namespace esphome {
 namespace iq2020 {
