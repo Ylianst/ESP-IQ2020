@@ -35,7 +35,7 @@ CONFIG_SCHEMA = cv.All(
         }
     )
     .extend(cv.COMPONENT_SCHEMA)
-#    .extend(ECONET_CLIENT_SCHEMA)
+    .extend(CLIENT_SCHEMA)
 )
 
 async def to_code(config):
