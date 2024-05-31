@@ -25,7 +25,7 @@ namespace iq2020_climate {
 		}
 	}
 
-	template<class K, class V> std::set<V> map_values_as_set(std::map<K, V> map) {
+	template<class K, class V> std::set<V> IQ2020Climate::map_values_as_set(std::map<K, V> map) {
 		std::set<V> v;
 		std::transform(map.begin(), map.end(), std::inserter(v, v.end()), [](const std::pair<K, V> &p) { return p.second; });
 		return v;

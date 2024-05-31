@@ -12,6 +12,8 @@ namespace iq2020_climate {
 		void control(const climate::ClimateCall &call) override;
 		climate::ClimateTraits traits() override;
 		void dump_config() override;
+	private:
+		template<class K, class V> std::set<V> map_values_as_set(std::map<K, V> map);
 	};
 
 } //namespace iq2020_climate
