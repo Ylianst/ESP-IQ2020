@@ -13,8 +13,8 @@ extern esphome::iq2020_climate::IQ2020Climate* g_iq2020_climate;
 namespace esphome {
 namespace iq2020_climate {
 
-	float fahrenheit_to_celsius(float f) { return (f - 32) * 5 / 9; }
-	float celsius_to_fahrenheit(float c) { return c * 9 / 5 + 32; }
+	//float fahrenheit_to_celsius(float f) { return (f - 32) * 5 / 9; }
+	//float celsius_to_fahrenheit(float c) { return c * 9 / 5 + 32; }
 
 	static const char *TAG = "iq2020.climate";
 
@@ -26,7 +26,7 @@ namespace iq2020_climate {
 
 	void IQ2020Climate::control(const climate::ClimateCall &call) {
 		if (call.get_target_temperature().has_value()) {
-			g_iq2020_main->SetTempAction(celsius_to_fahrenheit(call.get_target_temperature().value()));
+			g_iq2020_main->SetTempAction(call.get_target_temperature().value());
 		}
 	}
 
