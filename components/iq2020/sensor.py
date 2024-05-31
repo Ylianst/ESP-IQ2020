@@ -19,12 +19,12 @@ CONFIG_SCHEMA = cv.Schema(
         cv.Required(CONF_SENSOR_CURRENT_TEMPERATURE): sensor.sensor_schema(
             accuracy_decimals=1,
             state_class=STATE_CLASS_MEASUREMENT,
-			icon=ICON_THERMOMETER,
+            icon=ICON_THERMOMETER,
         ),
         cv.Required(CONF_SENSOR_TARGET_TEMPERATURE): sensor.sensor_schema(
             accuracy_decimals=1,
             state_class=STATE_CLASS_MEASUREMENT,
-			icon=ICON_THERMOMETER,
+            icon=ICON_THERMOMETER,
         ),
         cv.Required(CONF_SENSOR_CONNECTION_COUNT): sensor.sensor_schema(
             accuracy_decimals=0,
