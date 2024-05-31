@@ -309,7 +309,7 @@ void IQ2020Component::sendIQ2020Command(unsigned char dst, unsigned char src, un
 	ESP_LOGW(TAG, "IQ2020 transmit, dst:%02x src:%02x op:%02x datalen:%d", outboundBuffer[1], outboundBuffer[2], outboundBuffer[4], outboundBuffer[3]);
 }
 
-void IQ2020Component::testcall(char* msg) {
+void IQ2020Component::testcall(std::string msg) {
 	ESP_LOGW(TAG, "MSG: %s", msg);
 }
 

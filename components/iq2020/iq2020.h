@@ -48,6 +48,7 @@ public:
 	float get_setup_priority() const override { return esphome::setup_priority::AFTER_WIFI; }
 
 	void set_port(uint16_t port) { this->port_ = port; }
+	void testcall(std::string msg);
 
 protected:
 	void publish_sensor();
@@ -70,8 +71,6 @@ protected:
 		bool disconnected{ false };
 		size_t position{ 0 };
 	};
-
-	void testcall(char* msg);
 
 	esphome::uart::UARTComponent *stream_{ nullptr };
 	uint16_t port_;
