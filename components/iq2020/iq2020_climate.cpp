@@ -23,15 +23,27 @@ namespace iq2020_climate {
 		ESP_LOGD(TAG, "Climate Setup");
 
 		mode = esphome::climate::ClimateMode::CLIMATE_MODE_HEAT;
-		current_temperature = fahrenheit_to_celsius(72);
-		target_temperature = fahrenheit_to_celsius(82);
-		publish_state();
+		//current_temperature = fahrenheit_to_celsius(72);
+		//target_temperature = fahrenheit_to_celsius(82);
+		//publish_state();
 	}
 
 	void IQ2020Climate::control(const climate::ClimateCall &call) {
 		if (call.get_target_temperature().has_value()) {
 			g_iq2020_main->SetTempAction(call.get_target_temperature().value());
 		}
+	}
+
+	void IQ2020Climate::updateTempsF(float target, float current) {
+		current_temperature = fahrenheit_to_celsius(current);
+		target_temperature = fahrenheit_to_celsius(target);
+		publish_state();
+	}
+
+	void IQ2020Climate::updateTempsC(float target, float current) {
+		current_temperature = current;
+		target_temperature = target;
+		publish_state();
 	}
 
 	climate::ClimateTraits IQ2020Climate::traits() {

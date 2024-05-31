@@ -302,6 +302,14 @@ int IQ2020Component::processIQ2020Command() {
 			//ESP_LOGW(TAG, "Current Temp: %.1f", temp);
 			current_temp = temp;
 
+			if (g_iq2020_climate != NULL) {
+				if (processingBuffer[97] == 'F') { // Fahrenheit
+					g_iq2020_climate->updateTempsF(target_temp, current_temp);
+				} else {
+					g_iq2020_climate->updateTempsC(target_temp, current_temp);
+				}
+			}
+
 			ESP_LOGW(TAG, "Current Temp: %.1f, Target Temp: %.1f", current_temp, target_temp);
 		}
 
