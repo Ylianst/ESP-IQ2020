@@ -310,7 +310,7 @@ void IQ2020Component::sendIQ2020Command(unsigned char dst, unsigned char src, un
 }
 
 void IQ2020Component::testcall(std::string msg) {
-	ESP_LOGW(TAG, "MSG: %s", msg);
+	ESP_LOGW(TAG, "MSG: %s", msg.c_str());
 }
 
 IQ2020Component::Client::Client(std::unique_ptr<esphome::socket::Socket> socket, std::string identifier, size_t position)
