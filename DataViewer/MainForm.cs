@@ -207,7 +207,7 @@ namespace DataViewer
             //AppendText(" <-- " + ConvertByteArrayToHexString(data, 1, datalen + 3));
             if ((Filter != 0) && (data[1] != Filter) && (data[2] != Filter)) return totallen;
 
-            if ((data[5] != 0x02) || (data[6] != 0x56) || (totallen < 20)) return totallen; // DEBUG
+            //if ((data[5] != 0x02) || (data[6] != 0x56) || (totallen < 20)) return totallen; // DEBUG
 
             string t = ConvertByteArrayToHexString(data, 1, 1) + " " + ConvertByteArrayToHexString(data, 2, 1) + " " + ConvertByteArrayToHexString(data, 4, 1) + " " + ConvertByteArrayToHexString(data, 5, datalen);
             addPacketToStore(t);
@@ -234,6 +234,12 @@ namespace DataViewer
                     addDecodedData("Timer1", timer1.ToString());
                     int timer2 = data[78] + (data[79] << 8) + (data[80] << 16) + (data[81] << 24);
                     addDecodedData("Timer2", timer2.ToString());
+                }
+
+                // Version string
+                if ((data[5] == 0x01) && (data[6] == 0x0))
+                {
+                    addDecodedData("Version", UTF8Encoding.Default.GetString(data, 7, datalen - 3));
                 }
             }
 
@@ -456,6 +462,11 @@ namespace DataViewer
         {
             SendPacket("01 1F 40 1702041000"); // Turn on lights
             SendPacket("01 1F 40 1705"); // Ask lights status
+        }
+
+        private void askVersionsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SendPacket("01 1F 40 0100"); // Ask version strings
         }
     }
 }
