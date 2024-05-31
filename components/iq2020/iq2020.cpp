@@ -41,9 +41,9 @@ void IQ2020Component::setup() {
 
 	// Send initial polling commands
 	unsigned char lightPollCmd[] = { 0x17, 0x05 };
-	sendIQ2020Command(0x01, 0x1F, 0x40, lightOffCmd, 2); // Poll lights state
+	sendIQ2020Command(0x01, 0x1F, 0x40, lightPollCmd, 2); // Poll lights state
 	unsigned char generalPollCmd[] = { 0x02, 0x56 };
-	sendIQ2020Command(0x01, 0x1F, 0x40, lightOffCmd, 2); // Poll general state
+	sendIQ2020Command(0x01, 0x1F, 0x40, generalPollCmd, 2); // Poll general state
 }
 
 void IQ2020Component::loop() {
