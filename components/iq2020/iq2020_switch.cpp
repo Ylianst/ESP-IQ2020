@@ -2,6 +2,8 @@
 #include "iq2020_switch.h"
 #include "iq2020.h"
 
+extern IQ2020Component* g_iq2020_main;
+
 namespace esphome {
 namespace iq2020_switch {
 

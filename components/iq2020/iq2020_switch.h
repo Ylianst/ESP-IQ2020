@@ -3,8 +3,6 @@
 #include "esphome/core/component.h"
 #include "esphome/components/switch/switch.h"
 
-extern IQ2020Component* g_iq2020_main;
-
 namespace esphome {
 namespace iq2020_switch {
 
