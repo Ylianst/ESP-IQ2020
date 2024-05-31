@@ -17,15 +17,15 @@ CONF_IQ2020_SERVER = "iq2020_server"
 CONFIG_SCHEMA = cv.Schema(
     {
         cv.GenerateID(CONF_IQ2020_SERVER): cv.use_id(IQ2020Component),
-        cv.Required(CONF_SENSOR_CONNECTED): binary_sensor.binary_sensor_schema(
+        cv.Optional(CONF_SENSOR_CONNECTED): binary_sensor.binary_sensor_schema(
             device_class=DEVICE_CLASS_CONNECTIVITY,
             entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
         ),
-        cv.Required(CONF_SENSOR_CONNECTIONKIT): binary_sensor.binary_sensor_schema(
+        cv.Optional(CONF_SENSOR_CONNECTIONKIT): binary_sensor.binary_sensor_schema(
             device_class=DEVICE_CLASS_CONNECTIVITY,
             entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
         ),
-        cv.Required(CONF_SENSOR_LIGHTS): binary_sensor.binary_sensor_schema(
+        cv.Optional(CONF_SENSOR_LIGHTS): binary_sensor.binary_sensor_schema(
             device_class=DEVICE_CLASS_LIGHT,
             icon=ICON_LIGHTBULB,
         ),
