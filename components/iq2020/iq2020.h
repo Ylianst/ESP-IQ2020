@@ -73,8 +73,8 @@ protected:
 
 #ifdef USE_BINARY_SENSOR
     esphome::binary_sensor::BinarySensor *connected_sensor_;
-	esphome::binary_sensor::BinarySensor *set_lights_sensor;
-	esphome::binary_sensor::BinarySensor *set_connectionkit_sensor;
+	esphome::binary_sensor::BinarySensor *lights_sensor_;
+	esphome::binary_sensor::BinarySensor *connectionkit_sensor_;
 #endif
 #ifdef USE_SENSOR
     esphome::sensor::Sensor *connection_count_sensor_;
