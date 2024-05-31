@@ -20,11 +20,14 @@ namespace iq2020_climate {
 	}
 
 	void IQ2020Climate::control(const climate::ClimateCall &call) {
-
+		if (call.get_target_temperature().has_value()) {
+			g_iq2020_main->SetTempAction(call.get_target_temperature().value());
+		}
 	}
 
 	climate::ClimateTraits IQ2020Climate::traits() {
 		auto traits = climate::ClimateTraits();
+		traits.set_supports_current_temperature(true);
 		/*
 		traits.set_supports_current_temperature(!current_temperature_id_.empty());
 		traits.set_supports_current_humidity(!current_humidity_id_.empty());

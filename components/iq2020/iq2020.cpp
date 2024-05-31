@@ -335,5 +335,20 @@ void IQ2020Component::LightSwitchAction(int state) {
 	}
 }
 
+void IQ2020Component::SetTempAction(int newtemp) {
+	ESP_LOGW(TAG, "SetTempAction: %d", newtemp);
+	/*
+	lights_pending = state;
+	if (state != 0) {
+		unsigned char lightOnCmd[] = { 0x17, 0x02, 0x04, 0x11, 0x00 };
+		sendIQ2020Command(0x01, 0x1F, 0x40, lightOnCmd, 5); // Turn on lights
+	}
+	else {
+		unsigned char lightOffCmd[] = { 0x17, 0x02, 0x04, 0x10, 0x00 };
+		sendIQ2020Command(0x01, 0x1F, 0x40, lightOffCmd, 5); // Turn off lights
+	}
+	*/
+}
+
 IQ2020Component::Client::Client(std::unique_ptr<esphome::socket::Socket> socket, std::string identifier, size_t position)
 	: socket(std::move(socket)), identifier{ identifier }, position{ position } {}
