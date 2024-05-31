@@ -25,10 +25,21 @@ namespace iq2020_climate {
 		}
 	}
 
+	template<class K, class V> std::set<V> map_values_as_set(std::map<K, V> map) {
+		std::set<V> v;
+		std::transform(map.begin(), map.end(), std::inserter(v, v.end()), [](const std::pair<K, V> &p) { return p.second; });
+		return v;
+	}
+
 	climate::ClimateTraits IQ2020Climate::traits() {
 		auto traits = climate::ClimateTraits();
 		traits.set_supports_current_temperature(true);
-		traits.set_supported_modes(map_values_as_set(123)); // ["Off", "On"]
+
+		std::map<std::string, int> heatingModes;
+		studentGrades["Off"] = 0;
+		studentGrades["On"] = 1;
+		traits.set_supported_modes(map_values_as_set(heatingModes));
+
 		/*
 		traits.set_supports_current_temperature(!current_temperature_id_.empty());
 		traits.set_supports_current_humidity(!current_humidity_id_.empty());
