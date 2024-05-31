@@ -10,7 +10,9 @@
 #include "esphome/components/socket/socket.h"
 
 static const char *TAG = "iq2020";
+
 IQ2020Component* g_iq2020_main = NULL;
+esphome::iq2020_switch::IQ2020Switch* g_iq2020_light_switch = NULL;
 
 using namespace esphome;
 
@@ -230,7 +232,7 @@ int IQ2020Component::processIQ2020Command() {
 			// This is the SPA connection kit command to turn the lights on/off
 			if ((processingBuffer[8] & 1) != lights) {
 				lights = (processingBuffer[8] & 1);
-				if (light_switch != NULL) { light_switch->publish_state(lights); }
+				if (g_iq2020_light_switch != NULL) { g_iq2020_light_switch->publish_state(lights); }
 #ifdef USE_BINARY_SENSOR
 				if (this->lights_sensor_) { this->lights_sensor_->publish_state((lights != 0)); }
 #endif
@@ -248,7 +250,7 @@ int IQ2020Component::processIQ2020Command() {
 			// This is an update on the status of the spa lights (enabled, intensity, color)
 			if (lights != (processingBuffer[24] & 1)) {
 				lights = (processingBuffer[24] & 1);
-				if (light_switch != NULL) { light_switch->publish_state(lights); }
+				if (g_iq2020_light_switch != NULL) { g_iq2020_light_switch->publish_state(lights); }
 #ifdef USE_BINARY_SENSOR
 				if (this->lights_sensor_) { this->lights_sensor_->publish_state((lights != 0)); }
 #endif
@@ -312,8 +314,7 @@ void IQ2020Component::sendIQ2020Command(unsigned char dst, unsigned char src, un
 	ESP_LOGW(TAG, "IQ2020 transmit, dst:%02x src:%02x op:%02x datalen:%d", outboundBuffer[1], outboundBuffer[2], outboundBuffer[4], outboundBuffer[3]);
 }
 
-void IQ2020Component::LightSwitchAction(esphome::iq2020_switch::IQ2020Switch* sw, int state) {
-	light_switch = sw;
+void IQ2020Component::LightSwitchAction(int state) {
 	if (state >= 0) {
 
 	}

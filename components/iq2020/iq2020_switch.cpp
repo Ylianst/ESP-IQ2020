@@ -3,6 +3,7 @@
 #include "iq2020.h"
 
 extern IQ2020Component* g_iq2020_main;
+extern esphome::iq2020_switch::IQ2020Switch* g_iq2020_light_switch;
 
 namespace esphome {
 namespace iq2020_switch {
@@ -10,8 +11,8 @@ namespace iq2020_switch {
 	static const char *TAG = "iq2020.switch";
 
 	void IQ2020Switch::setup() {
+		g_iq2020_light_switch = this;
 		ESP_LOGD(TAG, "Switch Setup");
-		if (g_iq2020_main != NULL) { g_iq2020_main->LightSwitchAction(this, -1); }
 	}
 
 	void IQ2020Switch::write_state(bool state) {
