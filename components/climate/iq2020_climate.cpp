@@ -38,5 +38,5 @@ void IQ2020Climate::control(const climate::ClimateCall &call) {
 
 }
 
-}  // namespace econet
+}  // namespace iq2020
 }  // namespace esphome

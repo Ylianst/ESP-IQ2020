@@ -32,5 +32,5 @@ class IQ2020Climate : public climate::Climate, public Component {
   climate::ClimateTraits traits() override;
 };
 
-}  // namespace econet
+}  // namespace iq2020
 }  // namespace esphome
