@@ -54,8 +54,15 @@ namespace iq2020_climate {
 		heatingModes.insert(esphome::climate::ClimateMode::CLIMATE_MODE_HEAT);
 		traits.set_supported_modes(heatingModes);
 
-		traits.set_visual_min_temperature(26.5);
-		traits.set_visual_max_temperature(40);
+		//traits.set_visual_min_temperature(26.5);
+		//traits.set_visual_max_temperature(40);
+		//traits.set_visual_target_temperature_step(0.5);
+		//traits.set_visual_current_temperature_step(0.5);
+
+		traits.set_visual_min_temperature(fahrenheit_to_celsius(80));
+		traits.set_visual_max_temperature(fahrenheit_to_celsius(104));
+		traits.set_visual_target_temperature_step(fahrenheit_to_celsius(1));
+		traits.set_visual_current_temperature_step(fahrenheit_to_celsius(1));
 
 		/*
 		traits.set_supports_current_temperature(!current_temperature_id_.empty());
