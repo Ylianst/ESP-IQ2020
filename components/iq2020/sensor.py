@@ -5,6 +5,7 @@ from esphome.const import (
     UNIT_CELSIUS,
     ICON_THERMOMETER,
     STATE_CLASS_MEASUREMENT,
+    DEVICE_CLASS_TEMPERATURE,
     ENTITY_CATEGORY_DIAGNOSTIC,
 )
 from . import ns, IQ2020Component
