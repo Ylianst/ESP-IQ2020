@@ -233,9 +233,6 @@ int IQ2020Component::processIQ2020Command() {
 			if ((processingBuffer[8] & 1) != lights) {
 				lights = (processingBuffer[8] & 1);
 				if (g_iq2020_light_switch != NULL) { g_iq2020_light_switch->publish_state(lights); }
-#ifdef USE_BINARY_SENSOR
-				if (this->lights_sensor_) { this->lights_sensor_->publish_state((lights != 0)); }
-#endif
 			}
 		}
 
@@ -251,9 +248,6 @@ int IQ2020Component::processIQ2020Command() {
 			lights = lights_pending;
 			lights_pending = -1;
 			if (g_iq2020_light_switch != NULL) { g_iq2020_light_switch->publish_state(lights); }
-#ifdef USE_BINARY_SENSOR
-			if (this->lights_sensor_) { this->lights_sensor_->publish_state((lights != 0)); }
-#endif
 		}
 
 		if ((cmdlen == 28) && (processingBuffer[5] == 0x17) && (processingBuffer[6] == 0x05)) {
@@ -262,9 +256,6 @@ int IQ2020Component::processIQ2020Command() {
 			if (lights != (processingBuffer[24] & 1)) {
 				lights = (processingBuffer[24] & 1);
 				if (g_iq2020_light_switch != NULL) { g_iq2020_light_switch->publish_state(lights); }
-#ifdef USE_BINARY_SENSOR
-				if (this->lights_sensor_) { this->lights_sensor_->publish_state((lights != 0)); }
-#endif
 			}
 		}
 
