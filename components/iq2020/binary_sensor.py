@@ -19,12 +19,12 @@ CONFIG_SCHEMA = cv.Schema(
             device_class=DEVICE_CLASS_CONNECTIVITY,
             entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
         ),
-		cv.Required(CONF_SENSOR_LIGHTS): binary_sensor.binary_sensor_schema(
+        cv.Required(CONF_SENSOR_LIGHTS): binary_sensor.binary_sensor_schema(
             device_class=DEVICE_CLASS_SWITCH,
             entity_category=ENTITY_CATEGORY_NONE,
-			icon=ICON_LIGHTBULB,
+            icon=ICON_LIGHTBULB,
         ),
-		cv.Required(CONF_SENSOR_CONNECTIONKIT): binary_sensor.binary_sensor_schema(
+        cv.Required(CONF_SENSOR_CONNECTIONKIT): binary_sensor.binary_sensor_schema(
             device_class=DEVICE_CLASS_PRESENCE,
             entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
         ),
