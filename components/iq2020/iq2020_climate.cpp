@@ -36,8 +36,8 @@ namespace iq2020_climate {
 		traits.set_supports_current_temperature(true);
 
 		std::map<std::string, int> heatingModes;
-		studentGrades["Off"] = 0;
-		studentGrades["On"] = 1;
+		heatingModes["Off"] = 0;
+		heatingModes["On"] = 1;
 		traits.set_supported_modes(map_values_as_set(heatingModes));
 
 		/*
