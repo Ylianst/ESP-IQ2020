@@ -38,7 +38,7 @@ async def to_code(config):
 #    sens = await binary_sensor.new_binary_sensor(config[CONF_SENSOR_CONNECTED])
 #    cg.add(server.set_connected_sensor(sens))
 
-	if CONF_SENSOR_CONNECTED in config:
+    if CONF_SENSOR_CONNECTED in config:
         sens = yield binary_sensor.new_binary_sensor(config[CONF_SENSOR_CONNECTED])
         cg.add(var.set_connected_sensor(sens))
         
