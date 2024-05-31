@@ -9,7 +9,8 @@ namespace iq2020_climate {
 	class IQ2020Climate : public climate::Climate, public Component {
 	public:
 		void setup() override;
-		//void write_state(bool state) override;
+		void control(const climate::ClimateCall &call) override;
+		climate::ClimateTraits traits() override;
 		void dump_config() override;
 	};
 
