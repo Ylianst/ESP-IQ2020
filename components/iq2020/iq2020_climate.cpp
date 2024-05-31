@@ -3,7 +3,7 @@
 #include "esphome/core/hal.h"
 #include "esphome/core/log.h"
 #include "esphome/components/climate/climate_traits.h"
-#include "esphome/components/climate/climate_mode.h"
+//#include "esphome/components/climate/climate_mode.h"
 #include "iq2020_climate.h"
 #include "iq2020.h"
 
@@ -30,7 +30,7 @@ namespace iq2020_climate {
 		auto traits = climate::ClimateTraits();
 		traits.set_supports_current_temperature(true);
 
-		std::set<ClimateMode> heatingModes;
+		std::set<uint8_t> heatingModes;
 		heatingModes.insert(6); // ClimateMode::CLIMATE_MODE_AUTO
 		traits.set_supported_modes(heatingModes);
 
