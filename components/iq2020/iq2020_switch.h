@@ -11,10 +11,10 @@ namespace iq2020_switch {
 		void setup() override;
 		void write_state(bool state) override;
 		void dump_config() override;
-		void set_iq2020_parent(IQ2020Component *parent) { this->parent_ = parent; }
+		//void set_iq2020_parent(IQ2020Component *parent) { this->parent_ = parent; }
 
-	protected:
-		IQ2020Component *parent_;
+	//protected:
+		//IQ2020Component *parent_;
 	};
 
 } //namespace iq2020_switch
