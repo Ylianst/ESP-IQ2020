@@ -92,4 +92,4 @@ def get_schema(config):
 #    else:
 #        raise cv.Invalid(f"Unknown setting: {config.get(CONF_SENSOR_CURRENT_TEMPERATURE).get(CONF_TEMP_UNIT)}")
 
-CONFIG_SCHEMA = cv.All(get_schema)
+CONFIG_SCHEMA = get_schema()
