@@ -224,7 +224,7 @@ int IQ2020Component::processIQ2020Command() {
 
 		ESP_LOGW(TAG, "SCK CMD Data, len=%d, cmd=%02x%02x", cmdlen, processingBuffer[5], processingBuffer[6]);
 
-		if ((cmdlen == 10) && (processingBuffer[5] == 0x17) && (processingBuffer[6] == 0x02)) {
+		if ((cmdlen == 11) && (processingBuffer[5] == 0x17) && (processingBuffer[6] == 0x02)) {
 			// This is the SPA connection kit command to turn the lights on/off
 			if ((processingBuffer[8] & 1) != lights) {
 				lights = (processingBuffer[8] & 1);
@@ -241,7 +241,7 @@ int IQ2020Component::processIQ2020Command() {
 
 		ESP_LOGW(TAG, "SCK RSP Data, len=%d, cmd=%02x%02x", cmdlen, processingBuffer[5], processingBuffer[6]);
 
-		if ((cmdlen == 27) && (processingBuffer[5] == 0x17) && (processingBuffer[6] == 0x05)) {
+		if ((cmdlen == 28) && (processingBuffer[5] == 0x17) && (processingBuffer[6] == 0x05)) {
 			// This is an update on the status of the spa lights (enabled, intensity, color)
 			if (lights != (processingBuffer[24] & 1)) {
 				lights = (processingBuffer[24] & 1);

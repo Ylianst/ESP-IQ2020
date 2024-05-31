@@ -89,7 +89,7 @@ protected:
 
 	std::unique_ptr<esphome::socket::Socket> socket_{};
 	std::vector<Client> clients_{};
-	int lights = 0;
+	int lights = -1;
 	int connectionKit = 0;
 
 	// IQ2020 processing
