@@ -25,20 +25,13 @@ namespace iq2020_climate {
 		}
 	}
 
-	template<class K, class V> std::set<V> IQ2020Climate::map_values_as_set(std::map<K, V> map) {
-		std::set<V> v;
-		std::transform(map.begin(), map.end(), std::inserter(v, v.end()), [](const std::pair<K, V> &p) { return p.second; });
-		return v;
-	}
-
 	climate::ClimateTraits IQ2020Climate::traits() {
 		auto traits = climate::ClimateTraits();
 		traits.set_supports_current_temperature(true);
 
-		std::map<std::string, int> heatingModes;
-		heatingModes[0] = "Off";
-		heatingModes[1] = "On";
-		traits.set_supported_modes(map_values_as_set(heatingModes));
+		std::set<ClimateMode> heatingModes;
+		heatingModes.insert(ClimateMode::CLIMATE_MODE_AUTO);
+		traits.set_supported_modes(heatingModes);
 
 		/*
 		traits.set_supports_current_temperature(!current_temperature_id_.empty());
