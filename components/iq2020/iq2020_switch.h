@@ -4,7 +4,7 @@
 #include "esphome/components/switch/switch.h"
 
 namespace esphome {
-//namespace iq2020_switch {
+namespace iq2020_switch {
 
 	class IQ2020Switch : public switch_::Switch, public Component {
 	public:
@@ -13,5 +13,5 @@ namespace esphome {
 		void dump_config() override;
 	};
 
-//} //namespace iq2020_switch
+} //namespace iq2020_switch
 } //namespace esphome

@@ -48,7 +48,7 @@ public:
 	float get_setup_priority() const override { return esphome::setup_priority::AFTER_WIFI; }
 
 	void set_port(uint16_t port) { this->port_ = port; }
-	void LightSwitchAction(IQ2020Switch* sw, int state);
+	void LightSwitchAction(esphome::iq2020_switch::IQ2020Switch* sw, int state);
 
 protected:
 	void publish_sensor();
