@@ -22,13 +22,13 @@ CONFIG_SCHEMA = cv.Schema(
             accuracy_decimals=1,
             state_class=STATE_CLASS_MEASUREMENT,
             icon=ICON_THERMOMETER,
-            unit=UNIT_CELSIUS,
+            units=UNIT_CELSIUS,
         ),
         cv.Required(CONF_SENSOR_TARGET_TEMPERATURE): sensor.sensor_schema(
             accuracy_decimals=1,
             state_class=STATE_CLASS_MEASUREMENT,
             icon=ICON_THERMOMETER,
-            unit=UNIT_FAHRENHEIT,
+            units=UNIT_FAHRENHEIT,
         ),
         cv.Required(CONF_SENSOR_CONNECTION_COUNT): sensor.sensor_schema(
             accuracy_decimals=0,
