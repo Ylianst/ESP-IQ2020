@@ -237,7 +237,7 @@ int IQ2020Component::processIQ2020Command() {
 			connectionKit = 1;
 		}
 
-		ESP_LOGW(TAG, "SCK CMD Data, len=%d, cmd=%02x%02x", cmdlen, processingBuffer[5], processingBuffer[6]);
+		//ESP_LOGW(TAG, "SCK CMD Data, len=%d, cmd=%02x%02x", cmdlen, processingBuffer[5], processingBuffer[6]);
 
 		if ((cmdlen == 11) && (processingBuffer[5] == 0x17) && (processingBuffer[6] == 0x02)) {
 			// This is the SPA connection kit command to turn the lights on/off
@@ -251,7 +251,7 @@ int IQ2020Component::processIQ2020Command() {
 	if ((processingBuffer[1] == 0x1F) && (processingBuffer[2] == 0x01) && (processingBuffer[4] == 0x80)) {
 		// This is response data going towards the SPA connection kit.
 
-		ESP_LOGW(TAG, "SCK RSP Data, len=%d, cmd=%02x%02x", cmdlen, processingBuffer[5], processingBuffer[6]);
+		//ESP_LOGW(TAG, "SCK RSP Data, len=%d, cmd=%02x%02x", cmdlen, processingBuffer[5], processingBuffer[6]);
 
 		if ((lights_pending != -1) && (cmdlen == 9) && (processingBuffer[5] == 0x17) && (processingBuffer[6] == 0x02) && (processingBuffer[7] == 0x06)) {
 			// Confirmation that the pending light command was received
@@ -271,9 +271,10 @@ int IQ2020Component::processIQ2020Command() {
 
 		if ((pending_temp != -1) && (cmdlen == 9) && (processingBuffer[5] == 0x01) && (processingBuffer[6] == 0x09) && (processingBuffer[7] == 0x06)) {
 			// Confirmation that the pending temprature change command was received
-			target_temp = pending_temp;
+			target_temp = pending_temp_cmd;
+			if (pending_temp == pending_temp_cmd) { pending_temp = -1; pending_temp_retry = 0; }
 			pending_temp = -1;
-			pending_temp_retry = 0;
+			pending_temp_cmd = -1;
 			ESP_LOGW(TAG, "Temp Set Confirmation, Target Temp: %.1f", target_temp);
 #ifdef USE_SENSOR
 			if (temp_celsius) {
@@ -303,7 +304,7 @@ int IQ2020Component::processIQ2020Command() {
 				_target_temp = ((processingBuffer[90] - '0') * 10) + (processingBuffer[91] - '0') + ((processingBuffer[92] - '0') * 0.1);
 				_current_temp = ((processingBuffer[94] - '0') * 10) + (processingBuffer[95] - '0') + ((processingBuffer[96] - '0') * 0.1);
 			}
-			ESP_LOGW(TAG, "Reported Current Temp: %.1f, Target Temp: %.1f", _current_temp, _target_temp);
+			//ESP_LOGW(TAG, "Reported Current Temp: %.1f, Target Temp: %.1f", _current_temp, _target_temp);
 
 			// If temperatures have changed, publish the change
 			if ((_target_temp != target_temp) || (_current_temp != current_temp)) {
@@ -376,20 +377,23 @@ void IQ2020Component::LightSwitchAction(int state) {
 }
 
 void IQ2020Component::SetTempAction(float newtemp) {
-	if (pending_temp != -1) return;
-	ESP_LOGW(TAG, "SetTempAction: new=%f", newtemp);
+	//ESP_LOGW(TAG, "SetTempAction: new=%f", newtemp);
 
 	if (temp_celsius) {
 		pending_temp = (std::round(newtemp * 2) / 2); // Round to the nearest .5
 	} else {
 		pending_temp = std::round(esphome::celsius_to_fahrenheit(newtemp)); // Convert and round to the nearest integer
 	}
-	unsigned char deltaSteps = ((temp_celsius ? 2 : 1) * (pending_temp - target_temp));
-	ESP_LOGW(TAG, "SetTempAction: new=%f, target=%f, deltasteps=%d", pending_temp, target_temp, deltaSteps);
-	if (deltaSteps == 0) { pending_temp = -1; return; }
 	pending_temp_retry = 2;
-	unsigned char changeTempCmd[] = { 0x01, 0x09, 0xFF, deltaSteps };
-	sendIQ2020Command(0x01, 0x1F, 0x40, changeTempCmd, 4); // Adjust temp
+	
+	if (pending_temp_cmd == -1) { // If there are no outstanding temp commands in-flight, send one now.
+		unsigned char deltaSteps = ((temp_celsius ? 2 : 1) * (pending_temp - target_temp));
+		ESP_LOGW(TAG, "SetTempAction: new=%f, target=%f, deltasteps=%d", pending_temp, target_temp, deltaSteps);
+		if (deltaSteps == 0) { pending_temp = -1; return; }
+		pending_temp_cmd = pending_temp;
+		unsigned char changeTempCmd[] = { 0x01, 0x09, 0xFF, deltaSteps };
+		sendIQ2020Command(0x01, 0x1F, 0x40, changeTempCmd, 4); // Adjust temp
+	}
 }
 
 IQ2020Component::Client::Client(std::unique_ptr<esphome::socket::Socket> socket, std::string identifier, size_t position)
