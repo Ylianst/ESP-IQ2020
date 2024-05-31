@@ -2,7 +2,7 @@
 #include "esphome/core/component.h"
 #include "esphome/core/hal.h"
 #include "esphome/core/log.h"
-#include "esphome/components/climate/climate_traits.h"
+//#include "esphome/components/climate/climate_traits.h"
 #include "iq2020_climate.h"
 
 using namespace esphome;
