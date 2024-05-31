@@ -294,6 +294,8 @@ int IQ2020Component::processIQ2020Command() {
 				_current_temp = ((processingBuffer[94] - '0') * 10) + (processingBuffer[95] - '0') + ((processingBuffer[96] - '0') * 0.1);
 			}
 			pending_temp = -1;
+			ESP_LOGW(TAG, "Reported Current Temp: %.1f, Target Temp: %.1f", _current_temp, _target_temp);
+
 
 			// If temperatures have changed, publish the change
 			if ((_target_temp != target_temp) || (_current_temp != current_temp)) {
@@ -312,7 +314,7 @@ int IQ2020Component::processIQ2020Command() {
 					if (temp_celsius) { g_iq2020_climate->updateTempsC(target_temp, current_temp); }
 					else { g_iq2020_climate->updateTempsF(target_temp, current_temp); }
 				}
-				ESP_LOGW(TAG, "Current Temp: %.1f, Target Temp: %.1f", current_temp, target_temp);
+				ESP_LOGW(TAG, "Changed Current Temp: %.1f, Target Temp: %.1f", current_temp, target_temp);
 			}
 		}
 	}
@@ -349,7 +351,7 @@ void IQ2020Component::SetTempAction(float newtemp) {
 	if (pending_temp != -1) return;
 	if (temp_celsius) { pending_temp = newtemp; } else { pending_temp = esphome::celsius_to_fahrenheit(newtemp); }
 	unsigned char deltaSteps = ((temp_celsius ? 2 : 1) * (pending_temp - target_temp));
-	//ESP_LOGW(TAG, "SetTempAction: new=%f, target=%f, deltasteps=%d", pending_temp, target_temp, deltaSteps);
+	ESP_LOGW(TAG, "SetTempAction: new=%f, target=%f, deltasteps=%d", pending_temp, target_temp, deltaSteps);
 	if (deltaSteps == 0) return;
 	unsigned char changeTempCmd[] = { 0x01, 0x09, 0xFF, deltaSteps };
 	sendIQ2020Command(0x01, 0x1F, 0x40, changeTempCmd, 4); // Adjust temp
