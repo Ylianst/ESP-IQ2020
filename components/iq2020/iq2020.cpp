@@ -9,7 +9,7 @@
 #include "esphome/components/socket/socket.h"
 
 static const char *TAG = "iq2020";
-static IQ2020Component* g_iq2020_main;
+IQ2020Component* g_iq2020_main;
 
 using namespace esphome;
 
