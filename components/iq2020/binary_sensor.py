@@ -4,7 +4,7 @@ from esphome.components import binary_sensor
 from esphome.const import (
     ICON_LIGHTBULB,
     DEVICE_CLASS_LIGHT,
-    DEVICE_CLASS_PRESENCE,
+    DEVICE_CLASS_SWITCH,
     DEVICE_CLASS_CONNECTIVITY,
     ENTITY_CATEGORY_DIAGNOSTIC,
 )
