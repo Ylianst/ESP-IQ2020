@@ -12,6 +12,7 @@ namespace iq2020_switch {
 
 	void IQ2020Switch::write_state(bool state) {
 		ESP_LOGD(TAG, "Switch write state: %d", state);
+		this->publish_state(state);
 	}
 
 	void IQ2020Switch::dump_config() {
