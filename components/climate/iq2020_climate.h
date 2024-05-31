@@ -4,7 +4,7 @@
 #include "esphome/components/climate/climate.h"
 
 namespace esphome {
-namespace econet {
+namespace iq2020 {
 
 class IQ2020Climate : public climate::Climate, public Component {
  public:
