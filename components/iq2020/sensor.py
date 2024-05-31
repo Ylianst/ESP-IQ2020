@@ -97,4 +97,4 @@ def get_schema(config):
 CONFIG_SCHEMA = cv.Schema({
     cv.GenerateID(CONF_IQ2020_SERVER): cv.use_id(IQ2020Component),
     cv.Required(CONF_TEMP_UNIT): cv.string,
-}).extend(cv.All(cv.only_with(CONF_TEMP_UNIT), get_schema))
+}).extend(cv.All(get_schema))
