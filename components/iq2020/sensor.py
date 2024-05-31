@@ -19,7 +19,7 @@ CONF_IQ2020_SERVER = "iq2020_server"
 
 CONFIG_SCHEMAF = cv.Schema(
     {
-        cv.GenerateID(CONF_IQ2020_SERVER): cv.use_id(IQ2020Component),
+#        cv.GenerateID(CONF_IQ2020_SERVER): cv.use_id(IQ2020Component),
         cv.Required(CONF_SENSOR_CURRENT_TEMPERATURE): sensor.sensor_schema(
             unit_of_measurement=UNIT_FAHRENHEIT,
             device_class=DEVICE_CLASS_TEMPERATURE,
@@ -44,7 +44,7 @@ CONFIG_SCHEMAF = cv.Schema(
 
 CONFIG_SCHEMAC = cv.Schema(
     {
-        cv.GenerateID(CONF_IQ2020_SERVER): cv.use_id(IQ2020Component),
+#        cv.GenerateID(CONF_IQ2020_SERVER): cv.use_id(IQ2020Component),
         cv.Required(CONF_SENSOR_CURRENT_TEMPERATURE): sensor.sensor_schema(
             unit_of_measurement=UNIT_CELSIUS,
             device_class=DEVICE_CLASS_TEMPERATURE,
@@ -92,4 +92,9 @@ def get_schema(config):
 #    else:
 #        raise cv.Invalid(f"Unknown setting: {config.get(CONF_SENSOR_CURRENT_TEMPERATURE).get(CONF_TEMP_UNIT)}")
 
-CONFIG_SCHEMA = cv.All(get_schema)
+#CONFIG_SCHEMA = cv.All(get_schema)
+
+CONFIG_SCHEMA = cv.Schema({
+    cv.GenerateID(CONF_IQ2020_SERVER): cv.use_id(IQ2020Component),
+    cv.Required(CONF_TEMP_UNIT): cv.string,
+}).extend(cv.All(cv.only_with(CONF_TEMP_UNIT), get_schema))
