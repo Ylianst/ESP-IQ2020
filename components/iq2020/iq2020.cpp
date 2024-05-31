@@ -208,7 +208,8 @@ int IQ2020Component::processIQ2020Command() {
 
 	if (processingBuffer[2] == 0x1F) {
 		uint32_t now = esphome::millis();
-		ESP_LOGW(TAG, "TIME %d, LS %d", uint32_t, connectionKitLastSeenTime);
+		uint32_t now2 = ::millis();
+		ESP_LOGW(TAG, "TIME1 %d, TIME2 %d, LS %d", now, now2, connectionKitLastSeenTime);
 		if ((connectionKitLastSeenTime + 60000) < now) {
 			ESP_LOGW(TAG, "Spa Connection Kit Detected");
 #ifdef USE_BINARY_SENSOR
