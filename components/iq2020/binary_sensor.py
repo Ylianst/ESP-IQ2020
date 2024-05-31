@@ -33,21 +33,17 @@ CONFIG_SCHEMA = cv.Schema(
     }
 )
 
-
 async def to_code(config):
     server = await cg.get_variable(config[CONF_IQ2020_SERVER])
-
-#    sens = await binary_sensor.new_binary_sensor(config[CONF_SENSOR_CONNECTED])
-#    cg.add(server.set_connected_sensor(sens))
 
     if CONF_SENSOR_CONNECTED in config:
         sens = await binary_sensor.new_binary_sensor(config[CONF_SENSOR_CONNECTED])
         cg.add(server.set_connected_sensor(sens))
-        
+
     if CONF_SENSOR_LIGHTS in config:
         sens = await binary_sensor.new_binary_sensor(config[CONF_SENSOR_LIGHTS])
         cg.add(server.set_lights_sensor(sens))
-        
+
     if CONF_SENSOR_CONNECTIONKIT in config:
         sens = await binary_sensor.new_binary_sensor(config[CONF_SENSOR_CONNECTIONKIT])
         cg.add(server.set_connectionkit_sensor(sens))
