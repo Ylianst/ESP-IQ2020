@@ -11,13 +11,13 @@ namespace iq2020_switch {
 
 	void IQ2020Switch::setup() {
 		ESP_LOGD(TAG, "Switch Setup");
-		g_iq2020_main->LightSwitchAction(this, -1);
+		if (g_iq2020_main != NULL) { g_iq2020_main->LightSwitchAction(this, -1); }
 	}
 
 	void IQ2020Switch::write_state(bool state) {
 		ESP_LOGD(TAG, "Switch write state: %d", state);
 		//this->publish_state(state);
-		g_iq2020_main->LightSwitchAction(this, state);
+		if (g_iq2020_main != NULL) { g_iq2020_main->LightSwitchAction(this, state); }
 	}
 
 	void IQ2020Switch::dump_config() {
