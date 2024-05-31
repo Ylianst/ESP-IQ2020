@@ -24,6 +24,7 @@ namespace iq2020_climate {
 
 		mode = esphome::climate::ClimateMode::CLIMATE_MODE_HEAT;
 		current_temperature = fahrenheit_to_celsius(72);
+		target_temperature = fahrenheit_to_celsius(82);
 		publish_state();
 	}
 
