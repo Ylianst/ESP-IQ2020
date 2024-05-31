@@ -257,31 +257,33 @@ int IQ2020Component::processIQ2020Command() {
 			float temp = 0;
 			if (processingBuffer[93] == 'F') { // Fahrenheit
 				temp = ((processingBuffer[91] - '0') * 10) + (processingBuffer[92] - '0') + ((processingBuffer[90] == '1') ? 100 : 0);
+#ifdef USE_SENSOR
+				if ((target_temp != temp) && (this->target_f_temp_sensor_)) this->target_f_temp_sensor_->publish_state(temp);
+#endif
 			} else if (processingBuffer[92] == '.') { // Celcius
 				temp = ((processingBuffer[90] - '0') * 10) + (processingBuffer[91] - '0') + ((processingBuffer[92] - '0') * 0.1);
+#ifdef USE_SENSOR
+				if ((target_temp != temp) && (this->target_c_temp_sensor_)) this->target_c_temp_sensor_->publish_state(temp);
+#endif
 			}
 			//ESP_LOGW(TAG, "Target Temp: %.1f", temp);
-			if (target_temp != temp) {
-#ifdef USE_SENSOR
-				if (this->target_temp_sensor_) this->target_temp_sensor_->publish_state(temp);
-#endif
-				target_temp = temp;
-			}
+			target_temp = temp;
 
 			// Read current temperature
 			if (processingBuffer[97] == 'F') { // Fahrenheit
 				temp = ((processingBuffer[95] - '0') * 10) + (processingBuffer[96] - '0') + ((processingBuffer[94] == '1') ? 100 : 0);
+#ifdef USE_SENSOR
+				if ((current_temp != temp) && (this->current_f_temp_sensor_)) this->current_f_temp_sensor_->publish_state(temp);
+#endif
 			}
 			else if (processingBuffer[96] == '.') { // Celcius
 				temp = ((processingBuffer[94] - '0') * 10) + (processingBuffer[95] - '0') + ((processingBuffer[96] - '0') * 0.1);
+#ifdef USE_SENSOR
+				if ((current_temp != temp) && (this->current_c_temp_sensor_)) this->current_c_temp_sensor_->publish_state(temp);
+#endif
 			}
 			//ESP_LOGW(TAG, "Current Temp: %.1f", temp);
-			if (current_temp != temp) {
-#ifdef USE_SENSOR
-				if (this->current_temp_sensor_) this->current_temp_sensor_->publish_state(temp);
-#endif
-				current_temp = temp;
-			}
+			current_temp = temp;
 
 			ESP_LOGW(TAG, "Current Temp: %.1f, Target Temp: %.1f", current_temp, target_temp);
 		}

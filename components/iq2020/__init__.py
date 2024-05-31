@@ -21,11 +21,6 @@ def validate_buffer_size(buffer_size):
         raise cv.Invalid("Buffer size must be a power of two.")
     return buffer_size
 
-def validate_temp_unit(temp_unit):
-    if temp_unit != 'C' and temp_unit != 'F':
-        raise cv.Invalid("Temp unit must be C or F.")
-    return temp_unit
-
 CONFIG_SCHEMA = cv.All(
     cv.require_esphome_version(2022, 3, 0),
     cv.Schema(
@@ -33,7 +28,6 @@ CONFIG_SCHEMA = cv.All(
             cv.GenerateID(): cv.declare_id(IQ2020Component),
             cv.Optional(CONF_PORT, default=0): cv.port,
             cv.Optional(CONF_BUFFER_SIZE, default=128): cv.All(cv.positive_int, validate_buffer_size),
-            cv.Optional(CONF_TEMP_UNIT, default="C"): cv.All(validate_temp_unit),
         }
     )
     .extend(cv.COMPONENT_SCHEMA)
@@ -45,7 +39,6 @@ async def to_code(config):
     var = cg.new_Pvariable(config[CONF_ID])
     cg.add(var.set_port(config[CONF_PORT]))
     cg.add(var.set_buffer_size(config[CONF_BUFFER_SIZE]))
-    cg.add(var.set_temp_unit(config[CONF_TEMP_UNIT]))
 
     await cg.register_component(var, config)
     await uart.register_uart_device(var, config)
