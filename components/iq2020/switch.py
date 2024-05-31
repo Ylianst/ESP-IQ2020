@@ -3,10 +3,7 @@ import esphome.config_validation as cv
 from esphome.components import switch
 from esphome.const import CONF_ID
 
-from . import (
-    CONF_IQ2020_SERVER,
-)
-
+CONF_IQ2020_SERVER = "iq2020_server"
 CONF_SWITCH_LIGHTS = "iq2020_switch"
 
 iq2020_switch_ns = cg.esphome_ns.namespace('iq2020_switch')
