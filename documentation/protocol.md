@@ -179,13 +179,31 @@ E902DC05          - Big endian counter
 00D40701          - Maybe months and years?
 ```
 
-Temprature string. The value encode the temperature set point and current temprature in ASCII encoding. The F indicates fahrenheit. For example:
+Temperature string. The value encode the temperature set point and current temprature in ASCII encoding. The F indicates fahrenheit. For example:
 ```
 " 92F102F" = 2039324631303246 (fahrenheit)
 " 99F102F" = 2039394631303246 (fahrenheit)
 "101F102F" = 3130314631303246 (fahrenheit)
 "38.539.0" = 33382E3533392E30 (celsius)
 "38.039.0" = 33382E3033392E30 (celsius)
+```
+
+Get Versions
+```
+--> 01 1F 80 0100
+<-- 1F 01 80 01005752342E30346465316345303032444B342E303006
+```
+
+Get and set timestamp (in seconds). Send >60 in data to read the value.
+```
+--> 01 1F 80 024C99
+<-- 1F 01 80 024C3431011400D40701
+```
+
+Lots more information using command 0x0255, This look a lot like 0x0256.
+```
+--> 01 1F 80 0255
+<-- 1F 01 80 0255000800040000060400020622F21100201C201C201C84036054000000003130334617A3740006CC0A0061A5DD054500000000000000BBD30C0000000000000000005FB30F000200476CDD0500000000C2790A0020393546313032467800F800F800000000000000000000000000510000000000
 ```
 
 Other Unknown Periodic Polling
