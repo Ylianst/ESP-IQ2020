@@ -377,7 +377,14 @@ void IQ2020Component::LightSwitchAction(int state) {
 
 void IQ2020Component::SetTempAction(float newtemp) {
 	if (pending_temp != -1) return;
-	if (temp_celsius) { pending_temp = newtemp; } else { pending_temp = esphome::celsius_to_fahrenheit(newtemp); }
+	
+	if (temp_celsius) {
+		newtemp = (std::round(newtemp * 2) / 2); // Round to the nearest .5
+		pending_temp = newtemp;
+	} else {
+		newtemp = std::round(newtemp); // Round to the nearest integer
+		pending_temp = esphome::celsius_to_fahrenheit(newtemp);
+	}
 	unsigned char deltaSteps = ((temp_celsius ? 2 : 1) * (pending_temp - target_temp));
 	ESP_LOGW(TAG, "SetTempAction: new=%f, target=%f, deltasteps=%d", pending_temp, target_temp, deltaSteps);
 	if (deltaSteps == 0) { pending_temp = -1; return; }
