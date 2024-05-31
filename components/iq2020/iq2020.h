@@ -1,4 +1,5 @@
 #pragma once
+#include "iq2020_switch.h"
 
 #include "esphome/core/component.h"
 #include "esphome/components/socket/socket.h"
@@ -48,7 +49,7 @@ public:
 	float get_setup_priority() const override { return esphome::setup_priority::AFTER_WIFI; }
 
 	void set_port(uint16_t port) { this->port_ = port; }
-	void testcall(std::string msg);
+	void LightSwitchAction(IQ2020Switch* sw, int state);
 
 protected:
 	void publish_sensor();
@@ -102,6 +103,7 @@ protected:
 	int connectionKit = 0;
 	float target_temp = -1;
 	float current_temp = -1;
+	IQ2020Switch* light_switch = null;
 
 	// IQ2020 processing
 	int nextPossiblePacket();
