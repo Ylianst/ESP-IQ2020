@@ -274,7 +274,7 @@ int IQ2020Component::processIQ2020Command() {
 			target_temp = pending_temp;
 			pending_temp = -1;
 			pending_temp_retry = 0;
-			ESP_LOGW(TAG, "Temp Set Confirmation, Target Temp: %.1f", _target_temp);
+			ESP_LOGW(TAG, "Temp Set Confirmation, Target Temp: %.1f", target_temp);
 #ifdef USE_SENSOR
 			if (temp_celsius) {
 				if (this->target_c_temp_sensor_) this->target_c_temp_sensor_->publish_state(target_temp);
