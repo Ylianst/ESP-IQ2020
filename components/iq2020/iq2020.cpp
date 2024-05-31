@@ -243,8 +243,8 @@ int IQ2020Component::processIQ2020Command() {
 
 		if ((cmdlen == 27) && (processingBuffer[5] == 0x17) && (processingBuffer[6] == 0x05)) {
 			// This is an update on the status of the spa lights (enabled, intensity, color)
-			if (lights != (data[24] & 1)) {
-				lights = (data[24] & 1);
+			if (lights != (processingBuffer[24] & 1)) {
+				lights = (processingBuffer[24] & 1);
 #ifdef USE_BINARY_SENSOR
 				if (this->lights_sensor_) { this->lights_sensor_->publish_state((lights != 0)); }
 #endif
