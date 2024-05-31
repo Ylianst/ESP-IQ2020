@@ -4,7 +4,6 @@ from esphome.components import binary_sensor
 from esphome.const import (
     ICON_LIGHTBULB,
     DEVICE_CLASS_LIGHT,
-    DEVICE_CLASS_SWITCH,
     DEVICE_CLASS_CONNECTIVITY,
     ENTITY_CATEGORY_DIAGNOSTIC,
 )
@@ -23,7 +22,7 @@ CONFIG_SCHEMA = cv.Schema(
             entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
         ),
         cv.Required(CONF_SENSOR_CONNECTIONKIT): binary_sensor.binary_sensor_schema(
-            device_class=DEVICE_CLASS_SWITCH,
+            device_class=DEVICE_CLASS_CONNECTIVITY,
             entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
         ),
         cv.Required(CONF_SENSOR_LIGHTS): binary_sensor.binary_sensor_schema(
