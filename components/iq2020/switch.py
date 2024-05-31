@@ -22,5 +22,5 @@ async def to_code(config):
     await cg.register_component(server, config)
     await switch.register_switch(server, config)
 
-#    var = await cg.get_variable(config[CONF_IQ2020_SERVER])
-#    cg.add(server.set_request_mod(config[CONF_SWITCH_LIGHTS]))
+    var = await cg.get_variable(config[CONF_IQ2020_SERVER])
+    cg.add(server.set_light_switch(var))
