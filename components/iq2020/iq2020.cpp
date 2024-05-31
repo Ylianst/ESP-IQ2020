@@ -302,10 +302,10 @@ int IQ2020Component::processIQ2020Command() {
 #ifdef USE_SENSOR
 				if (temp_celsius) {
 					if (this->target_c_temp_sensor_) this->target_c_temp_sensor_->publish_state(target_temp);
-					if (this->current_c_temp_sensor_) this->current_c_temp_sensor_->publish_state(temp);
+					if (this->current_c_temp_sensor_) this->current_c_temp_sensor_->publish_state(current_temp);
 				} else {
 					if (this->target_f_temp_sensor_) this->target_f_temp_sensor_->publish_state(target_temp);
-					if (this->current_f_temp_sensor_) this->current_f_temp_sensor_->publish_state(temp);
+					if (this->current_f_temp_sensor_) this->current_f_temp_sensor_->publish_state(current_temp);
 				}
 #endif
 				if (g_iq2020_climate != NULL) {
