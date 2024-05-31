@@ -28,6 +28,7 @@ namespace iq2020_climate {
 	climate::ClimateTraits IQ2020Climate::traits() {
 		auto traits = climate::ClimateTraits();
 		traits.set_supports_current_temperature(true);
+		traits.set_supported_modes(map_values_as_set(["Off", "On"]));
 		/*
 		traits.set_supports_current_temperature(!current_temperature_id_.empty());
 		traits.set_supports_current_humidity(!current_humidity_id_.empty());
