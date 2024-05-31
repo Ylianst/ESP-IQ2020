@@ -2,6 +2,7 @@ import esphome.codegen as cg
 import esphome.config_validation as cv
 from esphome.components import sensor
 from esphome.const import (
+    ICON_THERMOMETER,
     STATE_CLASS_MEASUREMENT,
     ENTITY_CATEGORY_DIAGNOSTIC,
 )
@@ -18,10 +19,12 @@ CONFIG_SCHEMA = cv.Schema(
         cv.Required(CONF_SENSOR_CURRENT_TEMPERATURE): sensor.sensor_schema(
             accuracy_decimals=1,
             state_class=STATE_CLASS_MEASUREMENT,
+			icon=ICON_THERMOMETER,
         ),
         cv.Required(CONF_SENSOR_TARGET_TEMPERATURE): sensor.sensor_schema(
             accuracy_decimals=1,
             state_class=STATE_CLASS_MEASUREMENT,
+			icon=ICON_THERMOMETER,
         ),
         cv.Required(CONF_SENSOR_CONNECTION_COUNT): sensor.sensor_schema(
             accuracy_decimals=0,
