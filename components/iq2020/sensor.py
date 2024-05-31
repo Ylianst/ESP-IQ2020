@@ -89,6 +89,6 @@ def get_schema(config):
     elif config.get(CONF_TEMP_UNIT) == 'C':
         return CONFIG_SCHEMAC
     else:
-        raise cv.Invalid(f"Unknown setting: {config.get(CONF_TEMP_UNIT)}")
+        raise cv.Invalid(f"Unknown setting: {config}")
 
 CONFIG_SCHEMA = cv.All(get_schema)
