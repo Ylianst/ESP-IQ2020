@@ -253,17 +253,14 @@ int IQ2020Component::processIQ2020Command() {
 		if ((cmdlen == 140) && (processingBuffer[5] == 0x02) && (processingBuffer[6] == 0x56)) {
 			// This is the main status data (jets, temperature)
 
+			// Read target temperature
 			float temp = 0;
-			if (processingBuffer[93] == 'F') {
-				// Fahrenheit
+			if (processingBuffer[93] == 'F') { // Fahrenheit
 				temp = ((processingBuffer[91] - '0') * 10) + (processingBuffer[92] - '0') + ((processingBuffer[90] == '1') ? 100 : 0);
-			} else if (processingBuffer[92] == '.') {
-				// Celcius
+			} else if (processingBuffer[92] == '.') { // Celcius
 				temp = ((processingBuffer[90] - '0') * 10) + (processingBuffer[91] - '0') + ((processingBuffer[92] - '0') * 0.1);
 			}
-
-			ESP_LOGW(TAG, "Temp: %.6f", temp);
-
+			//ESP_LOGW(TAG, "Target Temp: %.1f", temp);
 			if (target_temp != temp) {
 #ifdef USE_SENSOR
 				if (this->target_temp_sensor_) this->target_temp_sensor_->publish_state(temp);
@@ -271,9 +268,22 @@ int IQ2020Component::processIQ2020Command() {
 				target_temp = temp;
 			}
 
-			//addDecodedData("Temp Set", UTF8Encoding.Default.GetString(data, 90, 4));
-			//addDecodedData("Temp Current", UTF8Encoding.Default.GetString(data, 94, 4));
+			// Read current temperature
+			if (processingBuffer[97] == 'F') { // Fahrenheit
+				temp = ((processingBuffer[95] - '0') * 10) + (processingBuffer[96] - '0') + ((processingBuffer[94] == '1') ? 100 : 0);
+			}
+			else if (processingBuffer[96] == '.') { // Celcius
+				temp = ((processingBuffer[94] - '0') * 10) + (processingBuffer[95] - '0') + ((processingBuffer[96] - '0') * 0.1);
+			}
+			//ESP_LOGW(TAG, "Current Temp: %.1f", temp);
+			if (current_temp != temp) {
+#ifdef USE_SENSOR
+				if (this->current_temp_sensor_) this->current_temp_sensor_->publish_state(temp);
+#endif
+				current_temp = temp;
+			}
 
+			ESP_LOGW(TAG, "Current Temp: %.1f, Target Temp: %.1f", current_temp, target_temp);
 		}
 
 	}
