@@ -37,11 +37,11 @@ async def to_code(config):
 
     if CONF_SENSOR_CURRENT_TEMPERATURE in config:
         sens = await sensor.new_sensor(config[CONF_SENSOR_CURRENT_TEMPERATURE])
-        cg.add(server.set_current_temperature_sensor(sens))
+        cg.add(server.set_current_temp_sensor(sens))
 
     if CONF_SENSOR_TARGET_TEMPERATURE in config:
         sens = await sensor.new_sensor(config[CONF_SENSOR_TARGET_TEMPERATURE])
-        cg.add(server.set_target_temperature_sensor(sens))
+        cg.add(server.set_target_temp_sensor(sens))
 
     if CONF_SENSOR_CONNECTION_COUNT in config:
         sens = await sensor.new_sensor(config[CONF_SENSOR_CONNECTION_COUNT])
