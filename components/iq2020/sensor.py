@@ -1,4 +1,4 @@
-import esphome.codegen as cg
+﻿import esphome.codegen as cg
 import esphome.config_validation as cv
 from esphome.components import sensor
 from esphome.const import (
@@ -9,7 +9,7 @@ from esphome.const import (
 )
 from . import ns, IQ2020Component
 
-UNIT_FAHRENHEIT = "�F"
+UNIT_FAHRENHEIT = "°F"
 CONF_SENSOR_CURRENT_TEMPERATURE = "current_temperature"
 CONF_SENSOR_TARGET_TEMPERATURE = "target_temperature"
 CONF_SENSOR_CONNECTION_COUNT = "connection_count"
