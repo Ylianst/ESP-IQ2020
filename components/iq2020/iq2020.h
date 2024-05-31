@@ -1,6 +1,5 @@
 #pragma once
 #include "iq2020_switch.h"
-
 #include "esphome/core/component.h"
 #include "esphome/components/socket/socket.h"
 #include "esphome/components/uart/uart.h"
