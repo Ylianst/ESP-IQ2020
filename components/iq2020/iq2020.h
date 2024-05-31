@@ -90,9 +90,10 @@ protected:
 	std::unique_ptr<esphome::socket::Socket> socket_{};
 	std::vector<Client> clients_{};
 	int lights = 0;
-	uint32_t connectionKitLastSeenTime = 0;
+	int connectionKit = 0;
 
 	// IQ2020 processing
+	int nextPossiblePacket();
 	unsigned char processingBuffer[IQ202BUFLEN];
 	unsigned char outboundBuffer[64];
 	int processingBufferLen = 0;

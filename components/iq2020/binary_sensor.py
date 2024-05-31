@@ -23,7 +23,7 @@ CONFIG_SCHEMA = cv.Schema(
             entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
         ),
         cv.Required(CONF_SENSOR_CONNECTIONKIT): binary_sensor.binary_sensor_schema(
-            device_class=DEVICE_CLASS_PRESENCE,
+            device_class=DEVICE_CLASS_SWITCH,
             entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
         ),
         cv.Required(CONF_SENSOR_LIGHTS): binary_sensor.binary_sensor_schema(

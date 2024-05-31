@@ -195,29 +195,62 @@ void IQ2020Component::processRawIQ2020Data(unsigned char *data, int len) {
 	}
 }
 
+int IQ2020Component::nextPossiblePacket() {
+	for (int i = 1; i < processingBufferLen; i++) { if (processingBuffer[i] == 0x1C) return i; }
+	return processingBufferLen;
+}
+
 int IQ2020Component::processIQ2020Command() {
 	if (processingBufferLen < 6) return 0; // Need more data
-	if (processingBuffer[0] != 0x1C) { ESP_LOGW(TAG, "Receive buffer out of sync!"); return processingBufferLen; } // Out of sync
+	if ((processingBuffer[0] != 0x1C) || ((processingBuffer[4] != 0x40) && (processingBuffer[4] != 0x80))) { ESP_LOGW(TAG, "Receive buffer out of sync!"); return nextPossiblePacket(); } // Out of sync
 	int cmdlen = 6 + processingBuffer[3];
 	if (processingBufferLen < cmdlen) return 0; // Need more data
 	unsigned char checksum = 0; // Compute the checksum
 	for (int i = 1; i < (cmdlen - 1); i++) { checksum += processingBuffer[i]; }
-	if (processingBuffer[cmdlen - 1] != (checksum ^ 0xFF)) { ESP_LOGW(TAG, "Invalid checksum. Got 0x%02x, expected 0x%02x.", processingBuffer[cmdlen - 1], (checksum ^ 0xFF)); return processingBufferLen; }
+	if (processingBuffer[cmdlen - 1] != (checksum ^ 0xFF)) { ESP_LOGW(TAG, "Invalid checksum. Got 0x%02x, expected 0x%02x.", processingBuffer[cmdlen - 1], (checksum ^ 0xFF)); return nextPossiblePacket(); }
 	ESP_LOGW(TAG, "IQ2020 data, dst:%02x src:%02x op:%02x datalen:%d", processingBuffer[1], processingBuffer[2], processingBuffer[4], processingBuffer[3]);
 	//if (processingBuffer[1] == 0x33) { unsigned char senddata[1]; sendIQ2020Command(0x29, 0x99, 0x40, senddata, 1); }
 
-	if (processingBuffer[2] == 0x1F) {
-		uint32_t now = esphome::millis();
-		uint32_t now2 = ::millis();
-		ESP_LOGW(TAG, "TIME1 %d, TIME2 %d, LS %d", now, now2, connectionKitLastSeenTime);
-		if ((connectionKitLastSeenTime + 60000) < now) {
-			ESP_LOGW(TAG, "Spa Connection Kit Detected");
+	if ((processingBuffer[1] == 0x01) && (processingBuffer[2] == 0x1F) && (processingBuffer[4] == 0x40)) {
+		// This is a request command from the SPA connection kit, take note of this.
+		// Presence of this device will cause us to no longer poll for state since this device will do it for us.
+		if (connectionKit == 0) {
+			//ESP_LOGW(TAG, "Spa Connection Kit Detected");
 #ifdef USE_BINARY_SENSOR
-			if (this->connectionkit_sensor_)
-				this->connectionkit_sensor_->publish_state(true);
+			if (this->connectionkit_sensor_) { this->connectionkit_sensor_->publish_state(true); }
 #endif
+			connectionKit = 1;
 		}
-		connectionKitLastSeenTime = now;
+
+		ESP_LOGW(TAG, "SCK CMD Data, len=%d, cmd=%02x%02x", cmdlen, processingBuffer[5], processingBuffer[6]);
+
+		if ((cmdlen == 10) && (processingBuffer[5] == 0x17) && (processingBuffer[6] == 0x02)) {
+			// This is the SPA connection kit command to turn the lights on/off
+			if ((processingBuffer[8] & 1) != lights) {
+				lights = (processingBuffer[8] & 1);
+#ifdef USE_BINARY_SENSOR
+				if (this->lights_sensor_) { this->lights_sensor_->publish_state((lights != 0)); }
+#endif
+			}
+		}
+
+	}
+
+	if ((processingBuffer[1] == 0x1F) && (processingBuffer[2] == 0x01) && (processingBuffer[4] == 0x80)) {
+		// This is response data going towards the SPA connection kit.
+
+		ESP_LOGW(TAG, "SCK RSP Data, len=%d, cmd=%02x%02x", cmdlen, processingBuffer[5], processingBuffer[6]);
+
+		if ((cmdlen == 27) && (processingBuffer[5] == 0x17) && (processingBuffer[6] == 0x05)) {
+			// This is an update on the status of the spa lights (enabled, intensity, color)
+			if (lights != (data[24] & 1)) {
+				lights = (data[24] & 1);
+#ifdef USE_BINARY_SENSOR
+				if (this->lights_sensor_) { this->lights_sensor_->publish_state((lights != 0)); }
+#endif
+			}
+		}
+
 	}
 
 	return cmdlen;
