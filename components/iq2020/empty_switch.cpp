@@ -1,22 +1,22 @@
 #include "esphome/core/log.h"
-#include "empty_switch.h"
+#include "iq2020_switch.h"
 
 namespace esphome {
-namespace empty_switch {
+namespace iq2020_switch {
 
-static const char *TAG = "empty_switch.switch";
+	static const char *TAG = "iq2020.switch";
 
-void EmptySwitch::setup() {
+	void IQ2020Switch::setup() {
+		ESP_LOGD(TAG, "Switch Setup");
+	}
 
-}
+	void IQ2020Switch::write_state(bool state) {
+		ESP_LOGD(TAG, "Switch write state: %d", state);
+	}
 
-void EmptySwitch::write_state(bool state) {
+	void IQ2020Switch::dump_config() {
+		ESP_LOGCONFIG(TAG, "Empty custom switch");
+	}
 
-}
-
-void EmptySwitch::dump_config(){
-    ESP_LOGCONFIG(TAG, "Empty custom switch");
-}
-
-} //namespace empty_switch
+} //namespace iq2020_switch
 } //namespace esphome
