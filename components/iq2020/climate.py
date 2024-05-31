@@ -4,13 +4,13 @@ from esphome.components import switch
 from esphome.const import CONF_ID
 
 CONF_IQ2020_SERVER = "IQ2020Component"
-CONF_SWITCH_LIGHTS = "iq2020_switch"
+CONF_CLIMATE = "iq2020_climate"
 
-iq2020_switch_ns = cg.esphome_ns.namespace('iq2020_switch')
-IQ2020Switch = iq2020_switch_ns.class_('IQ2020Switch', switch.Switch, cg.Component)
+iq2020_switch_ns = cg.esphome_ns.namespace('iq2020_climate')
+IQ2020Climate = iq2020_switch_ns.class_('IQ2020Climate', switch.Switch, cg.Component)
 
-CONFIG_SCHEMA = switch.SWITCH_SCHEMA.extend({
-    cv.GenerateID(): cv.declare_id(IQ2020Switch)
+CONFIG_SCHEMA = switch.CLIMATE_SCHEMA.extend({
+    cv.GenerateID(): cv.declare_id(IQ2020Climate)
 }).extend(cv.COMPONENT_SCHEMA)
 
 async def to_code(config):
