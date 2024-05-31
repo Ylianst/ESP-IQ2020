@@ -33,7 +33,7 @@ CONFIG_SCHEMA = cv.All(
             cv.GenerateID(): cv.declare_id(IQ2020Component),
             cv.Optional(CONF_PORT, default=0): cv.port,
             cv.Optional(CONF_BUFFER_SIZE, default=128): cv.All(cv.positive_int, validate_buffer_size),
-			cv.Optional(CONF_TEMP_UNIT, default="C"): cv.All(validate_temp_unit),
+            cv.Optional(CONF_TEMP_UNIT, default="C"): cv.All(validate_temp_unit),
         }
     )
     .extend(cv.COMPONENT_SCHEMA)
@@ -45,7 +45,7 @@ async def to_code(config):
     var = cg.new_Pvariable(config[CONF_ID])
     cg.add(var.set_port(config[CONF_PORT]))
     cg.add(var.set_buffer_size(config[CONF_BUFFER_SIZE]))
-	cg.add(var.set_temp_unit(config[CONF_TEMP_UNIT]))
+    cg.add(var.set_temp_unit(config[CONF_TEMP_UNIT]))
 
     await cg.register_component(var, config)
     await uart.register_uart_device(var, config)
