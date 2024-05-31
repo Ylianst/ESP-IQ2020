@@ -102,7 +102,7 @@ protected:
 	int connectionKit = 0;
 	float target_temp = -1;
 	float current_temp = -1;
-	IQ2020Switch* light_switch = null;
+	esphome::iq2020_switch::IQ2020Switch* light_switch = null;
 
 	// IQ2020 processing
 	int nextPossiblePacket();
