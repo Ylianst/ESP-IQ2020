@@ -31,7 +31,7 @@ namespace iq2020_climate {
 		traits.set_supports_current_temperature(true);
 
 		std::set<ClimateMode> heatingModes;
-		heatingModes.insert(ClimateMode::CLIMATE_MODE_AUTO);
+		heatingModes.insert(6); // ClimateMode::CLIMATE_MODE_AUTO
 		traits.set_supported_modes(heatingModes);
 
 		/*
