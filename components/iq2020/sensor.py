@@ -13,7 +13,7 @@ from . import ns, IQ2020Component
 UNIT_FAHRENHEIT = "°F"
 CONF_SENSOR_CURRENT_F_TEMPERATURE = "current_f_temperature"
 CONF_SENSOR_TARGET_F_TEMPERATURE = "target_f_temperature"
-CONF_SENSOR_CURRENT_C_TEMPERATUREF = "current_c_temperature"
+CONF_SENSOR_CURRENT_C_TEMPERATURE = "current_c_temperature"
 CONF_SENSOR_TARGET_C_TEMPERATURE = "target_c_temperature"
 CONF_SENSOR_CONNECTION_COUNT = "connection_count"
 CONF_IQ2020_SERVER = "iq2020_server"
