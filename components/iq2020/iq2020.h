@@ -26,6 +26,8 @@ public:
 
 #ifdef USE_BINARY_SENSOR
     void set_connected_sensor(esphome::binary_sensor::BinarySensor *connected) { this->connected_sensor_ = connected; }
+	void set_lights_sensor(esphome::binary_sensor::BinarySensor *on) { this->lights_sensor_ = on; }
+	void set_connectionkit_sensor(esphome::binary_sensor::BinarySensor *present) { this->connectionkit_sensor_ = present; }
 #endif
 #ifdef USE_SENSOR
     void set_connection_count_sensor(esphome::sensor::Sensor *connection_count) { this->connection_count_sensor_ = connection_count; }
@@ -71,6 +73,8 @@ protected:
 
 #ifdef USE_BINARY_SENSOR
     esphome::binary_sensor::BinarySensor *connected_sensor_;
+	esphome::binary_sensor::BinarySensor *set_lights_sensor;
+	esphome::binary_sensor::BinarySensor *set_connectionkit_sensor;
 #endif
 #ifdef USE_SENSOR
     esphome::sensor::Sensor *connection_count_sensor_;
