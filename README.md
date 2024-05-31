@@ -46,6 +46,17 @@ uart:
 iq2020:
    uart_id: SpaConnection
    port: 1234
+
+sensor:
+  - platform: iq2020
+    current_f_temperature:
+      name: Current Temperature
+    target_f_temperature:
+      name: Target Temperature
+
+switch:
+  - platform: iq2020
+    name: Lights
 ```
 
 Once done, flash your ESP32 device and you are ready to connect your device to the hot tub. The IQ2020 control board has an expansion connecter that is both RS485 and I2C. We will be using the RS485 pins of this connector and the IQ2020 board uses the 38400 baud N,8,1 serial configuration.
