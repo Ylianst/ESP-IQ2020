@@ -21,11 +21,13 @@ namespace iq2020_climate {
 		ESP_LOGD(TAG, "Climate Setup");
 	}
 
+	/*
 	void IQ2020Climate::write_state(int state) {
 		ESP_LOGD(TAG, "Climate write state: %d", state);
 		//this->publish_state(state);
 		//if (g_iq2020_main != NULL) { g_iq2020_main->ClimateAction(state); }
 	}
+	*/
 
 	void IQ2020Climate::dump_config() {
 		ESP_LOGCONFIG(TAG, "Empty custom climate");
