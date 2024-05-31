@@ -1,18 +1,28 @@
 import esphome.codegen as cg
 import esphome.config_validation as cv
 from esphome.components import binary_sensor
-from esphome.const import CONF_ID
+from esphome.const import (
+    DEVICE_CLASS_CONNECTIVITY,
+    ENTITY_CATEGORY_DIAGNOSTIC,
+)
+from . import ns, IQ2020Component
 
-empty_binary_sensor_ns = cg.esphome_ns.namespace('empty_binary_sensor')
+CONF_CONNECTED = "connected"
+CONF_IQ2020_SERVER = "iq2020_server"
 
-EmptyBinarySensor = empty_binary_sensor_ns.class_('EmptyBinarySensor', binary_sensor.BinarySensor, cg.Component)
+CONFIG_SCHEMA = cv.Schema(
+    {
+        cv.GenerateID(CONF_IQ2020_SERVER): cv.use_id(IQ2020Component),
+        cv.Required(CONF_CONNECTED): binary_sensor.binary_sensor_schema(
+            device_class=DEVICE_CLASS_CONNECTIVITY,
+            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
+        ),
+    }
+)
 
-CONFIG_SCHEMA = binary_sensor.BINARY_SENSOR_SCHEMA.extend({
-    cv.GenerateID(): cv.declare_id(EmptyBinarySensor),
-}).extend(cv.COMPONENT_SCHEMA)
 
+async def to_code(config):
+    server = await cg.get_variable(config[CONF_IQ2020_SERVER])
 
-def to_code(config):
-    var = cg.new_Pvariable(config[CONF_ID])
-    yield cg.register_component(var, config)
-    yield binary_sensor.register_binary_sensor(var, config)
+    sens = await binary_sensor.new_binary_sensor(config[CONF_CONNECTED])
+    cg.add(server.set_connected_sensor(sens))
