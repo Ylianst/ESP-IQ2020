@@ -22,7 +22,7 @@ def validate_buffer_size(buffer_size):
     return buffer_size
 
 def validate_temp_unit(temp_unit):
-    if temp_unit != 'C' & temp_unit != 'F':
+    if temp_unit != 'C' and temp_unit != 'F':
         raise cv.Invalid("Temp unit must be C or F.")
     return temp_unit
 
