@@ -47,7 +47,7 @@ public:
 
 	void set_port(uint16_t port) { this->port_ = port; }
 	void LightSwitchAction(int state);
-	void SetTempAction(int newtemp);
+	void SetTempAction(float newtemp);
 
 protected:
 	void publish_sensor();

@@ -345,7 +345,7 @@ void IQ2020Component::LightSwitchAction(int state) {
 	}
 }
 
-void IQ2020Component::SetTempAction(int newtemp) {
+void IQ2020Component::SetTempAction(float newtemp) {
 	//if (pending_temp != -1) return;
 	pending_temp = newtemp;
 	int deltaSteps = (temp_celsius ? 2 : 1) * (newtemp - target_temp);
