@@ -25,8 +25,8 @@ namespace iq2020_climate {
 		mode = esphome::climate::ClimateMode::CLIMATE_MODE_HEAT;
 		//current_temperature = fahrenheit_to_celsius(72);
 		//target_temperature = fahrenheit_to_celsius(82);
-		visual_min_temperature = 26.5;
-		visual_max_temperature = 40;
+		visual_min_temperature_ = 26.5;
+		visual_max_temperature_ = 40;
 		publish_state();
 	}
 
