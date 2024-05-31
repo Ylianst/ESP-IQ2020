@@ -84,11 +84,11 @@ async def to_code(config):
 
 # Dynamically choose the schema based on the setting
 def get_schema(config):
-    if config.get(CONF_SENSOR_CURRENT_TEMPERATURE) == 'F':
+    if config.get(CONF_SENSOR_CURRENT_TEMPERATURE).temp_unit == 'F':
         return CONFIG_SCHEMAF
-    elif config.get(CONF_SENSOR_CURRENT_TEMPERATURE) == 'C':
+    elif config.get(CONF_SENSOR_CURRENT_TEMPERATURE).temp_unit == 'C':
         return CONFIG_SCHEMAC
     else:
-        raise cv.Invalid(f"Unknown setting: {config.get(CONF_SENSOR_CURRENT_TEMPERATURE)}")
+        raise cv.Invalid(f"Unknown setting: {config.get(CONF_SENSOR_CURRENT_TEMPERATURE).temp_unit}")
 
 CONFIG_SCHEMA = cv.All(get_schema)
