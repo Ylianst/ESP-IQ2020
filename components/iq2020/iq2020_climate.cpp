@@ -25,9 +25,7 @@ namespace iq2020_climate {
 		mode = esphome::climate::ClimateMode::CLIMATE_MODE_HEAT;
 		//current_temperature = fahrenheit_to_celsius(72);
 		//target_temperature = fahrenheit_to_celsius(82);
-		visual_min_temperature_ = 26.5;
-		visual_max_temperature_ = 40;
-		publish_state();
+		//publish_state();
 	}
 
 	void IQ2020Climate::control(const climate::ClimateCall &call) {
@@ -55,6 +53,9 @@ namespace iq2020_climate {
 		std::set<esphome::climate::ClimateMode> heatingModes;
 		heatingModes.insert(esphome::climate::ClimateMode::CLIMATE_MODE_HEAT);
 		traits.set_supported_modes(heatingModes);
+
+		set_visual_min_temperature(26.5);
+		set_visual_max_temperature(40);
 
 		/*
 		traits.set_supports_current_temperature(!current_temperature_id_.empty());
