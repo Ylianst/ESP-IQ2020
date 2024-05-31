@@ -10,12 +10,13 @@
 #include "esphome/components/socket/socket.h"
 
 static const char *TAG = "iq2020";
-IQ2020Component* g_iq2020_main;
+IQ2020Component* g_iq2020_main = NULL;
 
 using namespace esphome;
 
 void IQ2020Component::setup() {
-	ESP_LOGCONFIG(TAG, "Setting up IQ2020...");
+	g_iq2020_main = this;
+	ESP_LOGD(TAG, "Setting up IQ2020...");
 
 	// The make_unique() wrapper doesn't like arrays, so initialize the unique_ptr directly.
 	this->buf_ = std::unique_ptr<uint8_t[]>{ new uint8_t[this->buf_size_] };
@@ -35,7 +36,6 @@ void IQ2020Component::setup() {
 	}
 
 	this->publish_sensor();
-	g_iq2020_main = this;
 }
 
 void IQ2020Component::loop() {
