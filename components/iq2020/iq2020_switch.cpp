@@ -5,7 +5,7 @@
 extern IQ2020Component* g_iq2020_main;
 
 namespace esphome {
-namespace iq2020_switch {
+//namespace iq2020_switch {
 
 	static const char *TAG = "iq2020.switch";
 
@@ -24,5 +24,5 @@ namespace iq2020_switch {
 		ESP_LOGCONFIG(TAG, "Empty custom switch");
 	}
 
-} //namespace iq2020_switch
+//} //namespace iq2020_switch
 } //namespace esphome
