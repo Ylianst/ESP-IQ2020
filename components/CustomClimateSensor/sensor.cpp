@@ -1,4 +1,4 @@
-#include "custom_climate_sensor.h"
+#include "sensor.h"
 
 namespace esphome {
 	namespace custom_climate {
