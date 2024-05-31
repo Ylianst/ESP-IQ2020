@@ -208,8 +208,7 @@ int IQ2020Component::processIQ2020Command() {
 	unsigned char checksum = 0; // Compute the checksum
 	for (int i = 1; i < (cmdlen - 1); i++) { checksum += processingBuffer[i]; }
 	if (processingBuffer[cmdlen - 1] != (checksum ^ 0xFF)) { ESP_LOGW(TAG, "Invalid checksum. Got 0x%02x, expected 0x%02x.", processingBuffer[cmdlen - 1], (checksum ^ 0xFF)); return nextPossiblePacket(); }
-	ESP_LOGW(TAG, "IQ2020 data, dst:%02x src:%02x op:%02x datalen:%d", processingBuffer[1], processingBuffer[2], processingBuffer[4], processingBuffer[3]);
-	//if (processingBuffer[1] == 0x33) { unsigned char senddata[1]; sendIQ2020Command(0x29, 0x99, 0x40, senddata, 1); }
+	//ESP_LOGW(TAG, "IQ2020 data, dst:%02x src:%02x op:%02x datalen:%d", processingBuffer[1], processingBuffer[2], processingBuffer[4], processingBuffer[3]);
 
 	if ((processingBuffer[1] == 0x01) && (processingBuffer[2] == 0x1F) && (processingBuffer[4] == 0x40)) {
 		// This is a request command from the SPA connection kit, take note of this.
@@ -249,6 +248,32 @@ int IQ2020Component::processIQ2020Command() {
 				if (this->lights_sensor_) { this->lights_sensor_->publish_state((lights != 0)); }
 #endif
 			}
+		}
+
+		if ((cmdlen == 140) && (processingBuffer[5] == 0x02) && (processingBuffer[6] == 0x56)) {
+			// This is the main status data (jets, temperature)
+
+			float temp = 0;
+			if (processingBuffer[93] == 'F') {
+				// Fahrenheit
+				temp = ((processingBuffer[91] - '0') * 10) + (processingBuffer[92] - '0') + ((processingBuffer[90] == '1') ? 100 : 0);
+			} else if (processingBuffer[92] == '.') {
+				// Celcius
+				temp = ((processingBuffer[90] - '0') * 10) + (processingBuffer[91] - '0') + ((processingBuffer[92] - '0') * 0.1);
+			}
+
+			ESP_LOGW(TAG, "Temp: %.6f", temp);
+
+			if (target_temp != temp) {
+#ifdef USE_SENSOR
+				if (this->target_temp_sensor_) this->target_temp_sensor_->publish_state(temp);
+#endif
+				target_temp = temp;
+			}
+
+			//addDecodedData("Temp Set", UTF8Encoding.Default.GetString(data, 90, 4));
+			//addDecodedData("Temp Current", UTF8Encoding.Default.GetString(data, 94, 4));
+
 		}
 
 	}

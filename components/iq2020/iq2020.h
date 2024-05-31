@@ -30,6 +30,8 @@ public:
 	void set_connectionkit_sensor(esphome::binary_sensor::BinarySensor *present) { this->connectionkit_sensor_ = present; }
 #endif
 #ifdef USE_SENSOR
+	void set_current_temp_sensor(esphome::sensor::Sensor *temp) { this->current_temp_sensor_ = temp; }
+	void set_target_temp_sensor(esphome::sensor::Sensor *temp) { this->target_temp_sensor_ = temp; }
 	void set_connection_count_sensor(esphome::sensor::Sensor *connection_count) { this->connection_count_sensor_ = connection_count; }
 #endif
 #ifdef USE_TEXT_SENSOR
@@ -77,6 +79,8 @@ protected:
 	esphome::binary_sensor::BinarySensor *connectionkit_sensor_;
 #endif
 #ifdef USE_SENSOR
+	esphome::sensor::Sensor *current_temp_sensor_;
+	esphome::sensor::Sensor *target_temp_sensor_;
 	esphome::sensor::Sensor *connection_count_sensor_;
 #endif
 #ifdef USE_TEXT_SENSOR
@@ -91,6 +95,8 @@ protected:
 	std::vector<Client> clients_{};
 	int lights = -1;
 	int connectionKit = 0;
+	float target_temp = -1;
+	float current_temp = -1;
 
 	// IQ2020 processing
 	int nextPossiblePacket();
