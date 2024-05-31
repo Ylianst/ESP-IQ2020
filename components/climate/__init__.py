@@ -25,17 +25,17 @@ CONF_TARGET_TEMPERATURE_HIGH_DATAPOINT = "target_temperature_high_datapoint"
 #)
 
 CONFIG_SCHEMA = cv.All(
-    climate.CLIMATE_SCHEMA.extend(
-        {
+#    climate.CLIMATE_SCHEMA.extend(
+#        {
 #            cv.GenerateID(): cv.declare_id(IQ2020Climate),
-            cv.Optional(CONF_CURRENT_TEMPERATURE_DATAPOINT, default=""): cv.string,
-            cv.Optional(CONF_TARGET_TEMPERATURE_DATAPOINT, default=""): cv.string,
-            cv.Optional(CONF_TARGET_TEMPERATURE_LOW_DATAPOINT, default=""): cv.string,
-            cv.Optional(CONF_TARGET_TEMPERATURE_HIGH_DATAPOINT, default=""): cv.string,
-        }
-    )
-    .extend(cv.COMPONENT_SCHEMA)
-    .extend(CLIENT_SCHEMA)
+#            cv.Optional(CONF_CURRENT_TEMPERATURE_DATAPOINT, default=""): cv.string,
+#            cv.Optional(CONF_TARGET_TEMPERATURE_DATAPOINT, default=""): cv.string,
+#            cv.Optional(CONF_TARGET_TEMPERATURE_LOW_DATAPOINT, default=""): cv.string,
+#            cv.Optional(CONF_TARGET_TEMPERATURE_HIGH_DATAPOINT, default=""): cv.string,
+#        }
+#    )
+#    .extend(cv.COMPONENT_SCHEMA)
+#    .extend(CLIENT_SCHEMA)
 )
 
 async def to_code(config):
