@@ -17,7 +17,7 @@ CONF_SENSOR_TARGET_TEMPERATURE = "target_temperature"
 CONF_SENSOR_CONNECTION_COUNT = "connection_count"
 CONF_IQ2020_SERVER = "iq2020_server"
 
-CONFIG_SCHEMAF = cv.Schema(
+CONFIG_SCHEMA = cv.Schema(
     {
         cv.GenerateID(CONF_IQ2020_SERVER): cv.use_id(IQ2020Component),
         cv.Required(CONF_SENSOR_CURRENT_TEMPERATURE): sensor.sensor_schema(
@@ -92,4 +92,4 @@ def get_schema(config):
 #    else:
 #        raise cv.Invalid(f"Unknown setting: {config.get(CONF_SENSOR_CURRENT_TEMPERATURE).get(CONF_TEMP_UNIT)}")
 
-CONFIG_SCHEMA = cv.All(get_schema)
+#CONFIG_SCHEMA = cv.All(get_schema)
