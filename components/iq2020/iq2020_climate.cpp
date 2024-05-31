@@ -8,8 +8,8 @@
 #include "iq2020_climate.h"
 //#include "iq2020.h"
 
-//extern IQ2020Component* g_iq2020_main;
-//extern esphome::iq2020_climate::IQ2020Climate* g_iq2020_light_climate;
+extern IQ2020Component* g_iq2020_main;
+extern esphome::iq2020_climate::IQ2020Climate* g_iq2020_light_climate;
 
 namespace esphome {
 namespace iq2020_climate {
