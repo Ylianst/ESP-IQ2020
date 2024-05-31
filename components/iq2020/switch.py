@@ -12,10 +12,10 @@ CONFIG_SCHEMA = switch.SWITCH_SCHEMA.extend({
     cv.GenerateID(): cv.declare_id(EmptySwitch)
 }).extend(cv.COMPONENT_SCHEMA)
 
-def to_code(config):
+async def to_code(config):
     server = cg.new_Pvariable(config[CONF_ID])
-    yield cg.register_component(server, config)
-    yield switch.register_switch(server, config)
+    await cg.register_component(server, config)
+    await switch.register_switch(server, config)
 
     var = await cg.get_variable(config[CONF_IQ2020_SERVER])
     cg.add(server.set_request_mod(config[CONF_SWITCH_LIGHTS]))
