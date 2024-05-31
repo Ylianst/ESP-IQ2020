@@ -71,6 +71,8 @@ protected:
 		size_t position{ 0 };
 	};
 
+	void testcall(char* msg);
+
 	esphome::uart::UARTComponent *stream_{ nullptr };
 	uint16_t port_;
 	size_t buf_size_;

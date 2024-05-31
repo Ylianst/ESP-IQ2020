@@ -1,5 +1,6 @@
 #include "esphome/core/log.h"
 #include "iq2020_switch.h"
+#include "iq2020.h"
 
 namespace esphome {
 namespace iq2020_switch {
@@ -13,6 +14,7 @@ namespace iq2020_switch {
 	void IQ2020Switch::write_state(bool state) {
 		ESP_LOGD(TAG, "Switch write state: %d", state);
 		this->publish_state(state);
+		g_iq2020_main->testcall("Hello!");
 	}
 
 	void IQ2020Switch::dump_config() {

@@ -9,6 +9,7 @@
 #include "esphome/components/socket/socket.h"
 
 static const char *TAG = "iq2020";
+static IQ2020Component* g_iq2020_main;
 
 using namespace esphome;
 
@@ -33,6 +34,7 @@ void IQ2020Component::setup() {
 	}
 
 	this->publish_sensor();
+	g_iq2020_main = this;
 }
 
 void IQ2020Component::loop() {
@@ -305,6 +307,10 @@ void IQ2020Component::sendIQ2020Command(unsigned char dst, unsigned char src, un
 	outboundBuffer[len + 5] = (checksum ^ 0xFF);
 	this->stream_->write_array(outboundBuffer, len + 6);
 	ESP_LOGW(TAG, "IQ2020 transmit, dst:%02x src:%02x op:%02x datalen:%d", outboundBuffer[1], outboundBuffer[2], outboundBuffer[4], outboundBuffer[3]);
+}
+
+void IQ2020Component::testcall(char* msg) {
+	ESP_LOGW(TAG, "MSG: %s", msg);
 }
 
 IQ2020Component::Client::Client(std::unique_ptr<esphome::socket::Socket> socket, std::string identifier, size_t position)
