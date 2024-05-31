@@ -11,23 +11,49 @@ from esphome.const import (
 from . import ns, IQ2020Component
 
 UNIT_FAHRENHEIT = "°F"
+CONF_TEMP_UNIT = "temp_unit"
 CONF_SENSOR_CURRENT_TEMPERATURE = "current_temperature"
 CONF_SENSOR_TARGET_TEMPERATURE = "target_temperature"
 CONF_SENSOR_CONNECTION_COUNT = "connection_count"
 CONF_IQ2020_SERVER = "iq2020_server"
 
-CONFIG_SCHEMA = cv.Schema(
+CONFIG_SCHEMAF = cv.Schema(
     {
         cv.GenerateID(CONF_IQ2020_SERVER): cv.use_id(IQ2020Component),
         cv.Required(CONF_SENSOR_CURRENT_TEMPERATURE): sensor.sensor_schema(
             unit_of_measurement=UNIT_FAHRENHEIT,
+            device_class=DEVICE_CLASS_TEMPERATURE,
+            accuracy_decimals=0,
+            state_class=STATE_CLASS_MEASUREMENT,
+            icon=ICON_THERMOMETER,
+        ),
+        cv.Required(CONF_SENSOR_TARGET_TEMPERATURE): sensor.sensor_schema(
+            unit_of_measurement=UNIT_FAHRENHEIT,
+            device_class=DEVICE_CLASS_TEMPERATURE,
+            accuracy_decimals=0,
+            state_class=STATE_CLASS_MEASUREMENT,
+            icon=ICON_THERMOMETER,
+        ),
+        cv.Required(CONF_SENSOR_CONNECTION_COUNT): sensor.sensor_schema(
+            accuracy_decimals=0,
+            state_class=STATE_CLASS_MEASUREMENT,
+            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
+        ),
+    }
+)
+
+CONFIG_SCHEMAC = cv.Schema(
+    {
+        cv.GenerateID(CONF_IQ2020_SERVER): cv.use_id(IQ2020Component),
+        cv.Required(CONF_SENSOR_CURRENT_TEMPERATURE): sensor.sensor_schema(
+            unit_of_measurement=UNIT_CELSIUS,
             device_class=DEVICE_CLASS_TEMPERATURE,
             accuracy_decimals=1,
             state_class=STATE_CLASS_MEASUREMENT,
             icon=ICON_THERMOMETER,
         ),
         cv.Required(CONF_SENSOR_TARGET_TEMPERATURE): sensor.sensor_schema(
-            unit_of_measurement=UNIT_FAHRENHEIT,
+            unit_of_measurement=UNIT_CELSIUS,
             device_class=DEVICE_CLASS_TEMPERATURE,
             accuracy_decimals=1,
             state_class=STATE_CLASS_MEASUREMENT,
@@ -40,7 +66,6 @@ CONFIG_SCHEMA = cv.Schema(
         ),
     }
 )
-
 
 async def to_code(config):
     server = await cg.get_variable(config[CONF_IQ2020_SERVER])
@@ -56,3 +81,12 @@ async def to_code(config):
     if CONF_SENSOR_CONNECTION_COUNT in config:
         sens = await sensor.new_sensor(config[CONF_SENSOR_CONNECTION_COUNT])
         cg.add(server.set_connection_count_sensor(sens))
+
+# Dynamically choose the schema based on the setting
+def get_schema(config):
+    if config.get(CONF_SETTING) == 'F':
+        return CONFIG_SCHEMAF
+    else:
+        raise CONFIG_SCHEMAC
+
+CONFIG_SCHEMA = cv.All(get_schema)
