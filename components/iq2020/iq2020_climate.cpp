@@ -13,13 +13,17 @@ extern esphome::iq2020_climate::IQ2020Climate* g_iq2020_climate;
 namespace esphome {
 namespace iq2020_climate {
 
+	float fahrenheit_to_celsius(float f) { return (f - 32) * 5 / 9; }
+	float celsius_to_fahrenheit(float c) { return c * 9 / 5 + 32; }
+
 	static const char *TAG = "iq2020.climate";
 
 	void IQ2020Climate::setup() {
 		g_iq2020_climate = this;
 		ESP_LOGD(TAG, "Climate Setup");
 
-		current_temperature = 72;
+		mode = esphome::climate::ClimateMode::CLIMATE_MODE_AUTO;
+		current_temperature = fahrenheit_to_celsius(72);
 		publish_state();
 	}
 
