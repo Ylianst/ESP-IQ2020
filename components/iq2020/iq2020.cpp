@@ -246,7 +246,6 @@ int IQ2020Component::processIQ2020Command() {
 				if (g_iq2020_light_switch != NULL) { g_iq2020_light_switch->publish_state(lights); }
 			}
 		}
-
 	}
 
 	if ((processingBuffer[1] == 0x1F) && (processingBuffer[2] == 0x01) && (processingBuffer[4] == 0x80)) {
@@ -255,7 +254,7 @@ int IQ2020Component::processIQ2020Command() {
 		ESP_LOGW(TAG, "SCK RSP Data, len=%d, cmd=%02x%02x", cmdlen, processingBuffer[5], processingBuffer[6]);
 
 		if ((lights_pending != -1) && (cmdlen == 9) && (processingBuffer[5] == 0x17) && (processingBuffer[6] == 0x02) && (processingBuffer[7] == 0x06)) {
-			// Confirmation that the pending light command we received
+			// Confirmation that the pending light command was received
 			lights = lights_pending;
 			lights_pending = -1;
 			if (g_iq2020_light_switch != NULL) { g_iq2020_light_switch->publish_state(lights); }
@@ -267,6 +266,16 @@ int IQ2020Component::processIQ2020Command() {
 			if (lights != (processingBuffer[24] & 1)) {
 				lights = (processingBuffer[24] & 1);
 				if (g_iq2020_light_switch != NULL) { g_iq2020_light_switch->publish_state(lights); }
+			}
+		}
+
+		if ((pending_temp != -1) && (cmdlen == 9) && (processingBuffer[5] == 0x01) && (processingBuffer[6] == 0x09) && (processingBuffer[7] == 0x06)) {
+			// Confirmation that the pending temprature change command was received
+			target_temp = pending_temp;
+			pending_temp = -1;
+			if (g_iq2020_climate != NULL) {
+				if (temp_celsius) { g_iq2020_climate->updateTempsC(target_temp, current_temp); }
+				else { g_iq2020_climate->updateTempsF(target_temp, current_temp); }
 			}
 		}
 
@@ -306,13 +315,11 @@ int IQ2020Component::processIQ2020Command() {
 			}
 			//ESP_LOGW(TAG, "Current Temp: %.1f", temp);
 			current_temp = temp;
+			pending_temp = -1;
 
 			if (g_iq2020_climate != NULL) {
-				if (temp_celsius) {
-					g_iq2020_climate->updateTempsC(target_temp, current_temp);
-				} else {
-					g_iq2020_climate->updateTempsF(target_temp, current_temp);
-				}
+				if (temp_celsius) { g_iq2020_climate->updateTempsC(target_temp, current_temp); }
+				else { g_iq2020_climate->updateTempsF(target_temp, current_temp); }
 			}
 
 			ESP_LOGW(TAG, "Current Temp: %.1f, Target Temp: %.1f", current_temp, target_temp);
@@ -349,23 +356,13 @@ void IQ2020Component::LightSwitchAction(int state) {
 }
 
 void IQ2020Component::SetTempAction(float newtemp) {
-	//if (pending_temp != -1) return;
-
+	if (pending_temp != -1) return;
 	if (temp_celsius) { pending_temp = newtemp; } else { pending_temp = esphome::celsius_to_fahrenheit(newtemp); }
-	int deltaSteps = (temp_celsius ? 2 : 1) * (pending_temp - target_temp);
+	unsigned char deltaSteps = ((temp_celsius ? 2 : 1) * (pending_temp - target_temp));
 	ESP_LOGW(TAG, "SetTempAction: new=%f, target=%f, deltasteps=%d", pending_temp, target_temp, deltaSteps);
-
-	/*
-	lights_pending = state;
-	if (state != 0) {
-		unsigned char lightOnCmd[] = { 0x17, 0x02, 0x04, 0x11, 0x00 };
-		sendIQ2020Command(0x01, 0x1F, 0x40, lightOnCmd, 5); // Turn on lights
-	}
-	else {
-		unsigned char lightOffCmd[] = { 0x17, 0x02, 0x04, 0x10, 0x00 };
-		sendIQ2020Command(0x01, 0x1F, 0x40, lightOffCmd, 5); // Turn off lights
-	}
-	*/
+	if (deltaSteps == 0) return;
+	unsigned char changeTempCmd[] = { 0x01, 0x09, 0xFF, deltaSteps };
+	sendIQ2020Command(0x01, 0x1F, 0x40, changeTempCmd, 4); // Adjust temp
 }
 
 IQ2020Component::Client::Client(std::unique_ptr<esphome::socket::Socket> socket, std::string identifier, size_t position)
