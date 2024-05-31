@@ -230,7 +230,7 @@ int IQ2020Component::processIQ2020Command() {
 			// This is the SPA connection kit command to turn the lights on/off
 			if ((processingBuffer[8] & 1) != lights) {
 				lights = (processingBuffer[8] & 1);
-				if (light_switch != null) { light_switch->publish_state(lights); }
+				if (light_switch != NULL) { light_switch->publish_state(lights); }
 #ifdef USE_BINARY_SENSOR
 				if (this->lights_sensor_) { this->lights_sensor_->publish_state((lights != 0)); }
 #endif
@@ -248,7 +248,7 @@ int IQ2020Component::processIQ2020Command() {
 			// This is an update on the status of the spa lights (enabled, intensity, color)
 			if (lights != (processingBuffer[24] & 1)) {
 				lights = (processingBuffer[24] & 1);
-				if (light_switch != null) { light_switch->publish_state(lights); }
+				if (light_switch != NULL) { light_switch->publish_state(lights); }
 #ifdef USE_BINARY_SENSOR
 				if (this->lights_sensor_) { this->lights_sensor_->publish_state((lights != 0)); }
 #endif
