@@ -9,7 +9,7 @@ AUTO_LOAD = ["socket"]
 
 DEPENDENCIES = ["uart", "network"]
 
-MULTI_CONF = True
+MULTI_CONF = False
 
 ns = cg.global_ns
 IQ2020Component = ns.class_("IQ2020Component", cg.Component)
