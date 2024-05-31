@@ -329,10 +329,10 @@ void IQ2020Component::LightSwitchAction(int state) {
 	lights_pending = state;
 	if (state != 0) {
 		unsigned char lightOnCmd[] = { 0x17, 0x02, 0x04, 0x11, 0x00 };
-		sendIQ2020Command(0x01, 0x1F, 0x40, lightOnCmd);
+		sendIQ2020Command(0x01, 0x1F, 0x40, lightOnCmd, 5);
 	} else {
 		unsigned char lightOffCmd[] = { 0x17, 0x02, 0x04, 0x10, 0x00 };
-		sendIQ2020Command(0x01, 0x1F, 0x40, lightOffCmd);
+		sendIQ2020Command(0x01, 0x1F, 0x40, lightOffCmd, 5);
 	}
 	//ESP_LOGW(TAG, "MSG: %s", msg.c_str());
 }
