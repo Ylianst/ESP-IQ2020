@@ -19,16 +19,18 @@ CONFIG_SCHEMA = cv.Schema(
     {
         cv.GenerateID(CONF_IQ2020_SERVER): cv.use_id(IQ2020Component),
         cv.Required(CONF_SENSOR_CURRENT_TEMPERATURE): sensor.sensor_schema(
+            unit_of_measurement=UNIT_CELSIUS,
+            device_class=DEVICE_CLASS_TEMPERATURE,
             accuracy_decimals=1,
             state_class=STATE_CLASS_MEASUREMENT,
             icon=ICON_THERMOMETER,
-            units=UNIT_CELSIUS,
         ),
         cv.Required(CONF_SENSOR_TARGET_TEMPERATURE): sensor.sensor_schema(
+            unit_of_measurement=UNIT_FAHRENHEIT,
+            device_class=DEVICE_CLASS_TEMPERATURE,
             accuracy_decimals=1,
             state_class=STATE_CLASS_MEASUREMENT,
             icon=ICON_THERMOMETER,
-            units=UNIT_FAHRENHEIT,
         ),
         cv.Required(CONF_SENSOR_CONNECTION_COUNT): sensor.sensor_schema(
             accuracy_decimals=0,
