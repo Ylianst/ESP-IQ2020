@@ -24,7 +24,7 @@ async def to_code(config):
     var = await switch.new_switch(config)
     await cg.register_component(var, config)
 
-    paren = await cg.get_variable(config[CONF_ID])
+    paren = await cg.get_variable(config[CONF_IQ2020_SERVER])
     cg.add(var.set_iq2020_parent(paren))
 #    cg.add(var.set_request_mod(config[CONF_REQUEST_MOD]))
 #   cg.add(var.set_request_once(config[CONF_REQUEST_ONCE]))
