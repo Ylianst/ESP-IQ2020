@@ -22,7 +22,7 @@ namespace iq2020_climate {
 		g_iq2020_climate = this;
 		ESP_LOGD(TAG, "Climate Setup");
 
-		mode = esphome::climate::ClimateMode::CLIMATE_MODE_AUTO;
+		mode = esphome::climate::ClimateMode::CLIMATE_MODE_HEAT;
 		current_temperature = fahrenheit_to_celsius(72);
 		publish_state();
 	}
@@ -38,7 +38,7 @@ namespace iq2020_climate {
 		traits.set_supports_current_temperature(true);
 
 		std::set<esphome::climate::ClimateMode> heatingModes;
-		heatingModes.insert(esphome::climate::ClimateMode::CLIMATE_MODE_AUTO);
+		heatingModes.insert(esphome::climate::ClimateMode::CLIMATE_MODE_HEAT);
 		traits.set_supported_modes(heatingModes);
 
 		/*
