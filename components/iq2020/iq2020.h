@@ -99,8 +99,10 @@ protected:
 	int lights = -1;
 	int lights_pending = -1;
 	int connectionKit = 0;
+	bool temp_celsius = false;
 	float target_temp = -1;
 	float current_temp = -1;
+	float pending_temp = -1;
 
 	// IQ2020 processing
 	int nextPossiblePacket();

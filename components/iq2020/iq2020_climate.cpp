@@ -21,11 +21,7 @@ namespace iq2020_climate {
 	void IQ2020Climate::setup() {
 		g_iq2020_climate = this;
 		ESP_LOGD(TAG, "Climate Setup");
-
 		mode = esphome::climate::ClimateMode::CLIMATE_MODE_HEAT;
-		//current_temperature = fahrenheit_to_celsius(72);
-		//target_temperature = fahrenheit_to_celsius(82);
-		//publish_state();
 	}
 
 	void IQ2020Climate::control(const climate::ClimateCall &call) {
@@ -64,15 +60,6 @@ namespace iq2020_climate {
 		traits.set_visual_target_temperature_step(1);
 		traits.set_visual_current_temperature_step(1);
 
-		/*
-		traits.set_supports_current_temperature(!current_temperature_id_.empty());
-		traits.set_supports_current_humidity(!current_humidity_id_.empty());
-		traits.set_supports_target_humidity(!target_dehumidification_level_id_.empty());
-		traits.set_supports_two_point_target_temperature(!target_temperature_high_id_.empty());
-		if (!mode_id_.empty()) {traits.set_supported_modes(map_values_as_set(modes_));}
-		if (!custom_preset_id_.empty()) {traits.set_supported_custom_presets(map_values_as_set(custom_presets_));}
-		if (!custom_fan_mode_id_.empty()) {traits.set_supported_custom_fan_modes(map_values_as_set(custom_fan_modes_));}
-		*/
 		return traits;
 	}
 

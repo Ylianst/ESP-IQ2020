@@ -273,11 +273,13 @@ int IQ2020Component::processIQ2020Command() {
 			// Read target temperature
 			float temp = 0;
 			if (processingBuffer[93] == 'F') { // Fahrenheit
+				temp_celsius = false;
 				temp = ((processingBuffer[91] - '0') * 10) + (processingBuffer[92] - '0') + ((processingBuffer[90] == '1') ? 100 : 0);
 #ifdef USE_SENSOR
 				if ((target_temp != temp) && (this->target_f_temp_sensor_)) this->target_f_temp_sensor_->publish_state(temp);
 #endif
 			} else if (processingBuffer[92] == '.') { // Celcius
+				temp_celsius = true;
 				temp = ((processingBuffer[90] - '0') * 10) + (processingBuffer[91] - '0') + ((processingBuffer[92] - '0') * 0.1);
 #ifdef USE_SENSOR
 				if ((target_temp != temp) && (this->target_c_temp_sensor_)) this->target_c_temp_sensor_->publish_state(temp);
@@ -303,10 +305,10 @@ int IQ2020Component::processIQ2020Command() {
 			current_temp = temp;
 
 			if (g_iq2020_climate != NULL) {
-				if (processingBuffer[97] == 'F') { // Fahrenheit
-					g_iq2020_climate->updateTempsF(target_temp, current_temp);
-				} else {
+				if (temp_celsius) {
 					g_iq2020_climate->updateTempsC(target_temp, current_temp);
+				} else {
+					g_iq2020_climate->updateTempsF(target_temp, current_temp);
 				}
 			}
 
@@ -344,7 +346,11 @@ void IQ2020Component::LightSwitchAction(int state) {
 }
 
 void IQ2020Component::SetTempAction(int newtemp) {
-	ESP_LOGW(TAG, "SetTempAction: %d", newtemp);
+	//if (pending_temp != -1) return;
+	pending_temp = newtemp;
+	int deltaSteps = (temp_celsius ? 2 : 1) * (newtemp - target_temp);
+	ESP_LOGW(TAG, "SetTempAction: new=%f, target=%f, deltasteps=%d", newtemp, target_temp, deltaSteps);
+
 	/*
 	lights_pending = state;
 	if (state != 0) {
