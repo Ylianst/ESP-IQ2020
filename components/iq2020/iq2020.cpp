@@ -246,8 +246,19 @@ int IQ2020Component::processIQ2020Command() {
 
 		ESP_LOGW(TAG, "SCK RSP Data, len=%d, cmd=%02x%02x", cmdlen, processingBuffer[5], processingBuffer[6]);
 
+		if ((lights_pending != -1) && (cmdlen == 9) && (processingBuffer[5] == 0x17) && (processingBuffer[6] == 0x02) && (processingBuffer[7] == 0x06)) {
+			// Confirmation that the pending light command we received
+			lights = lights_pending;
+			lights_pending = -1;
+			if (g_iq2020_light_switch != NULL) { g_iq2020_light_switch->publish_state(lights); }
+#ifdef USE_BINARY_SENSOR
+			if (this->lights_sensor_) { this->lights_sensor_->publish_state((lights != 0)); }
+#endif
+		}
+
 		if ((cmdlen == 28) && (processingBuffer[5] == 0x17) && (processingBuffer[6] == 0x05)) {
 			// This is an update on the status of the spa lights (enabled, intensity, color)
+			lights_pending = -1;
 			if (lights != (processingBuffer[24] & 1)) {
 				lights = (processingBuffer[24] & 1);
 				if (g_iq2020_light_switch != NULL) { g_iq2020_light_switch->publish_state(lights); }
@@ -315,8 +326,13 @@ void IQ2020Component::sendIQ2020Command(unsigned char dst, unsigned char src, un
 }
 
 void IQ2020Component::LightSwitchAction(int state) {
-	if (state >= 0) {
-
+	lights_pending = state;
+	if (state != 0) {
+		unsigned char lightOnCmd[] = { 0x17, 0x02, 0x04, 0x11, 0x00 };
+		sendIQ2020Command(0x01, 0x1F, 0x40, lightOnCmd);
+	} else {
+		unsigned char lightOffCmd[] = { 0x17, 0x02, 0x04, 0x10, 0x00 };
+		sendIQ2020Command(0x01, 0x1F, 0x40, lightOffCmd);
 	}
 	//ESP_LOGW(TAG, "MSG: %s", msg.c_str());
 }

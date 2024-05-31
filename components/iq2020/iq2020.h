@@ -98,6 +98,7 @@ protected:
 	std::unique_ptr<esphome::socket::Socket> socket_{};
 	std::vector<Client> clients_{};
 	int lights = -1;
+	int lights_pending = -1;
 	int connectionKit = 0;
 	float target_temp = -1;
 	float current_temp = -1;
