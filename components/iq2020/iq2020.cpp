@@ -18,6 +18,9 @@ esphome::iq2020_climate::IQ2020Climate* g_iq2020_climate = NULL;
 
 using namespace esphome;
 
+float fahrenheit_to_celsius(float f) { return (f - 32) * 5 / 9; }
+float celsius_to_fahrenheit(float c) { return c * 9 / 5 + 32; }
+
 void IQ2020Component::setup() {
 	g_iq2020_main = this;
 	ESP_LOGD(TAG, "Setting up IQ2020...");
@@ -347,9 +350,10 @@ void IQ2020Component::LightSwitchAction(int state) {
 
 void IQ2020Component::SetTempAction(float newtemp) {
 	//if (pending_temp != -1) return;
-	pending_temp = newtemp;
-	int deltaSteps = (temp_celsius ? 2 : 1) * (newtemp - target_temp);
-	ESP_LOGW(TAG, "SetTempAction: new=%f, target=%f, deltasteps=%d", newtemp, target_temp, deltaSteps);
+
+	if (temp_celsius) { pending_temp = newtemp; } else { pending_temp = celsius_to_fahrenheit(newtemp); }
+	int deltaSteps = (temp_celsius ? 2 : 1) * (pending_temp - target_temp);
+	ESP_LOGW(TAG, "SetTempAction: new=%f, target=%f, deltasteps=%d", pending_temp, target_temp, deltaSteps);
 
 	/*
 	lights_pending = state;

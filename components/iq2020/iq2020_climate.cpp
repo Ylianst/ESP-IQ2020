@@ -26,7 +26,7 @@ namespace iq2020_climate {
 
 	void IQ2020Climate::control(const climate::ClimateCall &call) {
 		if (call.get_target_temperature().has_value()) {
-			g_iq2020_main->SetTempAction(call.get_target_temperature().value());
+			g_iq2020_main->SetTempAction(celsius_to_fahrenheit(call.get_target_temperature().value()));
 		}
 	}
 
