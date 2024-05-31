@@ -5,7 +5,7 @@ from esphome.const import CONF_ID
 
 from . import ns, IQ2020Component
 
-CONF_IQ2020_SERVER = "iq2020_server"
+CONF_IQ2020_SERVER = "IQ2020Component"
 CONF_SWITCH_LIGHTS = "iq2020_switch"
 
 iq2020_switch_ns = cg.esphome_ns.namespace('iq2020_switch')
