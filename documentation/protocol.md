@@ -194,7 +194,7 @@ Get Versions
 <-- 1F 01 80 01005752342E30346465316345303032444B342E303006
 ```
 
-Get and set timestamp (in seconds)
+Get and set timestamp (in seconds). Send >60 in data to read the value.
 ```
 --> 01 1F 80 024C99
 <-- 1F 01 80 024C3431011400D40701
