@@ -3,6 +3,7 @@
 #include "esphome/core/hal.h"
 #include "esphome/core/log.h"
 #include "esphome/components/climate/climate_traits.h"
+#include "esphome/components/climate/climate_mode.h"
 #include "iq2020_climate.h"
 #include "iq2020.h"
 
