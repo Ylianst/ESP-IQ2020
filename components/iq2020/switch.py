@@ -25,7 +25,7 @@ async def to_code(config):
     var = await switch.new_switch(config)
     await cg.register_component(var, config)
 
-    raise cv.Invalid(f"ERR {config}")
+    raise cv.Invalid(f"ERR {cg}")
 
     paren = await cg.get_variable(config[CONF_IQ2020_SERVER])
     cg.add(var.set_iq2020_parent(paren))
