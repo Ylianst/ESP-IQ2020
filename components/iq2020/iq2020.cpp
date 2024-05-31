@@ -332,10 +332,13 @@ int IQ2020Component::processIQ2020Command() {
 					if (pending_temp_retry > 0) { // Try to adjust the temperature again
 						unsigned char deltaSteps = ((temp_celsius ? 2 : 1) * (pending_temp - target_temp));
 						ESP_LOGW(TAG, "Retry SetTempAction: new=%f, target=%f, deltasteps=%d", pending_temp, target_temp, deltaSteps);
-						if (deltaSteps == 0) return;
-						unsigned char changeTempCmd[] = { 0x01, 0x09, 0xFF, deltaSteps };
-						sendIQ2020Command(0x01, 0x1F, 0x40, changeTempCmd, 4); // Adjust temp
-						pending_temp_retry--;
+						if (deltaSteps != 0) {
+							unsigned char changeTempCmd[] = { 0x01, 0x09, 0xFF, deltaSteps };
+							sendIQ2020Command(0x01, 0x1F, 0x40, changeTempCmd, 4); // Adjust temp
+							pending_temp_retry--;
+						} else {
+							pending_temp = -1;
+						}
 					} else {
 						pending_temp = -1; // Give up
 					}
