@@ -6,7 +6,7 @@
 #include "iq2020.h"
 
 extern IQ2020Component* g_iq2020_main;
-extern esphome::iq2020_fan::IQ2020Fan* g_iq2020_fan[SWITCHFAN];
+extern esphome::iq2020_fan::IQ2020Fan* g_iq2020_fan[FANCOUNT];
 
 namespace esphome {
 namespace iq2020_fan {
