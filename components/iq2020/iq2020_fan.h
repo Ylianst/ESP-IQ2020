@@ -1,28 +1,28 @@
-import esphome.codegen as cg
-import esphome.config_validation as cv
-from esphome.components import fan
-from esphome.const import CONF_ID
+#pragma once
 
-from.import ns, IQ2020Component
+#include "esphome/core/component.h"
+//#include "esphome/components/output/binary_output.h"
+#include "esphome/components/fan/fan_state.h"
+#include "iq2020.h"
 
-CONF_IQ2020_ID = "IQ2020Component";
-CONF_IQ2020_SERVER = "iq2020_server"
-CONF_FAN_LIGHTS = "iq2020_fan"
-CONF_FAN_DATAPOINT = "fan_datapoint"
+namespace esphome {
+namespace iq2020_fan {
 
-iq2020_fan_ns = cg.esphome_ns.namespace('iq2020_fan')
-IQ2020Switch = iq2020_fan_ns.class_('IQ2020Fan', fan.Switch, cg.Component)
+	class IQ2020Fan : public Component {
+	public:
+		void set_fan(fan::Fan *fan) { fan_ = fan; }
+		//void set_output(output::BinaryOutput *output) { output_ = output; }
+		void setup() override;
+//		void loop() override;
+		void dump_config() override;
+		void set_fan_id(unsigned int id) { this->fan_id = id; }
 
-CONFIG_SCHEMA = fan.FAN_SCHEMA.extend({
-	cv.GenerateID() : cv.declare_id(IQ2020Switch)
-}).extend({ cv.Required(CONF_FAN_DATAPOINT) : cv.positive_int }).extend(cv.COMPONENT_SCHEMA)
+	protected:
+		fan::Fan *fan_;
+		//  output::BinaryOutput *output_;
+		bool next_update_{ true };
+		unsigned int fan_id;
+	};
 
-async def to_code(config) :
-	server = cg.new_Pvariable(config[CONF_ID])
-	await cg.register_component(server, config)
-	await fan.register_fan(server, config)
-
-	#    paren = await cg.get_variable(config[CONF_IQ2020_ID])
-	#    cg.add(server.set_iq2020_parent(paren))
-	#   cg.add(server.set_fan_id(config[CONF_ID]))
-	cg.add(server.set_fan_id(config[CONF_FAN_DATAPOINT]))
+}  // namespace iq2020_fan
+}  // namespace esphome
