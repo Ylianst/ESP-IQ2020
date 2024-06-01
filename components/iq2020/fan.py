@@ -15,9 +15,9 @@ IQ2020Fan = iq2020_fan_ns.class_('IQ2020Fan', fan.Fan, cg.Component)
 
 CONFIG_SCHEMA = fan.FAN_SCHEMA.extend({
     cv.GenerateID(CONF_OUTPUT_ID): cv.declare_id(IQ2020Fan),
-    cv.Required(CONF_OUTPUT): cv.use_id(output.BinaryOutput),
-    cv.Optional(CONF_DIRECTION_OUTPUT): cv.use_id(output.BinaryOutput),
-    cv.Optional(CONF_OSCILLATION_OUTPUT): cv.use_id(output.BinaryOutput),
+#    cv.Required(CONF_OUTPUT): cv.use_id(output.BinaryOutput),
+#    cv.Optional(CONF_DIRECTION_OUTPUT): cv.use_id(output.BinaryOutput),
+#    cv.Optional(CONF_OSCILLATION_OUTPUT): cv.use_id(output.BinaryOutput),
 }).extend({ cv.Required(CONF_FAN_DATAPOINT): cv.positive_int }).extend(cv.COMPONENT_SCHEMA)
 
 def to_code(config):
@@ -29,12 +29,12 @@ def to_code(config):
     output_ = yield cg.get_variable(config[CONF_OUTPUT])
     cg.add(var.set_output(output_))
 
-    if CONF_OSCILLATION_OUTPUT in config:
-        oscillation_output = yield cg.get_variable(config[CONF_OSCILLATION_OUTPUT])
-        cg.add(var.set_oscillating(oscillation_output))
+#    if CONF_OSCILLATION_OUTPUT in config:
+#        oscillation_output = yield cg.get_variable(config[CONF_OSCILLATION_OUTPUT])
+#        cg.add(var.set_oscillating(oscillation_output))
 
-    if CONF_DIRECTION_OUTPUT in config:
-        direction_output = yield cg.get_variable(config[CONF_DIRECTION_OUTPUT])
-        cg.add(var.set_direction(direction_output))
+#    if CONF_DIRECTION_OUTPUT in config:
+#        direction_output = yield cg.get_variable(config[CONF_DIRECTION_OUTPUT])
+#        cg.add(var.set_direction(direction_output))
 
     cg.add(server.set_fan_id(config[CONF_FAN_DATAPOINT]))
