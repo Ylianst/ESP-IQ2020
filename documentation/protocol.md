@@ -78,46 +78,94 @@ Read FreshWater Salt Module Data (Polled)
 <-- 1F 01 80 1E030003FFFF00FF006800FF07FF0000B3100040
 ```
 
-Jet 1 ON (Command)
+Jet 1 ON
 ```
 <-- 01 1F 40 0B0203
 <-- 1F 01 80 0B0202
 ```
 
-Jet 1 OFF (Command)
+Jet 1 OFF
 ```
 <-- 01 1F 40 0B0201
 <-- 1F 01 80 0B0200
 ```
 
-Jet 2 MEDIUM (Command)
+Jet 2 MEDIUM
 ```
 <-- 01 1F 40 0B0302
 <-- 1F 01 80 0B0301
 ```
 
-Jet 2 FULL (Command)
+Jet 2 FULL
 ```
 <-- 01 1F 40 0B0303
 <-- 1F 01 80 0B0302
 ```
 
-Jet 2 OFF (Command)
+Jet 2 OFF
 ```
 <-- 01 1F 40 0B0301
 <-- 1F 01 80 0B0300
 ```
 
-Lights ON (Command)
+Lights ON
 ```
 <-- 01 1F 40 1702041100
 <-- 1F 01 80 170206
 ```
 
-Lights OFF (Command)
+Lights OFF
 ```
 <-- 01 1F 40 1702041000
 <-- 1F 01 80 170206
+```
+
+Spa Lock ON
+```
+<-- 01 1F 40 0B1D02
+<-- 1F 01 80 0B1D01
+```
+
+Spa Lock OFF
+```
+<-- 01 1F 40 0B1D01
+<-- 1F 01 80 0B1D00
+```
+
+Temperature Lock ON
+```
+<-- 01 1F 40 0B1E02
+<-- 1F 01 80 0B1E01
+```
+
+Temperature Lock OFF
+```
+<-- 01 1F 40 0B1E01
+<-- 1F 01 80 0B1E00
+```
+
+Summer Timer ON
+```
+<-- 01 1F 40 0B1C02
+<-- 1F 01 80 0B1C00
+```
+
+Summer Timer OFF
+```
+<-- 01 1F 40 0B1C01
+<-- 1F 01 80 0B1C01
+```
+
+Clean Cycle ON
+```
+<-- 01 1F 40 0B1F02
+<-- 1F 01 80 0B1F01
+```
+
+Clean Cycle Off
+```
+<-- 01 1F 40 0B1F01
+<-- 1F 01 80 0B1F00
 ```
 
 Read light status (Polled)
@@ -160,7 +208,8 @@ Main status decoding
 80                - Response (0x40 = Request, 0x80 = Response).
 0256              - Main Status Data.
 0008              - ?
-0004              - Jets active & cleaning cycle status.
+00                - Flags: 0x01 = Temp Lock, 0x02 = Spa Lock, 0x04 = Jet1, 0x08 = Jet2 Full, 0x10 = Clean Cycle, 0x20 = Summer Timer
+04                - Flags: 0x02 = Jet2 Medium, 0x04 = AlwaysSet?
 00000604000A0622F21100201C201C201C8403605400000000  - ?
 31303346          - "103F" ASCII string, not sure what this is. See temprature string below.
 02937400ABC90A00  - ?
@@ -186,6 +235,41 @@ Temperature string. The value encode the temperature set point and current tempr
 "101F102F" = 3130314631303246 (fahrenheit)
 "38.539.0" = 33382E3533392E30 (celsius)
 "38.039.0" = 33382E3033392E30 (celsius)
+```
+
+Freshwater Salt System - Set Power
+```
+ <-- 01 1F 40 1E0201XX00                                - XX is 0x00 (0) to 0x0A (10) power level
+ <-- 1F 01 80 1E0206
+ <-- 1F 01 40 1E03XX03FFFF00FF006800FF07FF0000B3100040  - XX is 0x00 (0) to 0x0A (10) power level
+```
+
+Freshwater Salt System - Test Start
+```
+ <-- 01 1F 40 1E02030400
+ <-- 1F 01 80 1E0206
+ <-- 1F 01 40 1E030003FFFF00FF006800FF07FF0000B3100040
+```
+
+Freshwater Salt System - Test Stop
+```
+ <-- 01 1F 40 1E02030000
+ <-- 1F 01 80 1E0206
+ <-- 1F 01 40 1E030003FFFF00FF006800FF07FF0000B3100040
+```
+
+Freshwater Salt System - Boost Start
+```
+ <-- 01 1F 40 1E02030800
+ <-- 1F 01 80 1E0206
+ <-- 1F 01 40 1E030003FFFF00FF006800FF07FF0000B3100040
+```
+
+Freshwater Salt System - Boost Stop
+```
+ <-- 01 1F 40 1E02030000
+ <-- 1F 01 80 1E0206
+ <-- 1F 01 40 1E030003FFFF00FF006800FF07FF0000B3100040
 ```
 
 Get Versions
