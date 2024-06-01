@@ -21,11 +21,15 @@ CONFIG_SCHEMA = fan.FAN_SCHEMA.extend({
 }).extend({ cv.Required(CONF_FAN_DATAPOINT): cv.positive_int }).extend(cv.COMPONENT_SCHEMA)
 
 def to_code(config):
-    var = cg.new_Pvariable(config[CONF_ID])
-    yield cg.register_component(var, config)
+    server = cg.new_Pvariable(config[CONF_ID])
+    await cg.register_component(server, config)
+    await switch.register_switch(server, config)
 
-    fan_ = yield fan.create_fan_state(config)
-    cg.add(var.set_fan(fan_))
+#    var = cg.new_Pvariable(config[CONF_ID])
+#    yield cg.register_component(var, config)
+
+#    fan_ = yield fan.create_fan_state(config)
+#    cg.add(var.set_fan(fan_))
 #    output_ = yield cg.get_variable(config[CONF_OUTPUT])
 #    cg.add(var.set_output(output_))
 
