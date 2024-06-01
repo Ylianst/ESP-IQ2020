@@ -27,7 +27,7 @@ namespace iq2020_fan {
 		return traits;
 	};
 
-	void IQ2020Fan::control(const FanCall &call) {
+	void IQ2020Fan::control(const esphome::fan::FanCall &call) {
 		ESP_LOGCONFIG(TAG, "IQ2020 fan control");
 	};
 

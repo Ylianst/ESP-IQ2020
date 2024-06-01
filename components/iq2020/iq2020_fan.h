@@ -17,7 +17,7 @@ namespace iq2020_fan {
 		void set_fan_id(unsigned int id) { this->fan_id = id; }
 
 		esphome::fan::FanTraits get_traits() override;
-		void control(const FanCall &call) override;
+		void control(const esphome::fan::FanCall &call) override;
 
 	protected:
 //		fan::Fan *fan_;
