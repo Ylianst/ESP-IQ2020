@@ -20,7 +20,7 @@ CONFIG_SCHEMA = fan.FAN_SCHEMA.extend({
 #    cv.Optional(CONF_OSCILLATION_OUTPUT): cv.use_id(output.BinaryOutput),
 }).extend({ cv.Required(CONF_FAN_DATAPOINT): cv.positive_int }).extend(cv.COMPONENT_SCHEMA)
 
-def to_code(config):
+async def to_code(config):
     server = cg.new_Pvariable(config[CONF_ID])
     await cg.register_component(server, config)
     await switch.register_switch(server, config)
