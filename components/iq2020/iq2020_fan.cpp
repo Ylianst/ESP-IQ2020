@@ -19,7 +19,7 @@ namespace iq2020_fan {
 		ESP_LOGCONFIG(TAG, "IQ2020 fan");
 	}
 
-	FanTraits IQ2020Fan::get_traits() {
+	esphome::fan::FanTraits IQ2020Fan::get_traits() {
 		auto traits = fan::FanTraits();
 		traits.set_direction(false);
 		traits.set_oscillation(false);
