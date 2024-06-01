@@ -26,8 +26,8 @@ CONFIG_SCHEMA = cv.All(
     cv.Schema(
         {
             cv.GenerateID(): cv.declare_id(IQ2020Component),
-            cv.Optional(CONF_PORT, default=0): cv.port,
-            cv.Optional(CONF_BUFFER_SIZE, default=128): cv.All(cv.positive_int, validate_buffer_size),
+            cv.Optional(CONF_PORT, default = 0): cv.port,
+            cv.Optional(CONF_BUFFER_SIZE, default = 128): cv.All(cv.positive_int, validate_buffer_size),
         }
     )
     .extend(cv.COMPONENT_SCHEMA)
