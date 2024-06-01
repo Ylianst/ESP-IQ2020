@@ -11,7 +11,7 @@ CONF_SWITCH_DATAPOINT = "fan_datapoint"
 #IQ2020Fan = iq2020_fan_ns.class_('iq2020_fan', cg.Component)
 
 iq2020_fan_ns = cg.esphome_ns.namespace('iq2020_fan')
-IQ2020Fan = iq2020_fan_ns.class_('IQ2020Fan', switch.Fan, cg.Component)
+IQ2020Fan = iq2020_fan_ns.class_('IQ2020Fan', fan.Fan, cg.Component)
 
 CONFIG_SCHEMA = fan.FAN_SCHEMA.extend({
     cv.GenerateID(CONF_OUTPUT_ID): cv.declare_id(IQ2020Fan),
