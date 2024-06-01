@@ -12,7 +12,7 @@ void IQ2020Fan::setup() {
   traits.set_oscillation(false);
   traits.set_speed(false);
   
-  this->fan_->set_traits(traits);
+  //this->fan_->set_traits(traits);
   
   this->fan_->add_on_state_callback([this]() { this->next_update_ = true; });
 }
