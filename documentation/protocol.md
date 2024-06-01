@@ -78,43 +78,43 @@ Read FreshWater Salt Module Data (Polled)
 <-- 1F 01 80 1E030003FFFF00FF006800FF07FF0000B3100040
 ```
 
-Jet 1 ON (Command)
+Jet 1 ON
 ```
 <-- 01 1F 40 0B0203
 <-- 1F 01 80 0B0202
 ```
 
-Jet 1 OFF (Command)
+Jet 1 OFF
 ```
 <-- 01 1F 40 0B0201
 <-- 1F 01 80 0B0200
 ```
 
-Jet 2 MEDIUM (Command)
+Jet 2 MEDIUM
 ```
 <-- 01 1F 40 0B0302
 <-- 1F 01 80 0B0301
 ```
 
-Jet 2 FULL (Command)
+Jet 2 FULL
 ```
 <-- 01 1F 40 0B0303
 <-- 1F 01 80 0B0302
 ```
 
-Jet 2 OFF (Command)
+Jet 2 OFF
 ```
 <-- 01 1F 40 0B0301
 <-- 1F 01 80 0B0300
 ```
 
-Lights ON (Command)
+Lights ON
 ```
 <-- 01 1F 40 1702041100
 <-- 1F 01 80 170206
 ```
 
-Lights OFF (Command)
+Lights OFF
 ```
 <-- 01 1F 40 1702041000
 <-- 1F 01 80 170206
