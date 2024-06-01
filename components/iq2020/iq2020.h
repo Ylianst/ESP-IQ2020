@@ -18,6 +18,7 @@
 #define SWITCHCOUNT 10
 #define SWITCH_LIGHTS 0
 #define SWITCH_SPALOCK 1
+#define SWITCH_TEMPLOCK 2
 
 class IQ2020Component : public esphome::Component {
 public:

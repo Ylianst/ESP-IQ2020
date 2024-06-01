@@ -260,6 +260,11 @@ int IQ2020Component::processIQ2020Command() {
 			setSwitchState(SWITCH_SPALOCK, (processingBuffer[7] & 1));
 		}
 
+		if ((cmdlen == 9) && (processingBuffer[5] == 0x0B) && (processingBuffer[6] == 0x1E)) {
+			// Confirmation that the pending temp lock command was received, includes new state
+			setSwitchState(SWITCH_TEMPLOCK, (processingBuffer[7] & 1));
+		}
+
 		if ((cmdlen == 28) && (processingBuffer[5] == 0x17) && (processingBuffer[6] == 0x05)) {
 			// This is an update on the status of the spa lights (enabled, intensity, color)
 			setSwitchState(SWITCH_LIGHTS, (processingBuffer[24] & 1));
@@ -291,6 +296,7 @@ int IQ2020Component::processIQ2020Command() {
 			// Read state flags
 			unsigned char flags1 = processingBuffer[9];
 			unsigned char flags2 = processingBuffer[10];
+			setSwitchState(SWITCH_TEMPLOCK, flags1 & 0x01);
 			setSwitchState(SWITCH_SPALOCK, flags1 & 0x02);
 
 			// Read temperatures
@@ -380,6 +386,12 @@ void IQ2020Component::SwitchAction(unsigned int switchid, int state) {
 			switch_pending[SWITCH_SPALOCK] = state;
 			unsigned char cmd[] = { 0x0B, 0x1D, (state != 0) ? (unsigned char)0x02 : (unsigned char)0x01 };
 			sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Turn on/off spa lock
+			break;
+		}
+		case SWITCH_TEMPLOCK: { // Temp Lock Switch
+			switch_pending[SWITCH_TEMPLOCK] = state;
+			unsigned char cmd[] = { 0x0B, 0x1E, (state != 0) ? (unsigned char)0x02 : (unsigned char)0x01 };
+			sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Turn on/off temp lock
 			break;
 		}
 	}
