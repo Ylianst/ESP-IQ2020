@@ -14,9 +14,7 @@ EmptySwitch = iq2020_switch_ns.class_('IQ2020Switch', switch.Switch, cg.Componen
 
 CONFIG_SCHEMA = switch.SWITCH_SCHEMA.extend({
     cv.GenerateID(): cv.declare_id(EmptySwitch)
-})
-.extend(cv.COMPONENT_SCHEMA)
-.extend({ cv.Required(CONF_SWITCH_DATAPOINT): cv.string, })
+}).extend(cv.COMPONENT_SCHEMA).extend({ cv.Required(CONF_SWITCH_DATAPOINT): cv.string, })
 
 async def to_code(config):
     server = cg.new_Pvariable(config[CONF_ID])
