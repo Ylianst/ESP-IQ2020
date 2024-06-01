@@ -373,22 +373,22 @@ void IQ2020Component::SwitchAction(unsigned int switchid, int state) {
 		case SWITCH_LIGHTS: { // Spa Lights Switch
 			switch_pending[SWITCH_LIGHTS] = state;
 			if (state != 0) {
-				unsigned char lightOnCmd[] = { 0x17, 0x02, 0x04, 0x11, 0x00 };
-				sendIQ2020Command(0x01, 0x1F, 0x40, lightOnCmd, 5); // Turn on lights
+				const unsigned char cmd[] = { 0x17, 0x02, 0x04, 0x11, 0x00 };
+				sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Turn on lights
 			} else {
-				unsigned char lightOffCmd[] = { 0x17, 0x02, 0x04, 0x10, 0x00 };
-				sendIQ2020Command(0x01, 0x1F, 0x40, lightOffCmd, 5); // Turn off lights
+				const unsigned char cmd[] = { 0x17, 0x02, 0x04, 0x10, 0x00 };
+				sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Turn off lights
 			}
 		}
 		case SWITCH_SPALOCK: {
 			switch_pending[SWITCH_SPALOCK] = state;
 			if (state != 0) {
-				//unsigned char lightOnCmd[] = ;
-				sendIQ2020Command(0x01, 0x1F, 0x40, (unsigned char[]){ 0x17, 0x02, 0x04, 0x11, 0x00 }, 5); // Turn on spa lock
+				unsigned char cmd[] = { 0x0B, 0x1D, (state != 0) ? 0x02 : 0x01 };
+				sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Turn on spa lock
 			}
 			else {
-				unsigned char lightOffCmd[] = { 0x17, 0x02, 0x04, 0x10, 0x00 };
-				sendIQ2020Command(0x01, 0x1F, 0x40, lightOffCmd, 5); // Turn off spa lock
+				unsigned char cmd[] = { 0x0B, 0x1D, 0x01 };
+				sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Turn off spa lock
 			}
 		}
 	}
