@@ -382,14 +382,8 @@ void IQ2020Component::SwitchAction(unsigned int switchid, int state) {
 		}
 		case SWITCH_SPALOCK: {
 			switch_pending[SWITCH_SPALOCK] = state;
-			if (state != 0) {
-				unsigned char cmd[] = { 0x0B, 0x1D, (state != 0) ? 0x02 : 0x01 };
-				sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Turn on spa lock
-			}
-			else {
-				unsigned char cmd[] = { 0x0B, 0x1D, 0x01 };
-				sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Turn off spa lock
-			}
+			unsigned char cmd[] = { 0x0B, 0x1D, (state != 0) ? (unsigned char)0x02 : (unsigned char)0x01 };
+			sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Turn on/off spa lock
 		}
 	}
 }
