@@ -23,7 +23,8 @@ namespace iq2020_fan {
 		auto traits = fan::FanTraits();
 		traits.set_direction(false);
 		traits.set_oscillation(false);
-		traits.set_speed(false);
+		traits.set_speed(true);
+		traits.speed_count(2);
 		return traits;
 	};
 
