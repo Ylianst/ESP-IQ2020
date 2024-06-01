@@ -20,7 +20,6 @@ async def to_code(config) :
 	server = cg.new_Pvariable(config[CONF_ID])
 	await cg.register_component(server, config)
 	await fan.register_fan(server, config)
-	# await fan.register_fan(server, config)
 
 	#    paren = await cg.get_variable(config[CONF_IQ2020_ID])
 	#    cg.add(server.set_iq2020_parent(paren))

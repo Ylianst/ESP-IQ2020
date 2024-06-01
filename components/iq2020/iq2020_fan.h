@@ -8,7 +8,7 @@
 namespace esphome {
 namespace iq2020_fan {
 
-	class IQ2020Fan : public Component {
+	class IQ2020Fan : public fan_::Fan, public Component {
 	public:
 		void set_fan(fan::Fan *fan) { fan_ = fan; }
 		//void set_output(output::BinaryOutput *output) { output_ = output; }
