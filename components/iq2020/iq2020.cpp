@@ -373,11 +373,13 @@ void IQ2020Component::SwitchAction(unsigned int switchid, int state) {
 			switch_pending[SWITCH_LIGHTS] = state;
 			unsigned char cmd[] = { 0x17, 0x02, 0x04, (state != 0) ? (unsigned char)0x11 : (unsigned char)0x10, 0x00 };
 			sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Turn on/off lights
+			break;
 		}
 		case SWITCH_SPALOCK: { // Spa Lock Switch
 			switch_pending[SWITCH_SPALOCK] = state;
 			unsigned char cmd[] = { 0x0B, 0x1D, (state != 0) ? (unsigned char)0x02 : (unsigned char)0x01 };
 			sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Turn on/off spa lock
+			break;
 		}
 	}
 }
