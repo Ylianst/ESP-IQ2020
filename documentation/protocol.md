@@ -237,6 +237,13 @@ Temperature string. The value encode the temperature set point and current tempr
 "38.039.0" = 33382E3033392E30 (celsius)
 ```
 
+Freshwater Salt System - Set Power
+```
+ <-- 01 1F 40 1E0201XX00                                - XX is 0x00 (0) to 0x0A (10) power level
+ <-- 1F 01 80 1E0206
+ <-- 1F 01 40 1E03XX03FFFF00FF006800FF07FF0000B3100040  - XX is 0x00 (0) to 0x0A (10) power level
+```
+
 Get Versions
 ```
 --> 01 1F 40 0100
