@@ -12,17 +12,17 @@ namespace iq2020_switch {
 
 	void IQ2020Switch::setup() {
 		g_iq2020_light_switch = this;
-		ESP_LOGD(TAG, "%s: Switch Setup", switch_id_.c_str());
+		ESP_LOGD(TAG, "Switch:%d Setup", switch_id);
 	}
 
 	void IQ2020Switch::write_state(bool state) {
-		ESP_LOGD(TAG, "%s: Switch write state: %d", switch_id_.c_str(), state);
+		ESP_LOGD(TAG, "Switch:%d write state: %d", switch_id, state);
 		//this->publish_state(state);
 		if (g_iq2020_main != NULL) { g_iq2020_main->LightSwitchAction(state); }
 	}
 
 	void IQ2020Switch::dump_config() {
-		ESP_LOGCONFIG(TAG, "%s: Empty custom switch", switch_id_.c_str());
+		ESP_LOGCONFIG(TAG, "Switch:%d config", switch_id);
 	}
 
 } //namespace iq2020_switch
