@@ -13,9 +13,8 @@ CONFIG_SCHEMA = fan.FAN_SCHEMA.extend({
     cv.Required(CONF_OUTPUT): cv.use_id(output.BinaryOutput),
     cv.Optional(CONF_DIRECTION_OUTPUT): cv.use_id(output.BinaryOutput),
     cv.Optional(CONF_OSCILLATION_OUTPUT): cv.use_id(output.BinaryOutput),
-}).extend({ cv.Required(CONF_SWITCH_DATAPOINT): cv.positive_int })..extend(cv.COMPONENT_SCHEMA)
+}).extend({ cv.Required(CONF_SWITCH_DATAPOINT): cv.positive_int }).extend(cv.COMPONENT_SCHEMA)
 
-#abc
 def to_code(config):
     var = cg.new_Pvariable(config[CONF_OUTPUT_ID])
     yield cg.register_component(var, config)
