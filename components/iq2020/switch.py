@@ -38,6 +38,5 @@ async def to_code(config):
 #    paren = await cg.get_variable(config[CONF_IQ2020_ID])
 #    cg.add(server.set_iq2020_parent(paren))
 #   cg.add(server.set_switch_id(config[CONF_ID]))
-#    cg.add(server.set_switch_id(config["name"]))
-    cg.add(server.set_switch_id(config[CONF_SWITCH_DATAPOINT]))
-
+    cg.add(server.set_switch_id(config["name"]))
+#    cg.add(server.set_switch_id(config[CONF_SWITCH_DATAPOINT]))
