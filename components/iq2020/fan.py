@@ -29,7 +29,7 @@ def to_code(config):
 #    yield cg.register_component(var, config)
 
     fan_ = yield fan.create_fan_state(config)
-    cg.add(var.set_fan(fan_))
+#    cg.add(var.set_fan(fan_))
 #    output_ = yield cg.get_variable(config[CONF_OUTPUT])
 #    cg.add(var.set_output(output_))
 
