@@ -1,13 +1,14 @@
 import esphome.codegen as cg
 import esphome.config_validation as cv
 from esphome.components import switch
-from esphome.const import { CONF_ID, CONF_SWITCH_DATAPOINT }
+from esphome.const import CONF_ID
 
 from . import ns, IQ2020Component
 
 CONF_IQ2020_ID = "IQ2020Component";
 CONF_IQ2020_SERVER = "iq2020_server"
 CONF_SWITCH_LIGHTS = "iq2020_switch"
+CONF_SWITCH_DATAPOINT = "switch_datapoint"
 
 iq2020_switch_ns = cg.esphome_ns.namespace('iq2020_switch')
 EmptySwitch = iq2020_switch_ns.class_('IQ2020Switch', switch.Switch, cg.Component)
