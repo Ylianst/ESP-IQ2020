@@ -289,8 +289,8 @@ int IQ2020Component::processIQ2020Command() {
 			// This is the main status data (jets, temperature)
 
 			// Read state flags
-			unsigned chat flags1 = processingBuffer[9];
-			unsigned chat flags2 = processingBuffer[10];
+			unsigned char flags1 = processingBuffer[9];
+			unsigned char flags2 = processingBuffer[10];
 			setSwitchState(SWITCH_SPALOCK, flags1 & 0x02);
 
 			// Read temperatures
