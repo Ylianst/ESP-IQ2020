@@ -3,6 +3,10 @@
 #include "esphome/core/component.h"
 //#include "esphome/components/output/binary_output.h"
 #include "esphome/components/fan/fan_state.h"
+#include "iq2020.h"
+
+extern IQ2020Component* g_iq2020_main;
+extern esphome::iq2020_fan::IQ2020Fan* g_iq2020_fan[SWITCHFAN];
 
 namespace esphome {
 namespace iq2020_fan {
