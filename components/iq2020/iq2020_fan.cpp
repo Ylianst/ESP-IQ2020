@@ -1,4 +1,4 @@
-#include "empty_fan.h"
+#include "iq2020_fan.h"
 #include "esphome/core/log.h"
 
 namespace esphome {
