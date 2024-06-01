@@ -208,8 +208,8 @@ Main status decoding
 80                - Response (0x40 = Request, 0x80 = Response).
 0256              - Main Status Data.
 0008              - ?
-00                - Flags: 0x01 = Temp Lock, 0x02 = Spa Lock, 0x04 = Jet1, 0x10 = Clean Cycle, 0x20 = Summer Timer
-04                - Jets active & cleaning cycle status.
+00                - Flags: 0x01 = Temp Lock, 0x02 = Spa Lock, 0x04 = Jet1, 0x08 = Jet2 Full, 0x10 = Clean Cycle, 0x20 = Summer Timer
+04                - Flags: 0x02 = Jet2 Medium, 0x04 = AlwaysSet?
 00000604000A0622F21100201C201C201C8403605400000000  - ?
 31303346          - "103F" ASCII string, not sure what this is. See temprature string below.
 02937400ABC90A00  - ?
