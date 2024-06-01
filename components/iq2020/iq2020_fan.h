@@ -14,11 +14,13 @@ namespace iq2020_fan {
 		void setup() override;
 		void loop() override;
 		void dump_config() override;
+		void set_fan_id(unsigned int id) { this->fan_id = id; }
 
 	protected:
 		fan::Fan *fan_;
 		//  output::BinaryOutput *output_;
 		bool next_update_{ true };
+		unsigned int fan_id;
 	};
 
 }  // namespace iq2020_fan
