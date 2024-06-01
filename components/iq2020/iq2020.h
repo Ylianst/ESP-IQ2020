@@ -117,4 +117,5 @@ protected:
 	void processRawIQ2020Data(unsigned char *data, int len);
 	int processIQ2020Command();
 	void sendIQ2020Command(unsigned char dst, unsigned char src, unsigned char op, unsigned char *data, int len);
+	void setSwitchState(unsigned int switchid, int state);
 };

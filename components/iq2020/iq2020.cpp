@@ -242,36 +242,31 @@ int IQ2020Component::processIQ2020Command() {
 
 		if ((cmdlen == 11) && (processingBuffer[5] == 0x17) && (processingBuffer[6] == 0x02)) {
 			// This is the SPA connection kit command to turn the lights on/off
-			if ((processingBuffer[8] & 1) != switch_state[SWITCH_LIGHTS]) {
-				switch_state[SWITCH_LIGHTS] = (processingBuffer[8] & 1);
-				if (g_iq2020_switch[SWITCH_LIGHTS] != NULL) { g_iq2020_switch[SWITCH_LIGHTS]->publish_state(switch_state[SWITCH_LIGHTS]); }
-			}
+			setSwitchState(SWITCH_LIGHTS, (processingBuffer[8] & 1));
 		}
 	}
 
 	if ((processingBuffer[1] == 0x1F) && (processingBuffer[2] == 0x01) && (processingBuffer[4] == 0x80)) {
 		// This is response data going towards the SPA connection kit.
-
 		//ESP_LOGW(TAG, "SCK RSP Data, len=%d, cmd=%02x%02x", cmdlen, processingBuffer[5], processingBuffer[6]);
 
-		if ((switch_pending[SWITCH_LIGHTS] != -1) && (cmdlen == 9) && (processingBuffer[5] == 0x17) && (processingBuffer[6] == 0x02) && (processingBuffer[7] == 0x06)) {
+		if ((cmdlen == 9) && (processingBuffer[5] == 0x17) && (processingBuffer[6] == 0x02) && (processingBuffer[7] == 0x06)) {
 			// Confirmation that the pending light command was received
-			switch_state[SWITCH_LIGHTS] = switch_pending[SWITCH_LIGHTS];
-			switch_pending[SWITCH_LIGHTS] = -1;
-			if (g_iq2020_switch[0] != NULL) { g_iq2020_switch[0]->publish_state(switch_state[SWITCH_LIGHTS]); }
+			setSwitchState(SWITCH_LIGHTS, -1);
+		}
+
+		if ((cmdlen == 9) && (processingBuffer[5] == 0x0B) && (processingBuffer[6] == 0x1D)) {
+			// Confirmation that the pending spa lock command was received, includes new state
+			setSwitchState(SWITCH_SPALOCK, (processingBuffer[7] & 1));
 		}
 
 		if ((cmdlen == 28) && (processingBuffer[5] == 0x17) && (processingBuffer[6] == 0x05)) {
 			// This is an update on the status of the spa lights (enabled, intensity, color)
-			switch_pending[SWITCH_LIGHTS] = -1;
-			if (switch_state[SWITCH_LIGHTS] != (processingBuffer[24] & 1)) {
-				switch_state[SWITCH_LIGHTS] = (processingBuffer[24] & 1);
-				if (g_iq2020_switch[SWITCH_LIGHTS] != NULL) { g_iq2020_switch[SWITCH_LIGHTS]->publish_state(switch_state[SWITCH_LIGHTS]); }
-			}
+			setSwitchState(SWITCH_LIGHTS, (processingBuffer[24] & 1));
 		}
 
 		if ((pending_temp != -1) && (cmdlen == 9) && (processingBuffer[5] == 0x01) && (processingBuffer[6] == 0x09) && (processingBuffer[7] == 0x06)) {
-			// Confirmation that the pending temprature change command was received
+			// Confirmation that the pending temperature change command was received
 			target_temp = pending_temp_cmd;
 			if (pending_temp == pending_temp_cmd) { pending_temp = -1; pending_temp_retry = 0; }
 			pending_temp = -1;
@@ -280,8 +275,7 @@ int IQ2020Component::processIQ2020Command() {
 #ifdef USE_SENSOR
 			if (temp_celsius) {
 				if (this->target_c_temp_sensor_) this->target_c_temp_sensor_->publish_state(target_temp);
-			}
-			else {
+			} else {
 				if (this->target_f_temp_sensor_) this->target_f_temp_sensor_->publish_state(target_temp);
 			}
 #endif
@@ -293,6 +287,11 @@ int IQ2020Component::processIQ2020Command() {
 
 		if ((cmdlen == 140) && (processingBuffer[5] == 0x02) && (processingBuffer[6] == 0x56)) {
 			// This is the main status data (jets, temperature)
+
+			// Read state flags
+			unsigned chat flags1 = processingBuffer[9];
+			unsigned chat flags2 = processingBuffer[10];
+			setSwitchState(SWITCH_SPALOCK, flags1 & 0x02);
 
 			// Read temperatures
 			float _target_temp = 0, _current_temp = 0;
@@ -372,15 +371,10 @@ void IQ2020Component::SwitchAction(unsigned int switchid, int state) {
 	switch (switchid) {
 		case SWITCH_LIGHTS: { // Spa Lights Switch
 			switch_pending[SWITCH_LIGHTS] = state;
-			if (state != 0) {
-				unsigned char cmd[] = { 0x17, 0x02, 0x04, 0x11, 0x00 };
-				sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Turn on lights
-			} else {
-				unsigned char cmd[] = { 0x17, 0x02, 0x04, 0x10, 0x00 };
-				sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Turn off lights
-			}
+			unsigned char cmd[] = { 0x17, 0x02, 0x04, (state != 0) ? (unsigned char)0x11 : (unsigned char)0x10, 0x00 };
+			sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Turn on/off lights
 		}
-		case SWITCH_SPALOCK: {
+		case SWITCH_SPALOCK: { // Spa Lock Switch
 			switch_pending[SWITCH_SPALOCK] = state;
 			unsigned char cmd[] = { 0x0B, 0x1D, (state != 0) ? (unsigned char)0x02 : (unsigned char)0x01 };
 			sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Turn on/off spa lock
@@ -405,6 +399,19 @@ void IQ2020Component::SetTempAction(float newtemp) {
 		pending_temp_cmd = pending_temp;
 		unsigned char changeTempCmd[] = { 0x01, 0x09, 0xFF, deltaSteps };
 		sendIQ2020Command(0x01, 0x1F, 0x40, changeTempCmd, 4); // Adjust temp
+	}
+}
+
+void IQ2020Component::setSwitchState(unsigned int switchid, int state) {
+	if (state == -1) {
+		if (switch_pending[switchid] == -1) return;
+		state = switch_pending[switchid];
+		switch_pending[switchid] = -1;
+	}
+	if ((state != 0) != switch_state[switchid])) {
+		switch_state[switchid] = (state != 0);
+		switch_pending[switchid] = -1;
+		if (g_iq2020_switch[switchid] != NULL) { g_iq2020_switch[0]->publish_state(switch_state[switchid]);
 	}
 }
 
