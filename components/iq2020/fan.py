@@ -10,10 +10,10 @@ CONF_IQ2020_SERVER = "iq2020_server"
 CONF_FAN_DATAPOINT = "fan_datapoint"
 
 iq2020_fan_ns = cg.esphome_ns.namespace('iq2020_fan')
-IQ2020Switch = iq2020_fan_ns.class_('IQ2020Fan', fan.Switch, cg.Component)
+IQ2020Fan = iq2020_fan_ns.class_('IQ2020Fan', fan.Fan, cg.Component)
 
 CONFIG_SCHEMA = fan.FAN_SCHEMA.extend({
-	cv.GenerateID() : cv.declare_id(IQ2020Switch)
+	cv.GenerateID() : cv.declare_id(IQ2020Fan)
 }).extend({ cv.Required(CONF_FAN_DATAPOINT) : cv.positive_int }).extend(cv.COMPONENT_SCHEMA)
 
 async def to_code(config) :
