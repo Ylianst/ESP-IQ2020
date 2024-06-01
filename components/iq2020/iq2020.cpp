@@ -225,7 +225,7 @@ int IQ2020Component::processIQ2020Command() {
 	unsigned char checksum = 0; // Compute the checksum
 	for (int i = 1; i < (cmdlen - 1); i++) { checksum += processingBuffer[i]; }
 	if (processingBuffer[cmdlen - 1] != (checksum ^ 0xFF)) { ESP_LOGW(TAG, "Invalid checksum. Got 0x%02x, expected 0x%02x.", processingBuffer[cmdlen - 1], (checksum ^ 0xFF)); return nextPossiblePacket(); }
-	//ESP_LOGW(TAG, "IQ2020 data, dst:%02x src:%02x op:%02x datalen:%d", processingBuffer[1], processingBuffer[2], processingBuffer[4], processingBuffer[3]);
+	ESP_LOGW(TAG, "IQ2020 data, dst:%02x src:%02x op:%02x datalen:%d", processingBuffer[1], processingBuffer[2], processingBuffer[4], processingBuffer[3]);
 
 	if ((processingBuffer[1] == 0x01) && (processingBuffer[2] == 0x1F) && (processingBuffer[4] == 0x40)) {
 		// This is a request command from the SPA connection kit, take note of this.
@@ -238,7 +238,7 @@ int IQ2020Component::processIQ2020Command() {
 			connectionKit = 1;
 		}
 
-		//ESP_LOGW(TAG, "SCK CMD Data, len=%d, cmd=%02x%02x", cmdlen, processingBuffer[5], processingBuffer[6]);
+		ESP_LOGW(TAG, "SCK CMD Data, len=%d, cmd=%02x%02x", cmdlen, processingBuffer[5], processingBuffer[6]);
 
 		if ((cmdlen == 11) && (processingBuffer[5] == 0x17) && (processingBuffer[6] == 0x02)) {
 			// This is the SPA connection kit command to turn the lights on/off
@@ -248,7 +248,7 @@ int IQ2020Component::processIQ2020Command() {
 
 	if ((processingBuffer[1] == 0x1F) && (processingBuffer[2] == 0x01) && (processingBuffer[4] == 0x80)) {
 		// This is response data going towards the SPA connection kit.
-		//ESP_LOGW(TAG, "SCK RSP Data, len=%d, cmd=%02x%02x", cmdlen, processingBuffer[5], processingBuffer[6]);
+		ESP_LOGW(TAG, "SCK RSP Data, len=%d, cmd=%02x%02x", cmdlen, processingBuffer[5], processingBuffer[6]);
 
 		if ((cmdlen == 9) && (processingBuffer[5] == 0x17) && (processingBuffer[6] == 0x02) && (processingBuffer[7] == 0x06)) {
 			// Confirmation that the pending light command was received
@@ -368,6 +368,7 @@ void IQ2020Component::sendIQ2020Command(unsigned char dst, unsigned char src, un
 }
 
 void IQ2020Component::SwitchAction(unsigned int switchid, int state) {
+	ESP_LOGW(TAG, "SwitchAction, switchid = %d, status = %d", switchid, state);
 	switch (switchid) {
 		case SWITCH_LIGHTS: { // Spa Lights Switch
 			switch_pending[SWITCH_LIGHTS] = state;
@@ -405,6 +406,7 @@ void IQ2020Component::SetTempAction(float newtemp) {
 }
 
 void IQ2020Component::setSwitchState(unsigned int switchid, int state) {
+	ESP_LOGW(TAG, "setSwitchState, switchid = %d, status = %d", switchid, state);
 	if (state == -1) {
 		if (switch_pending[switchid] == -1) return;
 		state = switch_pending[switchid];
