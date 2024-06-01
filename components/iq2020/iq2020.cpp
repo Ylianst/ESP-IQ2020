@@ -13,7 +13,8 @@
 static const char *TAG = "iq2020";
 
 IQ2020Component* g_iq2020_main = NULL;
-esphome::iq2020_switch::IQ2020Switch* g_iq2020_light_switch = NULL;
+esphome::iq2020_switch::IQ2020Switch* g_iq2020_switch[10];
+memset(g_iq2020_switch, 0, sizeof(g_iq2020_switch))
 esphome::iq2020_climate::IQ2020Climate* g_iq2020_climate = NULL;
 
 using namespace esphome;
@@ -243,7 +244,7 @@ int IQ2020Component::processIQ2020Command() {
 			// This is the SPA connection kit command to turn the lights on/off
 			if ((processingBuffer[8] & 1) != lights) {
 				lights = (processingBuffer[8] & 1);
-				if (g_iq2020_light_switch != NULL) { g_iq2020_light_switch->publish_state(lights); }
+				if (g_iq2020_switch[0] != NULL) { g_iq2020_switch[0]->publish_state(lights); }
 			}
 		}
 	}
@@ -257,7 +258,7 @@ int IQ2020Component::processIQ2020Command() {
 			// Confirmation that the pending light command was received
 			lights = lights_pending;
 			lights_pending = -1;
-			if (g_iq2020_light_switch != NULL) { g_iq2020_light_switch->publish_state(lights); }
+			if (g_iq2020_switch[0] != NULL) { g_iq2020_switch[0]->publish_state(lights); }
 		}
 
 		if ((cmdlen == 28) && (processingBuffer[5] == 0x17) && (processingBuffer[6] == 0x05)) {
@@ -265,7 +266,7 @@ int IQ2020Component::processIQ2020Command() {
 			lights_pending = -1;
 			if (lights != (processingBuffer[24] & 1)) {
 				lights = (processingBuffer[24] & 1);
-				if (g_iq2020_light_switch != NULL) { g_iq2020_light_switch->publish_state(lights); }
+				if (g_iq2020_switch[0] != NULL) { g_iq2020_switch[0]->publish_state(lights); }
 			}
 		}
 
@@ -367,14 +368,18 @@ void IQ2020Component::sendIQ2020Command(unsigned char dst, unsigned char src, un
 	ESP_LOGW(TAG, "IQ2020 transmit, dst:%02x src:%02x op:%02x datalen:%d", outboundBuffer[1], outboundBuffer[2], outboundBuffer[4], outboundBuffer[3]);
 }
 
-void IQ2020Component::LightSwitchAction(int state) {
-	lights_pending = state;
-	if (state != 0) {
-		unsigned char lightOnCmd[] = { 0x17, 0x02, 0x04, 0x11, 0x00 };
-		sendIQ2020Command(0x01, 0x1F, 0x40, lightOnCmd, 5); // Turn on lights
-	} else {
-		unsigned char lightOffCmd[] = { 0x17, 0x02, 0x04, 0x10, 0x00 };
-		sendIQ2020Command(0x01, 0x1F, 0x40, lightOffCmd, 5); // Turn off lights
+void SwitchAction(unsigned int switchid, int state) {
+	switch (switchid) {
+		case 0: { // Spa Lights Switch
+			lights_pending = state;
+			if (state != 0) {
+				unsigned char lightOnCmd[] = { 0x17, 0x02, 0x04, 0x11, 0x00 };
+				sendIQ2020Command(0x01, 0x1F, 0x40, lightOnCmd, 5); // Turn on lights
+			} else {
+				unsigned char lightOffCmd[] = { 0x17, 0x02, 0x04, 0x10, 0x00 };
+				sendIQ2020Command(0x01, 0x1F, 0x40, lightOffCmd, 5); // Turn off lights
+			}
+		}
 	}
 }
 
