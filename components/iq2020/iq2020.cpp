@@ -314,6 +314,7 @@ int IQ2020Component::processIQ2020Command() {
 					if (temp_celsius) { g_iq2020_climate->updateTempsC(target_temp, current_temp); }
 					else { g_iq2020_climate->updateTempsF(target_temp, current_temp); }
 				}
+				ESP_LOGW(TAG, "Changed Current Temp: %.1f, Target Temp: %.1f", current_temp, target_temp);
 			}
 
 #ifdef USE_SENSOR
@@ -325,7 +326,6 @@ int IQ2020Component::processIQ2020Command() {
 				if (this->target_f_temp_sensor_) this->target_f_temp_sensor_->publish_state(target_temp);
 				if (this->current_f_temp_sensor_) this->current_f_temp_sensor_->publish_state(current_temp);
 			}
-			ESP_LOGW(TAG, "Current Temp: %.1f, Target Temp: %.1f", current_temp, target_temp);
 #endif
 
 			if (pending_temp != -1) {
