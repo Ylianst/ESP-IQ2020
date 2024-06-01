@@ -367,7 +367,7 @@ void IQ2020Component::sendIQ2020Command(unsigned char dst, unsigned char src, un
 	ESP_LOGW(TAG, "IQ2020 transmit, dst:%02x src:%02x op:%02x datalen:%d", outboundBuffer[1], outboundBuffer[2], outboundBuffer[4], outboundBuffer[3]);
 }
 
-void SwitchAction(unsigned int switchid, int state) {
+void IQ2020Component::SwitchAction(unsigned int switchid, int state) {
 	switch (switchid) {
 		case 0: { // Spa Lights Switch
 			lights_pending = state;
