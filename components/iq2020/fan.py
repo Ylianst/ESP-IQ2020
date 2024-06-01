@@ -41,4 +41,4 @@ def to_code(config):
 #        direction_output = yield cg.get_variable(config[CONF_DIRECTION_OUTPUT])
 #        cg.add(var.set_direction(direction_output))
 
-    cg.add(server.set_fan_id(config[CONF_FAN_DATAPOINT]))
+#    cg.add(server.set_fan_id(config[CONF_FAN_DATAPOINT]))
