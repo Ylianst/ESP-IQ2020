@@ -242,9 +242,9 @@ int IQ2020Component::processIQ2020Command() {
 
 		if ((cmdlen == 11) && (processingBuffer[5] == 0x17) && (processingBuffer[6] == 0x02)) {
 			// This is the SPA connection kit command to turn the lights on/off
-			if ((processingBuffer[8] & 1) != lights) {
-				lights = (processingBuffer[8] & 1);
-				if (g_iq2020_switch[0] != NULL) { g_iq2020_switch[0]->publish_state(lights); }
+			if ((processingBuffer[8] & 1) != switch_state[SWITCH_LIGHTS]) {
+				switch_state[SWITCH_LIGHTS] = (processingBuffer[8] & 1);
+				if (g_iq2020_switch[SWITCH_LIGHTS] != NULL) { g_iq2020_switch[SWITCH_LIGHTS]->publish_state(lights); }
 			}
 		}
 	}
