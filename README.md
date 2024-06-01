@@ -57,6 +57,43 @@ sensor:
 switch:
   - platform: iq2020
     name: Lights
+    id: lights_switch
+    icon: "mdi:lightbulb"
+    switch_datapoint: 0
+  - platform: iq2020
+    name: Spa Lock
+    id: spa_lock_switch
+    icon: "mdi:lock"
+    switch_datapoint: 1
+  - platform: iq2020
+    name: Temp Lock
+    id: temp_lock_switch
+    icon: "mdi:lock"
+    switch_datapoint: 2
+  - platform: iq2020
+    name: Clean Cycle
+    id: clean_cycle_switch
+    icon: "mdi:vacuum"
+    switch_datapoint: 3
+  - platform: iq2020
+    name: Summer Timer
+    id: summer_timer_switch
+    icon: "mdi:sun-clock"
+    switch_datapoint: 4
+  - platform: iq2020
+    name: Jets 1
+    id: jets1_switch
+    icon: "mdi:turbine"
+    switch_datapoint: 5
+  - platform: iq2020
+    name: Jets 2
+    id: jets2_switch
+    icon: "mdi:turbine"
+    switch_datapoint: 6
+
+climate:
+  - platform: iq2020
+    name: Temperature
 ```
 
 Once done, flash your ESP32 device and you are ready to connect your device to the hot tub. The IQ2020 control board has an expansion connecter that is both RS485 and I2C. We will be using the RS485 pins of this connector and the IQ2020 board uses the 38400 baud N,8,1 serial configuration.
