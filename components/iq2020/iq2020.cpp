@@ -265,6 +265,21 @@ int IQ2020Component::processIQ2020Command() {
 			setSwitchState(SWITCH_TEMPLOCK, (processingBuffer[7] & 1));
 		}
 
+		if ((cmdlen == 9) && (processingBuffer[5] == 0x0B) && (processingBuffer[6] == 0x1F)) {
+			// Confirmation that the pending cleaning cycle command was received, includes new state
+			setSwitchState(SWITCH_CLEANCYCLE, (processingBuffer[7] & 1));
+		}
+
+		if ((cmdlen == 9) && (processingBuffer[5] == 0x0B) && (processingBuffer[6] == 0x1C)) {
+			// Confirmation that the pending summer timer command was received, includes new state
+			setSwitchState(SWITCH_SUMMERTIMER, (processingBuffer[7] & 1));
+		}
+
+		if ((cmdlen == 9) && (processingBuffer[5] == 0x0B) && (processingBuffer[6] == 0x02)) {
+			// Confirmation that the pending Jets 1 command was received, includes new state
+			setSwitchState(SWITCH_JETS1, (processingBuffer[7] != 0));
+		}
+
 		if ((cmdlen == 28) && (processingBuffer[5] == 0x17) && (processingBuffer[6] == 0x05)) {
 			// This is an update on the status of the spa lights (enabled, intensity, color)
 			setSwitchState(SWITCH_LIGHTS, (processingBuffer[24] & 1));
@@ -298,6 +313,9 @@ int IQ2020Component::processIQ2020Command() {
 			unsigned char flags2 = processingBuffer[10];
 			setSwitchState(SWITCH_TEMPLOCK, flags1 & 0x01);
 			setSwitchState(SWITCH_SPALOCK, flags1 & 0x02);
+			setSwitchState(SWITCH_CLEANCYCLE, flags1 & 0x10);
+			setSwitchState(SWITCH_SUMMERTIMER, flags1 & 0x20);
+			setSwitchState(SWITCH_JETS1, flags1 & 0x04);
 
 			// Read temperatures
 			float _target_temp = 0, _current_temp = 0;
@@ -385,13 +403,33 @@ void IQ2020Component::SwitchAction(unsigned int switchid, int state) {
 		case SWITCH_SPALOCK: { // Spa Lock Switch
 			switch_pending[SWITCH_SPALOCK] = state;
 			unsigned char cmd[] = { 0x0B, 0x1D, (state != 0) ? (unsigned char)0x02 : (unsigned char)0x01 };
-			sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Turn on/off spa lock
+			sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd));
 			break;
 		}
 		case SWITCH_TEMPLOCK: { // Temp Lock Switch
 			switch_pending[SWITCH_TEMPLOCK] = state;
 			unsigned char cmd[] = { 0x0B, 0x1E, (state != 0) ? (unsigned char)0x02 : (unsigned char)0x01 };
-			sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Turn on/off temp lock
+			sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd));
+			break;
+		}
+		case SWITCH_CLEANCYCLE: { // Clean Cycle Switch
+			ESP_LOGW(TAG, "C1");
+			switch_pending[SWITCH_CLEANCYCLE] = state;
+			unsigned char cmd[] = { 0x0B, 0x1F, (state != 0) ? (unsigned char)0x02 : (unsigned char)0x01 };
+			sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd));
+			ESP_LOGW(TAG, "C2");
+			break;
+		}
+		case SWITCH_SUMMERTIMER: { // Summer Timer Switch
+			switch_pending[SWITCH_SUMMERTIMER] = state;
+			unsigned char cmd[] = { 0x0B, 0x1C, (state != 0) ? (unsigned char)0x02 : (unsigned char)0x01 };
+			sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd));
+			break;
+		}
+		case SWITCH_JETS1: { // Jets1 Switch
+			switch_pending[SWITCH_JETS1] = state;
+			unsigned char cmd[] = { 0x0B, 0x02, (state != 0) ? (unsigned char)0x03 : (unsigned char)0x01 };
+			sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd));
 			break;
 		}
 	}

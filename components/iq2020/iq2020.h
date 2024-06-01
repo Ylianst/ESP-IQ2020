@@ -19,6 +19,9 @@
 #define SWITCH_LIGHTS 0
 #define SWITCH_SPALOCK 1
 #define SWITCH_TEMPLOCK 2
+#define SWITCH_CLEANCYCLE 3
+#define SWITCH_SUMMERTIMER 4
+#define SWITCH_JETS1 5
 
 class IQ2020Component : public esphome::Component {
 public:

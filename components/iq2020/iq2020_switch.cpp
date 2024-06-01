@@ -3,7 +3,7 @@
 #include "iq2020.h"
 
 extern IQ2020Component* g_iq2020_main;
-extern esphome::iq2020_switch::IQ2020Switch* g_iq2020_switch[10];
+extern esphome::iq2020_switch::IQ2020Switch* g_iq2020_switch[SWITCHCOUNT];
 
 namespace esphome {
 namespace iq2020_switch {
@@ -11,7 +11,7 @@ namespace iq2020_switch {
 	static const char *TAG = "iq2020.switch";
 
 	void IQ2020Switch::setup() {
-		g_iq2020_switch[switch_id] = this;
+		if (switch_id < SWITCHCOUNT) { g_iq2020_switch[switch_id] = this; }
 		ESP_LOGD(TAG, "Switch:%d Setup", switch_id);
 	}
 
