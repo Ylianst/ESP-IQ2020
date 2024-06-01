@@ -25,8 +25,8 @@ def to_code(config):
 #    await cg.register_component(server, config)
 #    await fan.register_fan(server, config)
 
-    var = cg.new_Pvariable(config[CONF_ID])
-    yield cg.register_component(var, config)
+#    var = cg.new_Pvariable(config[CONF_ID])
+#    yield cg.register_component(var, config)
 
     fan_ = yield fan.create_fan_state(config)
     cg.add(var.set_fan(fan_))
