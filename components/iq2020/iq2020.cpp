@@ -244,7 +244,7 @@ int IQ2020Component::processIQ2020Command() {
 			// This is the SPA connection kit command to turn the lights on/off
 			if ((processingBuffer[8] & 1) != switch_state[SWITCH_LIGHTS]) {
 				switch_state[SWITCH_LIGHTS] = (processingBuffer[8] & 1);
-				if (g_iq2020_switch[SWITCH_LIGHTS] != NULL) { g_iq2020_switch[SWITCH_LIGHTS]->publish_state(lights); }
+				if (g_iq2020_switch[SWITCH_LIGHTS] != NULL) { g_iq2020_switch[SWITCH_LIGHTS]->publish_state(switch_state[SWITCH_LIGHTS]); }
 			}
 		}
 	}
@@ -258,15 +258,15 @@ int IQ2020Component::processIQ2020Command() {
 			// Confirmation that the pending light command was received
 			switch_state[SWITCH_LIGHTS] = switch_pending[SWITCH_LIGHTS];
 			switch_pending[SWITCH_LIGHTS] = -1;
-			if (g_iq2020_switch[0] != NULL) { g_iq2020_switch[0]->publish_state(lights); }
+			if (g_iq2020_switch[0] != NULL) { g_iq2020_switch[0]->publish_state(switch_state[SWITCH_LIGHTS]); }
 		}
 
 		if ((cmdlen == 28) && (processingBuffer[5] == 0x17) && (processingBuffer[6] == 0x05)) {
 			// This is an update on the status of the spa lights (enabled, intensity, color)
 			switch_pending[SWITCH_LIGHTS] = -1;
-			if (lights != (processingBuffer[24] & 1)) {
-				lights = (processingBuffer[24] & 1);
-				if (g_iq2020_switch[0] != NULL) { g_iq2020_switch[0]->publish_state(lights); }
+			if (switch_state[SWITCH_LIGHTS] != (processingBuffer[24] & 1)) {
+				switch_state[SWITCH_LIGHTS] = (processingBuffer[24] & 1);
+				if (g_iq2020_switch[SWITCH_LIGHTS] != NULL) { g_iq2020_switch[SWITCH_LIGHTS]->publish_state(switch_state[SWITCH_LIGHTS]); }
 			}
 		}
 
