@@ -15,6 +15,9 @@ namespace iq2020_fan {
 		void dump_config() override;
 		void set_fan_id(unsigned int id) { this->fan_id = id; }
 
+		FanTraits get_traits() override;
+		void control(const FanCall &call) override;
+
 	protected:
 //		fan::Fan *fan_;
 		//  output::BinaryOutput *output_;
