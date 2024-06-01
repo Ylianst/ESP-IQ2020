@@ -4,6 +4,8 @@
 #include "esphome/components/output/binary_output.h"
 #include "esphome/components/fan/fan_state.h"
 
+DEPENDENCIES = ["binary_output"]
+
 namespace esphome {
 namespace iq2020_fan {
 
