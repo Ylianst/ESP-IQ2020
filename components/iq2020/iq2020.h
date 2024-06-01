@@ -15,6 +15,11 @@
 #include <vector>
 
 #define IQ202BUFLEN 512
+#define FANCOUNT 4
+#define FAN_JETS1 0
+#define FAN_JETS2 1
+#define FAN_JETS3 2
+#define FAN_JETS4 3
 #define SWITCHCOUNT 10
 #define SWITCH_LIGHTS 0
 #define SWITCH_SPALOCK 1

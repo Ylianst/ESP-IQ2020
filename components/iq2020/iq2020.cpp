@@ -14,6 +14,7 @@ static const char *TAG = "iq2020";
 
 IQ2020Component* g_iq2020_main = NULL;
 esphome::iq2020_switch::IQ2020Switch* g_iq2020_switch[SWITCHCOUNT];
+esphome::iq2020_fan::IQ2020Fan* g_iq2020_fan[FANCOUNT];
 esphome::iq2020_climate::IQ2020Climate* g_iq2020_climate = NULL;
 
 using namespace esphome;
