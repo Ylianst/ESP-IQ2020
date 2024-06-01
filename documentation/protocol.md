@@ -120,6 +120,30 @@ Lights OFF (Command)
 <-- 1F 01 80 170206
 ```
 
+Spa Lock ON
+```
+<-- 01 1F 40 0B1D02
+<-- 1F 01 80 0B1D01
+```
+
+Spa Lock OFF
+```
+<-- 01 1F 40 0B1D01
+<-- 1F 01 80 0B1D00
+```
+
+Temperature Lock ON
+```
+<-- 01 1F 40 0B1E02
+<-- 1F 01 80 0B1E01
+```
+
+Temperature Lock OFF
+```
+<-- 01 1F 40 0B1E01
+<-- 1F 01 80 0B1E00
+```
+
 Read light status (Polled)
 ```
 <-- 01 1F 40 1705
@@ -160,7 +184,8 @@ Main status decoding
 80                - Response (0x40 = Request, 0x80 = Response).
 0256              - Main Status Data.
 0008              - ?
-0004              - Jets active & cleaning cycle status.
+00                - Flags: 0x01 = Temp Lock, 0x02 = Spa Lock
+04                - Jets active & cleaning cycle status.
 00000604000A0622F21100201C201C201C8403605400000000  - ?
 31303346          - "103F" ASCII string, not sure what this is. See temprature string below.
 02937400ABC90A00  - ?
