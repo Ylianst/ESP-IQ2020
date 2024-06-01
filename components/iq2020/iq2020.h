@@ -15,6 +15,9 @@
 #include <vector>
 
 #define IQ202BUFLEN 512
+#define SWITCHCOUNT 10
+#define SWITCH_LIGHTS 0
+#define SWITCH_SPALOCK 1
 
 class IQ2020Component : public esphome::Component {
 public:
@@ -96,8 +99,8 @@ protected:
 
 	std::unique_ptr<esphome::socket::Socket> socket_{};
 	std::vector<Client> clients_{};
-	int lights = -1;
-	int lights_pending = -1;
+	int switch_state[SWITCHCOUNT];   // Current state of all switches
+	int switch_pending[SWITCHCOUNT]; // Desired state of all switches
 	int connectionKit = 0;
 	bool temp_celsius = false;
 	float target_temp = -1;

@@ -13,7 +13,7 @@
 static const char *TAG = "iq2020";
 
 IQ2020Component* g_iq2020_main = NULL;
-esphome::iq2020_switch::IQ2020Switch* g_iq2020_switch[10];
+esphome::iq2020_switch::IQ2020Switch* g_iq2020_switch[SWITCHCOUNT];
 esphome::iq2020_climate::IQ2020Climate* g_iq2020_climate = NULL;
 
 using namespace esphome;
@@ -22,6 +22,7 @@ float fahrenheit_to_celsius(float f) { return (f - 32) * 5 / 9; }
 float celsius_to_fahrenheit(float c) { return c * 9 / 5 + 32; }
 
 void IQ2020Component::setup() {
+	for (int i = 0; i < SWITCHCOUNT; i++) { switch_state[i] = switch_pending[i] = -1; }
 	g_iq2020_main = this;
 	ESP_LOGD(TAG, "Setting up IQ2020...");
 
@@ -253,16 +254,16 @@ int IQ2020Component::processIQ2020Command() {
 
 		//ESP_LOGW(TAG, "SCK RSP Data, len=%d, cmd=%02x%02x", cmdlen, processingBuffer[5], processingBuffer[6]);
 
-		if ((lights_pending != -1) && (cmdlen == 9) && (processingBuffer[5] == 0x17) && (processingBuffer[6] == 0x02) && (processingBuffer[7] == 0x06)) {
+		if ((switch_pending[SWITCH_LIGHTS] != -1) && (cmdlen == 9) && (processingBuffer[5] == 0x17) && (processingBuffer[6] == 0x02) && (processingBuffer[7] == 0x06)) {
 			// Confirmation that the pending light command was received
-			lights = lights_pending;
-			lights_pending = -1;
+			switch_state[SWITCH_LIGHTS] = switch_pending[SWITCH_LIGHTS];
+			switch_pending[SWITCH_LIGHTS] = -1;
 			if (g_iq2020_switch[0] != NULL) { g_iq2020_switch[0]->publish_state(lights); }
 		}
 
 		if ((cmdlen == 28) && (processingBuffer[5] == 0x17) && (processingBuffer[6] == 0x05)) {
 			// This is an update on the status of the spa lights (enabled, intensity, color)
-			lights_pending = -1;
+			switch_pending[SWITCH_LIGHTS] = -1;
 			if (lights != (processingBuffer[24] & 1)) {
 				lights = (processingBuffer[24] & 1);
 				if (g_iq2020_switch[0] != NULL) { g_iq2020_switch[0]->publish_state(lights); }
@@ -369,14 +370,25 @@ void IQ2020Component::sendIQ2020Command(unsigned char dst, unsigned char src, un
 
 void IQ2020Component::SwitchAction(unsigned int switchid, int state) {
 	switch (switchid) {
-		case 0: { // Spa Lights Switch
-			lights_pending = state;
+		case SWITCH_LIGHTS: { // Spa Lights Switch
+			switch_pending[SWITCH_LIGHTS] = state;
 			if (state != 0) {
 				unsigned char lightOnCmd[] = { 0x17, 0x02, 0x04, 0x11, 0x00 };
 				sendIQ2020Command(0x01, 0x1F, 0x40, lightOnCmd, 5); // Turn on lights
 			} else {
 				unsigned char lightOffCmd[] = { 0x17, 0x02, 0x04, 0x10, 0x00 };
 				sendIQ2020Command(0x01, 0x1F, 0x40, lightOffCmd, 5); // Turn off lights
+			}
+		}
+		case SWITCH_SPALOCK: {
+			switch_pending[SWITCH_SPALOCK] = state;
+			if (state != 0) {
+				//unsigned char lightOnCmd[] = ;
+				sendIQ2020Command(0x01, 0x1F, 0x40, { 0x17, 0x02, 0x04, 0x11, 0x00 }, 5); // Turn on spa lock
+			}
+			else {
+				unsigned char lightOffCmd[] = { 0x17, 0x02, 0x04, 0x10, 0x00 };
+				sendIQ2020Command(0x01, 0x1F, 0x40, lightOffCmd, 5); // Turn off spa lock
 			}
 		}
 	}
