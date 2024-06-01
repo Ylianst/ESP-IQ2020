@@ -22,5 +22,5 @@ async def to_code(config):
     await switch.register_switch(server, config)
 
 #    paren = await cg.get_variable(config[CONF_IQ2020_ID])
-#    cg.add(var.set_iq2020_parent(paren))
-    cg.add(var.set_switch_id(config[CONF_ID]))
+#    cg.add(server.set_iq2020_parent(paren))
+    cg.add(server.set_switch_id(config[CONF_ID]))
