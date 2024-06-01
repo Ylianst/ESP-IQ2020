@@ -23,6 +23,7 @@ namespace iq2020_fan {
 		this->fan_->add_on_state_callback([this]() { this->next_update_ = true; });
 	}
 
+	/*
 	void IQ2020Fan::loop() {
 		if (!this->next_update_) {
 			return; //no state change, nothing to do
@@ -31,6 +32,7 @@ namespace iq2020_fan {
 
 		//there was a state change, do something here.
 	}
+	*/
 
 	void IQ2020Fan::dump_config() {
 		ESP_LOGCONFIG(TAG, "IQ2020 fan");

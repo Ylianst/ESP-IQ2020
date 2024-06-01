@@ -13,7 +13,7 @@ namespace iq2020_fan {
 		void set_fan(fan::Fan *fan) { fan_ = fan; }
 		//void set_output(output::BinaryOutput *output) { output_ = output; }
 		void setup() override;
-		void loop() override;
+//		void loop() override;
 		void dump_config() override;
 		void set_fan_id(unsigned int id) { this->fan_id = id; }
 
