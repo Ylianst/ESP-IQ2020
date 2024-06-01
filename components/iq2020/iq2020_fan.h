@@ -2,6 +2,7 @@
 
 #include "esphome/core/component.h"
 #include "esphome/components/fan/fan.h"
+#include "esphome/components/fan/fan_traits.h"
 
 namespace esphome {
 namespace iq2020_fan {
