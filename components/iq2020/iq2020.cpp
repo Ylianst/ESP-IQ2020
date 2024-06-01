@@ -280,6 +280,11 @@ int IQ2020Component::processIQ2020Command() {
 			setSwitchState(SWITCH_JETS1, (processingBuffer[7] != 0));
 		}
 
+		if ((cmdlen == 9) && (processingBuffer[5] == 0x0B) && (processingBuffer[6] == 0x03)) {
+			// Confirmation that the pending Jets 2 command was received, includes new state
+			setSwitchState(SWITCH_JETS2, (processingBuffer[7] != 0));
+		}
+
 		if ((cmdlen == 28) && (processingBuffer[5] == 0x17) && (processingBuffer[6] == 0x05)) {
 			// This is an update on the status of the spa lights (enabled, intensity, color)
 			setSwitchState(SWITCH_LIGHTS, (processingBuffer[24] & 1));
@@ -316,6 +321,7 @@ int IQ2020Component::processIQ2020Command() {
 			setSwitchState(SWITCH_CLEANCYCLE, flags1 & 0x10);
 			setSwitchState(SWITCH_SUMMERTIMER, flags1 & 0x20);
 			setSwitchState(SWITCH_JETS1, flags1 & 0x04);
+			setSwitchState(SWITCH_JETS2, (flags1 & 0x08) || (flags2 & 0x02));
 
 			// Read temperatures
 			float _target_temp = 0, _current_temp = 0;
@@ -413,11 +419,9 @@ void IQ2020Component::SwitchAction(unsigned int switchid, int state) {
 			break;
 		}
 		case SWITCH_CLEANCYCLE: { // Clean Cycle Switch
-			ESP_LOGW(TAG, "C1");
 			switch_pending[SWITCH_CLEANCYCLE] = state;
 			unsigned char cmd[] = { 0x0B, 0x1F, (state != 0) ? (unsigned char)0x02 : (unsigned char)0x01 };
 			sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd));
-			ESP_LOGW(TAG, "C2");
 			break;
 		}
 		case SWITCH_SUMMERTIMER: { // Summer Timer Switch
@@ -429,6 +433,12 @@ void IQ2020Component::SwitchAction(unsigned int switchid, int state) {
 		case SWITCH_JETS1: { // Jets1 Switch
 			switch_pending[SWITCH_JETS1] = state;
 			unsigned char cmd[] = { 0x0B, 0x02, (state != 0) ? (unsigned char)0x03 : (unsigned char)0x01 };
+			sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd));
+			break;
+		}
+		case SWITCH_JETS2: { // Jets2 Switch
+			switch_pending[SWITCH_JETS2] = state;
+			unsigned char cmd[] = { 0x0B, 0x03, (state != 0) ? (unsigned char)0x03 : (unsigned char)0x01 };
 			sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd));
 			break;
 		}
