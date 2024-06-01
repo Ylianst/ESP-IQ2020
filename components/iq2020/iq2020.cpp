@@ -373,10 +373,10 @@ void IQ2020Component::SwitchAction(unsigned int switchid, int state) {
 		case SWITCH_LIGHTS: { // Spa Lights Switch
 			switch_pending[SWITCH_LIGHTS] = state;
 			if (state != 0) {
-				const unsigned char cmd[] = { 0x17, 0x02, 0x04, 0x11, 0x00 };
+				unsigned char cmd[] = { 0x17, 0x02, 0x04, 0x11, 0x00 };
 				sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Turn on lights
 			} else {
-				const unsigned char cmd[] = { 0x17, 0x02, 0x04, 0x10, 0x00 };
+				unsigned char cmd[] = { 0x17, 0x02, 0x04, 0x10, 0x00 };
 				sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Turn off lights
 			}
 		}
