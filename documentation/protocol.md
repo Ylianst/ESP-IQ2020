@@ -244,6 +244,34 @@ Freshwater Salt System - Set Power
  <-- 1F 01 40 1E03XX03FFFF00FF006800FF07FF0000B3100040  - XX is 0x00 (0) to 0x0A (10) power level
 ```
 
+Freshwater Salt System - Test Start
+```
+ <-- 01 1F 40 1E02030400
+ <-- 1F 01 80 1E0206
+ <-- 1F 01 40 1E030003FFFF00FF006800FF07FF0000B3100040
+```
+
+Freshwater Salt System - Test Stop
+```
+ <-- 01 1F 40 1E02030000
+ <-- 1F 01 80 1E0206
+ <-- 1F 01 40 1E030003FFFF00FF006800FF07FF0000B3100040
+```
+
+Freshwater Salt System - Boost Start
+```
+ <-- 01 1F 40 1E02030800
+ <-- 1F 01 80 1E0206
+ <-- 1F 01 40 1E030003FFFF00FF006800FF07FF0000B3100040
+```
+
+Freshwater Salt System - Boost Stop
+```
+ <-- 01 1F 40 1E02030000
+ <-- 1F 01 80 1E0206
+ <-- 1F 01 40 1E030003FFFF00FF006800FF07FF0000B3100040
+```
+
 Get Versions
 ```
 --> 01 1F 40 0100
