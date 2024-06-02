@@ -21,7 +21,7 @@ namespace iq2020_fan {
 
 	esphome::fan::FanTraits IQ2020Fan::get_traits() {
 		// bool oscillation, bool speed, bool direction, int speed_count
-		auto traits = fan::FanTraits(false, true, false, fan_speeds);
+		auto traits = fan::FanTraits(true, true, true, fan_speeds);
 		return traits;
 	};
 
