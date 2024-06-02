@@ -10,8 +10,8 @@ CONFIG_SCHEMA = cv.Schema(
     {
         cv.GenerateID(CONF_IQ2020_SERVER): cv.use_id(IQ2020Component),
         cv.Optional(CONF_SENSOR_VERSION): text_sensor.text_sensor_schema(
-            device_class=DEVICE_CLASS_CONNECTIVITY,
-            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
+#            device_class=DEVICE_CLASS_CONNECTIVITY,
+#            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
         )
     }
 )
