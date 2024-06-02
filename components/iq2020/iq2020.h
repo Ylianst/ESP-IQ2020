@@ -9,6 +9,9 @@
 #ifdef USE_SENSOR
 #include "esphome/components/sensor/sensor.h"
 #endif
+#ifdef USE_TEXT_SENSOR
+#include "esphome/components/sensor/text_sensor.h"
+#endif
 
 #include <memory>
 #include <string>
