@@ -26,7 +26,7 @@ namespace iq2020_fan {
 	};
 
 	void IQ2020Fan::control(const esphome::fan::FanCall &call) {
-		ESP_LOGCONFIG(TAG, "IQ2020 fan control, speed: %d", *(call.get_speed()));
+		ESP_LOGCONFIG(TAG, "IQ2020 fan %d control, speed: %d", fan_id, *(call.get_speed()));
 		int state = 0;
 		if (call.get_speed().has_value()) { state = *(call.get_speed()); }
 		if ((fan_speeds == 1) && (state == 1)) { state = 2; } // If this is a single speed jet, turn it on should send max speed command. 
@@ -34,7 +34,7 @@ namespace iq2020_fan {
 	};
 
 	void IQ2020Fan::updateState(int s) {
-		ESP_LOGCONFIG(TAG, "IQ2020 fan updateState, state: %d", s);
+		ESP_LOGCONFIG(TAG, "IQ2020 fan %d updateState, state: %d", fan_id, s);
 		switch (s) {
 			case 0: { state = false; break; } // OFF
 			case 1: { state = true; speed = 1; break; } // MEDIUM
