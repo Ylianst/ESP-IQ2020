@@ -21,4 +21,4 @@ async def to_code(config):
     
     if CONF_SENSOR_VERSION in config:
         sens = await text_sensor.new_text_sensor(config[CONF_SENSOR_VERSION])
-#        cg.add(server.set_connected_sensor(sens))
+        cg.add(server.set_version_sensor(sens))

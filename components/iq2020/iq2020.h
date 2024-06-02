@@ -53,7 +53,7 @@ public:
 	void set_connection_count_sensor(esphome::sensor::Sensor *connection_count) { this->connection_count_sensor_ = connection_count; }
 #endif
 #ifdef USE_TEXT_SENSOR
-	void set_sample_text_sensor(esphome::text_sensor::TextSensor *sample_text) { this->sample_text_sensor_ = sample_text; }
+	void set_version_sensor(esphome::text_sensor::TextSensor *text) { this->version_sensor_ = text; }
 #endif
 
 	void setup() override;
@@ -105,7 +105,7 @@ protected:
 	esphome::sensor::Sensor *connection_count_sensor_;
 #endif
 #ifdef USE_TEXT_SENSOR
-	esphome::text_sensor::TextSensor *sample_text_sensor_;
+	esphome::text_sensor::TextSensor *version_sensor_;
 #endif
 
 	std::unique_ptr<uint8_t[]> buf_{};
