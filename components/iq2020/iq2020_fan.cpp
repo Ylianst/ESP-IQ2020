@@ -12,7 +12,7 @@ namespace iq2020_fan {
 
 	void IQ2020Fan::setup() {
 		if (fan_id < FANCOUNT) { g_iq2020_fan[fan_id] = this; }
-		ESP_LOGD(TAG, "Fan:%d Setup", fan_id);
+		//ESP_LOGD(TAG, "Fan:%d Setup", fan_id);
 	}
 
 	void IQ2020Fan::dump_config() {
@@ -26,7 +26,7 @@ namespace iq2020_fan {
 	};
 
 	void IQ2020Fan::control(const esphome::fan::FanCall &call) {
-		ESP_LOGCONFIG(TAG, "IQ2020 fan %d control, state: %d, speed: %d", fan_id, call.get_state(), *(call.get_speed()));
+		ESP_LOGCONFIG(TAG, "IQ2020 fan %d control. State: %d, Speed: %d", fan_id, call.get_state(), *(call.get_speed()));
 		int state = 0;
 		if (call.get_state() == true) {
 			if (call.get_speed().has_value()) { state = *(call.get_speed()); } else { state = 1; }
@@ -36,7 +36,7 @@ namespace iq2020_fan {
 	};
 
 	void IQ2020Fan::updateState(int s) {
-		ESP_LOGCONFIG(TAG, "IQ2020 fan %d updateState, state: %d", fan_id, s);
+		ESP_LOGCONFIG(TAG, "IQ2020 fan %d update. State: %d", fan_id, s);
 		switch (s) {
 			case 0: { state = false; break; } // OFF
 			case 1: { state = true; speed = 1; break; } // MEDIUM

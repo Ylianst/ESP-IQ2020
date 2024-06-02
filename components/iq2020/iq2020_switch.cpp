@@ -12,7 +12,7 @@ namespace iq2020_switch {
 
 	void IQ2020Switch::setup() {
 		if (switch_id < SWITCHCOUNT) { g_iq2020_switch[switch_id] = this; }
-		ESP_LOGD(TAG, "Switch:%d Setup", switch_id);
+		//ESP_LOGD(TAG, "Switch:%d Setup", switch_id);
 	}
 
 	void IQ2020Switch::write_state(bool state) {
