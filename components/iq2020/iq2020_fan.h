@@ -19,11 +19,12 @@ namespace iq2020_fan {
 
 		esphome::fan::FanTraits get_traits() override;
 		void control(const esphome::fan::FanCall &call) override;
+		void updateState(int state);
 
 	protected:
 //		fan::Fan *fan_;
-		//  output::BinaryOutput *output_;
-		bool next_update_{ true };
+//		output::BinaryOutput *output_;
+//		bool next_update_{ true };
 		unsigned int fan_id;
 		unsigned int fan_speeds;
 	};
