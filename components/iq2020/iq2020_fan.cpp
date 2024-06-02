@@ -29,7 +29,7 @@ namespace iq2020_fan {
 		ESP_LOGCONFIG(TAG, "IQ2020 fan %d control, state: %d, speed: %d", fan_id, call.get_state(), *(call.get_speed()));
 		int state = 0;
 		if (call.get_state() == true) {
-			if (call.get_speed().has_value()) { state = *(call.get_speed()); }
+			if (call.get_speed().has_value()) { state = *(call.get_speed()); } else { state = 1; }
 			if ((fan_speeds == 1) && (state == 1)) { state = 2; } // If this is a single speed jet, turn it on should send max speed command. 
 		}
 		g_iq2020_main->SwitchAction(fan_id + SWITCH_JETS1, state);
