@@ -292,7 +292,8 @@ int IQ2020Component::processIQ2020Command() {
 #ifdef USE_TEXT_SENSOR
 		if ((cmdlen > 10) && (processingBuffer[5] == 0x01) && (processingBuffer[6] == 0x00)) {
 			// Version string
-			std::string vstr(processingBuffer + 6, cmdlen - 7);
+			processingBuffer[cmdlen - 1] = 0;
+			std::string vstr((char*)(processingBuffer + 6));
 			versionstr = vstr;
 			if (this->version_sensor_) this->version_sensor_->publish_state(versionstr);
 		}
