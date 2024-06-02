@@ -33,21 +33,21 @@ namespace iq2020_fan {
 		g_iq2020_main->SwitchAction(fan_id + SWITCH_JETS1, state);
 	};
 
-	void IQ2020Fan::updateState(int state) {
-		ESP_LOGCONFIG(TAG, "IQ2020 fan updateState, state: %d", state);
-		switch (state) {
+	void IQ2020Fan::updateState(int s) {
+		ESP_LOGCONFIG(TAG, "IQ2020 fan updateState, state: %d", s);
+		switch (s) {
 			case 0: { // OFF
-				setstate(false);
+				state = false;
 				break;
 			}
 			case 1: { // MEDIUM
-				setstate(true);
-				setspeed(1);
+				state = true;
+				speed = 1;
 				break;
 			}
 			case 2: { // FULL
-				setstate(true);
-				setspeed(2);
+				state = true;
+				speed = 2;
 				break;
 			}
 			publish_state();
