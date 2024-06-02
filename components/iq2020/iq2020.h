@@ -105,7 +105,7 @@ protected:
 	esphome::sensor::Sensor *connection_count_sensor_;
 #endif
 #ifdef USE_TEXT_SENSOR
-	esphome::text_sensor::Sensor *sample_text_sensor_;
+	esphome::text_sensor::TextSensor *sample_text_sensor_;
 #endif
 
 	std::unique_ptr<uint8_t[]> buf_{};
