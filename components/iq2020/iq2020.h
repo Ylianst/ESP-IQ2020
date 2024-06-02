@@ -53,7 +53,7 @@ public:
 	void set_connection_count_sensor(esphome::sensor::Sensor *connection_count) { this->connection_count_sensor_ = connection_count; }
 #endif
 #ifdef USE_TEXT_SENSOR
-	void set_sample_text_sensor(esphome::sensor::TextSensor *sample_text) { this->sample_text_sensor_ = sample_text; }
+	void set_sample_text_sensor(esphome::text_sensor::TextSensor *sample_text) { this->sample_text_sensor_ = sample_text; }
 #endif
 
 	void setup() override;
