@@ -47,7 +47,7 @@ iq2020:
    uart_id: SpaConnection
    port: 1234
 
-# If using celsius units in the hot tub, replace `_f_ ` with `_c_` in the two entries below. 
+# If using celsius units in the hot tub, replace _f_ with _c_ in the two entries below. 
 sensor:
   - platform: iq2020
     current_f_temperature:
