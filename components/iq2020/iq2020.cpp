@@ -394,7 +394,7 @@ int IQ2020Component::processIQ2020Command() {
 
 #ifdef USE_TEXT_SENSOR
 			// If we don't have the version string, fetch it now.
-			if (std::string versionstr == NULL) {
+			if (versionstr == NULL) {
 				unsigned char cmd[] = { 0x01, 0x00 };
 				sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Get version string
 			}
