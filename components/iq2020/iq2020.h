@@ -28,6 +28,8 @@
 #define SWITCH_SUMMERTIMER 4
 #define SWITCH_JETS1 5
 #define SWITCH_JETS2 6
+#define SWITCH_JETS3 7
+#define SWITCH_JETS4 8
 
 class IQ2020Component : public esphome::Component {
 public:

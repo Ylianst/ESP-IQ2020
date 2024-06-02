@@ -319,11 +319,11 @@ int IQ2020Component::processIQ2020Command() {
 			unsigned char flags1 = processingBuffer[9];
 			unsigned char flags2 = processingBuffer[10];
 			setSwitchState(SWITCH_TEMPLOCK, flags1 & 0x01);
-			setSwitchState(SWITCH_SPALOCK, flags1 & 0x02);
-			setSwitchState(SWITCH_CLEANCYCLE, flags1 & 0x10);
-			setSwitchState(SWITCH_SUMMERTIMER, flags1 & 0x20);
-			setSwitchState(SWITCH_JETS1, flags1 & 0x04);
-			setSwitchState(SWITCH_JETS2, (flags1 & 0x08) || (flags2 & 0x02));
+			setSwitchState(SWITCH_SPALOCK, (flags1 & 0x02) != 0);
+			setSwitchState(SWITCH_CLEANCYCLE, (flags1 & 0x10) != 0);
+			setSwitchState(SWITCH_SUMMERTIMER, (flags1 & 0x20) != 0);
+			setSwitchState(SWITCH_JETS1, (flags1 & 0x04) !+ 0);
+			setSwitchState(SWITCH_JETS2, ((flags1 & 0x08) || (flags2 & 0x02)) != 0);
 
 			// Read temperatures
 			float _target_temp = 0, _current_temp = 0;
@@ -432,15 +432,14 @@ void IQ2020Component::SwitchAction(unsigned int switchid, int state) {
 			sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd));
 			break;
 		}
-		case SWITCH_JETS1: { // Jets1 Switch
-			switch_pending[SWITCH_JETS1] = state;
-			unsigned char cmd[] = { 0x0B, 0x02, (state != 0) ? (unsigned char)0x03 : (unsigned char)0x01 };
-			sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd));
-			break;
-		}
-		case SWITCH_JETS2: { // Jets2 Switch
-			switch_pending[SWITCH_JETS2] = state;
-			unsigned char cmd[] = { 0x0B, 0x03, (state != 0) ? (unsigned char)0x03 : (unsigned char)0x01 };
+		case SWITCH_JETS1: // CMD 0x02 (Tested)
+		case SWITCH_JETS2: // CMD 0x03 (Tested)
+		case SWITCH_JETS3: // CMD 0x04 (I never testing this, but I assume this is the correct command)
+		case SWITCH_JETS4: // CMD 0x05 (I never testing this, but I assume this is the correct command)
+		{
+			if ((state < 0) || (state > 2)) break;
+			switch_pending[switchid] = state; // 0 = OFF, 1 = MEDIUM, 2 = HIGH
+			unsigned char cmd[] = { 0x0B, (switchid - 3), state + 1 };
 			sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd));
 			break;
 		}
@@ -475,9 +474,13 @@ void IQ2020Component::setSwitchState(unsigned int switchid, int state) {
 		switch_pending[switchid] = -1;
 	}
 	if ((state != 0) != switch_state[switchid]) {
-		switch_state[switchid] = (state != 0);
+		switch_state[switchid] = state;
 		switch_pending[switchid] = -1;
-		if (g_iq2020_switch[switchid] != NULL) { g_iq2020_switch[switchid]->publish_state(switch_state[switchid]); }
+		if (switchid < SWITCH_JETS1) {
+			if (g_iq2020_switch[switchid] != NULL) { g_iq2020_switch[switchid]->publish_state(switch_state[switchid]); }
+		} else {
+			if (g_iq2020_fan[switchid - SWITCH_JETS1] != NULL) { g_iq2020_fan[switchid - SWITCH_JETS1]->publish_state(switch_state[switchid]); }
+		}
 	}
 }
 

@@ -21,12 +21,16 @@ namespace iq2020_fan {
 
 	esphome::fan::FanTraits IQ2020Fan::get_traits() {
 		// bool oscillation, bool speed, bool direction, int speed_count
-		auto traits = fan::FanTraits(true, true, true, fan_speeds);
+		auto traits = fan::FanTraits(false, true, false, fan_speeds);
 		return traits;
 	};
 
 	void IQ2020Fan::control(const esphome::fan::FanCall &call) {
 		ESP_LOGCONFIG(TAG, "IQ2020 fan control, speed: %d", *(call.get_speed()));
+		int state = 0;
+		if (call.get_speed().has_value()) { state = *(call.get_speed()); }
+		if ((fan_speeds == 1) && (state == 1)) { state = 2; } // If this is a single speed jet, turn it on should send max speed command. 
+		g_iq2020_main->SwitchAction(fan_id + SWITCH_JETS1, state);
 	};
 
 }  // namespace binary
