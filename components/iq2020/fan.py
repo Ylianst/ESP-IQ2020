@@ -7,8 +7,8 @@ from.import ns, IQ2020Component
 
 CONF_IQ2020_ID = "IQ2020Component";
 CONF_IQ2020_SERVER = "iq2020_server"
-CONF_FAN_DATAPOINT = "fan_datapoint"
-CONF_FAN_SPEEDS = "fan_speeds"
+CONF_FAN_DATAPOINT = "datapoint"
+CONF_FAN_SPEEDS = "speeds"
 
 iq2020_fan_ns = cg.esphome_ns.namespace('iq2020_fan')
 IQ2020Fan = iq2020_fan_ns.class_('IQ2020Fan', fan.Fan, cg.Component)

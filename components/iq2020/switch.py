@@ -7,7 +7,7 @@ from . import ns, IQ2020Component
 
 CONF_IQ2020_ID = "IQ2020Component";
 CONF_IQ2020_SERVER = "iq2020_server"
-CONF_SWITCH_DATAPOINT = "switch_datapoint"
+CONF_SWITCH_DATAPOINT = "datapoint"
 
 iq2020_switch_ns = cg.esphome_ns.namespace('iq2020_switch')
 IQ2020Switch = iq2020_switch_ns.class_('IQ2020Switch', switch.Switch, cg.Component)
