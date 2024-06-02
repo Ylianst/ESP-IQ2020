@@ -439,7 +439,7 @@ void IQ2020Component::SwitchAction(unsigned int switchid, int state) {
 		{
 			if ((state < 0) || (state > 2)) break;
 			switch_pending[switchid] = state; // 0 = OFF, 1 = MEDIUM, 2 = HIGH
-			unsigned char cmd[] = { 0x0B, (switchid - 3), state + 1 };
+			unsigned char cmd[] = { 0x0B, (unsigned char)(switchid - 3), (unsigned char)(state + 1) };
 			sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd));
 			break;
 		}
