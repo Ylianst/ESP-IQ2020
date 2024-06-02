@@ -277,14 +277,9 @@ int IQ2020Component::processIQ2020Command() {
 			setSwitchState(SWITCH_SUMMERTIMER, (processingBuffer[7] & 1));
 		}
 
-		if ((cmdlen == 9) && (processingBuffer[5] == 0x0B) && (processingBuffer[6] == 0x02)) {
-			// Confirmation that the pending Jets 1 command was received, includes new state
-			setSwitchState(SWITCH_JETS1, (processingBuffer[7] != 0));
-		}
-
-		if ((cmdlen == 9) && (processingBuffer[5] == 0x0B) && (processingBuffer[6] == 0x03)) {
-			// Confirmation that the pending Jets 2 command was received, includes new state
-			setSwitchState(SWITCH_JETS2, (processingBuffer[7] != 0));
+		// Confirmation that a Jets command was received which includes new state
+		if ((cmdlen == 9) && (processingBuffer[5] == 0x0B) && (processingBuffer[6] >= 0x02) && (processingBuffer[6] <= 0x05)) {
+			setSwitchState(processingBuffer[6] + 3, processingBuffer[7]);
 		}
 
 		if ((cmdlen == 28) && (processingBuffer[5] == 0x17) && (processingBuffer[6] == 0x05)) {
@@ -322,8 +317,13 @@ int IQ2020Component::processIQ2020Command() {
 			setSwitchState(SWITCH_SPALOCK, (flags1 & 0x02) != 0);
 			setSwitchState(SWITCH_CLEANCYCLE, (flags1 & 0x10) != 0);
 			setSwitchState(SWITCH_SUMMERTIMER, (flags1 & 0x20) != 0);
-			setSwitchState(SWITCH_JETS1, (flags1 & 0x04) !+ 0);
-			setSwitchState(SWITCH_JETS2, ((flags1 & 0x08) || (flags2 & 0x02)) != 0);
+
+			// Update JETS status. I don't currently know all of the JET status flags.
+			setSwitchState(SWITCH_JETS1, (flags1 & 0x04) != 0); // JETS2 OFF OR FULL
+			int jetState = 0; // JETS2 OFF
+			if (flags2 & 0x02) { jetState = 1; } // JETS2 MEDIUM
+			if (flags1 & 0x08) { jetState = 2; } // JETS2 FULL
+			setSwitchState(SWITCH_JETS2, jetState);
 
 			// Read temperatures
 			float _target_temp = 0, _current_temp = 0;
