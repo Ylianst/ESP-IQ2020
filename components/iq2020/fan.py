@@ -29,3 +29,4 @@ async def to_code(config) :
 	#    cg.add(server.set_iq2020_parent(paren))
 	#   cg.add(server.set_fan_id(config[CONF_ID]))
 	cg.add(server.set_fan_id(config[CONF_FAN_DATAPOINT]))
+	cg.add(server.set_fan_speeds(config[CONF_FAN_SPEEDS]))
