@@ -477,9 +477,9 @@ void IQ2020Component::setSwitchState(unsigned int switchid, int state) {
 		switch_state[switchid] = state;
 		switch_pending[switchid] = -1;
 		if (switchid < SWITCH_JETS1) {
-			if (g_iq2020_switch[switchid] != NULL) { g_iq2020_switch[switchid]->publish_state(switch_state[switchid]); }
+			if (g_iq2020_switch[switchid] != NULL) { g_iq2020_switch[switchid]->publish_state(state); }
 		} else {
-			if (g_iq2020_fan[switchid - SWITCH_JETS1] != NULL) { g_iq2020_fan[switchid - SWITCH_JETS1]->publish_state(switch_state[switchid]); }
+			if (g_iq2020_fan[switchid - SWITCH_JETS1] != NULL) { g_iq2020_fan[switchid - SWITCH_JETS1]->updateState(state); }
 		}
 	}
 }
