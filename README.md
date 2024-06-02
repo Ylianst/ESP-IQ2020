@@ -47,6 +47,7 @@ iq2020:
    uart_id: SpaConnection
    port: 1234
 
+# If using celsius units on the hot tub remote, replace _f_ with _c_ in the two entries below. 
 sensor:
   - platform: iq2020
     current_f_temperature:
@@ -80,16 +81,20 @@ switch:
     id: summer_timer_switch
     icon: "mdi:sun-clock"
     switch_datapoint: 4
+
+fan:
   - platform: iq2020
     name: Jets 1
-    id: jets1_switch
+    id: jets1
     icon: "mdi:turbine"
-    switch_datapoint: 5
+    datapoint: 0
+    speeds: 1
   - platform: iq2020
     name: Jets 2
-    id: jets2_switch
+    id: jets2
     icon: "mdi:turbine"
-    switch_datapoint: 6
+    datapoint: 1
+    speeds: 2
 
 climate:
   - platform: iq2020
