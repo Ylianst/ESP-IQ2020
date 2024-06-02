@@ -26,7 +26,7 @@ namespace iq2020_fan {
 	};
 
 	void IQ2020Fan::control(const esphome::fan::FanCall &call) {
-		ESP_LOGCONFIG(TAG, "IQ2020 fan control");
+		ESP_LOGCONFIG(TAG, "IQ2020 fan control, speed: %d", call.speed);
 	};
 
 }  // namespace binary
