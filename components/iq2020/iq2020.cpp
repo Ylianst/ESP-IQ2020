@@ -87,10 +87,12 @@ void IQ2020Component::publish_sensor() {
 	if (this->connection_count_sensor_)
 		this->connection_count_sensor_->publish_state(this->clients_.size());
 #endif
+/*
 #ifdef USE_TEXT_SENSOR
 	if (this->version_sensor_)
 		this->version_sensor_->publish_state("Sample123");
 #endif
+*/
 }
 
 void IQ2020Component::accept() {
@@ -287,6 +289,15 @@ int IQ2020Component::processIQ2020Command() {
 			setSwitchState(SWITCH_LIGHTS, (processingBuffer[24] & 1));
 		}
 
+#ifdef USE_TEXT_SENSOR
+		if ((cmdlen > 10) && (processingBuffer[5] == 0x01) && (processingBuffer[6] == 0x00)) {
+			// Version string
+			std::string vstr(processingBuffer + 6, cmdlen - 7);
+			versionstr = vstr;
+			if (this->version_sensor_) this->version_sensor_->publish_state(versionstr);
+		}
+#endif
+
 		if ((pending_temp != -1) && (cmdlen == 9) && (processingBuffer[5] == 0x01) && (processingBuffer[6] == 0x09) && (processingBuffer[7] == 0x06)) {
 			// Confirmation that the pending temperature change command was received
 			target_temp = pending_temp_cmd;
@@ -379,6 +390,14 @@ int IQ2020Component::processIQ2020Command() {
 					}
 				}
 			}
+
+#ifdef USE_TEXT_SENSOR
+			// If we don't have the version string, fetch it now.
+			if (std::string versionstr == NULL) {
+				unsigned char cmd[] = { 0x01, 0x00 };
+				sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Get version string
+			}
+#endif
 		}
 	}
 
