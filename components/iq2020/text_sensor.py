@@ -14,4 +14,7 @@ CONFIG_SCHEMA = cv.Schema(
 
 async def to_code(config):
     server = await cg.get_variable(config[CONF_IQ2020_SERVER])
-	sens = await text_sensor.new_binary_sensor(config[CONF_SENSOR_VERSION])
+    
+    if CONF_SENSOR_VERSION in config:
+        sens = await binary_sensor.new_binary_sensor(config[CONF_SENSOR_VERSION])
+        cg.add(server.set_connected_sensor(sens))
