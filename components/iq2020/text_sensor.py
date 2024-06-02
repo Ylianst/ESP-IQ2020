@@ -4,7 +4,7 @@ from esphome.components import text_sensor
 from . import ns, IQ2020Component
 
 CONF_IQ2020_SERVER = "iq2020_server"
-CONF_SENSOR_VERSION = "version"
+CONF_SENSOR_VERSION = "versionstr"
 
 CONFIG_SCHEMA = cv.Schema(
     {
