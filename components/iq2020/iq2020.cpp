@@ -88,8 +88,8 @@ void IQ2020Component::publish_sensor() {
 		this->connection_count_sensor_->publish_state(this->clients_.size());
 #endif
 #ifdef USE_TEXT_SENSOR
-	if (this->sample_text_sensor_)
-		this->sample_text_sensor_->publish_state("Sample123");
+	if (this->version_sensor_)
+		this->version_sensor_->publish_state("Sample123");
 #endif
 }
 
