@@ -37,17 +37,17 @@ namespace iq2020_fan {
 		ESP_LOGCONFIG(TAG, "IQ2020 fan updateState, state: %d", state);
 		switch (state) {
 			case 0: { // OFF
-				set_state(false);
+				setstate(false);
 				break;
 			}
 			case 1: { // MEDIUM
-				set_state(true);
-				set_speed(1);
+				setstate(true);
+				setspeed(1);
 				break;
 			}
 			case 2: { // FULL
-				set_state(true);
-				set_speed(2);
+				setstate(true);
+				setspeed(2);
 				break;
 			}
 			publish_state();
