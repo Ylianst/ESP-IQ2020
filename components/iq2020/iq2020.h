@@ -114,7 +114,7 @@ protected:
 
 	std::unique_ptr<esphome::socket::Socket> socket_{};
 	std::vector<Client> clients_{};
-	std::string versionstr = NULL;
+	std::string versionstr;
 	int switch_state[SWITCHCOUNT];   // Current state of all switches
 	int switch_pending[SWITCHCOUNT]; // Desired state of all switches
 	int connectionKit = 0;
