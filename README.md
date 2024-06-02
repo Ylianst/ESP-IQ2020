@@ -80,16 +80,20 @@ switch:
     id: summer_timer_switch
     icon: "mdi:sun-clock"
     switch_datapoint: 4
+
+fan:
   - platform: iq2020
     name: Jets 1
-    id: jets1_switch
+    id: jets1
     icon: "mdi:turbine"
-    switch_datapoint: 5
+    datapoint: 0
+    speeds: 1
   - platform: iq2020
     name: Jets 2
-    id: jets2_switch
+    id: jets2
     icon: "mdi:turbine"
-    switch_datapoint: 6
+    datapoint: 1
+    speeds: 2
 
 climate:
   - platform: iq2020
