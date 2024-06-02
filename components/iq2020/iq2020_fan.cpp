@@ -39,8 +39,8 @@ namespace iq2020_fan {
 			case 0: { state = false; break; } // OFF
 			case 1: { state = true; speed = 1; break; } // MEDIUM
 			case 2: { state = true; speed = (fan_speeds == 2) ? 2 : 1; break; } // FULL
-			publish_state();
 		}
+		publish_state();
 	}
 
 }  // namespace binary

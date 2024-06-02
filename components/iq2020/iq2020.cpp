@@ -319,7 +319,7 @@ int IQ2020Component::processIQ2020Command() {
 			setSwitchState(SWITCH_SUMMERTIMER, (flags1 & 0x20) != 0);
 
 			// Update JETS status. I don't currently know all of the JET status flags.
-			setSwitchState(SWITCH_JETS1, (flags1 & 0x04) != 0); // JETS2 OFF OR FULL
+			setSwitchState(SWITCH_JETS1, (flags1 & 0x04) ? 2 : 0); // JETS2 FULL OR OFF
 			int jetState = 0; // JETS2 OFF
 			if (flags2 & 0x02) { jetState = 1; } // JETS2 MEDIUM
 			if (flags1 & 0x08) { jetState = 2; } // JETS2 FULL
