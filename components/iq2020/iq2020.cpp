@@ -287,6 +287,7 @@ int IQ2020Component::processIQ2020Command() {
 
 		if ((cmdlen > 10) && (processingBuffer[5] == 0x01) && (processingBuffer[6] == 0x00)) {
 			// Version string
+			ESP_LOGW(TAG, "Temp Set Confirmation, Target Temp: %.1f", target_temp);
 #ifdef USE_TEXT_SENSOR
 			processingBuffer[cmdlen - 1] = 0;
 			std::string vstr((char*)(processingBuffer + 7));
@@ -318,7 +319,7 @@ int IQ2020Component::processIQ2020Command() {
 
 		if ((cmdlen == 140) && (processingBuffer[5] == 0x02) && (processingBuffer[6] == 0x56)) {
 			// This is the main status data (jets, temperature)
-			next_poll += 50000; // Add 50 seconds to the next poll
+			next_poll = ::millis() + 60000; // Next poll in 60 seconds to the next poll
 
 			// Read state flags
 			unsigned char flags1 = processingBuffer[9];
