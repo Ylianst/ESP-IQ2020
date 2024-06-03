@@ -25,7 +25,7 @@ You could use a USB-to-RS485 dongle to get at the same traffic, but that require
 
 Data Viewer is a C# application built with Visual Studio 2015. I provide a compiled executable here, but it's not code signed.
 
- - [IQ2020 Data Viewer Executable](https://github.com/Ylianst/ESP-IQ2020/blob/main/DataViewer/IQ2020-DataViewer.exe)
+ - [IQ2020 Data Viewer Executable](https://github.com/Ylianst/ESP-IQ2020/raw/main/DataViewer/IQ2020-DataViewer.exe)
  - [The source code is here](https://github.com/Ylianst/ESP-IQ2020/tree/main/DataViewer)
 
 Another thing you may want to do is change the debug level from `ERROR` to `DEBUG` in the ESP-Home confirmation file and reflash. You will see a lot more data in the ESP-Home logs.
