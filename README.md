@@ -105,7 +105,7 @@ climate:
     name: Temperature
 ```
 
-You may need to make a few changes. If your hot tub is setup to display temperature in celsius, replace `current_f_temperature` and `current_f_temperature` with `target_c_temperature` and `target_c_temperature`. Make sure you put your WIFI SSID and Password in `secrets.yaml`. Once ready, go ahead and flash your device over USB-C. At this point, the device should be able be visible over WIFI when powered using USB-C even if it's not connected to the computer.
+You may need to make a few changes. If your hot tub is setup to display temperature in celsius, replace `current_f_temperature` and `current_f_temperature` with `target_c_temperature` and `target_c_temperature`. Make sure you put your WIFI SSID and Password in `secrets.yaml`. Once ready, go ahead and flash your device over USB-C. At this point, the device should be visible over WIFI when powered using USB-C even if it's not connected to the computer.
 
 Next, grab 4 breadboard jumper wires and connect them to the RS485 module. I recommand using 4 different color wires, idealy blue, green, red and black. Put the male end in the RS485 module and tighten using a small screw driver. Double check the wires don't come off. Your device should look like this.
 
@@ -119,9 +119,8 @@ In the picture below you will notice I have the expansion board attached with 8 
 
 ![IQ2020-ESP3](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/c52b676b-e35c-474c-8919-2fc57302d0fb)
 
-Once done, power your hot tub back on and you should see data flowing into Home Assistant. You can see the current temperature, set the target temperature, lock the remote control, turn on lights & jets and graph the temperature and power usage. If a jet has two power levels, you should be able to see and control them. The spa data is polled by the device every minute, so, if you change a setting using the tub's remote, it may take up to a minute to update on Home Assistant. If something does not work right, please open an issue in GitHub. As with all Home Assistant integrations, you can use automations. For example, I an electric time-of-day plan and so, I adjust the temperature accordingly. There are also sensors provided so you can create tracking graphs.
+Once done, power your hot tub back on and you should see data flowing into Home Assistant. You can see the current temperature, set the target temperature, lock the remote control, turn on lights & jets and graph the temperature and power usage. If a jet has two power levels, you should be able to see and control them. The spa data is polled by the device every minute, so, if you change a setting using the tub's remote, it may take up to a minute to update on Home Assistant. If something does not work right, [please open an issue in GitHub](https://github.com/Ylianst/ESP-IQ2020/issues). As with all Home Assistant integrations, you can use automations. For example, I an electric time-of-day plan and so, I adjust the temperature accordingly. There are also sensors provided so you can create tracking graphs.
 
 For added details:
-  -
-  -
-  -
+  - [Using different ESP32 device](https://github.com/Ylianst/ESP-IQ2020/blob/main/documentation/devices.md)
+  - [Details on the RS485 serial protocol](https://github.com/Ylianst/ESP-IQ2020/blob/main/documentation/protocol.md)
