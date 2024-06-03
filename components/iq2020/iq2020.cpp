@@ -46,12 +46,9 @@ void IQ2020Component::setup() {
 	}
 
 	this->publish_sensor();
-
+	
 	// Send initial polling commands
-	unsigned char lightPollCmd[] = { 0x17, 0x05 };
-	sendIQ2020Command(0x01, 0x1F, 0x40, lightPollCmd, 2); // Poll lights state
-	unsigned char generalPollCmd[] = { 0x02, 0x56 };
-	sendIQ2020Command(0x01, 0x1F, 0x40, generalPollCmd, 2); // Poll general state
+	pollState();
 }
 
 void IQ2020Component::loop() {
@@ -60,6 +57,10 @@ void IQ2020Component::loop() {
 	this->flush();
 	this->write();
 	this->cleanup();
+
+	// Check if it's time to poll for state. We poll 10 seconds, but add 50 seconds if we get status.
+	unsigned long now = millis();
+	if (next_poll < now) { next_poll = now + 10000; pollState(); } // TODO: Handle now looping.
 }
 
 void IQ2020Component::dump_config() {
@@ -87,12 +88,6 @@ void IQ2020Component::publish_sensor() {
 	if (this->connection_count_sensor_)
 		this->connection_count_sensor_->publish_state(this->clients_.size());
 #endif
-/*
-#ifdef USE_TEXT_SENSOR
-	if (this->version_sensor_)
-		this->version_sensor_->publish_state("Sample123");
-#endif
-*/
 }
 
 void IQ2020Component::accept() {
@@ -289,15 +284,16 @@ int IQ2020Component::processIQ2020Command() {
 			setSwitchState(SWITCH_LIGHTS, (processingBuffer[24] & 1));
 		}
 
-#ifdef USE_TEXT_SENSOR
 		if ((cmdlen > 10) && (processingBuffer[5] == 0x01) && (processingBuffer[6] == 0x00)) {
 			// Version string
+#ifdef USE_TEXT_SENSOR
 			processingBuffer[cmdlen - 1] = 0;
 			std::string vstr((char*)(processingBuffer + 7));
 			versionstr = vstr;
 			if (this->version_sensor_) this->version_sensor_->publish_state(versionstr);
-		}
 #endif
+			pollState();
+		}
 
 		if ((pending_temp != -1) && (cmdlen == 9) && (processingBuffer[5] == 0x01) && (processingBuffer[6] == 0x09) && (processingBuffer[7] == 0x06)) {
 			// Confirmation that the pending temperature change command was received
@@ -321,6 +317,7 @@ int IQ2020Component::processIQ2020Command() {
 
 		if ((cmdlen == 140) && (processingBuffer[5] == 0x02) && (processingBuffer[6] == 0x56)) {
 			// This is the main status data (jets, temperature)
+			next_poll += 50000; // Add 50 seconds to the next poll
 
 			// Read state flags
 			unsigned char flags1 = processingBuffer[9];
@@ -392,13 +389,11 @@ int IQ2020Component::processIQ2020Command() {
 				}
 			}
 
-#ifdef USE_TEXT_SENSOR
-			// If we don't have the version string, fetch it now.
-			if (versionstr.empty()) {
-				unsigned char cmd[] = { 0x01, 0x00 };
-				sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Get version string
+			if (connectionKit == 0) {
+				// Poll lights state
+				unsigned char lightPollCmd[] = { 0x17, 0x05 };
+				sendIQ2020Command(0x01, 0x1F, 0x40, lightPollCmd, 2);
 			}
-#endif
 		}
 	}
 
@@ -499,6 +494,25 @@ void IQ2020Component::setSwitchState(unsigned int switchid, int state) {
 		if (g_iq2020_switch[switchid] != NULL) { g_iq2020_switch[switchid]->publish_state(state != 0); }
 		if ((switchid >= SWITCH_JETS1) && (g_iq2020_fan[switchid - SWITCH_JETS1] != NULL)) { g_iq2020_fan[switchid - SWITCH_JETS1]->updateState(state); }
 	}
+}
+
+void IQ2020Component::pollState() {
+	ESP_LOGW(TAG, "Poll");
+#ifdef USE_TEXT_SENSOR
+	// If we don't have the version string, fetch it now.
+	if (versionstr.empty()) {
+		unsigned char cmd[] = { 0x01, 0x00 };
+		sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Get version string
+	} else {
+		if (connectionKit) return;
+		unsigned char generalPollCmd[] = { 0x02, 0x56 };
+		sendIQ2020Command(0x01, 0x1F, 0x40, generalPollCmd, 2); // Poll general state
+	}
+#else
+	if (connectionKit) return;
+	unsigned char generalPollCmd[] = { 0x02, 0x56 };
+	sendIQ2020Command(0x01, 0x1F, 0x40, generalPollCmd, 2); // Poll general state
+#endif
 }
 
 IQ2020Component::Client::Client(std::unique_ptr<esphome::socket::Socket> socket, std::string identifier, size_t position)

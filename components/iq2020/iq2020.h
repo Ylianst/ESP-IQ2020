@@ -124,6 +124,7 @@ protected:
 	float pending_temp = -1;
 	float pending_temp_cmd = -1;
 	int pending_temp_retry = 0;
+	unsigned long next_poll = 0;
 
 	// IQ2020 processing
 	int nextPossiblePacket();
@@ -134,4 +135,5 @@ protected:
 	int processIQ2020Command();
 	void sendIQ2020Command(unsigned char dst, unsigned char src, unsigned char op, unsigned char *data, int len);
 	void setSwitchState(unsigned int switchid, int state);
+	void pollState();
 };
