@@ -1,7 +1,10 @@
 # ESP-IQ2020
-Connect your IQ2020 powered Hot Tub to Home Assistant. You can be able to remotely control temperatue, lights, jets and more along with monitoring power usage. The IQ2020 is the control board used by a lot of hot tubs, so check if you have this board. You will need to buy a small device, flash the right firmware on the device using ESP-Home and then connect the device using 4 wires to your hot tub. The device will be powered by the hot tub and has built-in WIFI, so everything stays within the control box, no messy wires. First you will need to buy a ESP32 device and a RS485 interface for it.
+Connect your IQ2020 powered Hot Tub to Home Assistant. You will be able to remotely control temperatue, lights, jets, lock the spa remote, monitoring power usage and more. It will make your hot tub and home a lot smarter. You can graph temperature and power usage, control temperature for time-of-day electric rates or when on vacation, get notified when the tub is in use, lock the spa remote control when the house in away mode, blink the tub lights when someone rings the doorbell and more.
 
-I recommand this exact hardware (~26$ US):
+![image](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/b3143b60-84fe-421e-9225-c157ae8f650c)
+
+The IQ2020 is the control board used by a lot of hot tubs, so check if you have this board. You will need to buy a small device, flash the right firmware on the device using ESP-Home and then connect the device using 4 wires to your hot tub. The device will be powered by the hot tub and has built-in WIFI, so everything stays within the control box, no messy wires. First you will need to buy a ESP32 device and a RS485 interface for it. I recommand this exact hardware (~26$ US):
+
 - [ATOM Lite ESP32 IoT Development Kit](https://shop.m5stack.com/products/atom-lite-esp32-development-kit)
 - [ATOM Tail485 - RS485 Converter for ATOM](https://shop.m5stack.com/products/atom-tail485)
 - [5 Colors 1Pin 2.54mm Female to Male Breadboard Jumper Wire](https://www.amazon.com/XLX-Breadboard-Soldering-Brushless-Double-end/dp/B07S839W8V/ref=sr_1_3)
@@ -118,7 +121,7 @@ In the picture below you will notice I have the expansion board attached with 8 
 
 Once done, power your hot tub back on and you should see data flowing into Home Assistant thru your new device. You can see the current temperature, set the target temperature, lock the remote control, turn on lights & jets and graph the temperature and power usage. If a jet has two power levels, you should be able to see and control them. The spa data is polled by the device every minute, so, if you change a setting using the tub's remote, it may take up to a minute to update on Home Assistant.
 
-![image](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/b3143b60-84fe-421e-9225-c157ae8f650c)
+
 
 As with all Home Assistant integrations, you can of course connect automations. For example, I an electric time-of-day plan and so, I adjust the temperature accordingly. There are also sensors provided so you can create tracking graphs.
 
