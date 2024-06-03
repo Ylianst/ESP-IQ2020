@@ -48,6 +48,7 @@ void IQ2020Component::setup() {
 	this->publish_sensor();
 	
 	// Send initial polling commands
+	next_poll = ::millis() + 10000;
 	pollState();
 }
 
