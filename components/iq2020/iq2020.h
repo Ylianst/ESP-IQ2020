@@ -117,7 +117,7 @@ protected:
 	std::string versionstr;
 	int switch_state[SWITCHCOUNT];   // Current state of all switches
 	int switch_pending[SWITCHCOUNT]; // Desired state of all switches
-	int connectionKit = 0;
+	unsigned long connectionKit = 0; // The time the spa connection kit was last seen
 	bool temp_celsius = false;
 	float target_temp = -1;
 	float current_temp = -1;

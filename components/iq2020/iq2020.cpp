@@ -48,7 +48,7 @@ void IQ2020Component::setup() {
 	this->publish_sensor();
 	
 	// Send initial polling commands
-	next_poll = ::millis() + 10000;
+	next_poll = ::millis() + 5000;
 	pollState();
 }
 
@@ -61,7 +61,14 @@ void IQ2020Component::loop() {
 
 	// Check if it's time to poll for state. We poll 10 seconds, but add 50 seconds if we get status.
 	unsigned long now = ::millis();
-	if (next_poll < now) { next_poll = now + 10000; pollState(); } // TODO: Handle now looping.
+	if ((connectionKit != 0) && ((connectionKit + 65000) < now)) {
+		ESP_LOGW(TAG, "Spa Connection Kit Removed");
+#ifdef USE_BINARY_SENSOR
+		if (this->connectionkit_sensor_) { this->connectionkit_sensor_->publish_state(false); }
+#endif
+		connectionKit = 0;
+	}
+	if (next_poll < now) { next_poll = now + 5000; pollState(); }
 }
 
 void IQ2020Component::dump_config() {
@@ -95,8 +102,7 @@ void IQ2020Component::accept() {
 	struct sockaddr_storage client_addr;
 	socklen_t client_addrlen = sizeof(client_addr);
 	std::unique_ptr<socket::Socket> socket = this->socket_->accept(reinterpret_cast<struct sockaddr *>(&client_addr), &client_addrlen);
-	if (!socket)
-		return;
+	if (!socket) return;
 
 	socket->setblocking(false);
 	std::string identifier = socket->getpeername();
@@ -231,12 +237,12 @@ int IQ2020Component::processIQ2020Command() {
 		// This is a request command from the SPA connection kit, take note of this.
 		// Presence of this device will cause us to no longer poll for state since this device will do it for us.
 		if (connectionKit == 0) {
-			//ESP_LOGW(TAG, "Spa Connection Kit Detected");
+			ESP_LOGW(TAG, "Spa Connection Kit Detected");
 #ifdef USE_BINARY_SENSOR
 			if (this->connectionkit_sensor_) { this->connectionkit_sensor_->publish_state(true); }
 #endif
-			connectionKit = 1;
 		}
+		connectionKit = ::millis();
 
 		ESP_LOGW(TAG, "SCK CMD Data, len=%d, cmd=%02x%02x", cmdlen, processingBuffer[5], processingBuffer[6]);
 
@@ -319,7 +325,7 @@ int IQ2020Component::processIQ2020Command() {
 
 		if ((cmdlen == 140) && (processingBuffer[5] == 0x02) && (processingBuffer[6] == 0x56)) {
 			// This is the main status data (jets, temperature)
-			next_poll = ::millis() + 60000; // Next poll in 60 seconds to the next poll
+			if (!versionstr.empty()) { next_poll = ::millis() + 65000; } // Next poll in 65 seconds
 
 			// Read state flags
 			unsigned char flags1 = processingBuffer[9];
@@ -506,12 +512,10 @@ void IQ2020Component::pollState() {
 		unsigned char cmd[] = { 0x01, 0x00 };
 		sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Get version string
 	} else {
-		if (connectionKit) return;
 		unsigned char generalPollCmd[] = { 0x02, 0x56 };
 		sendIQ2020Command(0x01, 0x1F, 0x40, generalPollCmd, 2); // Poll general state
 	}
 #else
-	if (connectionKit) return;
 	unsigned char generalPollCmd[] = { 0x02, 0x56 };
 	sendIQ2020Command(0x01, 0x1F, 0x40, generalPollCmd, 2); // Poll general state
 #endif
