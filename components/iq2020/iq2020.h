@@ -33,7 +33,7 @@
 #define SWITCH_JETS2 6
 #define SWITCH_JETS3 7
 #define SWITCH_JETS4 8
-
+// a
 class IQ2020Component : public esphome::Component {
 public:
 	IQ2020Component() = default;
