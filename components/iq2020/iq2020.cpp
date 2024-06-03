@@ -356,12 +356,14 @@ int IQ2020Component::processIQ2020Command() {
 				temp_celsius = false;
 				_target_temp = ((processingBuffer[91] - '0') * 10) + (processingBuffer[92] - '0') + ((processingBuffer[90] == '1') ? 100 : 0);
 				_current_temp = ((processingBuffer[95] - '0') * 10) + (processingBuffer[96] - '0') + ((processingBuffer[94] == '1') ? 100 : 0);
+				outlet_temp = ((processingBuffer[36] - '0') * 10) + (processingBuffer[37] - '0') + ((processingBuffer[38] == '1') ? 100 : 0);
 			} else if (processingBuffer[92] == '.') { // Celcius
 				temp_celsius = true;
-				_target_temp = ((processingBuffer[90] - '0') * 10) + (processingBuffer[91] - '0') + ((processingBuffer[92] - '0') * 0.1);
-				_current_temp = ((processingBuffer[94] - '0') * 10) + (processingBuffer[95] - '0') + ((processingBuffer[96] - '0') * 0.1);
+				_target_temp = ((processingBuffer[90] - '0') * 10) + (processingBuffer[91] - '0') + ((processingBuffer[93] - '0') * 0.1);
+				_current_temp = ((processingBuffer[94] - '0') * 10) + (processingBuffer[95] - '0') + ((processingBuffer[97] - '0') * 0.1);
+				outlet_temp = ((processingBuffer[36] - '0') * 10) + (processingBuffer[37] - '0') + ((processingBuffer[39] - '0') * 0.1);
 			}
-			//ESP_LOGD(TAG, "Reported Current Temp: %.1f, Target Temp: %.1f", _current_temp, _target_temp);
+			ESP_LOGD(TAG, "Reported Current Temp: %.1f, Target Temp: %.1f, Outlet Temp: %.1f", _current_temp, _target_temp, _outlet_temp);
 
 			// Publish the temperature values even if they don't change.
 			if ((_target_temp != target_temp) || (_current_temp != current_temp) || (temp_action != (heaterActive != 0))) {
@@ -379,10 +381,12 @@ int IQ2020Component::processIQ2020Command() {
 			if (temp_celsius) {
 				if (this->target_c_temp_sensor_) this->target_c_temp_sensor_->publish_state(target_temp);
 				if (this->current_c_temp_sensor_) this->current_c_temp_sensor_->publish_state(current_temp);
+				if (this->outlet_c_temp_sensor_) this->outlet_c_temp_sensor_->publish_state(outlet_temp);
 			}
 			else {
 				if (this->target_f_temp_sensor_) this->target_f_temp_sensor_->publish_state(target_temp);
 				if (this->current_f_temp_sensor_) this->current_f_temp_sensor_->publish_state(current_temp);
+				if (this->outlet_f_temp_sensor_) this->outlet_f_temp_sensor_->publish_state(outlet_temp);
 			}
 #endif
 

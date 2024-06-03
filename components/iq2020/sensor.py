@@ -15,8 +15,10 @@ from . import ns, IQ2020Component
 UNIT_FAHRENHEIT = "°F"
 CONF_SENSOR_CURRENT_F_TEMPERATURE = "current_f_temperature"
 CONF_SENSOR_TARGET_F_TEMPERATURE = "target_f_temperature"
+CONF_SENSOR_OUTLET_F_TEMPERATURE = "outlet_f_temperature"
 CONF_SENSOR_CURRENT_C_TEMPERATURE = "current_c_temperature"
 CONF_SENSOR_TARGET_C_TEMPERATURE = "target_c_temperature"
+CONF_SENSOR_OUTLET_C_TEMPERATURE = "outlet_c_temperature"
 CONF_SENSOR_CONNECTION_COUNT = "connection_count"
 CONF_SENSOR_HEATER_WATTAGE = "heater_wattage"
 CONF_SENSOR_HEATER_RELAY = "heater_relay"
@@ -39,6 +41,13 @@ CONFIG_SCHEMA = cv.Schema(
             state_class=STATE_CLASS_MEASUREMENT,
             icon=ICON_THERMOMETER,
         ),
+        cv.Optional(CONF_SENSOR_OUTLET_F_TEMPERATURE): sensor.sensor_schema(
+            unit_of_measurement=UNIT_FAHRENHEIT,
+            device_class=DEVICE_CLASS_TEMPERATURE,
+            accuracy_decimals=0,
+            state_class=STATE_CLASS_MEASUREMENT,
+            icon=ICON_THERMOMETER,
+        ),
         cv.Optional(CONF_SENSOR_CURRENT_C_TEMPERATURE): sensor.sensor_schema(
             unit_of_measurement=UNIT_CELSIUS,
             device_class=DEVICE_CLASS_TEMPERATURE,
@@ -47,6 +56,13 @@ CONFIG_SCHEMA = cv.Schema(
             icon=ICON_THERMOMETER,
         ),
         cv.Optional(CONF_SENSOR_TARGET_C_TEMPERATURE): sensor.sensor_schema(
+            unit_of_measurement=UNIT_CELSIUS,
+            device_class=DEVICE_CLASS_TEMPERATURE,
+            accuracy_decimals=1,
+            state_class=STATE_CLASS_MEASUREMENT,
+            icon=ICON_THERMOMETER,
+        ),
+        cv.Optional(CONF_SENSOR_OUTLET_C_TEMPERATURE): sensor.sensor_schema(
             unit_of_measurement=UNIT_CELSIUS,
             device_class=DEVICE_CLASS_TEMPERATURE,
             accuracy_decimals=1,
@@ -83,6 +99,10 @@ async def to_code(config):
         sens = await sensor.new_sensor(config[CONF_SENSOR_TARGET_F_TEMPERATURE])
         cg.add(server.set_target_f_temp_sensor(sens))
 
+    if CONF_SENSOR_OUTLET_F_TEMPERATURE in config:
+        sens = await sensor.new_sensor(config[CONF_SENSOR_OUTLET_F_TEMPERATURE])
+        cg.add(server.set_outlet_f_temp_sensor(sens))
+
     if CONF_SENSOR_CURRENT_C_TEMPERATURE in config:
         sens = await sensor.new_sensor(config[CONF_SENSOR_CURRENT_C_TEMPERATURE])
         cg.add(server.set_current_c_temp_sensor(sens))
@@ -90,6 +110,10 @@ async def to_code(config):
     if CONF_SENSOR_TARGET_C_TEMPERATURE in config:
         sens = await sensor.new_sensor(config[CONF_SENSOR_TARGET_C_TEMPERATURE])
         cg.add(server.set_target_c_temp_sensor(sens))
+
+    if CONF_SENSOR_OUTLET_C_TEMPERATURE in config:
+        sens = await sensor.new_sensor(config[CONF_SENSOR_OUTLET_C_TEMPERATURE])
+        cg.add(server.set_outlet_c_temp_sensor(sens))
 
     if CONF_SENSOR_CONNECTION_COUNT in config:
         sens = await sensor.new_sensor(config[CONF_SENSOR_CONNECTION_COUNT])

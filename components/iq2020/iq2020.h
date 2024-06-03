@@ -48,8 +48,10 @@ public:
 #ifdef USE_SENSOR
 	void set_current_f_temp_sensor(esphome::sensor::Sensor *temp) { this->current_f_temp_sensor_ = temp; }
 	void set_target_f_temp_sensor(esphome::sensor::Sensor *temp) { this->target_f_temp_sensor_ = temp; }
+	void set_outlet_f_temp_sensor(esphome::sensor::Sensor *temp) { this->outlet_f_temp_sensor_ = temp; }
 	void set_current_c_temp_sensor(esphome::sensor::Sensor *temp) { this->current_c_temp_sensor_ = temp; }
 	void set_target_c_temp_sensor(esphome::sensor::Sensor *temp) { this->target_c_temp_sensor_ = temp; }
+	void set_outlet_c_temp_sensor(esphome::sensor::Sensor *temp) { this->outlet_c_temp_sensor_ = temp; }
 	void set_connection_count_sensor(esphome::sensor::Sensor *connection_count) { this->connection_count_sensor_ = connection_count; }
 	void set_heater_wattage_sensor(esphome::sensor::Sensor *wattage) { this->wattage_sensor_ = wattage; }
 	void set_heater_relay_sensor(esphome::sensor::Sensor *relay) { this->relay_sensor_ = relay; }
@@ -102,8 +104,10 @@ protected:
 #ifdef USE_SENSOR
 	esphome::sensor::Sensor *current_f_temp_sensor_;
 	esphome::sensor::Sensor *target_f_temp_sensor_;
+	esphome::sensor::Sensor *outlet_f_temp_sensor_;
 	esphome::sensor::Sensor *current_c_temp_sensor_;
 	esphome::sensor::Sensor *target_c_temp_sensor_;
+	esphome::sensor::Sensor *outlet_c_temp_sensor_;
 	esphome::sensor::Sensor *connection_count_sensor_;
 	esphome::sensor::Sensor *wattage_sensor_;
 	esphome::sensor::Sensor *relay_sensor_;
@@ -126,6 +130,7 @@ protected:
 	int temp_action = -1;
 	float target_temp = -1;
 	float current_temp = -1;
+	float outlet_temp = -1;
 	float pending_temp = -1;
 	float pending_temp_cmd = -1;
 	int pending_temp_retry = 0;
