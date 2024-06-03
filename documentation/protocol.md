@@ -211,7 +211,7 @@ Main status decoding
 00                - Flags: 0x01 = Temp Lock, 0x02 = Spa Lock, 0x04 = Jet1, 0x08 = Jet2 Full, 0x10 = Clean Cycle, 0x20 = Summer Timer
 04                - Flags: 0x02 = Jet2 Medium, 0x04 = AlwaysSet?. 4 upper bits are spa lights: 0x0 = Off, 0x1 = Min Bright, 0x5 = Max Bright
 00000604000A0622F21100201C201C201C8403605400000000  - ?
-31303346          - "103F" ASCII string, not sure what this is. See temprature string below.
+31303346          - "103F" ASCII string, the heater outlet temperature.
 02937400ABC90A00  - ?
 033CDC05          - Big endian counter
 45000000000000007BD30C000000000000000000B8AF0F000200  - ?
