@@ -25,7 +25,7 @@ You could use a USB-toRS485 dongle to get at the traffic, but that requires you 
 
 Data Viewer is a C# application build with VIsual Studio 2015. [The source code is here](https://github.com/Ylianst/ESP-IQ2020/tree/main/DataViewer).
 
-Another thing you may want to do is change the debug level from `ERROR` to `DEBUG` in the ESP-Home confirmation file and reflash. You will see a lot more data in the logs.
+Another thing you may want to do is change the debug level from `ERROR` to `DEBUG` in the ESP-Home confirmation file and reflash. You will see a lot more data in the ESP-Home logs.
 
 ```
 logger:
