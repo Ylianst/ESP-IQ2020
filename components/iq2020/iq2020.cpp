@@ -356,7 +356,7 @@ int IQ2020Component::processIQ2020Command() {
 				temp_celsius = false;
 				_target_temp = ((processingBuffer[91] - '0') * 10) + (processingBuffer[92] - '0') + ((processingBuffer[90] == '1') ? 100 : 0);
 				_current_temp = ((processingBuffer[95] - '0') * 10) + (processingBuffer[96] - '0') + ((processingBuffer[94] == '1') ? 100 : 0);
-				outlet_temp = ((processingBuffer[36] - '0') * 10) + (processingBuffer[37] - '0') + ((processingBuffer[38] == '1') ? 100 : 0);
+				outlet_temp = ((processingBuffer[37] - '0') * 10) + (processingBuffer[38] - '0') + ((processingBuffer[36] == '1') ? 100 : 0);
 			} else if (processingBuffer[92] == '.') { // Celcius
 				temp_celsius = true;
 				_target_temp = ((processingBuffer[90] - '0') * 10) + (processingBuffer[91] - '0') + ((processingBuffer[93] - '0') * 0.1);
