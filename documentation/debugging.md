@@ -28,6 +28,8 @@ Data Viewer is a C# application built with Visual Studio 2015. I provide a compi
  - [IQ2020 Data Viewer Executable](https://github.com/Ylianst/ESP-IQ2020/raw/main/DataViewer/IQ2020-DataViewer.exe)
  - [The source code is here](https://github.com/Ylianst/ESP-IQ2020/tree/main/DataViewer)
 
+Once you get the executable, run it, put the IP address and port of your ESP32 device and hit connect. To makes things easy, packets will be shown like in the [RS485 protocol page](https://github.com/Ylianst/ESP-IQ2020/blob/main/documentation/protocol.md), without the starting byte, data length and checksum.
+
 Another thing you may want to do is change the debug level from `ERROR` to `DEBUG` in the ESP-Home confirmation file and reflash. You will see a lot more data in the ESP-Home logs.
 
 ```
