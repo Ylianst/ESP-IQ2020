@@ -1,14 +1,12 @@
 # ESP-IQ2020
-Connect a ESP-Home device to a Hot Tub with a IQ2020 control board. This project intends to connect these hot tubs to Home Assistant. First you will need a ESP32 device with a RS485 interface. For this project I recommand a M5Stack device since they are simple to connect and come in a small case.
+Connect your IQ2020 powered Hot Tub to Home Assistant. You can be able to remotely control temperatue, lights, jets and more along with monitoring power usage. The IQ2020 is the control board used by a lot of hot tubs, so check if you have this board. You will need to buy a small device, flash the right firmware on the device using ESP-Home and then connect the device using 4 wires to your hot tub. The device will be powered by the hot tub and has built-in WIFI, so everything stays within the control box, no messy wires. First you will need to buy a ESP32 device and a RS485 interface for it.
 
-If you want my exact hardware, but many alternatives exist:
+I recommand this exact hardware (~26$ US):
 - [ATOM Lite ESP32 IoT Development Kit](https://shop.m5stack.com/products/atom-lite-esp32-development-kit)
 - [ATOM Tail485 - RS485 Converter for ATOM](https://shop.m5stack.com/products/atom-tail485)
 - [5 Colors 1Pin 2.54mm Female to Male Breadboard Jumper Wire](https://www.amazon.com/XLX-Breadboard-Soldering-Brushless-Double-end/dp/B07S839W8V/ref=sr_1_3)
 
-I am using Home Assistant with ESP-Home and using the following configuration YAML file to build the device firmware. This firmware will just display all RS485 traffic to the log file and do nothing else. Once the IQ2020 commands are decoded, we can create a correct ESP-Home firmware that will control the hot tub. For now, this is what we need for development.
-
-Create a new ESP-Home device and copy the `logger` and `uart` section. In the `uart` section, `tx_pin` and `rx_pin` may need to be adjusted for your device's RS485 interface. Here, I have have WIFI SSID and password in my secrets.yaml file.
+Once you get the device, connect it to your computer using a USB-C table, create a new ESP home device, call it "Hot Tub" or anything you like, select `ESP32`. Once created, edit the configuration file to look like the one below. You should keep you own API encryption key and OTA password, but everything else can be copied from this example.
 
 ```
 esphome:
@@ -104,27 +102,27 @@ climate:
     name: Temperature
 ```
 
-Once done, flash your ESP32 device and you are ready to connect your device to the hot tub. The IQ2020 control board has an expansion connecter that is both RS485 and I2C. We will be using the RS485 pins of this connector and the IQ2020 board uses the 38400 baud N,8,1 serial configuration.
+You may need to make a few changes. If your hot tub is setup to display temperature in celsius, replace `current_f_temperature` and `current_f_temperature` with `target_c_temperature` and `target_c_temperature`. Make sure you put your WIFI SSID and Password in `secrets.yaml`. Once ready, go ahead and flash your device over USB-C. At this point, the device should be able be visible over WIFI when powered using USB-C even if it's not connected to the computer.
 
-![IQ2020-ESP1](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/07697b93-9469-46b6-9f8b-8a79d4cd90d3)
-
-Connect 4 male-to-female 1 pin jumper wires to the ESP32 device. It's best to use different colors for each pin.
+Next, grab 4 breadboard jumper wires and connect them to the RS485 module. I recommand using 4 different color wires, idealy blue, green, red and black. Put the male end in the RS485 module and tighten using a small screw driver. Double check the wires don't come off. Your device should look like this.
 
 ![IQ2020-ESP2](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/434920d7-ad5b-446c-af8e-142df2a1e9d8)
 
-Then connect the ESP32 to the tub. In the picture below you will notice I have the expansion board attached with 8 expension connectors. This expansion board is not needed unless you are out of free connectors. I have a salt-water device that I don't use, but I will keep it connected here so that some RS485 traffic can be seen by the ESP32 device. To be safe, turn off your hot tub first and double check all the wires. Note that the ESP32 device will be powered from the hot tub connector, so no other wires are required.
+Next, power off your hot tub and connect your new device like this:
+
+![IQ2020-ESP1](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/07697b93-9469-46b6-9f8b-8a79d4cd90d3)
+
+In the picture below you will notice I have the expansion board attached with 8 expension connectors, your hot tub will generally have 1 or 2 expansion connectors. If they are all busy, you will need to get an expansion board. Double check all the wires, you should not need to force anything, the wires should fit just right.
 
 ![IQ2020-ESP3](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/c52b676b-e35c-474c-8919-2fc57302d0fb)
 
-Once you power the hot tub back on, the ESP32 device will power on and connect to your network and Home Assistant using WIFI. At this point, you can go in the ESP-Home panel and take a look at the device logs. They will show all traffic on the RS485 bus in Hex format.
+Once done, power your hot tub back on and you should see data flowing into Home Assistant thru your new device. You can see the current temperature, set the target temperature, lock the remote control, turn on lights & jets and graph the temperature and power usage. If a jet has two power levels, you should be able to see and control them. The spa data is polled by the device every minute, so, if you change a setting using the tub's remote, it may take up to a minute to update on Home Assistant.
 
-![IQ2020-ESP5](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/93539d99-bc69-487a-a1dc-cb6d2bc41422)
+![image](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/b3143b60-84fe-421e-9225-c157ae8f650c)
 
-A quick look at the packets show the following probable encoding. If the packets don't look like this, you may have the RS485 A and B wires reversed.
+As with all Home Assistant integrations, you can of course connect automations. For example, I an electric time-of-day plan and so, I adjust the temperature accordingly. There are also sensors provided so you can create tracking graphs.
 
-![IQ2020-ESP4](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/1e278c78-4f45-4b57-9bb0-9ab4ed5304b8)
-
-This is the start of the project. If anyone can get gather more packets and help with decoding that would be great. Open an issue in this GitHub project and provide any added data or help that you can. This repo includes a DataViewer tool that can connect to the ESP32 using TCP and encode/decode serial packets in real time. Perfect to see exactly that is going on without a wired connection.
-
-![image](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/53f3eaf8-0f2d-4a54-883d-b178e3b27f50)
-
+For added details:
+  -
+  -
+  -
