@@ -61,7 +61,7 @@ void IQ2020Component::loop() {
 
 	// Check if it's time to poll for state. We poll 10 seconds, but add 50 seconds if we get status.
 	unsigned long now = ::millis();
-	if ((connectionKit != 0) && ((connectionKit + 65000) < now)) {
+	if ((connectionKit != 1) && ((connectionKit + 65000) < now)) {
 		ESP_LOGW(TAG, "Spa Connection Kit Removed");
 #ifdef USE_BINARY_SENSOR
 		if (this->connectionkit_sensor_) { this->connectionkit_sensor_->publish_state(false); }
@@ -397,7 +397,7 @@ int IQ2020Component::processIQ2020Command() {
 				}
 			}
 
-			if (connectionKit == 0) {
+			if (connectionKit <= 1) {
 				// Poll lights state
 				unsigned char lightPollCmd[] = { 0x17, 0x05 };
 				sendIQ2020Command(0x01, 0x1F, 0x40, lightPollCmd, 2);
