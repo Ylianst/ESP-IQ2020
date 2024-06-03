@@ -335,6 +335,14 @@ int IQ2020Component::processIQ2020Command() {
 			setSwitchState(SWITCH_CLEANCYCLE, (flags1 & 0x10) != 0);
 			setSwitchState(SWITCH_SUMMERTIMER, (flags1 & 0x20) != 0);
 
+#ifdef USE_SENSOR
+			// Water heater status
+			float heaterActive = processingBuffer[110];
+			float heaterWattage = (processingBuffer[119] << 8) + processingBuffer[118];
+			if (this->relay_sensor_) this->relay_sensor_->publish_state(heaterActive);
+			if (this->wattage_sensor_) this->wattage_sensor_->publish_state(heaterWattage);
+#endif
+
 			// Update JETS status. I don't currently know all of the JET status flags.
 			setSwitchState(SWITCH_JETS1, ((flags1 & 0x04) != 0) ? 2 : 0); // JETS2 FULL OR OFF
 			int jetState = 0; // JETS2 OFF

@@ -16,6 +16,8 @@ CONF_SENSOR_TARGET_F_TEMPERATURE = "target_f_temperature"
 CONF_SENSOR_CURRENT_C_TEMPERATURE = "current_c_temperature"
 CONF_SENSOR_TARGET_C_TEMPERATURE = "target_c_temperature"
 CONF_SENSOR_CONNECTION_COUNT = "connection_count"
+CONF_SENSOR_HEATER_WATTAGE = "heater_wattage"
+CONF_SENSOR_HEATER_RELAY = "heater_relay"
 CONF_IQ2020_SERVER = "iq2020_server"
 
 CONFIG_SCHEMA = cv.Schema(
@@ -54,6 +56,16 @@ CONFIG_SCHEMA = cv.Schema(
             state_class=STATE_CLASS_MEASUREMENT,
             entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
         ),
+        cv.Optional(CONF_SENSOR_HEATER_WATTAGE): sensor.sensor_schema(
+            unit_of_measurement=UNIT_WATT,
+            accuracy_decimals=0,
+            state_class=STATE_CLASS_MEASUREMENT,
+            icon=ICON_HEATING_COIL,
+        ),
+        cv.Optional(CONF_SENSOR_HEATER_RELAY): sensor.sensor_schema(
+            accuracy_decimals=0,
+            state_class=STATE_CLASS_MEASUREMENT,
+        ),
     }
 )
 
@@ -80,3 +92,11 @@ async def to_code(config):
     if CONF_SENSOR_CONNECTION_COUNT in config:
         sens = await sensor.new_sensor(config[CONF_SENSOR_CONNECTION_COUNT])
         cg.add(server.set_connection_count_sensor(sens))
+
+    if CONF_SENSOR_HEATER_WATTAGE in config:
+        sens = await sensor.new_sensor(config[CONF_SENSOR_HEATER_WATTAGE])
+        cg.add(server.set_heater_wattage_sensor(sens))
+
+    if CONF_SENSOR_HEATER_RELAY in config:
+        sens = await sensor.new_sensor(config[CONF_SENSOR_HEATER_RELAY])
+        cg.add(server.set_heater_relay_sensor(sens))

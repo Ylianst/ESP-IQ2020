@@ -51,6 +51,8 @@ public:
 	void set_current_c_temp_sensor(esphome::sensor::Sensor *temp) { this->current_c_temp_sensor_ = temp; }
 	void set_target_c_temp_sensor(esphome::sensor::Sensor *temp) { this->target_c_temp_sensor_ = temp; }
 	void set_connection_count_sensor(esphome::sensor::Sensor *connection_count) { this->connection_count_sensor_ = connection_count; }
+	void set_heater_wattage_sensor(esphome::sensor::Sensor *wattage) { this->wattage_sensor_ = wattage; }
+	void set_heater_relay_sensor(esphome::sensor::Sensor *relay) { this->relay_sensor_ = relay; }
 #endif
 #ifdef USE_TEXT_SENSOR
 	void set_version_sensor(esphome::text_sensor::TextSensor *text) { this->version_sensor_ = text; }
@@ -103,6 +105,9 @@ protected:
 	esphome::sensor::Sensor *current_c_temp_sensor_;
 	esphome::sensor::Sensor *target_c_temp_sensor_;
 	esphome::sensor::Sensor *connection_count_sensor_;
+	esphome::sensor::Sensor *connection_count_sensor_;
+	esphome::sensor::Sensor *wattage_sensor_;
+	esphome::sensor::Sensor *relay_sensor_;
 #endif
 #ifdef USE_TEXT_SENSOR
 	esphome::text_sensor::TextSensor *version_sensor_;
