@@ -218,11 +218,12 @@ Main status decoding
 E902DC05          - Big endian counter
 00000000C2790A00  - ?
 3130314631303246  - "101F102F" ASCII String, the target temp and current temp.
-7800F900F900000000000000000000000000   - ?
-5C                - Variable from 0x4D to 0xEA, changes almost at every poll.
-00                - ? Could be part of the previous byte.
-00                - Mostly 0x00, but occasionaly changes to 0x01 and 0x02.
-000000013C001E00006A6F00  - ?
+7800F700F700000000000000  - ?
+0F                - Water heater relay. 0x00 = Off, 0x0F = On
+0000000000        - ?
+5C00              - Variable from 0x4D00 to 0xEA00, changes almost at every poll. Probably big-endian 16 bits.
+F30E              - Water heater wattage, big-endian 16 bits
+0000013C001E00006A6F00  - ?
 080800            - SS:MM:HH Seconds (0 to 59), Minutes (0 to 59), Hours (0 to 24).
 13                - Number of days.
 00D40701          - Maybe months and years?
