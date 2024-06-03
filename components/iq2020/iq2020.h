@@ -124,7 +124,7 @@ protected:
 	float pending_temp = -1;
 	float pending_temp_cmd = -1;
 	int pending_temp_retry = 0;
-	uint32_t next_poll = 0;
+	unsigned long next_poll = 0;
 
 	// IQ2020 processing
 	int nextPossiblePacket();

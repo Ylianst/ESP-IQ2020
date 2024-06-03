@@ -59,7 +59,7 @@ void IQ2020Component::loop() {
 	this->cleanup();
 
 	// Check if it's time to poll for state. We poll 10 seconds, but add 50 seconds if we get status.
-	uint32_t now = millis();
+	unsigned long now = ::millis();
 	if (next_poll < now) { next_poll = now + 10000; pollState(); } // TODO: Handle now looping.
 }
 
