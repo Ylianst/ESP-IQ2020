@@ -130,4 +130,4 @@ For added details:
 
 Known Issues:
   - When controlling jets that have a low/high setting. The correct state should be shown when the jets are controlled by the hot tub remote, but if you try to turn them on low using Home Assistant, they will turn on as high. This seems to be a problem with the new Fan control in ESP-Home. I will have to submit example code and a request to get it fixed.
-  - Jets 3 and 4 may work but will not show the running state properly, but if we have such a hot tub and let send me traffic logs, I can probably add support for it.
+  - Jets 3 and 4 may work but will not show the running state properly, but if we have such a hot tub and can send me traffic logs, I can probably add support for it.
