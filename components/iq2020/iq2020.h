@@ -33,7 +33,7 @@
 #define SWITCH_JETS2 6
 #define SWITCH_JETS3 7
 #define SWITCH_JETS4 8
-// a
+
 class IQ2020Component : public esphome::Component {
 public:
 	IQ2020Component() = default;
@@ -104,7 +104,6 @@ protected:
 	esphome::sensor::Sensor *target_f_temp_sensor_;
 	esphome::sensor::Sensor *current_c_temp_sensor_;
 	esphome::sensor::Sensor *target_c_temp_sensor_;
-	esphome::sensor::Sensor *connection_count_sensor_;
 	esphome::sensor::Sensor *connection_count_sensor_;
 	esphome::sensor::Sensor *wattage_sensor_;
 	esphome::sensor::Sensor *relay_sensor_;
