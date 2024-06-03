@@ -1,5 +1,5 @@
 # ESP-IQ2020
-Connect your IQ2020 powered Hot Tub to Home Assistant. You will be able to remotely control temperatue, lights, jets, lock the spa remote, monitor power usage and more. It will make your hot tub and home a lot smarter. You can graph temperature and power usage, control temperature for time-of-day electric rates or when on vacation, get notified when the tub is in use, lock the spa remote control when the house in away mode, blink the tub lights when someone rings the doorbell and more.
+Connect your IQ2020 powered Hot Tub to Home Assistant to make your Hot Tub a lot smarter. You will be able to remotely control temperatue, lights, jets, lock the spa remote, monitor power usage and more. You can graph temperature and power usage, control temperature for time-of-day electric rates or when on vacation, get notified when the tub is in use, lock the spa remote control when the house in away mode, blink the tub lights when someone rings the doorbell and more.
 
 ![image](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/b3143b60-84fe-421e-9225-c157ae8f650c)
 
