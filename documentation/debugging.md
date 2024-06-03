@@ -8,7 +8,7 @@ This ESP-Home integration comes built it with a RS485 traffic relay on the ESP32
 - For hot tubs without a music device, we can impersonate the device with Home Assistant and make the controls avaialble.
 - I would like to control house lights from the hot tub remote? Maybe enable added Jets 3 and 4 that we don't have and connect that to automations?
 
-In any case, to enable the RS485-to-TCP relay system, just add a `port:` value under the `iq2020` section of the ESP-Home device configuration. By default this port is 0 and turn off.
+To enable the RS485-to-TCP relay system, just add a `port:` value under the `iq2020` section of the ESP-Home device configuration. By default this port is 0 and turn off.
 
 ```
 # Relay UART messages over TCP
