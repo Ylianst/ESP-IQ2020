@@ -55,6 +55,8 @@ sensor:
       name: Current Temperature
     target_f_temperature:
       name: Target Temperature
+    heater_wattage:
+      name: Heater Power
 
 switch:
   - platform: iq2020
