@@ -209,7 +209,7 @@ Main status decoding
 0256              - Main Status Data.
 0008              - ?
 00                - Flags: 0x01 = Temp Lock, 0x02 = Spa Lock, 0x04 = Jet1, 0x08 = Jet2 Full, 0x10 = Clean Cycle, 0x20 = Summer Timer
-04                - Flags: 0x02 = Jet2 Medium, 0x04 = AlwaysSet?
+04                - Flags: 0x02 = Jet2 Medium, 0x04 = AlwaysSet?. 4 upper bits are spa lights: 0x0 = Off, 0x1 = Min Bright, 0x5 = Max Bright
 00000604000A0622F21100201C201C201C8403605400000000  - ?
 31303346          - "103F" ASCII string, not sure what this is. See temprature string below.
 02937400ABC90A00  - ?
@@ -218,11 +218,12 @@ Main status decoding
 E902DC05          - Big endian counter
 00000000C2790A00  - ?
 3130314631303246  - "101F102F" ASCII String, the target temp and current temp.
-7800F900F900000000000000000000000000   - ?
-5C                - Variable from 0x4D to 0xEA, changes almost at every poll.
-00                - ? Could be part of the previous byte.
-00                - Mostly 0x00, but occasionaly changes to 0x01 and 0x02.
-000000013C001E00006A6F00  - ?
+7800F700F700000000000000  - ?
+0F                - Water heater relay. 0x00 = Off, 0x0F = On
+0000000000        - ?
+5C00              - Variable from 0x4D00 to 0xEA00, changes almost at every poll. Probably big-endian 16 bits.
+F30E              - Water heater wattage, big-endian 16 bits
+0000013C001E00006A6F00  - ?
 080800            - SS:MM:HH Seconds (0 to 59), Minutes (0 to 59), Hours (0 to 24).
 13                - Number of days.
 00D40701          - Maybe months and years?

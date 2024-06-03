@@ -21,6 +21,7 @@ esp32:
 
 logger:
   baud_rate: 0
+  level: ERROR
 
 # Enable Home Assistant API
 api:
