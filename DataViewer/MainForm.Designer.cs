@@ -75,6 +75,8 @@
             this.scanTimer = new System.Windows.Forms.Timer(this.components);
             this.logSaveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.askVersionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.connectionKitX0256ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.topPanel.SuspendLayout();
@@ -172,6 +174,7 @@
             this.filterToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.noneToolStripMenuItem,
             this.connectionKitToolStripMenuItem,
+            this.connectionKitX0256ToolStripMenuItem,
             this.freshWaterToolStripMenuItem});
             this.filterToolStripMenuItem.Name = "filterToolStripMenuItem";
             this.filterToolStripMenuItem.Size = new System.Drawing.Size(54, 24);
@@ -182,21 +185,21 @@
             this.noneToolStripMenuItem.Checked = true;
             this.noneToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.noneToolStripMenuItem.Name = "noneToolStripMenuItem";
-            this.noneToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
+            this.noneToolStripMenuItem.Size = new System.Drawing.Size(232, 26);
             this.noneToolStripMenuItem.Text = "None";
             this.noneToolStripMenuItem.Click += new System.EventHandler(this.noneToolStripMenuItem_Click);
             // 
             // connectionKitToolStripMenuItem
             // 
             this.connectionKitToolStripMenuItem.Name = "connectionKitToolStripMenuItem";
-            this.connectionKitToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
+            this.connectionKitToolStripMenuItem.Size = new System.Drawing.Size(232, 26);
             this.connectionKitToolStripMenuItem.Text = "Connection Kit";
             this.connectionKitToolStripMenuItem.Click += new System.EventHandler(this.connectionKitToolStripMenuItem_Click);
             // 
             // freshWaterToolStripMenuItem
             // 
             this.freshWaterToolStripMenuItem.Name = "freshWaterToolStripMenuItem";
-            this.freshWaterToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
+            this.freshWaterToolStripMenuItem.Size = new System.Drawing.Size(232, 26);
             this.freshWaterToolStripMenuItem.Text = "Fresh Water";
             this.freshWaterToolStripMenuItem.Click += new System.EventHandler(this.freshWaterToolStripMenuItem_Click);
             // 
@@ -204,6 +207,7 @@
             // 
             this.commandsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.askLightsStatusToolStripMenuItem,
+            this.toolStripMenuItem3,
             this.askTempStatusToolStripMenuItem,
             this.askVersionsToolStripMenuItem,
             this.lightsOnToolStripMenuItem,
@@ -215,28 +219,28 @@
             // askLightsStatusToolStripMenuItem
             // 
             this.askLightsStatusToolStripMenuItem.Name = "askLightsStatusToolStripMenuItem";
-            this.askLightsStatusToolStripMenuItem.Size = new System.Drawing.Size(194, 26);
+            this.askLightsStatusToolStripMenuItem.Size = new System.Drawing.Size(202, 26);
             this.askLightsStatusToolStripMenuItem.Text = "Ask Lights Status";
             this.askLightsStatusToolStripMenuItem.Click += new System.EventHandler(this.askLightsStatusToolStripMenuItem_Click);
             // 
             // askTempStatusToolStripMenuItem
             // 
             this.askTempStatusToolStripMenuItem.Name = "askTempStatusToolStripMenuItem";
-            this.askTempStatusToolStripMenuItem.Size = new System.Drawing.Size(194, 26);
-            this.askTempStatusToolStripMenuItem.Text = "Ask Temp Status";
+            this.askTempStatusToolStripMenuItem.Size = new System.Drawing.Size(202, 26);
+            this.askTempStatusToolStripMenuItem.Text = "Ask Status 0x0256";
             this.askTempStatusToolStripMenuItem.Click += new System.EventHandler(this.askTempStatusToolStripMenuItem_Click);
             // 
             // lightsOnToolStripMenuItem
             // 
             this.lightsOnToolStripMenuItem.Name = "lightsOnToolStripMenuItem";
-            this.lightsOnToolStripMenuItem.Size = new System.Drawing.Size(194, 26);
+            this.lightsOnToolStripMenuItem.Size = new System.Drawing.Size(202, 26);
             this.lightsOnToolStripMenuItem.Text = "Lights On";
             this.lightsOnToolStripMenuItem.Click += new System.EventHandler(this.lightsOnToolStripMenuItem_Click);
             // 
             // lightsOffToolStripMenuItem
             // 
             this.lightsOffToolStripMenuItem.Name = "lightsOffToolStripMenuItem";
-            this.lightsOffToolStripMenuItem.Size = new System.Drawing.Size(194, 26);
+            this.lightsOffToolStripMenuItem.Size = new System.Drawing.Size(202, 26);
             this.lightsOffToolStripMenuItem.Text = "Lights Off";
             this.lightsOffToolStripMenuItem.Click += new System.EventHandler(this.lightsOffToolStripMenuItem_Click);
             // 
@@ -505,9 +509,23 @@
             // askVersionsToolStripMenuItem
             // 
             this.askVersionsToolStripMenuItem.Name = "askVersionsToolStripMenuItem";
-            this.askVersionsToolStripMenuItem.Size = new System.Drawing.Size(194, 26);
+            this.askVersionsToolStripMenuItem.Size = new System.Drawing.Size(202, 26);
             this.askVersionsToolStripMenuItem.Text = "Ask Version";
             this.askVersionsToolStripMenuItem.Click += new System.EventHandler(this.askVersionsToolStripMenuItem_Click);
+            // 
+            // connectionKitX0256ToolStripMenuItem
+            // 
+            this.connectionKitX0256ToolStripMenuItem.Name = "connectionKitX0256ToolStripMenuItem";
+            this.connectionKitX0256ToolStripMenuItem.Size = new System.Drawing.Size(232, 26);
+            this.connectionKitX0256ToolStripMenuItem.Text = "Connection Kit 0x0256";
+            this.connectionKitX0256ToolStripMenuItem.Click += new System.EventHandler(this.connectionKitX0256ToolStripMenuItem_Click);
+            // 
+            // toolStripMenuItem3
+            // 
+            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(202, 26);
+            this.toolStripMenuItem3.Text = "Ask Status 0x0255";
+            this.toolStripMenuItem3.Click += new System.EventHandler(this.toolStripMenuItem3_Click);
             // 
             // MainForm
             // 
@@ -593,6 +611,8 @@
         private System.Windows.Forms.ToolStripMenuItem lightsOnToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem lightsOffToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem askVersionsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem connectionKitX0256ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem3;
     }
 }
 

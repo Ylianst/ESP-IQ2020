@@ -66,7 +66,7 @@ void IQ2020Component::loop() {
 #ifdef USE_BINARY_SENSOR
 		if (this->connectionkit_sensor_) { this->connectionkit_sensor_->publish_state(false); }
 #endif
-		connectionKit = 0;
+		connectionKit = 1;
 	}
 	if (next_poll < now) { next_poll = now + 5000; pollState(); }
 }
@@ -236,7 +236,7 @@ int IQ2020Component::processIQ2020Command() {
 	if ((processingBuffer[1] == 0x01) && (processingBuffer[2] == 0x1F) && (processingBuffer[4] == 0x40)) {
 		// This is a request command from the SPA connection kit, take note of this.
 		// Presence of this device will cause us to no longer poll for state since this device will do it for us.
-		if (connectionKit == 0) {
+		if (connectionKit <= 1) {
 			ESP_LOGW(TAG, "Spa Connection Kit Detected");
 #ifdef USE_BINARY_SENSOR
 			if (this->connectionkit_sensor_) { this->connectionkit_sensor_->publish_state(true); }

@@ -25,6 +25,8 @@ namespace DataViewer
         private int connectionState = 0;
         private FileInfo logFileInfo;
         private int Filter = 0;
+        private int FilterCmd1 = 0;
+        private int FilterCmd2 = 0;
 
         public MainForm()
         {
@@ -206,8 +208,8 @@ namespace DataViewer
             //AppendText("Checksum " + checksum + " / " + data[datalenpadded + 4] + ", len: " + datalenpadded);
             //AppendText(" <-- " + ConvertByteArrayToHexString(data, 1, datalen + 3));
             if ((Filter != 0) && (data[1] != Filter) && (data[2] != Filter)) return totallen;
-
-            //if ((data[5] != 0x02) || (data[6] != 0x56) || (totallen < 20)) return totallen; // DEBUG
+            if ((FilterCmd1 != 0) && (data[5] != FilterCmd1)) return totallen;
+            if ((FilterCmd2 != 0) && (data[6] != FilterCmd2)) return totallen;
 
             string t = ConvertByteArrayToHexString(data, 1, 1) + " " + ConvertByteArrayToHexString(data, 2, 1) + " " + ConvertByteArrayToHexString(data, 4, 1) + " " + ConvertByteArrayToHexString(data, 5, datalen);
             addPacketToStore(t);
@@ -243,7 +245,6 @@ namespace DataViewer
                 }
             }
 
-            //if (data[1] == 0x29) { sendButton_Click(this, null); }
             return totallen;
         }
 
@@ -416,24 +417,44 @@ namespace DataViewer
         private void noneToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Filter = 0;
+            FilterCmd1 = 0;
+            FilterCmd2 = 0;
             noneToolStripMenuItem.Checked = true;
             connectionKitToolStripMenuItem.Checked = false;
+            connectionKitX0256ToolStripMenuItem.Checked = false;
             freshWaterToolStripMenuItem.Checked = false;
         }
 
         private void connectionKitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Filter = 0x1F;
+            FilterCmd1 = 0;
+            FilterCmd2 = 0;
             noneToolStripMenuItem.Checked = false;
             connectionKitToolStripMenuItem.Checked = true;
+            connectionKitX0256ToolStripMenuItem.Checked = false;
+            freshWaterToolStripMenuItem.Checked = false;
+        }
+
+        private void connectionKitX0256ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Filter = 0x1F;
+            FilterCmd1 = 0x02;
+            FilterCmd2 = 0x56;
+            noneToolStripMenuItem.Checked = false;
+            connectionKitToolStripMenuItem.Checked = false;
+            connectionKitX0256ToolStripMenuItem.Checked = true;
             freshWaterToolStripMenuItem.Checked = false;
         }
 
         private void freshWaterToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Filter = 0x29;
+            FilterCmd1 = 0;
+            FilterCmd2 = 0;
             noneToolStripMenuItem.Checked = false;
             connectionKitToolStripMenuItem.Checked = false;
+            connectionKitX0256ToolStripMenuItem.Checked = false;
             freshWaterToolStripMenuItem.Checked = true;
         }
 
@@ -447,9 +468,14 @@ namespace DataViewer
             SendPacket("01 1F 40 1705"); // Ask lights status
         }
 
+        private void toolStripMenuItem3_Click(object sender, EventArgs e)
+        {
+            SendPacket("01 1F 40 0255"); // Ask status
+        }
+
         private void askTempStatusToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            SendPacket("01 1F 40 0256"); // Ask temp status
+            SendPacket("01 1F 40 0256"); // Ask status
         }
 
         private void lightsOnToolStripMenuItem_Click(object sender, EventArgs e)
@@ -468,5 +494,6 @@ namespace DataViewer
         {
             SendPacket("01 1F 40 0100"); // Ask version strings
         }
+
     }
 }
