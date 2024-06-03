@@ -53,6 +53,7 @@ namespace iq2020_climate {
 		//heatingModes.insert(esphome::climate::ClimateMode::CLIMATE_MODE_OFF);
 		heatingModes.insert(esphome::climate::ClimateMode::CLIMATE_MODE_HEAT);
 		traits.set_supported_modes(heatingModes);
+		traits.set_supports_action(true);
 
 		//traits.set_visual_min_temperature(26.5);
 		//traits.set_visual_max_temperature(40);
