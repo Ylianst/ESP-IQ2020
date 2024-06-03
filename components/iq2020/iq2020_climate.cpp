@@ -22,6 +22,7 @@ namespace iq2020_climate {
 		g_iq2020_climate = this;
 		ESP_LOGD(TAG, "Climate Setup");
 		mode = esphome::climate::ClimateMode::CLIMATE_MODE_HEAT;
+		action = esphome::climate::ClimateMode::CLIMATE_ACTION_OFF;
 	}
 
 	void IQ2020Climate::control(const climate::ClimateCall &call) {

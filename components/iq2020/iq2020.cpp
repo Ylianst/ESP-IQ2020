@@ -335,10 +335,10 @@ int IQ2020Component::processIQ2020Command() {
 			setSwitchState(SWITCH_CLEANCYCLE, (flags1 & 0x10) != 0);
 			setSwitchState(SWITCH_SUMMERTIMER, (flags1 & 0x20) != 0);
 
-#ifdef USE_SENSOR
 			// Water heater status
 			float heaterActive = processingBuffer[110];
 			float heaterWattage = (processingBuffer[119] << 8) + processingBuffer[118];
+#ifdef USE_SENSOR
 			if (this->relay_sensor_) this->relay_sensor_->publish_state(heaterActive);
 			if (this->wattage_sensor_) this->wattage_sensor_->publish_state(heaterWattage);
 #endif
@@ -363,15 +363,16 @@ int IQ2020Component::processIQ2020Command() {
 			}
 			//ESP_LOGD(TAG, "Reported Current Temp: %.1f, Target Temp: %.1f", _current_temp, _target_temp);
 
-			// If publish the temperature values even if they don't change.
-			if ((_target_temp != target_temp) || (_current_temp != current_temp)) {
+			// Publish the temperature values even if they don't change.
+			if ((_target_temp != target_temp) || (_current_temp != current_temp) || (temp_action != (heaterActive != 0))) {
 				target_temp = _target_temp;
 				current_temp = _current_temp;
+				temp_action = (heaterActive != 0);
 				if (g_iq2020_climate != NULL) {
-					if (temp_celsius) { g_iq2020_climate->updateTempsC(target_temp, current_temp); }
-					else { g_iq2020_climate->updateTempsF(target_temp, current_temp); }
+					if (temp_celsius) { g_iq2020_climate->updateTempsC(target_temp, current_temp, heaterActive); }
+					else { g_iq2020_climate->updateTempsF(target_temp, current_temp, heaterActive); }
 				}
-				ESP_LOGD(TAG, "Changed Current Temp: %.1f, Target Temp: %.1f", current_temp, target_temp);
+				ESP_LOGD(TAG, "Changed Current Temp: %.1f, Target Temp: %.1f, Action: %d", current_temp, target_temp, temp_action);
 			}
 
 #ifdef USE_SENSOR

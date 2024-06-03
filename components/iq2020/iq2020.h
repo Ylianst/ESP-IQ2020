@@ -123,6 +123,7 @@ protected:
 	int switch_pending[SWITCHCOUNT]; // Desired state of all switches
 	unsigned long connectionKit = 0; // The time the spa connection kit was last seen
 	bool temp_celsius = false;
+	int temp_action = -1;
 	float target_temp = -1;
 	float current_temp = -1;
 	float pending_temp = -1;
