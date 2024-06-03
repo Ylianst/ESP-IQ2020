@@ -229,6 +229,7 @@ namespace DataViewer
                 {
                     addDecodedData("Temp Set", UTF8Encoding.Default.GetString(data, 90, 4));
                     addDecodedData("Temp Current", UTF8Encoding.Default.GetString(data, 94, 4));
+                    addDecodedData("Heater Outlet", UTF8Encoding.Default.GetString(data, 36, 4));
                     addDecodedData("Time", data[133].ToString("D2") + ":" + data[132].ToString("D2") + ":" + data[131].ToString("D2"));
                     addDecodedData("JetInfo1", Convert.ToString(data[9], 2));
                     addDecodedData("JetInfo2", Convert.ToString(data[10], 2));
