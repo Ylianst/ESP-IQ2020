@@ -30,15 +30,17 @@ namespace iq2020_climate {
 		}
 	}
 
-	void IQ2020Climate::updateTempsF(float target, float current) {
+	void IQ2020Climate::updateTempsF(float target, float current, bool heating) {
 		current_temperature = fahrenheit_to_celsius(current);
 		target_temperature = fahrenheit_to_celsius(target);
+		action = heating ? CLIMATE_ACTION_HEATING : CLIMATE_ACTION_OFF;
 		publish_state();
 	}
 
-	void IQ2020Climate::updateTempsC(float target, float current) {
+	void IQ2020Climate::updateTempsC(float target, float current, bool heating) {
 		current_temperature = current;
 		target_temperature = target;
+		action = heating ? CLIMATE_ACTION_HEATING : CLIMATE_ACTION_OFF;
 		publish_state();
 	}
 
