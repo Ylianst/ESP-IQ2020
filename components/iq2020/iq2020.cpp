@@ -318,8 +318,8 @@ int IQ2020Component::processIQ2020Command() {
 			}
 #endif
 			if (g_iq2020_climate != NULL) {
-				if (temp_celsius) { g_iq2020_climate->updateTempsC(target_temp, current_temp); }
-				else { g_iq2020_climate->updateTempsF(target_temp, current_temp); }
+				if (temp_celsius) { g_iq2020_climate->updateTempsC(target_temp, current_temp, temp_action); }
+				else { g_iq2020_climate->updateTempsF(target_temp, current_temp, temp_action); }
 			}
 		}
 
@@ -369,8 +369,8 @@ int IQ2020Component::processIQ2020Command() {
 				current_temp = _current_temp;
 				temp_action = (heaterActive != 0);
 				if (g_iq2020_climate != NULL) {
-					if (temp_celsius) { g_iq2020_climate->updateTempsC(target_temp, current_temp, heaterActive); }
-					else { g_iq2020_climate->updateTempsF(target_temp, current_temp, heaterActive); }
+					if (temp_celsius) { g_iq2020_climate->updateTempsC(target_temp, current_temp, temp_action); }
+					else { g_iq2020_climate->updateTempsF(target_temp, current_temp, temp_action); }
 				}
 				ESP_LOGD(TAG, "Changed Current Temp: %.1f, Target Temp: %.1f, Action: %d", current_temp, target_temp, temp_action);
 			}
