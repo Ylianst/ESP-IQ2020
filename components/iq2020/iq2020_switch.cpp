@@ -22,7 +22,7 @@ namespace iq2020_switch {
 	}
 
 	void IQ2020Switch::dump_config() {
-		ESP_LOGCONFIG(TAG, "Switch:%d config", switch_id);
+		//ESP_LOGCONFIG(TAG, "Switch:%d config", switch_id);
 	}
 
 } //namespace iq2020_switch

@@ -16,7 +16,7 @@ namespace iq2020_fan {
 	}
 
 	void IQ2020Fan::dump_config() {
-		ESP_LOGCONFIG(TAG, "IQ2020 fan");
+		//ESP_LOGCONFIG(TAG, "Fan:%d config", fan_id);
 	}
 
 	esphome::fan::FanTraits IQ2020Fan::get_traits() {

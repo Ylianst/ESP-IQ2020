@@ -26,7 +26,7 @@ float celsius_to_fahrenheit(float c) { return c * 9 / 5 + 32; }
 void IQ2020Component::setup() {
 	for (int i = 0; i < SWITCHCOUNT; i++) { switch_state[i] = switch_pending[i] = -1; }
 	g_iq2020_main = this;
-	ESP_LOGD(TAG, "Setting up IQ2020...");
+	//ESP_LOGD(TAG, "Setting up IQ2020...");
 
 	// The make_unique() wrapper doesn't like arrays, so initialize the unique_ptr directly.
 	this->buf_ = std::unique_ptr<uint8_t[]>{ new uint8_t[this->buf_size_] };
