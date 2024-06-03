@@ -49,13 +49,15 @@ iq2020:
    uart_id: SpaConnection
    port: 1234
 
-# If using celsius units on the hot tub remote, replace _f_ with _c_ in the two entries below. 
+# If using celsius units on the hot tub remote, replace _f_ with _c_ in the three entries below. 
 sensor:
   - platform: iq2020
     current_f_temperature:
       name: Current Temperature
     target_f_temperature:
       name: Target Temperature
+    outlet_f_temperature:
+      name: Heater Outlet
     heater_wattage:
       name: Heater Power
 
@@ -105,7 +107,7 @@ climate:
     name: Temperature
 ```
 
-You may need to make a few changes. If your hot tub is setup to display temperature in celsius, replace `current_f_temperature` and `current_f_temperature` with `target_c_temperature` and `target_c_temperature`. Make sure you put your WIFI SSID and Password in `secrets.yaml`. Once ready, go ahead and flash your device over USB-C. At this point, the device should be visible over WIFI when powered using USB-C even if it's not connected to the computer.
+You may need to make a few changes. If your hot tub is setup to display temperature in celsius, replace `current_f_temperature`, `current_f_temperature`, `outlet_f_temperature` with `target_c_temperature`, `target_c_temperature` and `outlet_c_temperature`. Make sure you put your WIFI SSID and Password in `secrets.yaml`. Once ready, go ahead and flash your device over USB-C. At this point, the device should be visible over WIFI when powered using USB-C even if it's not connected to the computer.
 
 Next, grab 4 breadboard jumper wires and connect them to the RS485 module. I recommand using 4 different color wires, idealy blue, green, red and black. Put the male end in the RS485 module and tighten using a small screw driver. Double check the wires don't come off. Your device should look like this.
 
