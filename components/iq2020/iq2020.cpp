@@ -62,7 +62,7 @@ void IQ2020Component::loop() {
 	// Check if it's time to poll for state. We poll 10 seconds, but add 50 seconds if we get status.
 	unsigned long now = ::millis();
 	if ((connectionKit != 1) && ((connectionKit + 65000) < now)) {
-		ESP_LOGW(TAG, "Spa Connection Kit Removed");
+		ESP_LOGD(TAG, "Spa Connection Kit Removed");
 #ifdef USE_BINARY_SENSOR
 		if (this->connectionkit_sensor_) { this->connectionkit_sensor_->publish_state(false); }
 #endif
@@ -135,7 +135,7 @@ void IQ2020Component::read() {
 			this->buf_tail_ += free;
 			for (Client &client : this->clients_) {
 				if (client.position < this->buf_tail_) {
-					ESP_LOGW(TAG, "Dropped %u pending bytes for client %s", this->buf_tail_ - client.position, client.identifier.c_str());
+					ESP_LOGD(TAG, "Dropped %u pending bytes for client %s", this->buf_tail_ - client.position, client.identifier.c_str());
 					client.position = this->buf_tail_;
 				}
 			}
@@ -200,13 +200,13 @@ void IQ2020Component::write() {
 			// Expected if the (TCP) receive buffer is empty, nothing to do.
 		}
 		else {
-			ESP_LOGW(TAG, "Failed to read from client %s with error %d!", client.identifier.c_str(), errno);
+			ESP_LOGD(TAG, "Failed to read from client %s with error %d!", client.identifier.c_str(), errno);
 		}
 	}
 }
 
 void IQ2020Component::processRawIQ2020Data(unsigned char *data, int len) {
-	if ((len > IQ202BUFLEN) || ((processingBufferLen + len) > IQ202BUFLEN)) { ESP_LOGW(TAG, "Receive buffer is overflowing!"); processingBufferLen = 0; return; }
+	if ((len > IQ202BUFLEN) || ((processingBufferLen + len) > IQ202BUFLEN)) { ESP_LOGD(TAG, "Receive buffer is overflowing!"); processingBufferLen = 0; return; }
 	if (processingBufferLen == 0) { memset(processingBuffer, 0, IQ202BUFLEN); }
 	memcpy(processingBuffer + processingBufferLen, data, len);
 	processingBufferLen += len;
@@ -225,26 +225,26 @@ int IQ2020Component::nextPossiblePacket() {
 
 int IQ2020Component::processIQ2020Command() {
 	if (processingBufferLen < 6) return 0; // Need more data
-	if ((processingBuffer[0] != 0x1C) || ((processingBuffer[4] != 0x40) && (processingBuffer[4] != 0x80))) { ESP_LOGW(TAG, "Receive buffer out of sync!"); return nextPossiblePacket(); } // Out of sync
+	if ((processingBuffer[0] != 0x1C) || ((processingBuffer[4] != 0x40) && (processingBuffer[4] != 0x80))) { ESP_LOGD(TAG, "Receive buffer out of sync!"); return nextPossiblePacket(); } // Out of sync
 	int cmdlen = 6 + processingBuffer[3];
 	if (processingBufferLen < cmdlen) return 0; // Need more data
 	unsigned char checksum = 0; // Compute the checksum
 	for (int i = 1; i < (cmdlen - 1); i++) { checksum += processingBuffer[i]; }
-	if (processingBuffer[cmdlen - 1] != (checksum ^ 0xFF)) { ESP_LOGW(TAG, "Invalid checksum. Got 0x%02x, expected 0x%02x.", processingBuffer[cmdlen - 1], (checksum ^ 0xFF)); return nextPossiblePacket(); }
-	ESP_LOGW(TAG, "IQ2020 data, dst:%02x src:%02x op:%02x datalen:%d", processingBuffer[1], processingBuffer[2], processingBuffer[4], processingBuffer[3]);
+	if (processingBuffer[cmdlen - 1] != (checksum ^ 0xFF)) { ESP_LOGD(TAG, "Invalid checksum. Got 0x%02x, expected 0x%02x.", processingBuffer[cmdlen - 1], (checksum ^ 0xFF)); return nextPossiblePacket(); }
+	ESP_LOGD(TAG, "IQ2020 data, dst:%02x src:%02x op:%02x datalen:%d", processingBuffer[1], processingBuffer[2], processingBuffer[4], processingBuffer[3]);
 
 	if ((processingBuffer[1] == 0x01) && (processingBuffer[2] == 0x1F) && (processingBuffer[4] == 0x40)) {
 		// This is a request command from the SPA connection kit, take note of this.
 		// Presence of this device will cause us to no longer poll for state since this device will do it for us.
 		if (connectionKit <= 1) {
-			ESP_LOGW(TAG, "Spa Connection Kit Detected");
+			ESP_LOGD(TAG, "Spa Connection Kit Detected");
 #ifdef USE_BINARY_SENSOR
 			if (this->connectionkit_sensor_) { this->connectionkit_sensor_->publish_state(true); }
 #endif
 		}
 		connectionKit = ::millis();
 
-		ESP_LOGW(TAG, "SCK CMD Data, len=%d, cmd=%02x%02x", cmdlen, processingBuffer[5], processingBuffer[6]);
+		ESP_LOGD(TAG, "SCK CMD Data, len=%d, cmd=%02x%02x", cmdlen, processingBuffer[5], processingBuffer[6]);
 
 		if ((cmdlen == 11) && (processingBuffer[5] == 0x17) && (processingBuffer[6] == 0x02)) {
 			// This is the SPA connection kit command to turn the lights on/off
@@ -254,7 +254,7 @@ int IQ2020Component::processIQ2020Command() {
 
 	if ((processingBuffer[1] == 0x1F) && (processingBuffer[2] == 0x01) && (processingBuffer[4] == 0x80)) {
 		// This is response data going towards the SPA connection kit.
-		ESP_LOGW(TAG, "SCK RSP Data, len=%d, cmd=%02x%02x", cmdlen, processingBuffer[5], processingBuffer[6]);
+		ESP_LOGD(TAG, "SCK RSP Data, len=%d, cmd=%02x%02x", cmdlen, processingBuffer[5], processingBuffer[6]);
 
 		if ((cmdlen == 9) && (processingBuffer[5] == 0x17) && (processingBuffer[6] == 0x02) && (processingBuffer[7] == 0x06)) {
 			// Confirmation that the pending light command was received
@@ -293,7 +293,7 @@ int IQ2020Component::processIQ2020Command() {
 
 		if ((cmdlen > 10) && (processingBuffer[5] == 0x01) && (processingBuffer[6] == 0x00)) {
 			// Version string
-			ESP_LOGW(TAG, "Temp Set Confirmation, Target Temp: %.1f", target_temp);
+			ESP_LOGD(TAG, "Temp Set Confirmation, Target Temp: %.1f", target_temp);
 #ifdef USE_TEXT_SENSOR
 			processingBuffer[cmdlen - 1] = 0;
 			std::string vstr((char*)(processingBuffer + 7));
@@ -309,7 +309,7 @@ int IQ2020Component::processIQ2020Command() {
 			if (pending_temp == pending_temp_cmd) { pending_temp = -1; pending_temp_retry = 0; }
 			pending_temp = -1;
 			pending_temp_cmd = -1;
-			ESP_LOGW(TAG, "Temp Set Confirmation, Target Temp: %.1f", target_temp);
+			ESP_LOGD(TAG, "Temp Set Confirmation, Target Temp: %.1f", target_temp);
 #ifdef USE_SENSOR
 			if (temp_celsius) {
 				if (this->target_c_temp_sensor_) this->target_c_temp_sensor_->publish_state(target_temp);
@@ -353,7 +353,7 @@ int IQ2020Component::processIQ2020Command() {
 				_target_temp = ((processingBuffer[90] - '0') * 10) + (processingBuffer[91] - '0') + ((processingBuffer[92] - '0') * 0.1);
 				_current_temp = ((processingBuffer[94] - '0') * 10) + (processingBuffer[95] - '0') + ((processingBuffer[96] - '0') * 0.1);
 			}
-			//ESP_LOGW(TAG, "Reported Current Temp: %.1f, Target Temp: %.1f", _current_temp, _target_temp);
+			//ESP_LOGD(TAG, "Reported Current Temp: %.1f, Target Temp: %.1f", _current_temp, _target_temp);
 
 			// If publish the temperature values even if they don't change.
 			if ((_target_temp != target_temp) || (_current_temp != current_temp)) {
@@ -363,7 +363,7 @@ int IQ2020Component::processIQ2020Command() {
 					if (temp_celsius) { g_iq2020_climate->updateTempsC(target_temp, current_temp); }
 					else { g_iq2020_climate->updateTempsF(target_temp, current_temp); }
 				}
-				ESP_LOGW(TAG, "Changed Current Temp: %.1f, Target Temp: %.1f", current_temp, target_temp);
+				ESP_LOGD(TAG, "Changed Current Temp: %.1f, Target Temp: %.1f", current_temp, target_temp);
 			}
 
 #ifdef USE_SENSOR
@@ -383,7 +383,7 @@ int IQ2020Component::processIQ2020Command() {
 				} else {
 					if (pending_temp_retry > 0) { // Try to adjust the temperature again
 						unsigned char deltaSteps = ((temp_celsius ? 2 : 1) * (pending_temp - target_temp));
-						ESP_LOGW(TAG, "Retry SetTempAction: new=%f, target=%f, deltasteps=%d", pending_temp, target_temp, deltaSteps);
+						ESP_LOGD(TAG, "Retry SetTempAction: new=%f, target=%f, deltasteps=%d", pending_temp, target_temp, deltaSteps);
 						if (deltaSteps != 0) {
 							unsigned char changeTempCmd[] = { 0x01, 0x09, 0xFF, deltaSteps };
 							sendIQ2020Command(0x01, 0x1F, 0x40, changeTempCmd, 4); // Adjust temp
@@ -419,11 +419,11 @@ void IQ2020Component::sendIQ2020Command(unsigned char dst, unsigned char src, un
 	for (int i = 1; i < (len + 5); i++) { checksum += outboundBuffer[i]; }
 	outboundBuffer[len + 5] = (checksum ^ 0xFF);
 	this->stream_->write_array(outboundBuffer, len + 6);
-	ESP_LOGW(TAG, "IQ2020 transmit, dst:%02x src:%02x op:%02x datalen:%d", outboundBuffer[1], outboundBuffer[2], outboundBuffer[4], outboundBuffer[3]);
+	ESP_LOGD(TAG, "IQ2020 transmit, dst:%02x src:%02x op:%02x datalen:%d", outboundBuffer[1], outboundBuffer[2], outboundBuffer[4], outboundBuffer[3]);
 }
 
 void IQ2020Component::SwitchAction(unsigned int switchid, int state) {
-	ESP_LOGW(TAG, "SwitchAction, switchid = %d, status = %d", switchid, state);
+	ESP_LOGD(TAG, "SwitchAction, switchid = %d, status = %d", switchid, state);
 	switch (switchid) {
 		case SWITCH_LIGHTS: { // Spa Lights Switch
 			switch_pending[SWITCH_LIGHTS] = state;
@@ -470,7 +470,7 @@ void IQ2020Component::SwitchAction(unsigned int switchid, int state) {
 }
 
 void IQ2020Component::SetTempAction(float newtemp) {
-	//ESP_LOGW(TAG, "SetTempAction: new=%f", newtemp);
+	//ESP_LOGD(TAG, "SetTempAction: new=%f", newtemp);
 
 	if (temp_celsius) {
 		pending_temp = (std::round(newtemp * 2) / 2); // Round to the nearest .5
@@ -481,7 +481,7 @@ void IQ2020Component::SetTempAction(float newtemp) {
 	
 	if (pending_temp_cmd == -1) { // If there are no outstanding temp commands in-flight, send one now.
 		unsigned char deltaSteps = ((temp_celsius ? 2 : 1) * (pending_temp - target_temp));
-		ESP_LOGW(TAG, "SetTempAction: new=%f, target=%f, deltasteps=%d", pending_temp, target_temp, deltaSteps);
+		ESP_LOGD(TAG, "SetTempAction: new=%f, target=%f, deltasteps=%d", pending_temp, target_temp, deltaSteps);
 		if (deltaSteps == 0) { pending_temp = -1; return; }
 		pending_temp_cmd = pending_temp;
 		unsigned char changeTempCmd[] = { 0x01, 0x09, 0xFF, deltaSteps };
@@ -490,7 +490,7 @@ void IQ2020Component::SetTempAction(float newtemp) {
 }
 
 void IQ2020Component::setSwitchState(unsigned int switchid, int state) {
-	ESP_LOGW(TAG, "setSwitchState, switchid = %d, status = %d", switchid, state);
+	ESP_LOGD(TAG, "setSwitchState, switchid = %d, status = %d", switchid, state);
 	if (state == -1) {
 		if (switch_pending[switchid] == -1) return;
 		state = switch_pending[switchid];
@@ -505,7 +505,7 @@ void IQ2020Component::setSwitchState(unsigned int switchid, int state) {
 }
 
 void IQ2020Component::pollState() {
-	ESP_LOGW(TAG, "Poll");
+	ESP_LOGD(TAG, "Poll");
 #ifdef USE_TEXT_SENSOR
 	// If we don't have the version string, fetch it now.
 	if (versionstr.empty()) {
