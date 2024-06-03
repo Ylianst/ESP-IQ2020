@@ -119,7 +119,7 @@ In the picture below you will notice I have the expansion board attached with 8 
 
 ![IQ2020-ESP3](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/c52b676b-e35c-474c-8919-2fc57302d0fb)
 
-Once done, power your hot tub back on and you should see data flowing into Home Assistant. You can see the current temperature, set the target temperature, lock the remote control, turn on lights & jets and graph the temperature and power usage. If a jet has two power levels, you should be able to see and control them. The spa data is polled by the device every minute, so, if you change a setting using the tub's remote, it may take up to a minute to update on Home Assistant. If something does not work right, [please open an issue in GitHub](https://github.com/Ylianst/ESP-IQ2020/issues). As with all Home Assistant integrations, you can use automations. For example, I am on a electric time-of-day plan and so, I adjust lower the temperature automatically a few minutes before 5pm and turn it back up at 9pm. There are also sensors provided so you can create tracking graphs.
+Once done, power your hot tub back on and you should see data flowing into Home Assistant. You can see the current temperature, set the target temperature, lock the remote control, turn on lights & jets and graph the temperature and power usage. The spa data is polled by the device every minute, so, if you change a setting using the tub's remote, it may take up to a minute to update on Home Assistant. If something does not work right, [please open an issue in GitHub](https://github.com/Ylianst/ESP-IQ2020/issues). As with all Home Assistant integrations, you can use automations. For example, I am on a electric time-of-day plan and so, I adjust lower the temperature automatically a few minutes before 5pm and turn it back up at 9pm. There are also sensors provided so you can create tracking graphs.
 
 For added details:
   - [Using different ESP32 devices](https://github.com/Ylianst/ESP-IQ2020/blob/main/documentation/devices.md)
@@ -129,3 +129,4 @@ For added details:
 Known Issues:
   - When controlling jets that have a low/high setting. The correct state should be shown when the jets are controlled by the hot tub remote, but if you try to turn them on low using Home Assistant, they will turn on as high. This seems to be a problem with the new Fan control in ESP-Home. I will have to submit example code and a request to get it fixed.
   - Jets 3 and 4 may work but will not show the running state properly, but if we have such a hot tub and let send me traffic logs, I can probably add support for it.
+  - The climate control in Home Assistant is currently always showing as "heating" with the red icon. I can probably fix this so it only show heating when the water heater is active.
