@@ -11,8 +11,8 @@ namespace iq2020_climate {
 	public:
 		void setup() override;
 		void control(const climate::ClimateCall &call) override;
-		void updateTempsF(float target, float current, bool heating); // *
-		void updateTempsC(float target, float current, bool heating);
+		void updateTempsF(float target, float current, bool heating, bool heating);
+		void updateTempsC(float target, float current, bool heating, bool heating);
 		climate::ClimateTraits traits() override;
 		void dump_config() override;
 	private:
