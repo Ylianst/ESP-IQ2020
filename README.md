@@ -109,7 +109,7 @@ climate:
 
 You may need to make a few changes. If your hot tub is setup to display temperature in celsius, replace `current_f_temperature`, `current_f_temperature`, `outlet_f_temperature` with `target_c_temperature`, `target_c_temperature` and `outlet_c_temperature`. Make sure you put your WIFI SSID and Password in `secrets.yaml`. Once ready, go ahead and flash your device over USB-C. At this point, the device should be visible over WIFI when powered using USB-C even if it's not connected to the computer.
 
-Next, grab 4 breadboard jumper wires and connect them to the RS485 module. I recommand using 4 different color wires, idealy blue, yellow, red and black. Put the male end in the RS485 module and tighten using a small screw driver. Double check the wires don't come off. Your device should look like this.
+Next, grab 4 breadboard jumper wires and connect them to the RS485 module. I recommand using 4 different color wires. Idealy blue, yellow, red and black. Put the male end in the RS485 module and tighten using a small screw driver. Double check the wires don't come off. Your device should look like this.
 
 ![IQ2020-ESP2](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/434920d7-ad5b-446c-af8e-142df2a1e9d8)
 
