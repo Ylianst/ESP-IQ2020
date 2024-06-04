@@ -3,7 +3,7 @@ import esphome.config_validation as cv
 from esphome.components import sensor
 from esphome.const import (
     UNIT_WATT,
-    UNIT_SECONDS,
+    UNIT_SECOND,
     UNIT_CELSIUS,
     ICON_THERMOMETER,
     ICON_HEATING_COIL,
@@ -92,27 +92,27 @@ CONFIG_SCHEMA = cv.Schema(
             state_class=STATE_CLASS_MEASUREMENT,
         ),
         cv.Optional(CONF_SENSOR_HEATER_RELAY): sensor.sensor_schema(
-            unit_of_measurement=UNIT_SECONDS,
+            unit_of_measurement=UNIT_SECOND,
             accuracy_decimals=0
         ),
         cv.Optional(CONF_SENSOR_JETS1_TOTAL_RUNTIME): sensor.sensor_schema(
-            unit_of_measurement=UNIT_SECONDS,
+            unit_of_measurement=UNIT_SECOND,
             accuracy_decimals=0
         ),
         cv.Optional(CONF_SENSOR_LIFETIME_RUNTIME): sensor.sensor_schema(
-            unit_of_measurement=UNIT_SECONDS,
+            unit_of_measurement=UNIT_SECOND,
             accuracy_decimals=0
         ),
         cv.Optional(CONF_SENSOR_JETS2_TOTAL_RUNTIME): sensor.sensor_schema(
-            unit_of_measurement=UNIT_SECONDS,
+            unit_of_measurement=UNIT_SECOND,
             accuracy_decimals=0
         ),
         cv.Optional(CONF_SENSOR_JETS3_TOTAL_RUNTIME): sensor.sensor_schema(
-            unit_of_measurement=UNIT_SECONDS,
+            unit_of_measurement=UNIT_SECOND,
             accuracy_decimals=0
         ),
         cv.Optional(CONF_SENSOR_LIGHTS_TOTAL_RUNTIME): sensor.sensor_schema(
-            unit_of_measurement=UNIT_SECONDS,
+            unit_of_measurement=UNIT_SECOND,
             accuracy_decimals=0
         )
     }
