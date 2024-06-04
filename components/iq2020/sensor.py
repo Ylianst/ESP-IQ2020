@@ -3,9 +3,10 @@ import esphome.config_validation as cv
 from esphome.components import sensor
 from esphome.const import (
     UNIT_WATT,
+    UNIT_SECONDS,
     UNIT_CELSIUS,
     ICON_THERMOMETER,
-	ICON_HEATING_COIL,
+    ICON_HEATING_COIL,
     STATE_CLASS_MEASUREMENT,
     DEVICE_CLASS_TEMPERATURE,
     ENTITY_CATEGORY_DIAGNOSTIC,
@@ -19,6 +20,12 @@ CONF_SENSOR_OUTLET_F_TEMPERATURE = "outlet_f_temperature"
 CONF_SENSOR_CURRENT_C_TEMPERATURE = "current_c_temperature"
 CONF_SENSOR_TARGET_C_TEMPERATURE = "target_c_temperature"
 CONF_SENSOR_OUTLET_C_TEMPERATURE = "outlet_c_temperature"
+CONF_SENSOR_HEATER_TOTAL_RUNTIME = "heater_total_runtime"
+CONF_SENSOR_JETS1_TOTAL_RUNTIME = "jets1_total_runtime"
+CONF_SENSOR_LIFETIME_RUNTIME = "lifetime_runtime"
+CONF_SENSOR_JETS2_TOTAL_RUNTIME = "jets2_total_runtime"
+CONF_SENSOR_JETS3_TOTAL_RUNTIME = "jets3_total_runtime"
+CONF_SENSOR_LIGHTS_TOTAL_RUNTIME = "lights_total_runtime"
 CONF_SENSOR_CONNECTION_COUNT = "connection_count"
 CONF_SENSOR_HEATER_WATTAGE = "heater_wattage"
 CONF_SENSOR_HEATER_RELAY = "heater_relay"
@@ -84,6 +91,30 @@ CONFIG_SCHEMA = cv.Schema(
             accuracy_decimals=0,
             state_class=STATE_CLASS_MEASUREMENT,
         ),
+        cv.Optional(CONF_SENSOR_HEATER_RELAY): sensor.sensor_schema(
+            unit_of_measurement=UNIT_SECONDS,
+            accuracy_decimals=0
+        ),
+        cv.Optional(CONF_SENSOR_JETS1_TOTAL_RUNTIME): sensor.sensor_schema(
+            unit_of_measurement=UNIT_SECONDS,
+            accuracy_decimals=0
+        ),
+        cv.Optional(CONF_SENSOR_LIFETIME_RUNTIME): sensor.sensor_schema(
+            unit_of_measurement=UNIT_SECONDS,
+            accuracy_decimals=0
+        ),
+        cv.Optional(CONF_SENSOR_JETS2_TOTAL_RUNTIME): sensor.sensor_schema(
+            unit_of_measurement=UNIT_SECONDS,
+            accuracy_decimals=0
+        ),
+        cv.Optional(CONF_SENSOR_JETS3_TOTAL_RUNTIME): sensor.sensor_schema(
+            unit_of_measurement=UNIT_SECONDS,
+            accuracy_decimals=0
+        ),
+        cv.Optional(CONF_SENSOR_LIGHTS_TOTAL_RUNTIME): sensor.sensor_schema(
+            unit_of_measurement=UNIT_SECONDS,
+            accuracy_decimals=0
+        )
     }
 )
 
@@ -126,3 +157,27 @@ async def to_code(config):
     if CONF_SENSOR_HEATER_RELAY in config:
         sens = await sensor.new_sensor(config[CONF_SENSOR_HEATER_RELAY])
         cg.add(server.set_heater_relay_sensor(sens))
+
+    if CONF_SENSOR_HEATER_TOTAL_RUNTIME in config:
+        sens = await sensor.new_sensor(config[CONF_SENSOR_HEATER_TOTAL_RUNTIME])
+        cg.add(server.set_heater_total_runtime_sensor(sens))
+
+    if CONF_SENSOR_JETS1_TOTAL_RUNTIME in config:
+        sens = await sensor.new_sensor(config[CONF_SENSOR_JETS1_TOTAL_RUNTIME])
+        cg.add(server.set_jets1_total_runtime_sensor(sens))
+
+    if CONF_SENSOR_LIFETIME_RUNTIME in config:
+        sens = await sensor.new_sensor(config[CONF_SENSOR_LIFETIME_RUNTIME])
+        cg.add(server.set_lifetime_runtime_sensor(sens))
+
+    if CONF_SENSOR_JETS2_TOTAL_RUNTIME in config:
+        sens = await sensor.new_sensor(config[CONF_SENSOR_JETS2_TOTAL_RUNTIME])
+        cg.add(server.set_jets2_total_runtime_sensor(sens))
+
+    if CONF_SENSOR_JETS3_TOTAL_RUNTIME in config:
+        sens = await sensor.new_sensor(config[CONF_SENSOR_JETS3_TOTAL_RUNTIME])
+        cg.add(server.set_jets3_total_runtime_sensor(sens))
+
+    if CONF_SENSOR_LIGHTS_TOTAL_RUNTIME in config:
+        sens = await sensor.new_sensor(config[CONF_SENSOR_LIGHTS_TOTAL_RUNTIME])
+        cg.add(server.set_lights_total_runtime_sensor(sens))

@@ -22,6 +22,7 @@ using namespace esphome;
 
 float fahrenheit_to_celsius(float f) { return (f - 32) * 5 / 9; }
 float celsius_to_fahrenheit(float c) { return c * 9 / 5 + 32; }
+int readCounter(unsigned char* data, int offset) { return (data[offset]) + (data[offset + 1] << 8) + (data[offset + 2] << 16) + (data[offset + 3] << 24); }
 
 void IQ2020Component::setup() {
 	for (int i = 0; i < SWITCHCOUNT; i++) { switch_state[i] = switch_pending[i] = -1; }
@@ -382,12 +383,31 @@ int IQ2020Component::processIQ2020Command() {
 				if (this->target_c_temp_sensor_) this->target_c_temp_sensor_->publish_state(target_temp);
 				if (this->current_c_temp_sensor_) this->current_c_temp_sensor_->publish_state(current_temp);
 				if (this->outlet_c_temp_sensor_) this->outlet_c_temp_sensor_->publish_state(outlet_temp);
-			}
-			else {
+			} else {
 				if (this->target_f_temp_sensor_) this->target_f_temp_sensor_->publish_state(target_temp);
 				if (this->current_f_temp_sensor_) this->current_f_temp_sensor_->publish_state(current_temp);
 				if (this->outlet_f_temp_sensor_) this->outlet_f_temp_sensor_->publish_state(outlet_temp);
 			}
+
+			if (this->heater_total_runtime_sensor_) this->heater_total_runtime_sensor_->publish_state(readCounter(data, 40));
+			if (this->jets1_total_runtime_sensor_) this->jets1_total_runtime_sensor_->publish_state(readCounter(data, 44));
+			if (this->lifetime_runtime_sensor_) this->lifetime_runtime_sensor_->publish_state(readCounter(data, 48));
+			if (this->jets2_total_runtime_sensor_) this->jets2_total_runtime_sensor_->publish_state(readCounter(data, 60));
+			if (this->jets3_total_runtime_sensor_) this->jets3_total_runtime_sensor_->publish_state(readCounter(data, 64));
+			if (this->lights_total_runtime_sensor_) this->lights_total_runtime_sensor_->publish_state(readCounter(data, 72));
+
+			// Decode counters
+			//int HeaterTotalRuntime = readCounter(data, 40);
+			//int Jets1TotalRuntime = readCounter(data, 44);
+			//int LifetimeRuntimeSeconds1 = readCounter(data, 48);
+			//int UnknownCounter1 = readCounter(data, 52);
+			//int Jets2TotalRuntime = readCounter(data, 60);
+			//int Jets3TotalRuntime = readCounter(data, 64);
+			//int UnknownCounter2 = readCounter(data, 68);
+			//int LightsTotalRuntime = readCounter(data, 72);
+			//int LifetimeRuntimeSeconds2 = readCounter(data, 78);
+			//int UnknownCounter3 = readCounter(data, 82);
+			//int UnknownCounter4 = readCounter(data, 86);
 #endif
 
 			if (pending_temp != -1) {

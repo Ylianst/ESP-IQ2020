@@ -55,6 +55,12 @@ public:
 	void set_connection_count_sensor(esphome::sensor::Sensor *connection_count) { this->connection_count_sensor_ = connection_count; }
 	void set_heater_wattage_sensor(esphome::sensor::Sensor *wattage) { this->wattage_sensor_ = wattage; }
 	void set_heater_relay_sensor(esphome::sensor::Sensor *relay) { this->relay_sensor_ = relay; }
+	void set_heater_total_runtime_sensor(esphome::sensor::Sensor *sensor) { this->heater_total_runtime_sensor_ = sensor; }
+	void set_jets1_total_runtime_sensor(esphome::sensor::Sensor *sensor) { this->jets1_total_runtime_sensor_ = sensor; }
+	void set_lifetime_runtime_sensor(esphome::sensor::Sensor *sensor) { this->lifetime_runtime_sensor_ = sensor; }
+	void set_jets2_total_runtime_sensor(esphome::sensor::Sensor *sensor) { this->jets2_total_runtime_sensor_ = sensor; }
+	void set_jets3_total_runtime_sensor(esphome::sensor::Sensor *sensor) { this->jets3_total_runtime_sensor_ = sensor; }
+	void set_lights_total_runtime_sensor(esphome::sensor::Sensor *sensor) { this->lights_total_runtime_sensor_ = sensor; }
 #endif
 #ifdef USE_TEXT_SENSOR
 	void set_version_sensor(esphome::text_sensor::TextSensor *text) { this->version_sensor_ = text; }
@@ -111,6 +117,12 @@ protected:
 	esphome::sensor::Sensor *connection_count_sensor_;
 	esphome::sensor::Sensor *wattage_sensor_;
 	esphome::sensor::Sensor *relay_sensor_;
+	esphome::sensor::Sensor *heater_total_runtime_sensor_;
+	esphome::sensor::Sensor *jets1_total_runtime_sensor_;
+	esphome::sensor::Sensor *lifetime_runtime_sensor_;
+	esphome::sensor::Sensor *jets2_total_runtime_sensor_;
+	esphome::sensor::Sensor *jets3_total_runtime_sensor_;
+	esphome::sensor::Sensor *lights_total_runtime_sensor_;
 #endif
 #ifdef USE_TEXT_SENSOR
 	esphome::text_sensor::TextSensor *version_sensor_;
