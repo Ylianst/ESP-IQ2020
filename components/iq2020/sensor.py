@@ -5,6 +5,7 @@ from esphome.const import (
     UNIT_WATT,
     UNIT_SECOND,
     UNIT_CELSIUS,
+	ICON_TIMER,
     ICON_THERMOMETER,
     ICON_HEATING_COIL,
     STATE_CLASS_MEASUREMENT,
@@ -93,27 +94,33 @@ CONFIG_SCHEMA = cv.Schema(
         ),
         cv.Optional(CONF_SENSOR_HEATER_TOTAL_RUNTIME): sensor.sensor_schema(
             unit_of_measurement=UNIT_SECOND,
-            accuracy_decimals=0
+            accuracy_decimals=0,
+            icon=ICON_TIMER
         ),
         cv.Optional(CONF_SENSOR_JETS1_TOTAL_RUNTIME): sensor.sensor_schema(
             unit_of_measurement=UNIT_SECOND,
-            accuracy_decimals=0
+            accuracy_decimals=0,
+            icon=ICON_TIMER
         ),
         cv.Optional(CONF_SENSOR_LIFETIME_RUNTIME): sensor.sensor_schema(
             unit_of_measurement=UNIT_SECOND,
-            accuracy_decimals=0
+            accuracy_decimals=0,
+            icon=ICON_TIMER
         ),
         cv.Optional(CONF_SENSOR_JETS2_TOTAL_RUNTIME): sensor.sensor_schema(
             unit_of_measurement=UNIT_SECOND,
-            accuracy_decimals=0
+            accuracy_decimals=0,
+            icon=ICON_TIMER
         ),
         cv.Optional(CONF_SENSOR_JETS3_TOTAL_RUNTIME): sensor.sensor_schema(
             unit_of_measurement=UNIT_SECOND,
-            accuracy_decimals=0
+            accuracy_decimals=0,
+            icon=ICON_TIMER
         ),
         cv.Optional(CONF_SENSOR_LIGHTS_TOTAL_RUNTIME): sensor.sensor_schema(
             unit_of_measurement=UNIT_SECOND,
-            accuracy_decimals=0
+            accuracy_decimals=0,
+            icon=ICON_TIMER
         )
     }
 )
