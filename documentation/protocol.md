@@ -212,11 +212,19 @@ Main status decoding
 04                - Flags: 0x02 = Jet2 Medium, 0x04 = AlwaysSet?. 4 upper bits are spa lights: 0x0 = Off, 0x1 = Min Bright, 0x5 = Max Bright
 00000604000A0622F21100201C201C201C8403605400000000  - ?
 31303346          - "103F" ASCII string, the heater outlet temperature.
-02937400ABC90A00  - ?
-033CDC05          - Big endian counter
-45000000000000007BD30C000000000000000000B8AF0F000200  - ?
-E902DC05          - Big endian counter
-00000000C2790A00  - ?
+02937400          - Heater total runtime in seconds (Big endian)
+ABC90A00          - Jets 1 total runtime in seconds (Big endian)
+033CDC05          - Lifetime 1 runtime in seconds (Big endian)
+45000000          - Unknown counter
+00000000          - ?
+7BD30C00          - Jets 2 total runtime in seconds (Big endian)
+00000000          - Jets 3 total runtime in seconds (Big endian)
+00000000          - Unknown counter
+B8AF0F00          - Lights total runtime in seconds (Big endian)
+0200              - ?
+E902DC05          - Lifetime 2 runtime in seconds (Big endian)
+00000000          - Unknown counter
+C2790A00          - Unknown counter
 3130314631303246  - "101F102F" ASCII String, the target temp and current temp.
 7800F700F700000000000000  - ?
 0F                - Water heater relay. 0x00 = Off, 0x0F = On
