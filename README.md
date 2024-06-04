@@ -49,7 +49,8 @@ iq2020:
    uart_id: SpaConnection
    port: 1234
 
-# If using celsius units on the hot tub remote, replace _f_ with _c_ in the three entries below. 
+# If using celsius units on the hot tub remote, replace _f_ with _c_ in the three entries below.
+# Feel free to remove any sensor that are not relevent for your hot tub.
 sensor:
   - platform: iq2020
     current_f_temperature:
@@ -68,8 +69,8 @@ sensor:
       name: Lifetime Runtime
     jets2_total_runtime:
       name: Jets 2 Runtime
-    jets3_total_runtime:
-      name: Jets 3 Runtime
+#    jets3_total_runtime:
+#      name: Jets 3 Runtime
     lights_total_runtime:
       name: Lights Runtime
 
