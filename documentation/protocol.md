@@ -212,17 +212,17 @@ Main status decoding
 04                - Flags: 0x02 = Jet2 Medium, 0x04 = AlwaysSet?. 4 upper bits are spa lights: 0x0 = Off, 0x1 = Min Bright, 0x5 = Max Bright
 00000604000A0622F21100201C201C201C8403605400000000  - ?
 31303346          - "103F" ASCII string, the heater outlet temperature.
-02937400          - Heater total runtime in seconds (Big endian)
-ABC90A00          - Jets 1 total runtime in seconds (Big endian)
-033CDC05          - Lifetime 1 runtime in seconds (Big endian)
+02937400          - Heater total runtime in seconds (Big-Endian)
+ABC90A00          - Jets 1 total runtime in seconds (Big-Endian)
+033CDC05          - Lifetime 1 runtime in seconds (Big-Endian)
 45000000          - Unknown counter
 00000000          - ?
-7BD30C00          - Jets 2 total runtime in seconds (Big endian)
-00000000          - Jets 3 total runtime in seconds (Big endian)
+7BD30C00          - Jets 2 total runtime in seconds (Big-Endian)
+00000000          - Jets 3 total runtime in seconds (Big-Endian)
 00000000          - Unknown counter
-B8AF0F00          - Lights total runtime in seconds (Big endian)
+B8AF0F00          - Lights total runtime in seconds (Big-Endian)
 0200              - ?
-E902DC05          - Lifetime 2 runtime in seconds (Big endian)
+E902DC05          - Lifetime 2 runtime in seconds (Big-Endian)
 00000000          - Unknown counter
 C2790A00          - Unknown counter
 3130314631303246  - "101F102F" ASCII String, the target temp and current temp.
@@ -230,7 +230,7 @@ C2790A00          - Unknown counter
 0F                - Water heater relay. 0x00 = Off, 0x0F = On
 0000000000        - ?
 5C00              - Variable from 0x4D00 to 0xEA00, changes almost at every poll. Probably big-endian 16 bits.
-F30E              - Water heater wattage, big-endian 16 bits
+F30E              - Water heater wattage (Big-Endian)
 0000013C001E00006A6F00  - ?
 080800            - SS:MM:HH Seconds (0 to 59), Minutes (0 to 59), Hours (0 to 24).
 13                - Number of days.
