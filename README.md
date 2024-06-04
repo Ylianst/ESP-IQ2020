@@ -60,6 +60,18 @@ sensor:
       name: Heater Outlet
     heater_wattage:
       name: Heater Power
+    heater_total_runtime:
+      name: Heater Runtime
+    jets1_total_runtime:
+      name: Jets 1 Runtime
+    lifetime_runtime:
+      name: Lifetime Runtime
+    jets2_total_runtime:
+      name: Jets 2 Runtime
+    jets3_total_runtime:
+      name: Jets 3 Runtime
+    lights_total_runtime:
+      name: Lights Runtime
 
 switch:
   - platform: iq2020
