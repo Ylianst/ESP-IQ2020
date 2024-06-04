@@ -86,7 +86,7 @@ switch:
     icon: "mdi:lock"
     switch_datapoint: 1
   - platform: iq2020
-    name: Temp Lock
+    name: Temperature Lock
     id: temp_lock_switch
     icon: "mdi:lock"
     switch_datapoint: 2
