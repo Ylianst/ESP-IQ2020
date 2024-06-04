@@ -91,7 +91,7 @@ CONFIG_SCHEMA = cv.Schema(
             accuracy_decimals=0,
             state_class=STATE_CLASS_MEASUREMENT,
         ),
-        cv.Optional(CONF_SENSOR_HEATER_RELAY): sensor.sensor_schema(
+        cv.Optional(CONF_SENSOR_HEATER_TOTAL_RUNTIME): sensor.sensor_schema(
             unit_of_measurement=UNIT_SECOND,
             accuracy_decimals=0
         ),
