@@ -9,7 +9,9 @@ CONF_SENSOR_VERSION = "versionstr"
 CONFIG_SCHEMA = cv.Schema(
     {
         cv.GenerateID(CONF_IQ2020_SERVER): cv.use_id(IQ2020Component),
-        cv.Required(CONF_SENSOR_VERSION): text_sensor.text_sensor_schema()
+        cv.Required(CONF_SENSOR_VERSION): text_sensor.text_sensor_schema(
+            icon: "mdi:information"
+        )
     }
 )
 
