@@ -389,12 +389,12 @@ int IQ2020Component::processIQ2020Command() {
 				if (this->outlet_f_temp_sensor_) this->outlet_f_temp_sensor_->publish_state(outlet_temp);
 			}
 
-			if (this->heater_total_runtime_sensor_) this->heater_total_runtime_sensor_->publish_state(readCounter(data, 40));
-			if (this->jets1_total_runtime_sensor_) this->jets1_total_runtime_sensor_->publish_state(readCounter(data, 44));
-			if (this->lifetime_runtime_sensor_) this->lifetime_runtime_sensor_->publish_state(readCounter(data, 48));
-			if (this->jets2_total_runtime_sensor_) this->jets2_total_runtime_sensor_->publish_state(readCounter(data, 60));
-			if (this->jets3_total_runtime_sensor_) this->jets3_total_runtime_sensor_->publish_state(readCounter(data, 64));
-			if (this->lights_total_runtime_sensor_) this->lights_total_runtime_sensor_->publish_state(readCounter(data, 72));
+			if (this->heater_total_runtime_sensor_) this->heater_total_runtime_sensor_->publish_state(readCounter(processingBuffer, 40));
+			if (this->jets1_total_runtime_sensor_) this->jets1_total_runtime_sensor_->publish_state(readCounter(processingBuffer, 44));
+			if (this->lifetime_runtime_sensor_) this->lifetime_runtime_sensor_->publish_state(readCounter(processingBuffer, 48));
+			if (this->jets2_total_runtime_sensor_) this->jets2_total_runtime_sensor_->publish_state(readCounter(processingBuffer, 60));
+			if (this->jets3_total_runtime_sensor_) this->jets3_total_runtime_sensor_->publish_state(readCounter(processingBuffer, 64));
+			if (this->lights_total_runtime_sensor_) this->lights_total_runtime_sensor_->publish_state(readCounter(processingBuffer, 72));
 
 			// Decode counters
 			//int HeaterTotalRuntime = readCounter(data, 40);
