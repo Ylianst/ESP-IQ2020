@@ -79,27 +79,27 @@ switch:
     name: Lights
     id: lights_switch
     icon: "mdi:lightbulb"
-    switch_datapoint: 0
+    datapoint: 0
   - platform: iq2020
     name: Spa Lock
     id: spa_lock_switch
     icon: "mdi:lock"
-    switch_datapoint: 1
+    datapoint: 1
   - platform: iq2020
     name: Temperature Lock
     id: temp_lock_switch
     icon: "mdi:lock"
-    switch_datapoint: 2
+    datapoint: 2
   - platform: iq2020
     name: Clean Cycle
     id: clean_cycle_switch
     icon: "mdi:vacuum"
-    switch_datapoint: 3
+    datapoint: 3
   - platform: iq2020
     name: Summer Timer
     id: summer_timer_switch
     icon: "mdi:sun-clock"
-    switch_datapoint: 4
+    datapoint: 4
 
 fan:
   - platform: iq2020
