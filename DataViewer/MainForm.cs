@@ -233,10 +233,36 @@ namespace DataViewer
                     addDecodedData("Time", data[133].ToString("D2") + ":" + data[132].ToString("D2") + ":" + data[131].ToString("D2"));
                     addDecodedData("JetInfo1", Convert.ToString(data[9], 2));
                     addDecodedData("JetInfo2", Convert.ToString(data[10], 2));
-                    int timer1 = data[48] + (data[49] << 8) + (data[50] << 16) + (data[51] << 24);
-                    addDecodedData("Timer1", timer1.ToString());
-                    int timer2 = data[78] + (data[79] << 8) + (data[80] << 16) + (data[81] << 24);
-                    addDecodedData("Timer2", timer2.ToString());
+                    //int timer1 = data[48] + (data[49] << 8) + (data[50] << 16) + (data[51] << 24);
+                    //int timer1 = getIntFromByteArray(data, 48);
+                    //addDecodedData("Timer1", timer1.ToString());
+                    //int timer2 = data[78] + (data[79] << 8) + (data[80] << 16) + (data[81] << 24);
+                    //int timer2 = getIntFromByteArray(data, 78);
+                    //addDecodedData("Timer2", timer2.ToString());
+
+                    int HeaterTotalRuntime = getIntFromByteArray(data, 40);
+                    int Jets1TotalRuntime = getIntFromByteArray(data, 44);
+                    int LifetimeRuntimeSeconds1 = getIntFromByteArray(data, 48);
+                    int UnknownCounter1 = getIntFromByteArray(data, 52);
+                    int Jets2TotalRuntime = getIntFromByteArray(data, 60);
+                    int Jets3TotalRuntime = getIntFromByteArray(data, 64);
+                    int UnknownCounter2 = getIntFromByteArray(data, 68);
+                    int LightsTotalRuntime = getIntFromByteArray(data, 72);
+                    int LifetimeRuntimeSeconds2 = getIntFromByteArray(data, 78);
+                    int UnknownCounter3 = getIntFromByteArray(data, 82);
+                    int UnknownCounter4 = getIntFromByteArray(data, 86);
+
+                    addDecodedData("Heater Total Runtime", HeaterTotalRuntime.ToString());
+                    addDecodedData("Jets 1 Total Runtime", Jets1TotalRuntime.ToString());
+                    addDecodedData("Lifetime Runtime 1", LifetimeRuntimeSeconds1.ToString());
+                    addDecodedData("Unknown Counter 1", UnknownCounter1.ToString());
+                    addDecodedData("Jets 2 Total Runtime", Jets2TotalRuntime.ToString());
+                    addDecodedData("Jets 3 Total Runtime", Jets3TotalRuntime.ToString());
+                    addDecodedData("Unknown Counter 2", UnknownCounter2.ToString());
+                    addDecodedData("Lights Total Runtime", LightsTotalRuntime.ToString());
+                    addDecodedData("Lifetime Runtime 2", LifetimeRuntimeSeconds2.ToString());
+                    addDecodedData("Unknown Counter 3", UnknownCounter3.ToString());
+                    addDecodedData("Unknown Counter 4", UnknownCounter4.ToString());
                 }
 
                 // Version string
@@ -247,6 +273,11 @@ namespace DataViewer
             }
 
             return totallen;
+        }
+
+        private int getIntFromByteArray(byte[] data, int offset)
+        {
+            return data[offset] + (data[offset + 1] << 8) + (data[offset + 2] << 16) + (data[offset + 3] << 24);
         }
 
         private void sendButton_Click(object sender, EventArgs e)
