@@ -531,13 +531,13 @@ namespace DataViewer
 
         private void setCurrentTimeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            DateTime n = DateTime.Now;
-            //DateTime n = new DateTime(2023, 12, 31, 23, 59, 0);
+            //DateTime n = DateTime.Now;
+            DateTime n = new DateTime(2023, 12, 31, 23, 59, 30);
             byte[] b = new byte[7];
             b[0] = (byte)n.Second;
             b[1] = (byte)n.Minute;
             b[2] = (byte)n.Hour;
-            b[3] = (byte)(n.Day);
+            b[3] = (byte)n.Day;
             b[4] = (byte)(n.Month - 1);
             b[5] = (byte)(n.Year & 0xFF);
             b[6] = (byte)(n.Year >> 8);

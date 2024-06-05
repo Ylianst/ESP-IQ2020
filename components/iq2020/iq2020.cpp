@@ -294,12 +294,12 @@ int IQ2020Component::processIQ2020Command() {
 
 		if ((cmdlen > 10) && (processingBuffer[5] == 0x01) && (processingBuffer[6] == 0x00)) {
 			// Version string
-			ESP_LOGD(TAG, "Temp Set Confirmation, Target Temp: %.1f", target_temp);
 #ifdef USE_TEXT_SENSOR
 			processingBuffer[cmdlen - 1] = 0;
 			std::string vstr((char*)(processingBuffer + 7));
 			versionstr = vstr;
 			if (this->version_sensor_) this->version_sensor_->publish_state(versionstr);
+			ESP_LOGD(TAG, "Version string: %d", versionstr.c_str());
 #endif
 			pollState();
 		}
@@ -322,6 +322,7 @@ int IQ2020Component::processIQ2020Command() {
 				if (temp_celsius) { g_iq2020_climate->updateTempsC(target_temp, current_temp, temp_action); }
 				else { g_iq2020_climate->updateTempsF(target_temp, current_temp, temp_action); }
 			}
+			next_poll = ::millis() + 5000; // Perform state polling in the next 5 seconds to update heater status.
 		}
 
 		if ((cmdlen == 140) && (processingBuffer[5] == 0x02) && (processingBuffer[6] == 0x56)) {
