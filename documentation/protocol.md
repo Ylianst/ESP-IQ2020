@@ -233,8 +233,8 @@ C2790A00          - Unknown counter
 F30E              - Water heater wattage (Big-Endian)
 0000013C001E00006A6F00  - ?
 080800            - SS:MM:HH Seconds (0 to 59), Minutes (0 to 59), Hours (0 to 24).
-13                - Number of days.
-00D40701          - Maybe months and years?
+1300D407          - DD:MM:YYYY Days (1 to 31), Month (0 to 11), Year (2 byte Big-Endian).
+01                - ?
 ```
 
 Temperature string. The value encode the temperature set point and current temprature in ASCII encoding. The F indicates fahrenheit. For example:
