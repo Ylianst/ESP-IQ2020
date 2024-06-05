@@ -230,15 +230,17 @@ namespace DataViewer
                     addDecodedData("Temp Set", UTF8Encoding.Default.GetString(data, 90, 4));
                     addDecodedData("Temp Current", UTF8Encoding.Default.GetString(data, 94, 4));
                     addDecodedData("Heater Outlet", UTF8Encoding.Default.GetString(data, 36, 4)); // Heater outlet temp
-                    addDecodedData("Time", data[133].ToString("D2") + ":" + data[132].ToString("D2") + ":" + data[131].ToString("D2"));
                     addDecodedData("JetInfo1", Convert.ToString(data[9], 2));
                     addDecodedData("JetInfo2", Convert.ToString(data[10], 2));
-                    //int timer1 = data[48] + (data[49] << 8) + (data[50] << 16) + (data[51] << 24);
-                    //int timer1 = getIntFromByteArray(data, 48);
-                    //addDecodedData("Timer1", timer1.ToString());
-                    //int timer2 = data[78] + (data[79] << 8) + (data[80] << 16) + (data[81] << 24);
-                    //int timer2 = getIntFromByteArray(data, 78);
-                    //addDecodedData("Timer2", timer2.ToString());
+
+                    // Decode the time
+                    int seconds = data[131];
+                    int minutes = data[132];
+                    int hours = data[133];
+                    int day = data[134];
+                    int month = data[135] + 1;
+                    int year = data[136] + (data[137] << 8);
+                    addDecodedData("Time", new DateTime(year, month, day, hours, minutes, seconds).ToString());
 
                     int HeaterTotalRuntime = getIntFromByteArray(data, 40);
                     int Jets1TotalRuntime = getIntFromByteArray(data, 44);
@@ -527,5 +529,19 @@ namespace DataViewer
             SendPacket("01 1F 40 0100"); // Ask version strings
         }
 
+        private void setCurrentTimeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DateTime n = DateTime.Now;
+            //DateTime n = new DateTime(2023, 12, 31, 23, 59, 0);
+            byte[] b = new byte[7];
+            b[0] = (byte)n.Second;
+            b[1] = (byte)n.Minute;
+            b[2] = (byte)n.Hour;
+            b[3] = (byte)(n.Day);
+            b[4] = (byte)(n.Month - 1);
+            b[5] = (byte)(n.Year & 0xFF);
+            b[6] = (byte)(n.Year >> 8);
+            SendPacket("01 1F 40 024C " + ConvertByteArrayToHexString(b , 0 , 7));
+        }
     }
 }

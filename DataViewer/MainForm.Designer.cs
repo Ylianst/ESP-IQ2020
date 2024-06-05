@@ -43,10 +43,13 @@
             this.filterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.noneToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.connectionKitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.connectionKitX0256ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.freshWaterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.commandsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.askLightsStatusToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
             this.askTempStatusToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.askVersionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.lightsOnToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.lightsOffToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
@@ -74,9 +77,7 @@
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.scanTimer = new System.Windows.Forms.Timer(this.components);
             this.logSaveFileDialog = new System.Windows.Forms.SaveFileDialog();
-            this.askVersionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.connectionKitX0256ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
+            this.setCurrentTimeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.topPanel.SuspendLayout();
@@ -196,6 +197,13 @@
             this.connectionKitToolStripMenuItem.Text = "Connection Kit";
             this.connectionKitToolStripMenuItem.Click += new System.EventHandler(this.connectionKitToolStripMenuItem_Click);
             // 
+            // connectionKitX0256ToolStripMenuItem
+            // 
+            this.connectionKitX0256ToolStripMenuItem.Name = "connectionKitX0256ToolStripMenuItem";
+            this.connectionKitX0256ToolStripMenuItem.Size = new System.Drawing.Size(232, 26);
+            this.connectionKitX0256ToolStripMenuItem.Text = "Connection Kit 0x0256";
+            this.connectionKitX0256ToolStripMenuItem.Click += new System.EventHandler(this.connectionKitX0256ToolStripMenuItem_Click);
+            // 
             // freshWaterToolStripMenuItem
             // 
             this.freshWaterToolStripMenuItem.Name = "freshWaterToolStripMenuItem";
@@ -211,7 +219,8 @@
             this.askTempStatusToolStripMenuItem,
             this.askVersionsToolStripMenuItem,
             this.lightsOnToolStripMenuItem,
-            this.lightsOffToolStripMenuItem});
+            this.lightsOffToolStripMenuItem,
+            this.setCurrentTimeToolStripMenuItem});
             this.commandsToolStripMenuItem.Name = "commandsToolStripMenuItem";
             this.commandsToolStripMenuItem.Size = new System.Drawing.Size(96, 24);
             this.commandsToolStripMenuItem.Text = "&Commands";
@@ -223,12 +232,26 @@
             this.askLightsStatusToolStripMenuItem.Text = "Ask Lights Status";
             this.askLightsStatusToolStripMenuItem.Click += new System.EventHandler(this.askLightsStatusToolStripMenuItem_Click);
             // 
+            // toolStripMenuItem3
+            // 
+            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(202, 26);
+            this.toolStripMenuItem3.Text = "Ask Status 0x0255";
+            this.toolStripMenuItem3.Click += new System.EventHandler(this.toolStripMenuItem3_Click);
+            // 
             // askTempStatusToolStripMenuItem
             // 
             this.askTempStatusToolStripMenuItem.Name = "askTempStatusToolStripMenuItem";
             this.askTempStatusToolStripMenuItem.Size = new System.Drawing.Size(202, 26);
             this.askTempStatusToolStripMenuItem.Text = "Ask Status 0x0256";
             this.askTempStatusToolStripMenuItem.Click += new System.EventHandler(this.askTempStatusToolStripMenuItem_Click);
+            // 
+            // askVersionsToolStripMenuItem
+            // 
+            this.askVersionsToolStripMenuItem.Name = "askVersionsToolStripMenuItem";
+            this.askVersionsToolStripMenuItem.Size = new System.Drawing.Size(202, 26);
+            this.askVersionsToolStripMenuItem.Text = "Ask Version";
+            this.askVersionsToolStripMenuItem.Click += new System.EventHandler(this.askVersionsToolStripMenuItem_Click);
             // 
             // lightsOnToolStripMenuItem
             // 
@@ -506,26 +529,12 @@
             this.logSaveFileDialog.OverwritePrompt = false;
             this.logSaveFileDialog.Title = "Capture Traffic";
             // 
-            // askVersionsToolStripMenuItem
+            // setCurrentTimeToolStripMenuItem
             // 
-            this.askVersionsToolStripMenuItem.Name = "askVersionsToolStripMenuItem";
-            this.askVersionsToolStripMenuItem.Size = new System.Drawing.Size(202, 26);
-            this.askVersionsToolStripMenuItem.Text = "Ask Version";
-            this.askVersionsToolStripMenuItem.Click += new System.EventHandler(this.askVersionsToolStripMenuItem_Click);
-            // 
-            // connectionKitX0256ToolStripMenuItem
-            // 
-            this.connectionKitX0256ToolStripMenuItem.Name = "connectionKitX0256ToolStripMenuItem";
-            this.connectionKitX0256ToolStripMenuItem.Size = new System.Drawing.Size(232, 26);
-            this.connectionKitX0256ToolStripMenuItem.Text = "Connection Kit 0x0256";
-            this.connectionKitX0256ToolStripMenuItem.Click += new System.EventHandler(this.connectionKitX0256ToolStripMenuItem_Click);
-            // 
-            // toolStripMenuItem3
-            // 
-            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(202, 26);
-            this.toolStripMenuItem3.Text = "Ask Status 0x0255";
-            this.toolStripMenuItem3.Click += new System.EventHandler(this.toolStripMenuItem3_Click);
+            this.setCurrentTimeToolStripMenuItem.Name = "setCurrentTimeToolStripMenuItem";
+            this.setCurrentTimeToolStripMenuItem.Size = new System.Drawing.Size(202, 26);
+            this.setCurrentTimeToolStripMenuItem.Text = "Set Current Time";
+            this.setCurrentTimeToolStripMenuItem.Click += new System.EventHandler(this.setCurrentTimeToolStripMenuItem_Click);
             // 
             // MainForm
             // 
@@ -613,6 +622,7 @@
         private System.Windows.Forms.ToolStripMenuItem askVersionsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem connectionKitX0256ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem3;
+        private System.Windows.Forms.ToolStripMenuItem setCurrentTimeToolStripMenuItem;
     }
 }
 
