@@ -287,10 +287,22 @@ Get Versions
 <-- 1F 01 80 01005752342E30346465316345303032444B342E303006
 ```
 
-Get and set timestamp (in seconds). Send >60 in data to read the value.
+Get Current Time
 ```
---> 01 1F 40 024C99
+--> 01 1F 40 024C
 <-- 1F 01 80 024C3431011400D40701
+                 SSMMHHDDMMYYYY
+Encoded as:
+SS:MM:HH Seconds (0 to 59), Minutes (0 to 59), Hours (0 to 24).
+DD:MM:YYYY Days (1 to 31), Month (0 to 11), Year (2 byte Big-Endian).
+```
+
+Set Current Time
+```
+--> 01 1F 40 024C2C2B140405E807
+<-- 1F 01 80 024C2C2B140405E80701
+
+Same encoding as Get Current Time.
 ```
 
 Command 0x0255 is just like command 0x0256 but shorter. Some information at the end is missing.
