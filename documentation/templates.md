@@ -40,6 +40,6 @@ Once added, you can restart Home Assistant and you will have new sensors you can
 
 ![image](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/86192bbf-501d-47da-b2f1-c1a93cf524d8)
 
-If you run into any issues, go to the Home Assistant "Developer Tools", select the "Template" tab and paste the `value_template` above and fix any issues. You can also do this to change the format of the sensor to a different language or show the values with a different format.
+If you run into any issues or want to make changes, go to the Home Assistant "Developer Tools", select the "Template" tab and paste the `value_template` above. You can see the result on the right and make changes as you wish.
 
 ![image](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/ffa2b8ac-4193-411d-b864-b04e8ea1b068)
