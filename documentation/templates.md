@@ -38,7 +38,7 @@ sensor:
 
 Once added, you can restart Home Assistant and you will have new sensors you can then display on the dashboard like this:
 
-![image](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/38e456e7-7946-4dfd-8699-6d5bccfc4a46)
+![image](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/86192bbf-501d-47da-b2f1-c1a93cf524d8)
 
 If you run into any issues, go to the Home Assistant "Developer Tools", select the "Template" tab and paste the `value_template` above and fix any issues. You can also do this to change the format of the sensor to a different language or show the values with a different format.
 
