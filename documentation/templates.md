@@ -1,6 +1,10 @@
 # Home Assistant Templates
 
-A lot of the sonsor values returned by this integration are large numbers of seconds like the lifetime of the hot tub, jets or lights. To turn these values into something more practical, edit your Home Assistant configuration.yaml file and add the following `sensor:` template. Note that you may need to change `hot_tub_` to the name of your own device.
+A lot of the sonsor values returned by this integration are large numbers of seconds like the lifetime of the hot tub, jets or lights. On this page, we have Home Assistant template sensors you can add to change the seconds value into anything you like. Below in the templates that will make the seconds show up as days and hours like this:
+
+![image](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/04f2112f-6d3e-407e-ab42-3bf2d6b780c5)
+
+To do this, edit your Home Assistant configuration.yaml file and add the following `sensor:` template. Note that you may need to change `hot_tub_` to the name of your own device.
 
 ```
 sensor:
@@ -78,10 +82,6 @@ sensor:
           {% endif %}
 ```
 
-Once added, you can restart Home Assistant and you will have new sensors you can then display on the dashboard like this:
-
-![image](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/04f2112f-6d3e-407e-ab42-3bf2d6b780c5)
-
-If you run into any issues or want to make changes, go to the Home Assistant "Developer Tools", select the "Template" tab and paste the `value_template` above. You can see the result on the right and make changes as you wish.
+Once added, you can restart Home Assistant and you will have new sensors you can then display on the dashboard. If you run into any issues or want to make changes, go to the Home Assistant "Developer Tools", select the "Template" tab and paste the `value_template` above. You can see the result on the right and make changes as you wish.
 
 ![image](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/ffa2b8ac-4193-411d-b864-b04e8ea1b068)
