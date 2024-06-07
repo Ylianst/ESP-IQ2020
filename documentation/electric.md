@@ -6,7 +6,7 @@ Power on the electric grid is not generated at a fixed price all day and year lo
  - Mid-peak = 15.77¢ / KWh
  - On-peak = 41.11¢ / KWh
 
-So, it makes a big difference if you can power your hot tub using off-peak power rates. With this IQ2020 integration, we can do that by dynamically setting the hot tub temperature during the day use as much cheap power as possible.
+So, it makes a big difference if you can power your hot tub using off-peak power rates. With this IQ2020 integration, we can do that by dynamically setting the hot tub temperature to use as much cheap power as possible.
 
 First, I have 3 automations in Home Assistant that trigger at Off-Peak, Mid-Peak and On-Peak rates. I do a bunch of things with these to cut power use during the On-Peak times. For the hot tub, I lower the temperature at mid-peak and lower again at on-peak. Here is what the temperature graph looks like for 48 hours.
 
