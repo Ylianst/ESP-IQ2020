@@ -63,3 +63,32 @@ uart:
   rx_pin: GPIO22
   baud_rate: 38400
 ```
+
+# ESP32 + RS485MAX
+
+I don't have this setup and have not testing it, but using the RS485MAX module requires an extra GPIO pin to tell the module what is the current traffic direction (send or receive). In order to support this module, this integration supports an extra `flow_control_pin`. First, the device look like this and has the following connectors:
+
+![RS485MAX](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/206c999e-6ad5-4125-9fbe-c2e3f006833e)
+
+![rs485_esp32_wireing](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/55be71ba-e095-410b-863e-632e2733fb75)
+
+Here is a suggested wireing I found. Some of these modules are 3v instead of 5v. 
+
+![rs485_esp32_wireing](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/88095165-4f1a-4243-b931-694b484ba623)
+
+In this case, the configuration should look like:
+
+```
+uart:
+  id: SpaConnection
+  tx_pin: GPIO19
+  rx_pin: GPIO18
+  baud_rate: 38400
+
+iq2020:
+   uart_id: SpaConnection
+   flow_control_pin: GPIO4
+   port: 1234
+```
+
+This said, if you have a setup like this that works. Please let me know so I can update this section.
