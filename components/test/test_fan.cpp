@@ -28,7 +28,7 @@ namespace test_fan {
 	void TestFan::control(const esphome::fan::FanCall &call) {
 		ESP_LOGCONFIG(TAG, "Test control. State: %d, Speed: %d", call.get_state(), *(call.get_speed()));
 		state = call.get_state();
-		speed = *(call.get_speed())
+		speed = *(call.get_speed());
 		publish_state();
 	};
 
