@@ -8,7 +8,6 @@ namespace test_fan {
 	static const char *TAG = "test_fan.fan";
 
 	void TestFan::setup() {
-		if (fan_id < FANCOUNT) { g_test_fan[fan_id] = this; }
 		//ESP_LOGD(TAG, "Fan:%d Setup", fan_id);
 	}
 
