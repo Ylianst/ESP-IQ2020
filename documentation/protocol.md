@@ -209,7 +209,7 @@ Main status decoding
 02937400          - Heater total runtime in seconds (Big-Endian)
 ABC90A00          - Jets 1 total runtime in seconds (Big-Endian)
 033CDC05          - Lifetime 1 runtime in seconds (Big-Endian)
-45000000          - Unknown counter
+45000000          - Power on / Boot counter (Big-Endian)
 00000000          - ?
 7BD30C00          - Jets 2 total runtime in seconds (Big-Endian)
 00000000          - Jets 3 total runtime in seconds (Big-Endian)
