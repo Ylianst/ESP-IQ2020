@@ -74,6 +74,8 @@ sensor:
 #      name: Jets 3 Runtime
     lights_total_runtime:
       name: Lights Runtime
+    power_on_counter:
+      name: Power On Counter
 
 switch:
   - platform: iq2020
