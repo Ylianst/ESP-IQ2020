@@ -365,7 +365,7 @@ int IQ2020Component::processIQ2020Command() {
 				_current_temp = ((processingBuffer[94] - '0') * 10) + (processingBuffer[95] - '0') + ((processingBuffer[97] - '0') * 0.1);
 				outlet_temp = ((processingBuffer[36] - '0') * 10) + (processingBuffer[37] - '0') + ((processingBuffer[39] - '0') * 0.1);
 			}
-			ESP_LOGD(TAG, "Reported Current Temp: %.1f, Target Temp: %.1f, Outlet Temp: %.1f", _current_temp, _target_temp, _outlet_temp);
+			ESP_LOGD(TAG, "Reported Current Temp: %.1f, Target Temp: %.1f, Outlet Temp: %.1f", _current_temp, _target_temp, outlet_temp);
 
 			// Publish the temperature values even if they don't change.
 			if ((_target_temp != target_temp) || (_current_temp != current_temp) || (temp_action != (heaterActive != 0))) {
