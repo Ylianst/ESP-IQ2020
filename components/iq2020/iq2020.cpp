@@ -393,6 +393,7 @@ int IQ2020Component::processIQ2020Command() {
 			if (this->heater_total_runtime_sensor_) this->heater_total_runtime_sensor_->publish_state(readCounter(processingBuffer, 40));
 			if (this->jets1_total_runtime_sensor_) this->jets1_total_runtime_sensor_->publish_state(readCounter(processingBuffer, 44));
 			if (this->lifetime_runtime_sensor_) this->lifetime_runtime_sensor_->publish_state(readCounter(processingBuffer, 48));
+			if (this->power_on_counter_sensor_) this->power_on_counter_sensor_->publish_state(readCounter(processingBuffer, 52));
 			if (this->jets2_total_runtime_sensor_) this->jets2_total_runtime_sensor_->publish_state(readCounter(processingBuffer, 60));
 			if (this->jets3_total_runtime_sensor_) this->jets3_total_runtime_sensor_->publish_state(readCounter(processingBuffer, 64));
 			if (this->lights_total_runtime_sensor_) this->lights_total_runtime_sensor_->publish_state(readCounter(processingBuffer, 72));
@@ -401,7 +402,7 @@ int IQ2020Component::processIQ2020Command() {
 			//int HeaterTotalRuntime = readCounter(data, 40);
 			//int Jets1TotalRuntime = readCounter(data, 44);
 			//int LifetimeRuntimeSeconds1 = readCounter(data, 48);
-			//int UnknownCounter1 = readCounter(data, 52);
+			//int PowerOnCounter = readCounter(data, 52);
 			//int Jets2TotalRuntime = readCounter(data, 60);
 			//int Jets3TotalRuntime = readCounter(data, 64);
 			//int UnknownCounter2 = readCounter(data, 68);

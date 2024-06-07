@@ -5,7 +5,8 @@ from esphome.const import (
     UNIT_WATT,
     UNIT_SECOND,
     UNIT_CELSIUS,
-	ICON_TIMER,
+    ICON_TIMER,
+    ICON_COUNTER,
     ICON_THERMOMETER,
     ICON_HEATING_COIL,
     STATE_CLASS_MEASUREMENT,
@@ -27,6 +28,7 @@ CONF_SENSOR_LIFETIME_RUNTIME = "lifetime_runtime"
 CONF_SENSOR_JETS2_TOTAL_RUNTIME = "jets2_total_runtime"
 CONF_SENSOR_JETS3_TOTAL_RUNTIME = "jets3_total_runtime"
 CONF_SENSOR_LIGHTS_TOTAL_RUNTIME = "lights_total_runtime"
+CONF_SENSOR_POWER_ON_COUNTER = "power_on_counter"
 CONF_SENSOR_CONNECTION_COUNT = "connection_count"
 CONF_SENSOR_HEATER_WATTAGE = "heater_wattage"
 CONF_SENSOR_HEATER_RELAY = "heater_relay"
@@ -122,6 +124,10 @@ CONFIG_SCHEMA = cv.Schema(
             accuracy_decimals=0,
             icon=ICON_TIMER
         )
+        cv.Optional(CONF_SENSOR_POWER_ON_COUNTER): sensor.sensor_schema(
+            accuracy_decimals=0,
+            icon=ICON_COUNTER // mdi:counter
+        )
     }
 )
 
@@ -188,3 +194,7 @@ async def to_code(config):
     if CONF_SENSOR_LIGHTS_TOTAL_RUNTIME in config:
         sens = await sensor.new_sensor(config[CONF_SENSOR_LIGHTS_TOTAL_RUNTIME])
         cg.add(server.set_lights_total_runtime_sensor(sens))
+
+    if CONF_SENSOR_POWER_ON_COUNTER in config:
+        sens = await sensor.new_sensor(config[CONF_SENSOR_POWER_ON_COUNTER])
+        cg.add(server.set_power_on_counter_sensor(sens))
