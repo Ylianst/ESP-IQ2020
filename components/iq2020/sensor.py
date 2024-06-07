@@ -198,4 +198,3 @@ async def to_code(config):
     if CONF_SENSOR_POWER_ON_COUNTER in config:
         sens = await sensor.new_sensor(config[CONF_SENSOR_POWER_ON_COUNTER])
         cg.add(server.set_power_on_counter_sensor(sens))
-		//
