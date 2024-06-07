@@ -40,6 +40,7 @@ public:
 	explicit IQ2020Component(esphome::uart::UARTComponent *stream) : stream_{ stream } {}
 	void set_uart_parent(esphome::uart::UARTComponent *parent) { this->stream_ = parent; }
 	void set_buffer_size(size_t size) { this->buf_size_ = size; }
+	void set_flow_control_pin(GPIOPin *flow_control_pin) { this->flow_control_pin_ = flow_control_pin; }
 
 #ifdef USE_BINARY_SENSOR
 	void set_connected_sensor(esphome::binary_sensor::BinarySensor *connected) { this->connected_sensor_ = connected; }
@@ -104,6 +105,7 @@ protected:
 	esphome::uart::UARTComponent *stream_{ nullptr };
 	uint16_t port_;
 	size_t buf_size_;
+	GPIOPin *flow_control_pin_{ nullptr };
 
 #ifdef USE_BINARY_SENSOR
 	esphome::binary_sensor::BinarySensor *connected_sensor_;

@@ -27,6 +27,7 @@ int readCounter(unsigned char* data, int offset) { return (data[offset]) + (data
 void IQ2020Component::setup() {
 	for (int i = 0; i < SWITCHCOUNT; i++) { switch_state[i] = switch_pending[i] = -1; }
 	g_iq2020_main = this;
+	if (this->flow_control_pin_ != nullptr) { this->flow_control_pin_->setup(); }
 	//ESP_LOGD(TAG, "Setting up IQ2020...");
 
 	// The make_unique() wrapper doesn't like arrays, so initialize the unique_ptr directly.
@@ -75,6 +76,9 @@ void IQ2020Component::loop() {
 void IQ2020Component::dump_config() {
 	ESP_LOGCONFIG(TAG, "IQ2020:");
 	ESP_LOGCONFIG(TAG, "  Address: %s:%u", esphome::network::get_use_address().c_str(), this->port_);
+	if (this->flow_control_pin_ != nullptr) {
+		ESP_LOGCONFIG(TAG, "  Flow Control Pin: ", this->flow_control_pin_);
+	}
 #ifdef USE_BINARY_SENSOR
 	LOG_BINARY_SENSOR("  ", "Connected:", this->connected_sensor_);
 #endif
@@ -190,8 +194,12 @@ void IQ2020Component::write() {
 		if (client.disconnected)
 			continue;
 
-		while ((read = client.socket->read(&buf, sizeof(buf))) > 0)
+		while ((read = client.socket->read(&buf, sizeof(buf))) > 0) {
+			if (this->flow_control_pin_ != nullptr) { this->flow_control_pin_->digital_write(true); }
 			this->stream_->write_array(buf, read);
+			this->stream_->flush();
+			if (this->flow_control_pin_ != nullptr) { this->flow_control_pin_->digital_write(false); }
+		}
 
 		if (read == 0 || errno == ECONNRESET) {
 			ESP_LOGD(TAG, "Client %s disconnected", client.identifier.c_str());
@@ -453,7 +461,10 @@ void IQ2020Component::sendIQ2020Command(unsigned char dst, unsigned char src, un
 	unsigned char checksum = 0; // Compute the checksum
 	for (int i = 1; i < (len + 5); i++) { checksum += outboundBuffer[i]; }
 	outboundBuffer[len + 5] = (checksum ^ 0xFF);
+	if (this->flow_control_pin_ != nullptr) { this->flow_control_pin_->digital_write(true); }
 	this->stream_->write_array(outboundBuffer, len + 6);
+	this->stream_->flush();
+	if (this->flow_control_pin_ != nullptr) { this->flow_control_pin_->digital_write(false); }
 	ESP_LOGD(TAG, "IQ2020 transmit, dst:%02x src:%02x op:%02x datalen:%d", outboundBuffer[1], outboundBuffer[2], outboundBuffer[4], outboundBuffer[3]);
 }
 
