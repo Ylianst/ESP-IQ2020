@@ -130,7 +130,7 @@ protected:
 #ifdef USE_TEXT_SENSOR
 	esphome::text_sensor::TextSensor *version_sensor_;
 #endif
-
+	//
 	std::unique_ptr<uint8_t[]> buf_{};
 	size_t buf_head_{ 0 };
 	size_t buf_tail_{ 0 };
