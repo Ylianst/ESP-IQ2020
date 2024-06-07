@@ -51,7 +51,7 @@ Same device at the first option, but a different RS485 interface.
 
 I use this device and interface for a different project and it works great. Once assembled, the device looks like this.
 
-![m5stack-atom-rs485-atom-lite-development-kit-rs485-converter-k045-2158034089](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/5f81d5d2-d047-4ceb-b9f0-aef23833bf64)
+![334186423-5f81d5d2-d047-4ceb-b9f0-aef23833bf64](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/2de09371-1728-4c3d-9aba-2025eb072ac3)
 
 In the ESP-Home configuration, you will need to use the following settings. Note the GPIO pin numbers.
 
