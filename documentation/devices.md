@@ -91,4 +91,4 @@ iq2020:
    port: 1234
 ```
 
-This said, if you have a setup like this that works. Please let me know so I can update this section.
+This said, if you have a setup like this that works. Please let me know so I can update this section. This integration should lower the `flow_control_pin` when receiving and raise it when transmitting.
