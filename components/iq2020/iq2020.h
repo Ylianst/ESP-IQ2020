@@ -2,7 +2,6 @@
 #include "esphome/core/component.h"
 #include "esphome/components/socket/socket.h"
 #include "esphome/components/uart/uart.h"
-#include "esphome/core/gpio.h"
 
 #ifdef USE_BINARY_SENSOR
 #include "esphome/components/binary_sensor/binary_sensor.h"
@@ -106,7 +105,7 @@ protected:
 	esphome::uart::UARTComponent *stream_{ nullptr };
 	uint16_t port_;
 	size_t buf_size_;
-	GPIOPin *flow_control_pin_{ nullptr };
+	esphome::GPIOPin *flow_control_pin_{ nullptr };
 
 #ifdef USE_BINARY_SENSOR
 	esphome::binary_sensor::BinarySensor *connected_sensor_;
