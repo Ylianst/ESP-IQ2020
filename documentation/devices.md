@@ -70,7 +70,7 @@ I don't have this setup and have not testing it, but using the RS485MAX module r
 
 ![RS485MAX](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/206c999e-6ad5-4125-9fbe-c2e3f006833e)
 
-![rs485_esp32_wireing](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/55be71ba-e095-410b-863e-632e2733fb75)
+![max485](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/4718e3b0-7495-429d-a056-6f6ecea14694)
 
 Here is a suggested wireing I found. Some of these modules are 3v instead of 5v. 
 
