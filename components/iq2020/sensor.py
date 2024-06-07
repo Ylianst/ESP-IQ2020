@@ -123,7 +123,7 @@ CONFIG_SCHEMA = cv.Schema(
             unit_of_measurement=UNIT_SECOND,
             accuracy_decimals=0,
             icon=ICON_TIMER
-        )
+        ),
         cv.Optional(CONF_SENSOR_POWER_ON_COUNTER): sensor.sensor_schema(
             accuracy_decimals=0,
             icon=ICON_COUNTER
