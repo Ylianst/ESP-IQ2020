@@ -140,6 +140,8 @@ For added details:
   - [Using different ESP32 devices](https://github.com/Ylianst/ESP-IQ2020/blob/main/documentation/devices.md)
   - [Details on the RS485 serial protocol](https://github.com/Ylianst/ESP-IQ2020/blob/main/documentation/protocol.md)
   - [Debugging RS485 traffic](https://github.com/Ylianst/ESP-IQ2020/blob/main/documentation/debugging.md)
+  - [Home Assistant Sensor Templates](https://github.com/Ylianst/ESP-IQ2020/blob/main/documentation/templates.md)
+  - [Variable Electric Rate Savings](https://github.com/Ylianst/ESP-IQ2020/blob/main/documentation/electric.md)
 
 Known Issues:
   - When controlling jets that have a low/high setting. The correct state should be shown when the jets are controlled by the hot tub remote, but if you try to turn them on low using Home Assistant, they will turn on as high. This seems to be a problem with the new Fan control in ESP-Home. I will have to submit example code and a request to get it fixed.

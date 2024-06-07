@@ -72,12 +72,6 @@ The echanges between the IQ2020 and this Salt Water device on address 0x29 alway
 
 The Spa Connection Kit sends all it's commands from address 0x1F. Sending the commands from a different address will not work.
 
-Read FreshWater Salt Module Data (Polled)
-```
-<-- 01 1F 40 1E03
-<-- 1F 01 80 1E030003FFFF00FF006800FF07FF0000B3100040
-```
-
 Jet 1 ON
 ```
 <-- 01 1F 40 0B0203
@@ -215,7 +209,7 @@ Main status decoding
 02937400          - Heater total runtime in seconds (Big-Endian)
 ABC90A00          - Jets 1 total runtime in seconds (Big-Endian)
 033CDC05          - Lifetime 1 runtime in seconds (Big-Endian)
-45000000          - Unknown counter
+45000000          - Power on / Boot counter (Big-Endian)
 00000000          - ?
 7BD30C00          - Jets 2 total runtime in seconds (Big-Endian)
 00000000          - Jets 3 total runtime in seconds (Big-Endian)
@@ -244,6 +238,12 @@ Temperature string. The value encode the temperature set point and current tempr
 "101F102F" = 3130314631303246 (fahrenheit)
 "38.539.0" = 33382E3533392E30 (celsius)
 "38.039.0" = 33382E3033392E30 (celsius)
+```
+
+Read FreshWater Salt Module Data (Polled)
+```
+<-- 01 1F 40 1E03
+<-- 1F 01 80 1E030003FFFF00FF006800FF07FF0000B3100040
 ```
 
 Freshwater Salt System - Set Power
