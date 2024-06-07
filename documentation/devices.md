@@ -51,7 +51,7 @@ Same device at the first option, but a different RS485 interface.
 
 I use this device and interface for a different project and it works great. Once assembled, the device looks like this.
 
-![334186423-5f81d5d2-d047-4ceb-b9f0-aef23833bf64](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/2de09371-1728-4c3d-9aba-2025eb072ac3)
+![334186423-5f81d5d2-d047-4ceb-b9f0-aef23833bf64](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/5cef14f5-2575-4ac1-9393-596dd468fda1)
 
 In the ESP-Home configuration, you will need to use the following settings. Note the GPIO pin numbers.
 
@@ -70,13 +70,13 @@ I don't suggest this setup as it's not a nice as the ones above and you will nee
 
 I don't have this setup and have not testing it, but using the RS485MAX module requires an extra GPIO pin to tell the module what is the current traffic direction (send or receive). In order to support this module, this integration supports an extra `flow_control_pin`. The device look like this and has the following connectors:
 
-![RS485MAX](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/206c999e-6ad5-4125-9fbe-c2e3f006833e)
+![RS485MAX](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/f27715c6-e463-4dc1-b3ed-ff575076ff0c)
 
-![max485](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/4718e3b0-7495-429d-a056-6f6ecea14694)
+![max485](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/20253758-e7fa-41a9-ab1b-d55aff3e9bba)
 
 Here is a suggested wireing I found. Some of these modules are 3v instead of 5v and so, take care to wire correctly.
 
-![rs485_esp32_wireing](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/88095165-4f1a-4243-b931-694b484ba623)
+![rs485_esp32_wireing](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/8822b497-0453-4daf-bf64-abf90327809f)
 
 In this case, the configuration should look like:
 
