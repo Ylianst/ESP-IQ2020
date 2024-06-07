@@ -13,10 +13,12 @@ namespace iq2020_fan {
 	void IQ2020Fan::setup() {
 		if (fan_id < FANCOUNT) { g_iq2020_fan[fan_id] = this; }
 		//ESP_LOGD(TAG, "Fan:%d Setup", fan_id);
+		state = 0;
+		speed = 1;
 	}
 
 	void IQ2020Fan::dump_config() {
-		//ESP_LOGCONFIG(TAG, "Fan:%d config", fan_id);
+		ESP_LOGCONFIG(TAG, "IQ2020 fan %d config. State: %d, Speed: %d", fan_id, state, speed);
 	}
 
 	esphome::fan::FanTraits IQ2020Fan::get_traits() {
@@ -29,7 +31,6 @@ namespace iq2020_fan {
 		ESP_LOGCONFIG(TAG, "IQ2020 fan %d control. State: %d, Speed: %d", fan_id, call.get_state(), *(call.get_speed()));
 		state = call.get_state();
 		speed = *(call.get_speed());
-
 		int xstate = 0;
 		if (call.get_state() == true) {
 			if (call.get_speed().has_value()) { xstate = *(call.get_speed()); } else { xstate = 1; }
