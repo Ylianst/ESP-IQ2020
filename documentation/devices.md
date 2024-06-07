@@ -47,7 +47,7 @@ uart:
 Same device at the first option, but a different RS485 interface.
 
 - [ATOM Lite ESP32 IoT Development Kit](https://shop.m5stack.com/products/atom-lite-esp32-development-kit)
-- [ATOMIC RS485 Base]([https://shop.m5stack.com/products/atom-tail485](https://shop.m5stack.com/products/atomic-rs485-base))
+- [ATOMIC RS485 Base](https://shop.m5stack.com/products/atomic-rs485-base)
 
 I use this device and interface for a different project and it works great. Once assembled, the device looks like this.
 
