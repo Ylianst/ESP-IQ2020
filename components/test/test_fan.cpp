@@ -15,19 +15,19 @@ namespace test_fan {
 		//ESP_LOGCONFIG(TAG, "Fan:%d config", fan_id);
 	}
 
+	void TestFan::loop() {
+		//ESP_LOGCONFIG(TAG, "Fan:%d loop", fan_id);
+	}
+
 	esphome::fan::FanTraits TestFan::get_traits() {
 		// bool oscillation, bool speed, bool direction, int speed_count
-		auto traits = fan::FanTraits(false, true, false, fan_speeds);
+		auto traits = fan::FanTraits(true, true, true, fan_speeds);
 		return traits;
 	};
 
 	void TestFan::control(const esphome::fan::FanCall &call) {
-		ESP_LOGCONFIG(TAG, "Test fan %d control. State: %d, Speed: %d", fan_id, call.get_state(), *(call.get_speed()));
+		ESP_LOGCONFIG(TAG, "Test control. State: %d, Speed: %d", call.get_state(), *(call.get_speed()));
 	};
-
-	void TestFan::updateState(int s) {
-		ESP_LOGCONFIG(TAG, "Test fan %d update. State: %d", fan_id, s);
-	}
 
 }  // namespace binary
 }  // namespace test_fan
