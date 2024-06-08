@@ -121,6 +121,11 @@ fan:
 climate:
   - platform: iq2020
     name: Temperature
+
+text_sensor:
+  - platform: iq2020
+    versionstr:
+      name: Version
 ```
 
 You may need to make a few changes. If your hot tub is setup to display temperature in celsius, replace `current_f_temperature`, `current_f_temperature`, `outlet_f_temperature` with `target_c_temperature`, `target_c_temperature` and `outlet_c_temperature`. Make sure you put your WIFI SSID and Password in `secrets.yaml`. Once ready, go ahead and flash your device over USB-C. At this point, the device should be visible over WIFI when powered using USB-C even if it's not connected to the computer.
