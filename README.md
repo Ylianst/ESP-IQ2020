@@ -3,6 +3,10 @@ Connect your IQ2020 powered Hot Tub to Home Assistant to make your Hot Tub a lot
 
 ![IQ2020-ESP1b](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/0ba0a473-8653-4b65-8338-052c8237fb5b)
 
+There is a video showing off the integration and how to get it installed.
+
+[![IQ2020 Hot Tub connected to Home Assistant](https://img.youtube.com/vi/egX6bspzuqo/maxresdefault.jpg)](https://youtu.be/egX6bspzuqo)
+
 The IQ2020 is the control board used by a lot of hot tubs, so check if you have this board. You will need to buy a small device, flash the right firmware on the device using ESP-Home and then connect the device using 4 wires to your hot tub. The device will be powered by the hot tub and has built-in WIFI, so everything stays within the control box, no messy wires. First you will need to buy a ESP32 device and a RS485 interface for it. I recommand this exact hardware (~26$ US):
 
 - [ATOM Lite ESP32 IoT Development Kit](https://shop.m5stack.com/products/atom-lite-esp32-development-kit)
