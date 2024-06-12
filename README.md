@@ -3,7 +3,7 @@ Connect your IQ2020 powered Hot Tub to Home Assistant to make your Hot Tub a lot
 
 ![IQ2020-ESP1b](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/0ba0a473-8653-4b65-8338-052c8237fb5b)
 
-There is a video showing off the integration and how to get it installed.
+There is a video shows off the integration and how to get it installed.
 
 [![IQ2020 Hot Tub connected to Home Assistant](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/5d55095e-eba0-4b3b-8058-8033d20e062b)](https://youtu.be/egX6bspzuqo)
 
