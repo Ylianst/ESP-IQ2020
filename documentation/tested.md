@@ -9,7 +9,7 @@ In this document, I want to keep notes on the currently tested and confirmed to 
 - Modules: FreshWater® Salt System
 - Interface: M5Stack-ATOM + Tail485
 
-My settings:
+Notable Settings:
 ```
 uart:
   id: SpaConnection
@@ -17,6 +17,7 @@ uart:
   rx_pin: GPIO32
   baud_rate: 38400
 
+# Jets 1 and 2 setup, others removed
 fan:
   - platform: iq2020
     name: Jets 1
@@ -31,3 +32,29 @@ fan:
     datapoint: 1
     speeds: 2
 ```
+
+## HotSpring HotSpot Stride
+
+- Status: Reported to work, Pump1 has 2 speeds but does not report speed correctly.
+- Version: ?
+- Modules: None
+- Interface: M5Stack ATOM Lite ESP32 with ATOMIC RS485
+
+Notable Settings:
+```
+uart:
+  id: SpaConnection
+  tx_pin: GPIO19
+  rx_pin: GPIO22
+  baud_rate: 38400
+
+# Jets 2 and after are removed.
+fan:
+  - platform: iq2020
+    name: Jets 1
+    id: jets1
+    icon: "mdi:turbine"
+    datapoint: 0
+    speeds: 2
+```
+
