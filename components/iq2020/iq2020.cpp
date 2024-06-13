@@ -354,8 +354,12 @@ int IQ2020Component::processIQ2020Command() {
 #endif
 
 			// Update JETS status. I don't currently know all of the JET status flags.
-			setSwitchState(SWITCH_JETS1, ((flags1 & 0x04) != 0) ? 2 : 0); // JETS2 FULL OR OFF
-			int jetState = 0; // JETS2 OFF
+			int jetState = 0; // JETS1 OFF
+			if (flags2 & 0x01) { jetState = 1; } // JETS1 MEDIUM
+			if (flags1 & 0x04) { jetState = 2; } // JETS1 FULL
+			setSwitchState(SWITCH_JETS1, jetState);
+			
+			jetState = 0; // JETS2 OFF
 			if (flags2 & 0x02) { jetState = 1; } // JETS2 MEDIUM
 			if (flags1 & 0x08) { jetState = 2; } // JETS2 FULL
 			setSwitchState(SWITCH_JETS2, jetState);
