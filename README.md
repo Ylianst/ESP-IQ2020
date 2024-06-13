@@ -45,6 +45,8 @@ wifi:
 external_components:
   - source: github://ylianst/esp-iq2020
 
+# Make sure tx/rx pins are correct for your device.
+# GPIO26/32 is ok for M5Stack-ATOM + Tail485, look in GitHub devices link for your device.
 uart:
   id: SpaConnection
   tx_pin: GPIO26
