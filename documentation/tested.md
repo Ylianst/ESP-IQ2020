@@ -58,3 +58,9 @@ fan:
     speeds: 2
 ```
 
+## Hotspring Envoy 2017
+
+ - Status: Works great.
+ - Version: WR2.02ad1bE002DK2.02
+ - Modules: ACE system
+ - Interface: ?
