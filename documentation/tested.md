@@ -33,7 +33,7 @@ fan:
     speeds: 2
 ```
 
-## HotSpring HotSpot Stride
+## HotSpring HotSpot Stride 2021
 
 - Status: Reported to work, Pump1 has 2 speeds but does not report speed correctly.
 - Version: ?
