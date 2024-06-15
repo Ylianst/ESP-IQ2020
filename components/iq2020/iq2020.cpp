@@ -66,6 +66,7 @@ void IQ2020Component::loop() {
 	if ((next_retry_count > 0) && (next_retry < now)) {
 		for (int switchid = 0; switchid < SWITCHCOUNT; switchid++) {
 			if (switch_pending[switchid] != -1) {
+				ESP_LOGD(TAG, "Retry %d set to %d", switchid, switch_pending[switchid]);
 				SwitchActionEx(switchid, switch_pending[switchid]); // Try again
 				break; // Only retry one command
 			}
