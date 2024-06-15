@@ -79,9 +79,8 @@ public:
 	float get_setup_priority() const override { return esphome::setup_priority::AFTER_WIFI; }
 
 	void set_port(uint16_t port) { this->port_ = port; }
-	void SwitchAction(unsigned int switchid, int state);
-	void SwitchActionEx(unsigned int switchid, int state);
-	void SetTempAction(float newtemp);
+	void switchAction(unsigned int switchid, int state);
+	void setTempAction(float newtemp);
 
 protected:
 	void publish_sensor();

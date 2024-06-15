@@ -66,13 +66,15 @@ void IQ2020Component::loop() {
 	if ((next_retry_count > 0) && (next_retry < now)) {
 		for (int switchid = 0; switchid < SWITCHCOUNT; switchid++) {
 			if (switch_pending[switchid] != -1) {
-				ESP_LOGD(TAG, "Retry %d set to %d", switchid, switch_pending[switchid]);
-				SwitchActionEx(switchid, switch_pending[switchid]); // Try again
+				ESP_LOGE(TAG, "Retry %d set to %d", switchid, switch_pending[switchid]);
+				switchAction(switchid, switch_pending[switchid]); // Try again
+				next_retry_count--; // Setup for the next retry
+				next_retry = ::millis() + SWITCH_RETRY_TIME;
 				break; // Only retry one command
 			}
+			// No commands that need retry, clear the retry state
+			next_retry_count = 0;
 		}
-		next_retry_count--; // Setup for the next retry
-		next_retry = ::millis() + SWITCH_RETRY_TIME;
 	}
 
 	// Check if it's time to poll for state. We poll each 10 seconds, but add 50 seconds if we get status.
@@ -267,11 +269,6 @@ int IQ2020Component::processIQ2020Command() {
 		connectionKit = ::millis();
 
 		ESP_LOGD(TAG, "SCK CMD Data, len=%d, cmd=%02x%02x", cmdlen, processingBuffer[5], processingBuffer[6]);
-
-		if ((cmdlen == 11) && (processingBuffer[5] == 0x17) && (processingBuffer[6] == 0x02)) {
-			// This is the SPA connection kit command to turn the lights on/off
-			setSwitchState(SWITCH_LIGHTS, (processingBuffer[8] & 1));
-		}
 	}
 
 	if ((processingBuffer[1] == 0x1F) && (processingBuffer[2] == 0x01) && (processingBuffer[4] == 0x80)) {
@@ -443,7 +440,7 @@ int IQ2020Component::processIQ2020Command() {
 				} else {
 					if (pending_temp_retry > 0) { // Try to adjust the temperature again
 						unsigned char deltaSteps = ((temp_celsius ? 2 : 1) * (pending_temp - target_temp));
-						ESP_LOGD(TAG, "Retry SetTempAction: new=%f, target=%f, deltasteps=%d", pending_temp, target_temp, deltaSteps);
+						ESP_LOGD(TAG, "Retry setTempAction: new=%f, target=%f, deltasteps=%d", pending_temp, target_temp, deltaSteps);
 						if (deltaSteps != 0) {
 							unsigned char changeTempCmd[] = { 0x01, 0x09, 0xFF, deltaSteps };
 							sendIQ2020Command(0x01, 0x1F, 0x40, changeTempCmd, 4); // Adjust temp
@@ -485,59 +482,8 @@ void IQ2020Component::sendIQ2020Command(unsigned char dst, unsigned char src, un
 	ESP_LOGD(TAG, "IQ2020 transmit, dst:%02x src:%02x op:%02x datalen:%d", outboundBuffer[1], outboundBuffer[2], outboundBuffer[4], outboundBuffer[3]);
 }
 
-void IQ2020Component::SwitchAction(unsigned int switchid, int state) {
-	ESP_LOGD(TAG, "SwitchAction, switchid = %d, status = %d", switchid, state);
-	switch (switchid) {
-		case SWITCH_LIGHTS: { // Spa Lights Switch
-			switch_pending[SWITCH_LIGHTS] = state;
-			unsigned char cmd[] = { 0x17, 0x02, 0x04, (state != 0) ? (unsigned char)0x11 : (unsigned char)0x10, 0x00 };
-			//sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Turn on/off lights
-			break;
-		}
-		case SWITCH_SPALOCK: { // Spa Lock Switch
-			switch_pending[SWITCH_SPALOCK] = state;
-			unsigned char cmd[] = { 0x0B, 0x1D, (state != 0) ? (unsigned char)0x02 : (unsigned char)0x01 };
-			//sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd));
-			break;
-		}
-		case SWITCH_TEMPLOCK: { // Temp Lock Switch
-			switch_pending[SWITCH_TEMPLOCK] = state;
-			unsigned char cmd[] = { 0x0B, 0x1E, (state != 0) ? (unsigned char)0x02 : (unsigned char)0x01 };
-			//sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd));
-			break;
-		}
-		case SWITCH_CLEANCYCLE: { // Clean Cycle Switch
-			switch_pending[SWITCH_CLEANCYCLE] = state;
-			unsigned char cmd[] = { 0x0B, 0x1F, (state != 0) ? (unsigned char)0x02 : (unsigned char)0x01 };
-			//sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd));
-			break;
-		}
-		case SWITCH_SUMMERTIMER: { // Summer Timer Switch
-			switch_pending[SWITCH_SUMMERTIMER] = state;
-			unsigned char cmd[] = { 0x0B, 0x1C, (state != 0) ? (unsigned char)0x02 : (unsigned char)0x01 };
-			//sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd));
-			break;
-		}
-		case SWITCH_JETS1: // CMD 0x02 (Tested)
-		case SWITCH_JETS2: // CMD 0x03 (Tested)
-		case SWITCH_JETS3: // CMD 0x04 (I never testing this, but I assume this is the correct command)
-		case SWITCH_JETS4: // CMD 0x05 (I never testing this, but I assume this is the correct command)
-		{
-			if ((state < 0) || (state > 2)) break;
-			switch_pending[switchid] = state; // 0 = OFF, 1 = MEDIUM, 2 = HIGH
-			unsigned char cmd[] = { 0x0B, (unsigned char)(switchid - 3), (unsigned char)(state + 1) };
-			//sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd));
-			break;
-		}
-		default: { return; }
-	}
-	// If the command does not get confirmed, setup to try again
-	next_retry_count += SWITCH_RETRY_COUNT;
-	next_retry = ::millis() + SWITCH_RETRY_TIME;
-}
-
-void IQ2020Component::SwitchActionEx(unsigned int switchid, int state) {
-	ESP_LOGD(TAG, "SwitchAction, switchid = %d, status = %d", switchid, state);
+void IQ2020Component::switchAction(unsigned int switchid, int state) {
+	ESP_LOGD(TAG, "switchAction, switchid = %d, status = %d", switchid, state);
 	switch (switchid) {
 	case SWITCH_LIGHTS: { // Spa Lights Switch
 		switch_pending[SWITCH_LIGHTS] = state;
@@ -587,8 +533,8 @@ void IQ2020Component::SwitchActionEx(unsigned int switchid, int state) {
 	next_retry = ::millis() + SWITCH_RETRY_TIME;
 }
 
-void IQ2020Component::SetTempAction(float newtemp) {
-	//ESP_LOGD(TAG, "SetTempAction: new=%f", newtemp);
+void IQ2020Component::setTempAction(float newtemp) {
+	//ESP_LOGD(TAG, "setTempAction: new=%f", newtemp);
 
 	if (temp_celsius) {
 		pending_temp = (std::round(newtemp * 2) / 2); // Round to the nearest .5
@@ -599,7 +545,7 @@ void IQ2020Component::SetTempAction(float newtemp) {
 	
 	if (pending_temp_cmd == -1) { // If there are no outstanding temp commands in-flight, send one now.
 		unsigned char deltaSteps = ((temp_celsius ? 2 : 1) * (pending_temp - target_temp));
-		ESP_LOGD(TAG, "SetTempAction: new=%f, target=%f, deltasteps=%d", pending_temp, target_temp, deltaSteps);
+		ESP_LOGD(TAG, "setTempAction: new=%f, target=%f, deltasteps=%d", pending_temp, target_temp, deltaSteps);
 		if (deltaSteps == 0) { pending_temp = -1; return; }
 		pending_temp_cmd = pending_temp;
 		unsigned char changeTempCmd[] = { 0x01, 0x09, 0xFF, deltaSteps };
@@ -625,20 +571,18 @@ void IQ2020Component::setSwitchState(unsigned int switchid, int state) {
 }
 
 void IQ2020Component::pollState() {
-	ESP_LOGD(TAG, "Poll");
 #ifdef USE_TEXT_SENSOR
 	// If we don't have the version string, fetch it now.
 	if (versionstr.empty()) {
+		ESP_LOGD(TAG, "Poll Version Str");
 		unsigned char cmd[] = { 0x01, 0x00 };
 		sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Get version string
-	} else {
-		unsigned char generalPollCmd[] = { 0x02, 0x56 };
-		sendIQ2020Command(0x01, 0x1F, 0x40, generalPollCmd, 2); // Poll general state
+		return;
 	}
-#else
+#endif
+	ESP_LOGD(TAG, "Poll");
 	unsigned char generalPollCmd[] = { 0x02, 0x56 };
 	sendIQ2020Command(0x01, 0x1F, 0x40, generalPollCmd, 2); // Poll general state
-#endif
 }
 
 IQ2020Component::Client::Client(std::unique_ptr<esphome::socket::Socket> socket, std::string identifier, size_t position)
