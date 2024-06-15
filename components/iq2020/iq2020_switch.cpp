@@ -18,7 +18,7 @@ namespace iq2020_switch {
 	void IQ2020Switch::write_state(bool state) {
 		ESP_LOGD(TAG, "Switch:%d write state: %d", switch_id, state);
 		//this->publish_state(state);
-		if (g_iq2020_main != NULL) { g_iq2020_main->SwitchAction(switch_id, state); }
+		if (g_iq2020_main != NULL) { g_iq2020_main->switchAction(switch_id, state); }
 	}
 
 	void IQ2020Switch::dump_config() {

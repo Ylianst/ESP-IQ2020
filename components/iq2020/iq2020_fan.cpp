@@ -36,7 +36,7 @@ namespace iq2020_fan {
 			if (call.get_speed().has_value()) { xstate = *(call.get_speed()); } else { xstate = 1; }
 			if ((fan_speeds == 1) && (xstate == 1)) { xstate = 2; } // If this is a single speed jet, turn it on should send max speed command. 
 		}
-		g_iq2020_main->SwitchAction(fan_id + SWITCH_JETS1, xstate);
+		g_iq2020_main->switchAction(fan_id + SWITCH_JETS1, xstate);
 	};
 
 	void IQ2020Fan::updateState(int s) {
