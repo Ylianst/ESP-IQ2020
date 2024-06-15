@@ -21,7 +21,7 @@ namespace DataViewer
         private byte[] readBuffer = new byte[2000];
         private int readBufferLen = 0;
         private StreamWriter outputFile = null;
-        private int scanAddress = 0;
+        private int scanValue = 0;
         private int connectionState = 0;
         private FileInfo logFileInfo;
         private int Filter = 0;
@@ -396,13 +396,22 @@ namespace DataViewer
 
         private void scanToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            scanAddress = 0;
-            scanTimer.Enabled = true;
+            if (scanTimer.Enabled)
+            {
+                scanToolStripMenuItem.Checked = false;
+                scanTimer.Enabled = false;
+            }
+            else
+            {
+                scanToolStripMenuItem.Checked = true;
+                scanValue = 0;
+                scanTimer.Enabled = true;
+            }
         }
 
         private void scanTimer_Tick(object sender, EventArgs e)
         {
-            if ((scanAddress > 255) || (stream == null)) { scanTimer.Enabled = false; return; }
+            if ((scanValue > 65535) || (stream == null)) { scanToolStripMenuItem.Checked = false; scanTimer.Enabled = false; return; }
 
             /*
             byte[] data = ConvertHexStringToByteArray(hexTextBox.Text);
@@ -426,16 +435,19 @@ namespace DataViewer
             packet[2] = src;
             packet[3] = (byte)(data.Length);
             packet[4] = op;
-            //packet[4] = (byte)scanAddress;
             data.CopyTo(packet, 5);
-            packet[5] = (byte)scanAddress;
+
+            // Scan all commands
+            packet[5] = (byte)(scanValue & 0xFF);
+            packet[6] = (byte)(scanValue >> 8);
+
             packet[packet.Length - 1] = ComputeChecksum(packet, 1, packet.Length - 1);
             //AppendText(" RAW --> " + ConvertByteArrayToHexString(packet, 0, packet.Length));
             AppendPacketDataText(" --> " + ConvertByteArrayToHexString(packet, 1, 1) + " " + ConvertByteArrayToHexString(packet, 2, 1) + " " + ConvertByteArrayToHexString(packet, 4, 1) + " " + ConvertByteArrayToHexString(packet, 5, data.Length));
             AppendRawDataText(" --> " + ConvertByteArrayToHexString(packet, 0, packet.Length));
             stream.WriteAsync(packet, 0, packet.Length);
 
-            scanAddress++;
+            scanValue++;
         }
 
         private void annotateLogToolStripMenuItem_Click(object sender, EventArgs e)
@@ -542,6 +554,11 @@ namespace DataViewer
             b[5] = (byte)(n.Year & 0xFF);
             b[6] = (byte)(n.Year >> 8);
             SendPacket("01 1F 40 024C " + ConvertByteArrayToHexString(b , 0 , 7));
+        }
+
+        private void filterToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

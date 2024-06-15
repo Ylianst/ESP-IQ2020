@@ -23,7 +23,9 @@
 #define FAN_JETS2 1
 #define FAN_JETS3 2
 #define FAN_JETS4 3
-#define SWITCHCOUNT 10
+#define SWITCHCOUNT 9
+#define SWITCH_RETRY_COUNT 3
+#define SWITCH_RETRY_TIME 200
 #define SWITCH_LIGHTS 0
 #define SWITCH_SPALOCK 1
 #define SWITCH_TEMPLOCK 2
@@ -78,6 +80,7 @@ public:
 
 	void set_port(uint16_t port) { this->port_ = port; }
 	void SwitchAction(unsigned int switchid, int state);
+	void SwitchActionEx(unsigned int switchid, int state);
 	void SetTempAction(float newtemp);
 
 protected:
@@ -152,6 +155,8 @@ protected:
 	float pending_temp_cmd = -1;
 	int pending_temp_retry = 0;
 	unsigned long next_poll = 0;
+	unsigned long next_retry = 0;
+	int next_retry_count = 0;
 
 	// IQ2020 processing
 	int nextPossiblePacket();

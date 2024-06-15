@@ -52,6 +52,7 @@
             this.askVersionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.lightsOnToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.lightsOffToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.setCurrentTimeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.mainToolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.topPanel = new System.Windows.Forms.Panel();
@@ -77,7 +78,6 @@
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.scanTimer = new System.Windows.Forms.Timer(this.components);
             this.logSaveFileDialog = new System.Windows.Forms.SaveFileDialog();
-            this.setCurrentTimeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.topPanel.SuspendLayout();
@@ -180,6 +180,7 @@
             this.filterToolStripMenuItem.Name = "filterToolStripMenuItem";
             this.filterToolStripMenuItem.Size = new System.Drawing.Size(54, 24);
             this.filterToolStripMenuItem.Text = "F&ilter";
+            this.filterToolStripMenuItem.Click += new System.EventHandler(this.filterToolStripMenuItem_Click);
             // 
             // noneToolStripMenuItem
             // 
@@ -266,6 +267,13 @@
             this.lightsOffToolStripMenuItem.Size = new System.Drawing.Size(202, 26);
             this.lightsOffToolStripMenuItem.Text = "Lights Off";
             this.lightsOffToolStripMenuItem.Click += new System.EventHandler(this.lightsOffToolStripMenuItem_Click);
+            // 
+            // setCurrentTimeToolStripMenuItem
+            // 
+            this.setCurrentTimeToolStripMenuItem.Name = "setCurrentTimeToolStripMenuItem";
+            this.setCurrentTimeToolStripMenuItem.Size = new System.Drawing.Size(202, 26);
+            this.setCurrentTimeToolStripMenuItem.Text = "Set Current Time";
+            this.setCurrentTimeToolStripMenuItem.Click += new System.EventHandler(this.setCurrentTimeToolStripMenuItem_Click);
             // 
             // statusStrip1
             // 
@@ -518,7 +526,7 @@
             // 
             // scanTimer
             // 
-            this.scanTimer.Interval = 500;
+            this.scanTimer.Interval = 300;
             this.scanTimer.Tick += new System.EventHandler(this.scanTimer_Tick);
             // 
             // logSaveFileDialog
@@ -528,13 +536,6 @@
             this.logSaveFileDialog.Filter = "Text File|*.txt|All Files|*.*";
             this.logSaveFileDialog.OverwritePrompt = false;
             this.logSaveFileDialog.Title = "Capture Traffic";
-            // 
-            // setCurrentTimeToolStripMenuItem
-            // 
-            this.setCurrentTimeToolStripMenuItem.Name = "setCurrentTimeToolStripMenuItem";
-            this.setCurrentTimeToolStripMenuItem.Size = new System.Drawing.Size(202, 26);
-            this.setCurrentTimeToolStripMenuItem.Text = "Set Current Time";
-            this.setCurrentTimeToolStripMenuItem.Click += new System.EventHandler(this.setCurrentTimeToolStripMenuItem_Click);
             // 
             // MainForm
             // 
