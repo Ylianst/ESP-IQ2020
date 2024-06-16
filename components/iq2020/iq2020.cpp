@@ -15,7 +15,7 @@ static const char *TAG = "iq2020";
 
 // These globals are ugly, but I can't figure out the correct system yet.
 IQ2020Component* g_iq2020_main = NULL;
-int g_iq2020_switch_setup = 0;
+//int g_iq2020_switch_setup = 0;
 esphome::iq2020_switch::IQ2020Switch* g_iq2020_switch[SWITCHCOUNT];
 esphome::iq2020_fan::IQ2020Fan* g_iq2020_fan[FANCOUNT];
 esphome::iq2020_climate::IQ2020Climate* g_iq2020_climate = NULL;
@@ -28,11 +28,13 @@ int readCounter(unsigned char* data, int offset) { return (data[offset]) + (data
 
 void IQ2020Component::setup() {
 	for (int i = 0; i < SWITCHCOUNT; i++) { switch_state[i] = switch_pending[i] = -1; }
+	/*
 	if (g_iq2020_switch_setup == 0) {
 		for (int i = 0; i < SWITCHCOUNT; i++) { g_iq2020_switch[i] = NULL; }
 		for (int i = 0; i < FANCOUNT; i++) { g_iq2020_fan[i] = NULL; }
 		g_iq2020_switch_setup = 1;
 	}
+	*/
 	g_iq2020_main = this;
 	if (this->flow_control_pin_ != nullptr) { this->flow_control_pin_->setup(); }
 	//ESP_LOGD(TAG, "Setting up IQ2020...");
