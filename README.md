@@ -128,9 +128,11 @@ fan:
     datapoint: 1
     speeds: 2
 
+# Set `celsius` to `true` if using celsius units.
 climate:
   - platform: iq2020
     name: Temperature
+    celsius: false
 
 text_sensor:
   - platform: iq2020
@@ -138,7 +140,7 @@ text_sensor:
       name: Version
 ```
 
-You may need to make a few changes. If your hot tub is setup to display temperature in celsius, replace `current_f_temperature`, `current_f_temperature`, `outlet_f_temperature` with `target_c_temperature`, `target_c_temperature` and `outlet_c_temperature`. Make sure you put your WIFI SSID and Password in `secrets.yaml`. Once ready, go ahead and flash your device over USB-C. At this point, the device should be visible over WIFI when powered using USB-C even if it's not connected to the computer.
+You may need to make a few changes. If your hot tub is setup to display temperature in celsius, replace `current_f_temperature`, `current_f_temperature`, `outlet_f_temperature` with `target_c_temperature`, `target_c_temperature` and `outlet_c_temperature` and set `celsius` to true in the `climate` section. Make sure you put your WIFI SSID and Password in `secrets.yaml`. Once ready, go ahead and flash your device over USB-C. At this point, the device should be visible over WIFI when powered using USB-C even if it's not connected to the computer.
 
 Next, grab 4 breadboard jumper wires and connect them to the RS485 module. I recommand using 4 different color wires. Idealy blue, yellow, red and black. Put the male end in the RS485 module and tighten using a small screw driver. Double check the wires don't come off. Your device should look like this.
 
