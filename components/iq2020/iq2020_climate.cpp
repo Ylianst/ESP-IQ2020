@@ -55,15 +55,17 @@ namespace iq2020_climate {
 		traits.set_supported_modes(heatingModes);
 		traits.set_supports_action(true);
 
-		//traits.set_visual_min_temperature(26.5);
-		//traits.set_visual_max_temperature(40);
-		//traits.set_visual_target_temperature_step(0.5);
-		//traits.set_visual_current_temperature_step(0.5);
-
-		traits.set_visual_min_temperature(fahrenheit_to_celsius(80));
-		traits.set_visual_max_temperature(fahrenheit_to_celsius(104));
-		traits.set_visual_target_temperature_step(1);
-		traits.set_visual_current_temperature_step(1);
+		if (celsius) { // Celsius setup
+			traits.set_visual_min_temperature(26.5);
+			traits.set_visual_max_temperature(40);
+			traits.set_visual_target_temperature_step(0.5);
+			traits.set_visual_current_temperature_step(0.5);
+		} else { // Fahrenheit setup
+			traits.set_visual_min_temperature(fahrenheit_to_celsius(80));
+			traits.set_visual_max_temperature(fahrenheit_to_celsius(104));
+			traits.set_visual_target_temperature_step(1);
+			traits.set_visual_current_temperature_step(1);
+		}
 
 		return traits;
 	}
