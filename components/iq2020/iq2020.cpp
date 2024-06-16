@@ -274,12 +274,19 @@ int IQ2020Component::processIQ2020Command() {
 
 	if ((processingBuffer[1] == 0x29) && (processingBuffer[2] == 0x01) && (processingBuffer[4] == 0x40) && (cmdlen == 21) && (processingBuffer[5] == 0x1E) && (processingBuffer[6] == 0x01)) {
 		// This is a command from IQ2020 to the Freshwater System
-		ESP_LOGD(TAG, "XAAAAAA RSP Data, len=%d, cmd=%02x%02x", cmdlen, processingBuffer[5], processingBuffer[6]);
+		//ESP_LOGD(TAG, "FreshWater REQ Data, len=%d, cmd=%02x%02x", cmdlen, processingBuffer[5], processingBuffer[6]);
+		//if (processingBuffer[7] <= 10) { setSwitchState(SWITCH_SALT_POWER, processingBuffer[7]); }
 	}
 
 	if ((processingBuffer[1] == 0x01) && (processingBuffer[2] == 0x29) && (processingBuffer[4] == 0x80) && (cmdlen == 21) && (processingBuffer[5] == 0x1E) && (processingBuffer[6] == 0x01)) {
 		// This is a reply command from the Freshwater System to the IQ2020
-		ESP_LOGD(TAG, "XBBBBBB RSP Data, len=%d, cmd=%02x%02x", cmdlen, processingBuffer[5], processingBuffer[6]);
+		//ESP_LOGD(TAG, "FreshWater RSP Data, len=%d, cmd=%02x%02x", cmdlen, processingBuffer[5], processingBuffer[6]);
+		if (processingBuffer[7] <= 10) {
+			setSwitchState(SWITCH_SALT_POWER, processingBuffer[7]);
+#ifdef USE_SENSOR
+			if (this->salt_power_sensor_) this->salt_power_sensor_->publish_state(processingBuffer[7]);
+#endif
+		}
 	}
 
 	if ((processingBuffer[1] == 0x1F) && (processingBuffer[2] == 0x01) && (processingBuffer[4] == 0x80)) {
@@ -289,13 +296,11 @@ int IQ2020Component::processIQ2020Command() {
 		if ((cmdlen == 9) && (processingBuffer[5] == 0xE1) && (processingBuffer[6] == 0x02) && (processingBuffer[7] == 0x06)) {
 			// Confirmation that the fresh water salt system has changed power state
 			setSwitchState(SWITCH_SALT_POWER, -1);
-			ESP_LOGD(TAG, "CCC");
 		}
 
 		if ((cmdlen == 26) && (processingBuffer[5] == 0x1E) && (processingBuffer[6] == 0x03)) {
 			// Status of the Freshwater Salt System
 			setSwitchState(SWITCH_SALT_POWER, processingBuffer[7]); // Power level
-			ESP_LOGD(TAG, "DDD");
 		}
 
 		if ((cmdlen == 9) && (processingBuffer[5] == 0x17) && (processingBuffer[6] == 0x02) && (processingBuffer[7] == 0x06)) {

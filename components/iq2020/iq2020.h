@@ -66,7 +66,7 @@ public:
 	void set_jets3_total_runtime_sensor(esphome::sensor::Sensor *sensor) { this->jets3_total_runtime_sensor_ = sensor; }
 	void set_lights_total_runtime_sensor(esphome::sensor::Sensor *sensor) { this->lights_total_runtime_sensor_ = sensor; }
 	void set_power_on_counter_sensor(esphome::sensor::Sensor *sensor) { this->power_on_counter_sensor_ = sensor; }
-	
+	void set_salt_power_sensor(esphome::sensor::Sensor *sensor) { this->salt_power_sensor_ = sensor; }
 #endif
 #ifdef USE_TEXT_SENSOR
 	void set_version_sensor(esphome::text_sensor::TextSensor *text) { this->version_sensor_ = text; }
@@ -131,6 +131,7 @@ protected:
 	esphome::sensor::Sensor *jets3_total_runtime_sensor_;
 	esphome::sensor::Sensor *lights_total_runtime_sensor_;
 	esphome::sensor::Sensor *power_on_counter_sensor_;
+	esphome::sensor::Sensor *salt_power_sensor_;
 #endif
 #ifdef USE_TEXT_SENSOR
 	esphome::text_sensor::TextSensor *version_sensor_;
