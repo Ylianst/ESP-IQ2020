@@ -271,9 +271,29 @@ int IQ2020Component::processIQ2020Command() {
 		ESP_LOGD(TAG, "SCK CMD Data, len=%d, cmd=%02x%02x", cmdlen, processingBuffer[5], processingBuffer[6]);
 	}
 
+	if ((processingBuffer[1] == 0x29) && (processingBuffer[2] == 0x01) && (processingBuffer[4] == 0x40) && (cmdlen == 21) && (processingBuffer[5] == 0xE1) && (processingBuffer[6] == 0x01)) {
+		// This is a command from IQ2020 to the Freshwater System
+		ESP_LOGD(TAG, "AAA");
+	}
+
+	if ((processingBuffer[1] == 0x01) && (processingBuffer[2] == 0x29) && (processingBuffer[4] == 0x80) && (cmdlen == 21) && (processingBuffer[5] == 0xE1) && (processingBuffer[6] == 0x01)) {
+		// This is a reply command from the Freshwater System to the IQ2020
+		ESP_LOGD(TAG, "BBB");
+	}
+
 	if ((processingBuffer[1] == 0x1F) && (processingBuffer[2] == 0x01) && (processingBuffer[4] == 0x80)) {
 		// This is response data going towards the SPA connection kit.
 		ESP_LOGD(TAG, "SCK RSP Data, len=%d, cmd=%02x%02x", cmdlen, processingBuffer[5], processingBuffer[6]);
+
+		if ((cmdlen == 9) && (processingBuffer[5] == 0xE1) && (processingBuffer[6] == 0x02) && (processingBuffer[7] == 0x06)) {
+			// Confirmation that the fresh water salt system has changed power state
+			setSwitchState(SWITCH_SALT_POWER, -1);
+		}
+
+		if ((cmdlen == 26) && (processingBuffer[5] == 0x1E) && (processingBuffer[6] == 0x03)) {
+			// Status of the Freshwater Salt System
+			setSwitchState(SWITCH_SALT_POWER, processingBuffer[7]); // Power level
+		}
 
 		if ((cmdlen == 9) && (processingBuffer[5] == 0x17) && (processingBuffer[6] == 0x02) && (processingBuffer[7] == 0x06)) {
 			// Confirmation that the pending light command was received
@@ -523,6 +543,14 @@ void IQ2020Component::switchAction(unsigned int switchid, int state) {
 		if ((state < 0) || (state > 2)) break;
 		switch_pending[switchid] = state; // 0 = OFF, 1 = MEDIUM, 2 = HIGH
 		unsigned char cmd[] = { 0x0B, (unsigned char)(switchid - 3), (unsigned char)(state + 1) };
+		sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd));
+		break;
+	}
+	case SWITCH_SALT_POWER:
+	{
+		if ((state < 0) || (state > 10)) break;
+		switch_pending[switchid] = state; // 0 = OFF ... 10 = HIGH
+		unsigned char cmd[] = { 0x1E, 0x02, 0x01, state, 0x00};
 		sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd));
 		break;
 	}

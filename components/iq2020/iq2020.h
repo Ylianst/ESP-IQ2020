@@ -23,7 +23,7 @@
 #define FAN_JETS2 1
 #define FAN_JETS3 2
 #define FAN_JETS4 3
-#define SWITCHCOUNT 9
+#define SWITCHCOUNT 10
 #define SWITCH_RETRY_COUNT 3
 #define SWITCH_RETRY_TIME 200
 #define SWITCH_LIGHTS 0
@@ -35,6 +35,7 @@
 #define SWITCH_JETS2 6
 #define SWITCH_JETS3 7
 #define SWITCH_JETS4 8
+#define SWITCH_SALT_POWER 9  // Freshwater Salt System Power Level
 
 class IQ2020Component : public esphome::Component {
 public:
