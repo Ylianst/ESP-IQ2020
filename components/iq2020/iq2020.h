@@ -158,6 +158,7 @@ protected:
 	unsigned long next_poll = 0;
 	unsigned long next_retry = 0;
 	int next_retry_count = 0;
+	int salt_power = -1; // This is polled too frequently to send to HA each time. Only send when changes occur.
 
 	// IQ2020 processing
 	int nextPossiblePacket();

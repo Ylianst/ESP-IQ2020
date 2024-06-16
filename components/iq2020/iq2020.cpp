@@ -281,7 +281,8 @@ int IQ2020Component::processIQ2020Command() {
 	if ((processingBuffer[1] == 0x01) && (processingBuffer[2] == 0x29) && (processingBuffer[4] == 0x80) && (cmdlen == 21) && (processingBuffer[5] == 0x1E) && (processingBuffer[6] == 0x01)) {
 		// This is a reply command from the Freshwater System to the IQ2020
 		//ESP_LOGD(TAG, "FreshWater RSP Data, len=%d, cmd=%02x%02x", cmdlen, processingBuffer[5], processingBuffer[6]);
-		if (processingBuffer[7] <= 10) {
+		if ((processingBuffer[7] <= 10) && (salt_power != processingBuffer[7])) {
+			salt_power = processingBuffer[7];
 			setSwitchState(SWITCH_SALT_POWER, processingBuffer[7]);
 #ifdef USE_SENSOR
 			if (this->salt_power_sensor_) this->salt_power_sensor_->publish_state(processingBuffer[7]);
@@ -300,7 +301,10 @@ int IQ2020Component::processIQ2020Command() {
 
 		if ((cmdlen == 26) && (processingBuffer[5] == 0x1E) && (processingBuffer[6] == 0x03)) {
 			// Status of the Freshwater Salt System
-			setSwitchState(SWITCH_SALT_POWER, processingBuffer[7]); // Power level
+			if (salt_power != processingBuffer[7]) {
+				salt_power = processingBuffer[7];
+				setSwitchState(SWITCH_SALT_POWER, processingBuffer[7]); // Power level
+			}
 		}
 
 		if ((cmdlen == 9) && (processingBuffer[5] == 0x17) && (processingBuffer[6] == 0x02) && (processingBuffer[7] == 0x06)) {
@@ -560,6 +564,7 @@ void IQ2020Component::switchAction(unsigned int switchid, int state) {
 		switch_pending[switchid] = state; // 0 = OFF ... 10 = HIGH
 		unsigned char cmd[] = { 0x1E, 0x02, 0x01, (unsigned char)state, 0x00 };
 		sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd));
+		salt_power = -1;
 		break;
 	}
 	default: { return; }
