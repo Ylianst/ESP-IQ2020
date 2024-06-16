@@ -272,14 +272,14 @@ int IQ2020Component::processIQ2020Command() {
 		ESP_LOGD(TAG, "SCK CMD Data, len=%d, cmd=%02x%02x", cmdlen, processingBuffer[5], processingBuffer[6]);
 	}
 
-	if ((processingBuffer[1] == 0x29) && (processingBuffer[2] == 0x01) && (processingBuffer[4] == 0x40)/* && (cmdlen == 21) && (processingBuffer[5] == 0xE1) && (processingBuffer[6] == 0x01)*/) {
+	if ((processingBuffer[1] == 0x29) && (processingBuffer[2] == 0x01) && (processingBuffer[4] == 0x40) && (cmdlen == 21) && (processingBuffer[5] == 0x1E) && (processingBuffer[6] == 0x01)) {
 		// This is a command from IQ2020 to the Freshwater System
-		ESP_LOGD(TAG, "AAAAAA RSP Data, len=%d, cmd=%02x%02x", cmdlen, processingBuffer[5], processingBuffer[6]);
+		ESP_LOGD(TAG, "XAAAAAA RSP Data, len=%d, cmd=%02x%02x", cmdlen, processingBuffer[5], processingBuffer[6]);
 	}
 
-	if ((processingBuffer[1] == 0x01) && (processingBuffer[2] == 0x29) && (processingBuffer[4] == 0x80)/* && (cmdlen == 21) && (processingBuffer[5] == 0xE1) && (processingBuffer[6] == 0x01)*/) {
+	if ((processingBuffer[1] == 0x01) && (processingBuffer[2] == 0x29) && (processingBuffer[4] == 0x80) && (cmdlen == 21) && (processingBuffer[5] == 0x1E) && (processingBuffer[6] == 0x01)) {
 		// This is a reply command from the Freshwater System to the IQ2020
-		ESP_LOGD(TAG, "BBBBBB RSP Data, len=%d, cmd=%02x%02x", cmdlen, processingBuffer[5], processingBuffer[6]);
+		ESP_LOGD(TAG, "XBBBBBB RSP Data, len=%d, cmd=%02x%02x", cmdlen, processingBuffer[5], processingBuffer[6]);
 	}
 
 	if ((processingBuffer[1] == 0x1F) && (processingBuffer[2] == 0x01) && (processingBuffer[4] == 0x80)) {
