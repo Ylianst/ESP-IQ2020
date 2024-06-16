@@ -128,7 +128,7 @@ fan:
     datapoint: 1
     speeds: 2
 
-# Set `celsius` to `true` if using celsius units.
+# Set "celsius" to "true" if using celsius units.
 climate:
   - platform: iq2020
     name: Temperature
