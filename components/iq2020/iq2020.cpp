@@ -13,7 +13,9 @@
 
 static const char *TAG = "iq2020";
 
+// These globals are ugly, but I can't figure out the correct system yet.
 IQ2020Component* g_iq2020_main = NULL;
+int g_iq2020_switch_setup = 0;
 esphome::iq2020_switch::IQ2020Switch* g_iq2020_switch[SWITCHCOUNT];
 esphome::iq2020_fan::IQ2020Fan* g_iq2020_fan[FANCOUNT];
 esphome::iq2020_climate::IQ2020Climate* g_iq2020_climate = NULL;
@@ -26,6 +28,11 @@ int readCounter(unsigned char* data, int offset) { return (data[offset]) + (data
 
 void IQ2020Component::setup() {
 	for (int i = 0; i < SWITCHCOUNT; i++) { switch_state[i] = switch_pending[i] = -1; }
+	if (g_iq2020_switch_setup == 0) {
+		for (int i = 0; i < SWITCHCOUNT; i++) { g_iq2020_switch[i] = NULL; }
+		for (int i = 0; i < FANCOUNT; i++) { g_iq2020_fan[i] = NULL; }
+		g_iq2020_switch_setup = 1;
+	}
 	g_iq2020_main = this;
 	if (this->flow_control_pin_ != nullptr) { this->flow_control_pin_->setup(); }
 	//ESP_LOGD(TAG, "Setting up IQ2020...");
@@ -271,12 +278,12 @@ int IQ2020Component::processIQ2020Command() {
 		ESP_LOGD(TAG, "SCK CMD Data, len=%d, cmd=%02x%02x", cmdlen, processingBuffer[5], processingBuffer[6]);
 	}
 
-	if ((processingBuffer[1] == 0x29) && (processingBuffer[2] == 0x01) && (processingBuffer[4] == 0x40) && (cmdlen == 21) && (processingBuffer[5] == 0xE1) && (processingBuffer[6] == 0x01)) {
+	if ((processingBuffer[1] == 0x29) && (processingBuffer[2] == 0x01) && (processingBuffer[4] == 0x40) && (cmdlen == 15) && (processingBuffer[5] == 0xE1) && (processingBuffer[6] == 0x01)) {
 		// This is a command from IQ2020 to the Freshwater System
 		ESP_LOGD(TAG, "AAA");
 	}
 
-	if ((processingBuffer[1] == 0x01) && (processingBuffer[2] == 0x29) && (processingBuffer[4] == 0x80) && (cmdlen == 21) && (processingBuffer[5] == 0xE1) && (processingBuffer[6] == 0x01)) {
+	if ((processingBuffer[1] == 0x01) && (processingBuffer[2] == 0x29) && (processingBuffer[4] == 0x80) && (cmdlen == 15) && (processingBuffer[5] == 0xE1) && (processingBuffer[6] == 0x01)) {
 		// This is a reply command from the Freshwater System to the IQ2020
 		ESP_LOGD(TAG, "BBB");
 	}
@@ -288,11 +295,13 @@ int IQ2020Component::processIQ2020Command() {
 		if ((cmdlen == 9) && (processingBuffer[5] == 0xE1) && (processingBuffer[6] == 0x02) && (processingBuffer[7] == 0x06)) {
 			// Confirmation that the fresh water salt system has changed power state
 			setSwitchState(SWITCH_SALT_POWER, -1);
+			ESP_LOGD(TAG, "CCC");
 		}
 
 		if ((cmdlen == 26) && (processingBuffer[5] == 0x1E) && (processingBuffer[6] == 0x03)) {
 			// Status of the Freshwater Salt System
 			setSwitchState(SWITCH_SALT_POWER, processingBuffer[7]); // Power level
+			ESP_LOGD(TAG, "DDD");
 		}
 
 		if ((cmdlen == 9) && (processingBuffer[5] == 0x17) && (processingBuffer[6] == 0x02) && (processingBuffer[7] == 0x06)) {
@@ -594,7 +603,7 @@ void IQ2020Component::setSwitchState(unsigned int switchid, int state) {
 		switch_state[switchid] = state;
 		switch_pending[switchid] = -1;
 		if (g_iq2020_switch[switchid] != NULL) { g_iq2020_switch[switchid]->publish_state(state != 0); }
-		if ((switchid >= SWITCH_JETS1) && (g_iq2020_fan[switchid - SWITCH_JETS1] != NULL)) { g_iq2020_fan[switchid - SWITCH_JETS1]->updateState(state); }
+		if ((switchid >= SWITCH_JETS1) && (switchid <= SWITCH_JETS4) && (g_iq2020_fan[switchid - SWITCH_JETS1] != NULL)) { g_iq2020_fan[switchid - SWITCH_JETS1]->updateState(state); }
 	}
 }
 

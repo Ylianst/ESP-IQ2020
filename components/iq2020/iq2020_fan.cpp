@@ -3,6 +3,8 @@
 #include "iq2020.h"
 
 extern IQ2020Component* g_iq2020_main;
+extern int g_iq2020_switch_setup = 0;
+extern esphome::iq2020_switch::IQ2020Switch* g_iq2020_switch[SWITCHCOUNT];
 extern esphome::iq2020_fan::IQ2020Fan* g_iq2020_fan[FANCOUNT];
 
 namespace esphome {
@@ -11,6 +13,11 @@ namespace iq2020_fan {
 	static const char *TAG = "iq2020_fan.fan";
 
 	void IQ2020Fan::setup() {
+		if (g_iq2020_switch_setup == 0) {
+			for (int i = 0; i < SWITCHCOUNT; i++) { g_iq2020_switch[i] = NULL; }
+			for (int i = 0; i < FANCOUNT; i++) { g_iq2020_fan[i] = NULL; }
+			g_iq2020_switch_setup = 1;
+		}
 		if (fan_id < FANCOUNT) { g_iq2020_fan[fan_id] = this; }
 		//ESP_LOGD(TAG, "Fan:%d Setup", fan_id);
 		state = 0;
