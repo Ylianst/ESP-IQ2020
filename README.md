@@ -84,6 +84,8 @@ sensor:
       name: Lights Runtime
     power_on_counter:
       name: Power On Counter
+#    salt_power:
+#      name: Salt System Power
 
 switch:
   - platform: iq2020
