@@ -21,4 +21,5 @@ async def to_code(config):
     await cg.register_component(server, config)
     await climate.register_climate(server, config)
 
-    cg.add(server.set_celsius(config[CONF_CELSIUS]))
+    if CONF_CELSIUS in config:
+        cg.add(server.set_celsius(config[CONF_CELSIUS]))
