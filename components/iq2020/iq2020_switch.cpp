@@ -5,7 +5,7 @@
 extern IQ2020Component* g_iq2020_main;
 //extern int g_iq2020_switch_setup = 0;
 extern esphome::iq2020_switch::IQ2020Switch* g_iq2020_switch[SWITCHCOUNT];
-extern esphome::iq2020_fan::IQ2020Fan* g_iq2020_fan[FANCOUNT];
+//extern esphome::iq2020_fan::IQ2020Fan* g_iq2020_fan[FANCOUNT];
 
 namespace esphome {
 namespace iq2020_switch {
