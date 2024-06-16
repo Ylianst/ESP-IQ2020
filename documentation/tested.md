@@ -64,3 +64,9 @@ fan:
  - Version: WR2.02ad1bE002DK2.02
  - Modules: ACE system
  - Interface: ?
+
+## Hotspring Sovereign 2015
+
+ - Status: Works great but lifetime indicator shows over 29 years which is not accurate.
+ - Version: 1.08.D0172E002HL1.02
+ - Modules: None
