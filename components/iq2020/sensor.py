@@ -140,28 +140,24 @@ CONFIG_SCHEMA = cv.Schema(
         ),
         cv.Optional(CONF_SENSOR_TESTVAL1): sensor.sensor_schema(
             unit_of_measurement=UNIT_WATT,
-            accuracy_decimals=0,
             state_class=STATE_CLASS_MEASUREMENT,
             accuracy_decimals=0,
             icon=ICON_GAUGE
         ),
         cv.Optional(CONF_SENSOR_TESTVAL2): sensor.sensor_schema(
             unit_of_measurement=UNIT_WATT,
-            accuracy_decimals=0,
             state_class=STATE_CLASS_MEASUREMENT,
             accuracy_decimals=0,
             icon=ICON_GAUGE
         ),
         cv.Optional(CONF_SENSOR_TESTVAL3): sensor.sensor_schema(
             unit_of_measurement=UNIT_WATT,
-            accuracy_decimals=0,
             state_class=STATE_CLASS_MEASUREMENT,
             accuracy_decimals=0,
             icon=ICON_GAUGE
         ),
         cv.Optional(CONF_SENSOR_TESTVAL4): sensor.sensor_schema(
             unit_of_measurement=UNIT_WATT,
-            accuracy_decimals=0,
             state_class=STATE_CLASS_MEASUREMENT,
             accuracy_decimals=0,
             icon=ICON_GAUGE
