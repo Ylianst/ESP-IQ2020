@@ -78,6 +78,10 @@
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.scanTimer = new System.Windows.Forms.Timer(this.components);
             this.logSaveFileDialog = new System.Windows.Forms.SaveFileDialog();
+            this.stateDecodeTabPage = new System.Windows.Forms.TabPage();
+            this.stateDecodeTextBox = new System.Windows.Forms.TextBox();
+            this.pollStateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.pollTimer = new System.Windows.Forms.Timer(this.components);
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.topPanel.SuspendLayout();
@@ -88,6 +92,7 @@
             this.panel1.SuspendLayout();
             this.storeTabPage.SuspendLayout();
             this.dataTabPage.SuspendLayout();
+            this.stateDecodeTabPage.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -151,7 +156,8 @@
             // 
             this.actionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.annotateLogToolStripMenuItem,
-            this.scanToolStripMenuItem});
+            this.scanToolStripMenuItem,
+            this.pollStateToolStripMenuItem});
             this.actionsToolStripMenuItem.Name = "actionsToolStripMenuItem";
             this.actionsToolStripMenuItem.Size = new System.Drawing.Size(70, 24);
             this.actionsToolStripMenuItem.Text = "&Actions";
@@ -378,6 +384,7 @@
             this.mainTabControl.Controls.Add(this.rawDataTabPage);
             this.mainTabControl.Controls.Add(this.storeTabPage);
             this.mainTabControl.Controls.Add(this.dataTabPage);
+            this.mainTabControl.Controls.Add(this.stateDecodeTabPage);
             this.mainTabControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.mainTabControl.Location = new System.Drawing.Point(0, 78);
             this.mainTabControl.Name = "mainTabControl";
@@ -537,6 +544,42 @@
             this.logSaveFileDialog.OverwritePrompt = false;
             this.logSaveFileDialog.Title = "Capture Traffic";
             // 
+            // stateDecodeTabPage
+            // 
+            this.stateDecodeTabPage.Controls.Add(this.stateDecodeTextBox);
+            this.stateDecodeTabPage.Location = new System.Drawing.Point(4, 25);
+            this.stateDecodeTabPage.Name = "stateDecodeTabPage";
+            this.stateDecodeTabPage.Size = new System.Drawing.Size(696, 406);
+            this.stateDecodeTabPage.TabIndex = 4;
+            this.stateDecodeTabPage.Text = "State";
+            this.stateDecodeTabPage.UseVisualStyleBackColor = true;
+            // 
+            // stateDecodeTextBox
+            // 
+            this.stateDecodeTextBox.BackColor = System.Drawing.Color.PapayaWhip;
+            this.stateDecodeTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.stateDecodeTextBox.Font = new System.Drawing.Font("Courier New", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.stateDecodeTextBox.Location = new System.Drawing.Point(0, 0);
+            this.stateDecodeTextBox.Multiline = true;
+            this.stateDecodeTextBox.Name = "stateDecodeTextBox";
+            this.stateDecodeTextBox.ReadOnly = true;
+            this.stateDecodeTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.stateDecodeTextBox.Size = new System.Drawing.Size(696, 406);
+            this.stateDecodeTextBox.TabIndex = 7;
+            this.stateDecodeTextBox.WordWrap = false;
+            // 
+            // pollStateToolStripMenuItem
+            // 
+            this.pollStateToolStripMenuItem.Name = "pollStateToolStripMenuItem";
+            this.pollStateToolStripMenuItem.Size = new System.Drawing.Size(183, 26);
+            this.pollStateToolStripMenuItem.Text = "&Poll State";
+            this.pollStateToolStripMenuItem.Click += new System.EventHandler(this.pollStateToolStripMenuItem_Click);
+            // 
+            // pollTimer
+            // 
+            this.pollTimer.Interval = 2000;
+            this.pollTimer.Tick += new System.EventHandler(this.pollTimer_Tick);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -569,6 +612,8 @@
             this.panel1.PerformLayout();
             this.storeTabPage.ResumeLayout(false);
             this.dataTabPage.ResumeLayout(false);
+            this.stateDecodeTabPage.ResumeLayout(false);
+            this.stateDecodeTabPage.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -624,6 +669,10 @@
         private System.Windows.Forms.ToolStripMenuItem connectionKitX0256ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem3;
         private System.Windows.Forms.ToolStripMenuItem setCurrentTimeToolStripMenuItem;
+        private System.Windows.Forms.TabPage stateDecodeTabPage;
+        private System.Windows.Forms.TextBox stateDecodeTextBox;
+        private System.Windows.Forms.ToolStripMenuItem pollStateToolStripMenuItem;
+        private System.Windows.Forms.Timer pollTimer;
     }
 }
 

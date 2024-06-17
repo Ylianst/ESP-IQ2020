@@ -464,6 +464,12 @@ int IQ2020Component::processIQ2020Command() {
 			//int LifetimeRuntimeSeconds2 = readCounter(data, 78);
 			//int UnknownCounter3 = readCounter(data, 82);
 			//int UnknownCounter4 = readCounter(data, 86);
+
+			// Mystery values
+			if (this->testval1_sensor_) this->testval1_sensor_->publish_state(processingBuffer[98]);
+			if (this->testval2_sensor_) this->testval2_sensor_->publish_state(processingBuffer[100]);
+			if (this->testval3_sensor_) this->testval3_sensor_->publish_state(processingBuffer[116]);
+			if (this->testval4_sensor_) this->testval4_sensor_->publish_state(processingBuffer[128]);
 #endif
 
 			if (pending_temp != -1) {

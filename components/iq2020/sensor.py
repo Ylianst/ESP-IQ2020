@@ -34,6 +34,10 @@ CONF_SENSOR_SALT_POWER = "salt_power"
 CONF_SENSOR_CONNECTION_COUNT = "connection_count"
 CONF_SENSOR_HEATER_WATTAGE = "heater_wattage"
 CONF_SENSOR_HEATER_RELAY = "heater_relay"
+CONF_SENSOR_TESTVAL1 = "testval1"
+CONF_SENSOR_TESTVAL2 = "testval2"
+CONF_SENSOR_TESTVAL3 = "testval3"
+CONF_SENSOR_TESTVAL4 = "testval4"
 CONF_IQ2020_SERVER = "iq2020_server"
 
 CONFIG_SCHEMA = cv.Schema(
@@ -133,6 +137,22 @@ CONFIG_SCHEMA = cv.Schema(
         cv.Optional(CONF_SENSOR_SALT_POWER): sensor.sensor_schema(
             accuracy_decimals=0,
             icon=ICON_GAUGE
+        ),
+        cv.Optional(CONF_SENSOR_TESTVAL1): sensor.sensor_schema(
+            accuracy_decimals=0,
+            icon=ICON_GAUGE
+        ),
+        cv.Optional(CONF_SENSOR_TESTVAL2): sensor.sensor_schema(
+            accuracy_decimals=0,
+            icon=ICON_GAUGE
+        ),
+        cv.Optional(CONF_SENSOR_TESTVAL3): sensor.sensor_schema(
+            accuracy_decimals=0,
+            icon=ICON_GAUGE
+        ),
+        cv.Optional(CONF_SENSOR_TESTVAL4): sensor.sensor_schema(
+            accuracy_decimals=0,
+            icon=ICON_GAUGE
         )
     }
 )
@@ -208,3 +228,19 @@ async def to_code(config):
     if CONF_SENSOR_SALT_POWER in config:
         sens = await sensor.new_sensor(config[CONF_SENSOR_SALT_POWER])
         cg.add(server.set_salt_power_sensor(sens))
+
+    if CONF_SENSOR_TESTVAL1 in config:
+        sens = await sensor.new_sensor(config[CONF_SENSOR_TESTVAL1])
+        cg.add(server.set_testval1(sens))
+
+    if CONF_SENSOR_TESTVAL2 in config:
+        sens = await sensor.new_sensor(config[CONF_SENSOR_TESTVAL2])
+        cg.add(server.set_testval2(sens))
+
+    if CONF_SENSOR_TESTVAL3 in config:
+        sens = await sensor.new_sensor(config[CONF_SENSOR_TESTVAL3])
+        cg.add(server.set_testval3(sens))
+
+    if CONF_SENSOR_TESTVAL4 in config:
+        sens = await sensor.new_sensor(config[CONF_SENSOR_TESTVAL4])
+        cg.add(server.set_testval4(sens))
