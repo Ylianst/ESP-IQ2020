@@ -194,8 +194,9 @@ Read light status (Polled)
 ```
 <-- 01 1F 40 1705
 <-- 1F 01 80 17050005020202000000000000000005010101010000
-                   AABBCCDD                WWXXYYZZOO
+                 FFAABBCCDD                WWXXYYZZOO
 
+FF = Flags (0x01 = Lights Timer On)
 AA = Underwater light intensity (0x05 = High ... 0x01 = Low, 0x00 = Off)
 BB = Bartop light intensity
 CC = Pillow light intensity
@@ -232,7 +233,12 @@ Main status decoding
 0008              - ?
 00                - Flags: 0x01 = Temp Lock, 0x02 = Spa Lock, 0x04 = Jet1 Full, 0x08 = Jet2 Full, 0x10 = Clean Cycle, 0x20 = Summer Timer
 04                - Flags: 0x01 = Jet1 Medium, 0x02 = Jet2 Medium, 0x04 = AlwaysSet?. 4 upper bits are spa lights: 0x0 = Off, 0x1 = Min Bright, 0x5 = Max Bright
-00000604000A0622F21100201C201C201C8403605400000000  - ?
+00000604000A0622F2 - ?
+11                - Flags: 0x40 is Celsius
+00                - ?
+201C201C201C      - ?
+84036054          - ?
+00000000          - ?
 31303346          - "103F" ASCII string, the heater outlet temperature.
 02937400          - Heater total runtime in seconds (Big-Endian)
 ABC90A00          - Jets 1 total runtime in seconds (Big-Endian)
