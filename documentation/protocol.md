@@ -91,9 +91,9 @@ The Spa Connection Kit sends all it's commands from address 0x1F. Sending the co
 0B27 - Unknown (0B278C)
 1702 - Lights on/off
 1705 - Read lights status
-1900 - Unknown (190015)
-1901 - Unknown Periodic Polling (190100190000000B0004010000)
-1D07 - Unknown Periodic Polling (1D07FFFF)
+1900 - Audio Module Command (190015)
+1901 - Get Audio Module Data (190100190000000B0004010000)
+1D07 - Get Heat Pump Data (1D07FFFF)
 1E02 - Freshwater Salt System - Set Power / Start Test
 1E03 - Get FreshWater Salt Module Data
 ```
