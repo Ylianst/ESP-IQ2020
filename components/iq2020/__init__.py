@@ -31,7 +31,7 @@ CONFIG_SCHEMA = cv.All(
             cv.Optional(CONF_PORT, default = 0): cv.port,
             cv.Optional(CONF_BUFFER_SIZE, default = 128): cv.All(cv.positive_int, validate_buffer_size),
             cv.Optional(CONF_FLOW_CONTROL_PIN): pins.gpio_output_pin_schema,
-            cv.Optional(CONF_ACE_EMULATION, default = 0): cv.boolean,
+            cv.Optional(CONF_ACE_EMULATION, default = 'false'): cv.boolean,
         }
     )
     .extend(cv.COMPONENT_SCHEMA)
