@@ -388,8 +388,8 @@ int IQ2020Component::processIQ2020Command() {
 			setSwitchState(SWITCH_SUMMERTIMER, (flags1 & 0x20) != 0);
 
 			// Water heater status
-			float heaterActive = processingBuffer[110];
-			float heaterWattage = (processingBuffer[119] << 8) + processingBuffer[118];
+			float heaterActive = processingBuffer[110]; // Actualy L2 Current (Amps)
+			float heaterWattage = (processingBuffer[119] << 8) + processingBuffer[118]; // Actualy L2 Power (Watts)
 #ifdef USE_SENSOR
 			if (this->relay_sensor_) this->relay_sensor_->publish_state(heaterActive);
 			if (this->wattage_sensor_) this->wattage_sensor_->publish_state(heaterWattage);
