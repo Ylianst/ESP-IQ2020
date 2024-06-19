@@ -262,10 +262,10 @@ C2790A00          - Jets 2 low operation in seconds (Big-Endian)
 F700              - Voltage Heater (Big-Endian)
 F700              - Voltage L2 (Big-Endian)
 0000              - Voltage Jet 3 (Big-Endian)
-0000              - Current L1
-0000              - Current Heater
-0F00              - Current L2 (Heater power: 0x0000 = Off, 0x0F00 = On)
-0000              - Current Jet 3
+0000              - Current L1 (Amps)
+0000              - Current Heater (Amps)
+0F00              - Current L2 (Heater power: 0x0000 = Off, 0x0F00 = 15 Amps)
+0000              - Current Jet 3 (Amps)
 0000              - Power L1 wattage (Big-Endian)
 5C00              - Power Heater wattage (Big-Endian)
 F30E              - Power L2 wattage - Water heater wattage (Big-Endian)
