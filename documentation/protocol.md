@@ -361,7 +361,7 @@ Command 0x0255 is just like command 0x0256 but shorter. Some information at the 
 <-- 1F 01 80 0255000800040000060400020622F21100201C201C201C84036054000000003130334617A3740006CC0A0061A5DD054500000000000000BBD30C0000000000000000005FB30F000200476CDD0500000000C2790A0020393546313032467800F800F800000000000000000000000000510000000000
 ```
 
-Poll for sudio module status
+Poll for audio module status
 ```
 <-- 01 1F 40 1901
 <-- 1F 01 80 190100190000000B0004010000
@@ -371,4 +371,14 @@ Poll for heat pump status
 ```
 <-- 01 1F 40 1D07FF
 <-- 1F 01 80 1D07FFFF
+```
+
+Heat pump data is as follows
+```
+1F                - Destination Spa Connection Kit (0x1F).
+01                - Source IQ2020 (0x01).
+80                - Response (0x40 = Request, 0x80 = Response).
+1D07              - Command 0x1D07 Heat Pump Status
+FF                - Heat pump current operational status
+FF                - Heat pump current mode setting
 ```
