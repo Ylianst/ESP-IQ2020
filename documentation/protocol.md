@@ -273,7 +273,7 @@ F30E              - Power L2 wattage - Water heater wattage (Big-Endian)
 01                - Daily Clear Cycle
 3C00              - Filter Time 1
 1E00              - Filter Time 2
-00                - Flags: Hawk status econ / Hawl status circ
+00                - Flags: Hawk status econ / Hawk status circ
 6A                - PCB temperature
 6F                - Peripheral Current
 00080800          - Real-Time-Clock SS:MM:HH Seconds (0 to 59), Minutes (0 to 59), Hours (0 to 24).
