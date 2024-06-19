@@ -83,11 +83,11 @@ sensor:
     power_on_counter:
       name: Power On Counter
     power_l1:
-      name: Power L1
-    power_heater:
-      name: Power Heater
+      name: Pumps Power
+#    power_heater:
+#      name: Power Heater
     power_l2:
-      name: Power L2
+      name: Heater Power
     pcb_temperature:
       name: PCB Temperature
 #    salt_power:
