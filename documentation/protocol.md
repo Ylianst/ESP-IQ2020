@@ -229,15 +229,16 @@ Main status decoding
 1F                - Destination Spa Connection Kit (0x1F).
 01                - Source IQ2020 (0x01).
 80                - Response (0x40 = Request, 0x80 = Response).
-0256              - Main Status Data.
-0008              - ?
+0256              - Main Status Data Command.
+0008              - Model type.
 00                - Flags: 0x01 = Temp Lock, 0x02 = Spa Lock, 0x04 = Jet1 Full, 0x08 = Jet2 Full, 0x10 = Clean Cycle, 0x20 = Summer Timer
 04                - Flags: 0x01 = Jet1 Medium, 0x02 = Jet2 Medium, 0x04 = AlwaysSet?. 4 upper bits are spa lights: 0x0 = Off, 0x1 = Min Bright, 0x5 = Max Bright
 00000604000A0622F2 - ?
 11                - Flags: 0x40 is Celsius
 00                - ?
-201C201C201C      - ?
-84036054          - ?
+201C201C201C      - Pump1, Pump2, Pump3 timeouts (3 x 16bit Big-Endian)
+8403              - Blower timeout
+6054              - Lights timeout
 00000000          - ?
 31303346          - "103F" ASCII string, the heater outlet temperature.
 02937400          - Heater total runtime in seconds (Big-Endian)
@@ -250,19 +251,24 @@ ABC90A00          - Jets 1 total runtime in seconds (Big-Endian)
 00000000          - Unknown counter
 B8AF0F00          - Lights total runtime in seconds (Big-Endian)
 0200              - ?
-E902DC05          - Lifetime 2 runtime in seconds (Big-Endian)
-00000000          - Unknown counter
-C2790A00          - Unknown counter
+E902DC05          - Circulation pump runtime in seconds (Big-Endian)
+00000000          - Jets 1 low operation in seconds (Big-Endian)
+C2790A00          - Jets 2 low operation in seconds (Big-Endian)
 3130314631303246  - "101F102F" ASCII String, the target temp and current temp.
-7800F700F700000000000000  - ?
+7800              - Voltage L1 (Big-Endian)
+F700              - Voltage Heater (Big-Endian)
+F700              - Voltage L2 (Big-Endian)
+0000              - Voltage Jet 3 (Big-Endian)
+00000000  - ?
 0F                - Water heater relay. 0x00 = Off, 0x0F = On
 0000000000        - ?
-5C00              - Variable from 0x4D00 to 0xEA00, changes almost at every poll. Probably big-endian 16 bits.
+5C00              - L1 wattage (Big-Endian)
 F30E              - Water heater wattage (Big-Endian)
-0000013C001E00006A6F00  - ?
-080800            - SS:MM:HH Seconds (0 to 59), Minutes (0 to 59), Hours (0 to 24).
-1300D407          - DD:MM:YYYY Days (1 to 31), Month (0 to 11), Year (2 byte Big-Endian).
-01                - ?
+0000              - L2 wattage? (Big-Endian)
+013C001E00006A6F00  - ?
+080800            - Real-Time-Clock SS:MM:HH Seconds (0 to 59), Minutes (0 to 59), Hours (0 to 24).
+1300D407          - Real-Time-Clock DD:MM:YYYY Days (1 to 31), Month (0 to 11), Year (2 byte Big-Endian).
+01                - Real-Time-Clock Status
 ```
 
 Temperature string. The value encode the temperature set point and current temprature in ASCII encoding. The F indicates fahrenheit. For example:
