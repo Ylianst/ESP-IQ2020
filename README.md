@@ -98,6 +98,8 @@ sensor:
       name: Controller Temperature
 #    salt_power:
 #      name: Salt System Power
+#    salt_content:
+#      name: Salt Content
 
 switch:
   - platform: iq2020
