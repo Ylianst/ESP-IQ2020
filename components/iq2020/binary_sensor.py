@@ -2,7 +2,6 @@ import esphome.codegen as cg
 import esphome.config_validation as cv
 from esphome.components import binary_sensor
 from esphome.const import (
-    DEVICE_CLASS_SWITCH,
     DEVICE_CLASS_CONNECTIVITY,
     ENTITY_CATEGORY_DIAGNOSTIC,
 )
@@ -24,9 +23,7 @@ CONFIG_SCHEMA = cv.Schema(
             device_class=DEVICE_CLASS_CONNECTIVITY,
             entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
         ),
-        cv.Optional(CONF_SENSOR_SALT_BOOST): binary_sensor.binary_sensor_schema(
-            device_class=DEVICE_CLASS_SWITCH,
-        ),
+        cv.Optional(CONF_SENSOR_SALT_BOOST): binary_sensor.binary_sensor_schema(),
     }
 )
 
