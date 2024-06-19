@@ -57,8 +57,6 @@ public:
 	void set_target_c_temp_sensor(esphome::sensor::Sensor *temp) { this->target_c_temp_sensor_ = temp; }
 	void set_outlet_c_temp_sensor(esphome::sensor::Sensor *temp) { this->outlet_c_temp_sensor_ = temp; }
 	void set_connection_count_sensor(esphome::sensor::Sensor *connection_count) { this->connection_count_sensor_ = connection_count; }
-	void set_heater_wattage_sensor(esphome::sensor::Sensor *wattage) { this->wattage_sensor_ = wattage; }
-	void set_heater_relay_sensor(esphome::sensor::Sensor *relay) { this->relay_sensor_ = relay; }
 	void set_heater_total_runtime_sensor(esphome::sensor::Sensor *sensor) { this->heater_total_runtime_sensor_ = sensor; }
 	void set_jets1_total_runtime_sensor(esphome::sensor::Sensor *sensor) { this->jets1_total_runtime_sensor_ = sensor; }
 	void set_lifetime_runtime_sensor(esphome::sensor::Sensor *sensor) { this->lifetime_runtime_sensor_ = sensor; }
@@ -70,7 +68,12 @@ public:
 	void set_voltage_l1_sensor(esphome::sensor::Sensor *sensor) { this->voltage_l1_sensor_ = sensor; }
 	void set_voltage_heater_sensor(esphome::sensor::Sensor *sensor) { this->voltage_heater_sensor_ = sensor; }
 	void set_voltage_l2_sensor(esphome::sensor::Sensor *sensor) { this->voltage_l2_sensor_ = sensor; }
-	void set_testval3(esphome::sensor::Sensor *sensor) { this->testval3_sensor_ = sensor; }
+	void set_current_l1_sensor(esphome::sensor::Sensor *sensor) { this->current_l1_sensor_ = sensor; }
+	void set_current_heater_sensor(esphome::sensor::Sensor *sensor) { this->current_heater_sensor_ = sensor; }
+	void set_current_l2_sensor(esphome::sensor::Sensor *sensor) { this->current_l2_sensor_ = sensor; }
+	void set_power_l1_sensor(esphome::sensor::Sensor *sensor) { this->power_l1_sensor_ = sensor; }
+	void set_power_heater_sensor(esphome::sensor::Sensor *sensor) { this->power_heater_sensor_ = sensor; }
+	void set_power_l2_sensor(esphome::sensor::Sensor *sensor) { this->power_l2_sensor_ = sensor; }
 	void set_pcb_temperature_sensor(esphome::sensor::Sensor *sensor) { this->pcb_temperature_sensor_ = sensor; }
 
 #endif
@@ -128,8 +131,6 @@ protected:
 	esphome::sensor::Sensor *target_c_temp_sensor_;
 	esphome::sensor::Sensor *outlet_c_temp_sensor_;
 	esphome::sensor::Sensor *connection_count_sensor_;
-	esphome::sensor::Sensor *wattage_sensor_;
-	esphome::sensor::Sensor *relay_sensor_;
 	esphome::sensor::Sensor *heater_total_runtime_sensor_;
 	esphome::sensor::Sensor *jets1_total_runtime_sensor_;
 	esphome::sensor::Sensor *lifetime_runtime_sensor_;
@@ -141,7 +142,12 @@ protected:
 	esphome::sensor::Sensor *voltage_l1_sensor_;
 	esphome::sensor::Sensor *voltage_heater_sensor_;
 	esphome::sensor::Sensor *voltage_l2_sensor_;
-	esphome::sensor::Sensor *testval3_sensor_;
+	esphome::sensor::Sensor *current_l1_sensor_;
+	esphome::sensor::Sensor *current_heater_sensor_;
+	esphome::sensor::Sensor *current_l2_sensor_;
+	esphome::sensor::Sensor *power_l1_sensor_;
+	esphome::sensor::Sensor *power_heater_sensor_;
+	esphome::sensor::Sensor *power_l2_sensor_;
 	esphome::sensor::Sensor *pcb_temperature_sensor_;
 #endif
 #ifdef USE_TEXT_SENSOR

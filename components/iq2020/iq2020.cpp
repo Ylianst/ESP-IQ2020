@@ -387,14 +387,6 @@ int IQ2020Component::processIQ2020Command() {
 			setSwitchState(SWITCH_CLEANCYCLE, (flags1 & 0x10) != 0);
 			setSwitchState(SWITCH_SUMMERTIMER, (flags1 & 0x20) != 0);
 
-			// Water heater status
-			float heaterActive = processingBuffer[110]; // Actualy L2 Current (Amps)
-			float heaterWattage = (processingBuffer[119] << 8) + processingBuffer[118]; // Actualy L2 Power (Watts)
-#ifdef USE_SENSOR
-			if (this->relay_sensor_) this->relay_sensor_->publish_state(heaterActive);
-			if (this->wattage_sensor_) this->wattage_sensor_->publish_state(heaterWattage);
-#endif
-
 			// Update JETS status. I don't currently know all of the JET status flags.
 			int jetState = 0; // JETS1 OFF
 			if (flags2 & 0x01) { jetState = 1; } // JETS1 MEDIUM
@@ -457,7 +449,16 @@ int IQ2020Component::processIQ2020Command() {
 			if (this->voltage_heater_sensor_) this->voltage_heater_sensor_->publish_state((float)(processingBuffer[100] + (processingBuffer[101] << 8)));
 			if (this->voltage_l2_sensor_) this->voltage_l2_sensor_->publish_state((float)(processingBuffer[102] + (processingBuffer[103] << 8)));
 
-			if (this->testval3_sensor_) this->testval3_sensor_->publish_state((float)(processingBuffer[116] + (processingBuffer[117] << 8)));
+			// Current sensors
+			if (this->current_l1_sensor_) this->current_l1_sensor_->publish_state((float)(processingBuffer[106] + (processingBuffer[107] << 8)));
+			if (this->current_heater_sensor_) this->current_heater_sensor_->publish_state((float)(processingBuffer[108] + (processingBuffer[109] << 8)));
+			if (this->current_l2_sensor_) this->current_l2_sensor_->publish_state((float)(processingBuffer[110] + (processingBuffer[111] << 8)));
+
+			// Power sensors
+			if (this->power_l1_sensor_) this->power_l1_sensor_->publish_state((float)(processingBuffer[114] + (processingBuffer[115] << 8)));
+			if (this->power_heater_sensor_) this->power_heater_sensor_->publish_state((float)(processingBuffer[116] + (processingBuffer[117] << 8)));
+			if (this->power_l2_sensor_) this->power_l2_sensor_->publish_state((float)(processingBuffer[118] + (processingBuffer[119] << 8)));
+
 			if (this->pcb_temperature_sensor_) this->pcb_temperature_sensor_->publish_state((float)processingBuffer[128]);
 #endif
 

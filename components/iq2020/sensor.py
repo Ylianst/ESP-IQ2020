@@ -34,12 +34,15 @@ CONF_SENSOR_LIGHTS_TOTAL_RUNTIME = "lights_total_runtime"
 CONF_SENSOR_POWER_ON_COUNTER = "power_on_counter"
 CONF_SENSOR_SALT_POWER = "salt_power"
 CONF_SENSOR_CONNECTION_COUNT = "connection_count"
-CONF_SENSOR_HEATER_WATTAGE = "heater_wattage"
-CONF_SENSOR_HEATER_RELAY = "heater_relay"
 CONF_SENSOR_VOLTAGE_L1 = "voltage_l1"
 CONF_SENSOR_VOLTAGE_HEATER = "voltage_heater"
 CONF_SENSOR_VOLTAGE_L2 = "voltage_l2"
-CONF_SENSOR_TESTVAL3 = "testval3"
+CONF_SENSOR_CURRENT_L1 = "current_l1"
+CONF_SENSOR_CURRENT_HEATER = "current_heater"
+CONF_SENSOR_CURRENT_L2 = "current_l2"
+CONF_SENSOR_POWER_L1 = "power_l1"
+CONF_SENSOR_POWER_HEATER = "power_heater"
+CONF_SENSOR_POWER_L2 = "power_l2"
 CONF_SENSOR_PCB_TEMPERATURE = "pcb_temperature"
 CONF_IQ2020_SERVER = "iq2020_server"
 
@@ -92,16 +95,6 @@ CONFIG_SCHEMA = cv.Schema(
             accuracy_decimals=0,
             state_class=STATE_CLASS_MEASUREMENT,
             entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
-        ),
-        cv.Optional(CONF_SENSOR_HEATER_WATTAGE): sensor.sensor_schema(
-            unit_of_measurement=UNIT_WATT,
-            accuracy_decimals=0,
-            state_class=STATE_CLASS_MEASUREMENT,
-            icon=ICON_HEATING_COIL,
-        ),
-        cv.Optional(CONF_SENSOR_HEATER_RELAY): sensor.sensor_schema(
-            accuracy_decimals=0,
-            state_class=STATE_CLASS_MEASUREMENT,
         ),
         cv.Optional(CONF_SENSOR_HEATER_TOTAL_RUNTIME): sensor.sensor_schema(
             unit_of_measurement=UNIT_SECOND,
@@ -162,11 +155,47 @@ CONFIG_SCHEMA = cv.Schema(
             accuracy_decimals=0,
             icon=ICON_CURRENT_AC
         ),
-        cv.Optional(CONF_SENSOR_TESTVAL3): sensor.sensor_schema(
+        cv.Optional(CONF_SENSOR_CURRENT_L1): sensor.sensor_schema(
+            unit_of_measurement=UNIT_AMPERE,
+            state_class=STATE_CLASS_MEASUREMENT,
+            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
+            accuracy_decimals=0,
+            icon=ICON_CURRENT_AC
+        ),
+        cv.Optional(CONF_SENSOR_CURRENT_HEATER): sensor.sensor_schema(
+            unit_of_measurement=UNIT_AMPERE,
+            state_class=STATE_CLASS_MEASUREMENT,
+            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
+            accuracy_decimals=0,
+            icon=ICON_CURRENT_AC
+        ),
+        cv.Optional(CONF_SENSOR_CURRENT_L2): sensor.sensor_schema(
+            unit_of_measurement=UNIT_AMPERE,
+            state_class=STATE_CLASS_MEASUREMENT,
+            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
+            accuracy_decimals=0,
+            icon=ICON_CURRENT_AC
+        ),
+        cv.Optional(CONF_SENSOR_POWER_L1): sensor.sensor_schema(
             unit_of_measurement=UNIT_WATT,
             state_class=STATE_CLASS_MEASUREMENT,
+            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
             accuracy_decimals=0,
-            icon=ICON_GAUGE
+            icon=ICON_CURRENT_AC
+        ),
+        cv.Optional(CONF_SENSOR_POWER_HEATER): sensor.sensor_schema(
+            unit_of_measurement=UNIT_WATT,
+            state_class=STATE_CLASS_MEASUREMENT,
+            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
+            accuracy_decimals=0,
+            icon=ICON_CURRENT_AC
+        ),
+        cv.Optional(CONF_SENSOR_POWER_L2): sensor.sensor_schema(
+            unit_of_measurement=UNIT_WATT,
+            state_class=STATE_CLASS_MEASUREMENT,
+            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
+            accuracy_decimals=0,
+            icon=ICON_CURRENT_AC
         ),
         cv.Optional(CONF_SENSOR_PCB_TEMPERATURE): sensor.sensor_schema(
             unit_of_measurement=UNIT_FAHRENHEIT,
@@ -209,14 +238,6 @@ async def to_code(config):
     if CONF_SENSOR_CONNECTION_COUNT in config:
         sens = await sensor.new_sensor(config[CONF_SENSOR_CONNECTION_COUNT])
         cg.add(server.set_connection_count_sensor(sens))
-
-    if CONF_SENSOR_HEATER_WATTAGE in config:
-        sens = await sensor.new_sensor(config[CONF_SENSOR_HEATER_WATTAGE])
-        cg.add(server.set_heater_wattage_sensor(sens))
-
-    if CONF_SENSOR_HEATER_RELAY in config:
-        sens = await sensor.new_sensor(config[CONF_SENSOR_HEATER_RELAY])
-        cg.add(server.set_heater_relay_sensor(sens))
 
     if CONF_SENSOR_HEATER_TOTAL_RUNTIME in config:
         sens = await sensor.new_sensor(config[CONF_SENSOR_HEATER_TOTAL_RUNTIME])
@@ -262,9 +283,29 @@ async def to_code(config):
         sens = await sensor.new_sensor(config[CONF_SENSOR_VOLTAGE_L2])
         cg.add(server.set_voltage_l2_sensor(sens))
 
-    if CONF_SENSOR_TESTVAL3 in config:
-        sens = await sensor.new_sensor(config[CONF_SENSOR_TESTVAL3])
-        cg.add(server.set_testval3(sens))
+    if CONF_SENSOR_CURRENT_L1 in config:
+        sens = await sensor.new_sensor(config[CONF_SENSOR_CURRENT_L1])
+        cg.add(server.set_current_l1_sensor(sens))
+
+    if CONF_SENSOR_CURRENT_HEATER in config:
+        sens = await sensor.new_sensor(config[CONF_SENSOR_CURRENT_HEATER])
+        cg.add(server.set_current_heater_sensor(sens))
+
+    if CONF_SENSOR_CURRENT_L2 in config:
+        sens = await sensor.new_sensor(config[CONF_SENSOR_CURRENT_L2])
+        cg.add(server.set_current_l2_sensor(sens))
+
+    if CONF_SENSOR_POWER_L1 in config:
+        sens = await sensor.new_sensor(config[CONF_SENSOR_POWER_L1])
+        cg.add(server.set_power_l1_sensor(sens))
+
+    if CONF_SENSOR_POWER_HEATER in config:
+        sens = await sensor.new_sensor(config[CONF_SENSOR_POWER_HEATER])
+        cg.add(server.set_power_heater_sensor(sens))
+
+    if CONF_SENSOR_POWER_L2 in config:
+        sens = await sensor.new_sensor(config[CONF_SENSOR_POWER_L2])
+        cg.add(server.set_power_l2_sensor(sens))
 
     if CONF_SENSOR_PCB_TEMPERATURE in config:
         sens = await sensor.new_sensor(config[CONF_SENSOR_PCB_TEMPERATURE])

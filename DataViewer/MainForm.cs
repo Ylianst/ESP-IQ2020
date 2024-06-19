@@ -261,10 +261,17 @@ namespace DataViewer
                     int UnknownCounter3 = getIntFromByteArray(data, 82);
                     int UnknownCounter4 = getIntFromByteArray(data, 86);
 
-                    int testval1 = data[98];
-                    int testval2 = data[100];
-                    int testval3 = data[116];
-                    int testval4 = data[128];
+                    int voltage_l1 = getShortFromByteArray(data, 98);
+                    int voltage_heater = getShortFromByteArray(data, 100);
+                    int voltage_l2 = getShortFromByteArray(data, 102);
+
+                    int current_l1 = getShortFromByteArray(data, 106);
+                    int current_heater = getShortFromByteArray(data, 108);
+                    int current_l2 = getShortFromByteArray(data, 110);
+
+                    int power_l1 = getShortFromByteArray(data, 114);
+                    int power_heater = getShortFromByteArray(data, 116);
+                    int power_l2 = getShortFromByteArray(data, 118);
 
                     addDecodedData("Heater Total Runtime", HeaterTotalRuntime.ToString());
                     addDecodedData("Jets 1 Total Runtime", Jets1TotalRuntime.ToString());
@@ -277,10 +284,16 @@ namespace DataViewer
                     addDecodedData("Lifetime Runtime 2", LifetimeRuntimeSeconds2.ToString());
                     addDecodedData("Unknown Counter 3", UnknownCounter3.ToString());
                     addDecodedData("Unknown Counter 4", UnknownCounter4.ToString());
-                    addDecodedData("Test val 1", testval1.ToString());
-                    addDecodedData("Test val 2", testval2.ToString());
-                    addDecodedData("Test val 3", testval3.ToString());
-                    addDecodedData("Test val 4", testval4.ToString());
+
+                    addDecodedData("Voltage L1", voltage_l1.ToString());
+                    addDecodedData("Voltage Heater", voltage_heater.ToString());
+                    addDecodedData("Voltage L2", voltage_l2.ToString());
+                    addDecodedData("Current L1", current_l1.ToString());
+                    addDecodedData("Current Heater", current_heater.ToString());
+                    addDecodedData("Current L2", current_l2.ToString());
+                    addDecodedData("Power L1", power_l1.ToString());
+                    addDecodedData("Power Heater", power_heater.ToString());
+                    addDecodedData("Power L2", power_l2.ToString());
 
                     string hex = ConvertByteArrayToHexString(data, 1, totallen);
                     string decodeHex = string.Format("Hex: {0}\r\n", hex);
@@ -299,29 +312,33 @@ namespace DataViewer
                     decodeHex += string.Format("{0} - Jets 1 total runtime in seconds, {1}\r\n", hex.Substring(86, 8), getIntFromByteArray(data, 44));
                     decodeHex += string.Format("{0} - Lifetime in seconds, {1}\r\n", hex.Substring(94, 8), getIntFromByteArray(data, 48));
                     decodeHex += string.Format("{0} - Power on / Boot counter\r\n", hex.Substring(102, 8));
-                    decodeHex += string.Format("{0} - Unknown\r\n", hex.Substring(110, 8));
+                    decodeHex += string.Format("{0} - Flags\r\n", hex.Substring(110, 8));
                     decodeHex += string.Format("{0} - Jet 2 runtime\r\n", hex.Substring(118, 8));
-                    decodeHex += string.Format("{0} - Jet 3 runtime?\r\n", hex.Substring(126, 8));
-                    decodeHex += string.Format("{0} - Jet 4 runtime?\r\n", hex.Substring(134, 8));
+                    decodeHex += string.Format("{0} - Jet 3 runtime\r\n", hex.Substring(126, 8));
+                    decodeHex += string.Format("{0} - Blower runtime\r\n", hex.Substring(134, 8));
                     decodeHex += string.Format("{0} - Lights runtime\r\n", hex.Substring(142, 8));
-                    decodeHex += string.Format("{0}     - Unknown\r\n", hex.Substring(150, 4));
-                    decodeHex += string.Format("{0} - Unknown Lifetime\r\n", hex.Substring(154, 8));
-                    decodeHex += string.Format("{0} - Unknown Lifetime\r\n", hex.Substring(162, 8));
-                    decodeHex += string.Format("{0} - Unknown Lifetime\r\n", hex.Substring(170, 8));
+                    decodeHex += string.Format("{0}     - SPA state & Light state\r\n", hex.Substring(150, 4));
+                    decodeHex += string.Format("{0} - Circulation pump Lifetime\r\n", hex.Substring(154, 8));
+                    decodeHex += string.Format("{0} - Jets 1 low operation Lifetime\r\n", hex.Substring(162, 8));
+                    decodeHex += string.Format("{0} - Jets 2 low operation Lifetime\r\n", hex.Substring(170, 8));
                     decodeHex += string.Format("{0} - Target Temperature String, \"{1}\"\r\n", hex.Substring(178, 8), UTF8Encoding.Default.GetString(data, 90, 4));
                     decodeHex += string.Format("{0} - Current Temperature String, \"{1}\"\r\n", hex.Substring(186, 8), UTF8Encoding.Default.GetString(data, 94, 4));
-                    decodeHex += string.Format("{0}     - Unknown\r\n", hex.Substring(194, 4));
-                    decodeHex += string.Format("{0}     - Unknown\r\n", hex.Substring(198, 4));
-                    decodeHex += string.Format("{0}     - Unknown\r\n", hex.Substring(202, 4));
-                    decodeHex += string.Format("{0} - Unknown\r\n", hex.Substring(206, 12));
-                    decodeHex += string.Format("{0}       - Water heater relay. 0x00 = Off, 0x0F = On\r\n", hex.Substring(218, 2));
-                    decodeHex += string.Format("{0} - Unknown\r\n", hex.Substring(220, 10));
-                    decodeHex += string.Format("{0}     - Unknown sensor\r\n", hex.Substring(230, 4));
-                    decodeHex += string.Format("{0}     - Water heater wattage\r\n", hex.Substring(234, 4));
-                    decodeHex += string.Format("{0} - Unknown\r\n", hex.Substring(238, 22));
-                    decodeHex += string.Format("{0}   - Time hh:mm:ss, {1}:{2}:{3}\r\n", hex.Substring(260, 6), hours, minutes, seconds);
+                    decodeHex += string.Format("{0}     - Voltage L1\r\n", hex.Substring(194, 4));
+                    decodeHex += string.Format("{0}     - Voltage Heater\r\n", hex.Substring(198, 4));
+                    decodeHex += string.Format("{0}     - Voltage L2\r\n", hex.Substring(202, 4));
+                    decodeHex += string.Format("{0}     - Voltage Jet3\r\n", hex.Substring(206, 4));
+                    decodeHex += string.Format("{0}     - Current L1\r\n", hex.Substring(210, 4));
+                    decodeHex += string.Format("{0}     - Current Heater\r\n", hex.Substring(214, 4));
+                    decodeHex += string.Format("{0}     - Current L2 (Heater)\r\n", hex.Substring(218, 4));
+                    decodeHex += string.Format("{0}     - Current Jet3\r\n", hex.Substring(222, 4));
+                    decodeHex += string.Format("{0}     - Power L1\r\n", hex.Substring(226, 4));
+                    decodeHex += string.Format("{0}     - Power Heater\r\n", hex.Substring(230, 4));
+                    decodeHex += string.Format("{0}     - Power L2 (Heater)\r\n", hex.Substring(234, 4));
+                    decodeHex += string.Format("{0}     - Power Jet3\r\n", hex.Substring(238, 4));
+                    decodeHex += string.Format("{0} - Unknown\r\n", hex.Substring(242, 16));
+                    decodeHex += string.Format("{0} - Time hh:mm:ss, {1}:{2}:{3}\r\n", hex.Substring(258, 8), hours, minutes, seconds);
                     decodeHex += string.Format("{0} - Date, {1}-{2}-{3}\r\n", hex.Substring(266, 8), day, month, year);
-                    decodeHex += string.Format("{0}       - Unknown\r\n", hex.Substring(274, 2));
+                    decodeHex += string.Format("{0}       - Clock Status\r\n", hex.Substring(274, 2));
 
                     setStateDecoded(decodeHex);
                 }
@@ -339,6 +356,11 @@ namespace DataViewer
         private int getIntFromByteArray(byte[] data, int offset)
         {
             return data[offset] + (data[offset + 1] << 8) + (data[offset + 2] << 16) + (data[offset + 3] << 24);
+        }
+
+        private int getShortFromByteArray(byte[] data, int offset)
+        {
+            return data[offset] + (data[offset + 1] << 8);
         }
 
         private void sendButton_Click(object sender, EventArgs e)
