@@ -454,7 +454,7 @@ int IQ2020Component::processIQ2020Command() {
 			if (this->current_heater_sensor_) this->current_heater_sensor_->publish_state((float)(processingBuffer[108] + (processingBuffer[109] << 8)));
 			if (this->current_l2_sensor_) this->current_l2_sensor_->publish_state((float)(processingBuffer[110] + (processingBuffer[111] << 8)));
 
-			// Power sensors
+			// Power sensors 
 			if (this->power_l1_sensor_) this->power_l1_sensor_->publish_state((float)(processingBuffer[114] + (processingBuffer[115] << 8)));
 			if (this->power_heater_sensor_) this->power_heater_sensor_->publish_state((float)(processingBuffer[116] + (processingBuffer[117] << 8)));
 			if (this->power_l2_sensor_) this->power_l2_sensor_->publish_state((float)(processingBuffer[118] + (processingBuffer[119] << 8)));

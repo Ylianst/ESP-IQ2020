@@ -207,7 +207,6 @@ CONFIG_SCHEMA = cv.Schema(
     }
 )
 
-
 async def to_code(config):
     server = await cg.get_variable(config[CONF_IQ2020_SERVER])
 
