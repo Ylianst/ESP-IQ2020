@@ -181,7 +181,7 @@ CONFIG_SCHEMA = cv.Schema(
             unit_of_measurement=UNIT_WATT,
             state_class=STATE_CLASS_MEASUREMENT,
             accuracy_decimals=0,
-            icon=ICON_CURRENT_AC
+            icon="mdi:turbine"
         ),
         cv.Optional(CONF_SENSOR_POWER_HEATER): sensor.sensor_schema(
             unit_of_measurement=UNIT_WATT,
@@ -193,7 +193,7 @@ CONFIG_SCHEMA = cv.Schema(
             unit_of_measurement=UNIT_WATT,
             state_class=STATE_CLASS_MEASUREMENT,
             accuracy_decimals=0,
-            icon=ICON_CURRENT_AC
+            icon=ICON_HEATING_COIL
         ),
         cv.Optional(CONF_SENSOR_PCB_TEMPERATURE): sensor.sensor_schema(
             unit_of_measurement=UNIT_FAHRENHEIT,
