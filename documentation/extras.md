@@ -26,6 +26,29 @@ Note that you can't have two `sensor:` sections, so just add all of these lines 
 
 ![image](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/cff708ec-8ba3-48f8-b337-1d83b5bb00e0)
 
+
+## Adding Current and Voltage sensors
+
+You can add additional voltage and current sensors. In general you don't need them since the power sensor in watts are a more accurate value of (voltage * current).
+
+```
+sensor:
+    voltage_l1:
+      name: Voltage L1
+    voltage_heater:
+      name: Voltage Heater
+    voltage_l2:
+      name: Voltage L2
+    current_l1:
+      name: Current L1
+    current_heater:
+      name: Current Heater
+    current_l2:
+      name: Current L2
+```
+Note that you can't have two `sensor:` sections, so just add all of these lines except `sensor:` to your existing section. You can add them at the top or bottom, order is not important. Once re-flashed, you should see new values in the diagnostic section of Home Assistant.
+
+
 ## Templates for seconds sensors
 
 A lot of the sensor values returned by this integration are large numbers of seconds like the lifetime of the hot tub, jets or lights. On this page, we have Home Assistant template sensors you can add to change the seconds value into anything you like. Below in the templates that will make the seconds show up as days and hours like this:
