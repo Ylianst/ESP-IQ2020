@@ -498,7 +498,6 @@ int IQ2020Component::processIQ2020Command() {
 			if (this->pcb_temperature_sensor_) this->pcb_temperature_sensor_->publish_state((float)processingBuffer[128]);
 			if (this->salt_power_sensor_ && (salt_power >= 0)) this->salt_power_sensor_->publish_state(salt_power);
 			if (this->salt_content_sensor_ && (salt_content >= 0)) this->salt_content_sensor_->publish_state((float)salt_content);
-
 #endif
 
 			if (pending_temp != -1) {
