@@ -5,9 +5,11 @@ from esphome.const import (
     UNIT_WATT,
     UNIT_SECOND,
     UNIT_CELSIUS,
+	UNIT_VOLTS,
     ICON_GAUGE,
     ICON_TIMER,
     ICON_COUNTER,
+	ICON_CURRENT_AC,
     ICON_THERMOMETER,
     ICON_HEATING_COIL,
     STATE_CLASS_MEASUREMENT,
@@ -34,10 +36,11 @@ CONF_SENSOR_SALT_POWER = "salt_power"
 CONF_SENSOR_CONNECTION_COUNT = "connection_count"
 CONF_SENSOR_HEATER_WATTAGE = "heater_wattage"
 CONF_SENSOR_HEATER_RELAY = "heater_relay"
-CONF_SENSOR_TESTVAL1 = "testval1"
-CONF_SENSOR_TESTVAL2 = "testval2"
+CONF_SENSOR_VOLTAGE_L1 = "voltage_l1"
+CONF_SENSOR_VOLTAGE_HEATER = "voltage_heater"
+CONF_SENSOR_VOLTAGE_L2 = "voltage_l2"
 CONF_SENSOR_TESTVAL3 = "testval3"
-CONF_SENSOR_TESTVAL4 = "testval4"
+CONF_SENSOR_PCB_TEMPERATURE = "pcb_temperature"
 CONF_IQ2020_SERVER = "iq2020_server"
 
 CONFIG_SCHEMA = cv.Schema(
@@ -138,17 +141,26 @@ CONFIG_SCHEMA = cv.Schema(
             accuracy_decimals=0,
             icon=ICON_GAUGE
         ),
-        cv.Optional(CONF_SENSOR_TESTVAL1): sensor.sensor_schema(
-            unit_of_measurement=UNIT_WATT,
+        cv.Optional(CONF_SENSOR_VOLTAGE_L1): sensor.sensor_schema(
+            unit_of_measurement=UNIT_VOLTS,
             state_class=STATE_CLASS_MEASUREMENT,
+            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
             accuracy_decimals=0,
-            icon=ICON_GAUGE
+            icon=ICON_CURRENT_AC
         ),
-        cv.Optional(CONF_SENSOR_TESTVAL2): sensor.sensor_schema(
-            unit_of_measurement=UNIT_WATT,
+        cv.Optional(CONF_SENSOR_VOLTAGE_HEATER): sensor.sensor_schema(
+            unit_of_measurement=UNIT_VOLTS,
             state_class=STATE_CLASS_MEASUREMENT,
+            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
             accuracy_decimals=0,
-            icon=ICON_GAUGE
+            icon=ICON_CURRENT_AC
+        ),
+        cv.Optional(CONF_SENSOR_VOLTAGE_L2): sensor.sensor_schema(
+            unit_of_measurement=UNIT_VOLTS,
+            state_class=STATE_CLASS_MEASUREMENT,
+            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
+            accuracy_decimals=0,
+            icon=ICON_CURRENT_AC
         ),
         cv.Optional(CONF_SENSOR_TESTVAL3): sensor.sensor_schema(
             unit_of_measurement=UNIT_WATT,
@@ -156,11 +168,11 @@ CONFIG_SCHEMA = cv.Schema(
             accuracy_decimals=0,
             icon=ICON_GAUGE
         ),
-        cv.Optional(CONF_SENSOR_TESTVAL4): sensor.sensor_schema(
-            unit_of_measurement=UNIT_WATT,
+        cv.Optional(CONF_SENSOR_PCB_TEMPERATURE): sensor.sensor_schema(
+            unit_of_measurement=UNIT_FAHRENHEIT,
             state_class=STATE_CLASS_MEASUREMENT,
             accuracy_decimals=0,
-            icon=ICON_GAUGE
+            icon=ICON_THERMOMETER
         )
     }
 )
@@ -237,18 +249,22 @@ async def to_code(config):
         sens = await sensor.new_sensor(config[CONF_SENSOR_SALT_POWER])
         cg.add(server.set_salt_power_sensor(sens))
 
-    if CONF_SENSOR_TESTVAL1 in config:
-        sens = await sensor.new_sensor(config[CONF_SENSOR_TESTVAL1])
-        cg.add(server.set_testval1(sens))
+    if CONF_SENSOR_VOLTAGE_L1 in config:
+        sens = await sensor.new_sensor(config[CONF_SENSOR_VOLTAGE_L1])
+        cg.add(server.set_voltage_l1_sensor(sens))
 
-    if CONF_SENSOR_TESTVAL2 in config:
-        sens = await sensor.new_sensor(config[CONF_SENSOR_TESTVAL2])
-        cg.add(server.set_testval2(sens))
+    if CONF_SENSOR_VOLTAGE_HEATER in config:
+        sens = await sensor.new_sensor(config[CONF_SENSOR_VOLTAGE_HEATER])
+        cg.add(server.set_voltage_heater_sensor(sens))
+
+    if CONF_SENSOR_VOLTAGE_L2 in config:
+        sens = await sensor.new_sensor(config[CONF_SENSOR_VOLTAGE_L2])
+        cg.add(server.set_voltage_l2_sensor(sens))
 
     if CONF_SENSOR_TESTVAL3 in config:
         sens = await sensor.new_sensor(config[CONF_SENSOR_TESTVAL3])
         cg.add(server.set_testval3(sens))
 
-    if CONF_SENSOR_TESTVAL4 in config:
-        sens = await sensor.new_sensor(config[CONF_SENSOR_TESTVAL4])
-        cg.add(server.set_testval4(sens))
+    if CONF_SENSOR_PCB_TEMPERATURE in config:
+        sens = await sensor.new_sensor(config[CONF_SENSOR_PCB_TEMPERATURE])
+        cg.add(server.set_pcb_temperature_sensor(sens))

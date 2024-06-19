@@ -452,24 +452,13 @@ int IQ2020Component::processIQ2020Command() {
 			if (this->jets3_total_runtime_sensor_) this->jets3_total_runtime_sensor_->publish_state(readCounter(processingBuffer, 64));
 			if (this->lights_total_runtime_sensor_) this->lights_total_runtime_sensor_->publish_state(readCounter(processingBuffer, 72));
 
-			// Decode counters
-			//int HeaterTotalRuntime = readCounter(data, 40);
-			//int Jets1TotalRuntime = readCounter(data, 44);
-			//int LifetimeRuntimeSeconds1 = readCounter(data, 48);
-			//int PowerOnCounter = readCounter(data, 52);
-			//int Jets2TotalRuntime = readCounter(data, 60);
-			//int Jets3TotalRuntime = readCounter(data, 64);
-			//int UnknownCounter2 = readCounter(data, 68);
-			//int LightsTotalRuntime = readCounter(data, 72);
-			//int LifetimeRuntimeSeconds2 = readCounter(data, 78);
-			//int UnknownCounter3 = readCounter(data, 82);
-			//int UnknownCounter4 = readCounter(data, 86);
+			// Voltage sensors
+			if (this->voltage_l1_sensor_) this->voltage_l1_sensor_->publish_state((float)(processingBuffer[98] + (processingBuffer[99] << 8)));
+			if (this->voltage_heater_sensor_) this->voltage_heater_sensor_->publish_state((float)(processingBuffer[100] + (processingBuffer[101] << 8)));
+			if (this->voltage_l2_sensor_) this->voltage_l2_sensor_->publish_state((float)(processingBuffer[102] + (processingBuffer[103] << 8)));
 
-			// Mystery values
-			if (this->testval1_sensor_) this->testval1_sensor_->publish_state((float)processingBuffer[98]);
-			if (this->testval2_sensor_) this->testval2_sensor_->publish_state((float)processingBuffer[100]);
-			if (this->testval3_sensor_) this->testval3_sensor_->publish_state((float)processingBuffer[116]);
-			if (this->testval4_sensor_) this->testval4_sensor_->publish_state((float)processingBuffer[128]);
+			if (this->testval3_sensor_) this->testval3_sensor_->publish_state((float)(processingBuffer[116] + (processingBuffer[117] << 8)));
+			if (this->pcb_temperature_sensor_) this->pcb_temperature_sensor_->publish_state((float)processingBuffer[128]);
 #endif
 
 			if (pending_temp != -1) {
