@@ -63,6 +63,9 @@ public:
 	void set_jets2_total_runtime_sensor(esphome::sensor::Sensor *sensor) { this->jets2_total_runtime_sensor_ = sensor; }
 	void set_jets3_total_runtime_sensor(esphome::sensor::Sensor *sensor) { this->jets3_total_runtime_sensor_ = sensor; }
 	void set_lights_total_runtime_sensor(esphome::sensor::Sensor *sensor) { this->lights_total_runtime_sensor_ = sensor; }
+	void set_circ_pump_total_runtime_sensor(esphome::sensor::Sensor *sensor) { this->circ_pump_total_runtime_sensor_ = sensor; }
+	void set_jet1_low_total_runtime_sensor(esphome::sensor::Sensor *sensor) { this->jet1_low_total_runtime_sensor_ = sensor; }
+	void set_jet2_low_total_runtime_sensor(esphome::sensor::Sensor *sensor) { this->jet2_low_total_runtime_sensor_ = sensor; }
 	void set_power_on_counter_sensor(esphome::sensor::Sensor *sensor) { this->power_on_counter_sensor_ = sensor; }
 	void set_salt_power_sensor(esphome::sensor::Sensor *sensor) { this->salt_power_sensor_ = sensor; }
 	void set_voltage_l1_sensor(esphome::sensor::Sensor *sensor) { this->voltage_l1_sensor_ = sensor; }
@@ -136,6 +139,9 @@ protected:
 	esphome::sensor::Sensor *jets2_total_runtime_sensor_;
 	esphome::sensor::Sensor *jets3_total_runtime_sensor_;
 	esphome::sensor::Sensor *lights_total_runtime_sensor_;
+	esphome::sensor::Sensor *circ_pump_total_runtime_sensor_;
+	esphome::sensor::Sensor *jet1_low_total_runtime_sensor_;
+	esphome::sensor::Sensor *jet2_low_total_runtime_sensor_;
 	esphome::sensor::Sensor *power_on_counter_sensor_;
 	esphome::sensor::Sensor *salt_power_sensor_;
 	esphome::sensor::Sensor *voltage_l1_sensor_;

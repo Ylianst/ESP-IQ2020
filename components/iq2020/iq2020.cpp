@@ -429,6 +429,7 @@ int IQ2020Component::processIQ2020Command() {
 			}
 
 #ifdef USE_SENSOR
+			// Temperature sensors
 			if (temp_celsius) {
 				if (this->target_c_temp_sensor_) this->target_c_temp_sensor_->publish_state(target_temp);
 				if (this->current_c_temp_sensor_) this->current_c_temp_sensor_->publish_state(current_temp);
@@ -439,6 +440,7 @@ int IQ2020Component::processIQ2020Command() {
 				if (this->outlet_f_temp_sensor_) this->outlet_f_temp_sensor_->publish_state(outlet_temp);
 			}
 
+			// Runtime sensors
 			if (this->heater_total_runtime_sensor_) this->heater_total_runtime_sensor_->publish_state(readCounter(processingBuffer, 40));
 			if (this->jets1_total_runtime_sensor_) this->jets1_total_runtime_sensor_->publish_state(readCounter(processingBuffer, 44));
 			if (this->lifetime_runtime_sensor_) this->lifetime_runtime_sensor_->publish_state(readCounter(processingBuffer, 48));
@@ -446,6 +448,9 @@ int IQ2020Component::processIQ2020Command() {
 			if (this->jets2_total_runtime_sensor_) this->jets2_total_runtime_sensor_->publish_state(readCounter(processingBuffer, 60));
 			if (this->jets3_total_runtime_sensor_) this->jets3_total_runtime_sensor_->publish_state(readCounter(processingBuffer, 64));
 			if (this->lights_total_runtime_sensor_) this->lights_total_runtime_sensor_->publish_state(readCounter(processingBuffer, 72));
+			if (this->circ_pump_total_runtime_sensor_) this->circ_pump_total_runtime_sensor_->publish_state(readCounter(processingBuffer, 78));
+			if (this->jet1_low_total_runtime_sensor_) this->jet1_low_total_runtime_sensor_->publish_state(readCounter(processingBuffer, 82));
+			if (this->jet2_low_total_runtime_sensor_) this->jet2_low_total_runtime_sensor_->publish_state(readCounter(processingBuffer, 86));
 
 			// Voltage sensors
 			if (this->voltage_l1_sensor_) this->voltage_l1_sensor_->publish_state((float)(processingBuffer[98] + (processingBuffer[99] << 8)));
@@ -462,6 +467,7 @@ int IQ2020Component::processIQ2020Command() {
 			if (this->power_heater_sensor_) this->power_heater_sensor_->publish_state((float)(processingBuffer[116] + (processingBuffer[117] << 8)));
 			if (this->power_l2_sensor_) this->power_l2_sensor_->publish_state((float)(processingBuffer[118] + (processingBuffer[119] << 8)));
 
+			// Misc sensors
 			if (this->pcb_temperature_sensor_) this->pcb_temperature_sensor_->publish_state((float)processingBuffer[128]);
 #endif
 

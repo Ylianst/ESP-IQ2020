@@ -32,6 +32,9 @@ CONF_SENSOR_LIFETIME_RUNTIME = "lifetime_runtime"
 CONF_SENSOR_JETS2_TOTAL_RUNTIME = "jets2_total_runtime"
 CONF_SENSOR_JETS3_TOTAL_RUNTIME = "jets3_total_runtime"
 CONF_SENSOR_LIGHTS_TOTAL_RUNTIME = "lights_total_runtime"
+CONF_SENSOR_CIRCULATION_PUMP_TOTAL_RUNTIME = "circulation_pump_total_runtime"
+CONF_SENSOR_JETS1_LOW_RUNTIME = "jet1_low_total_runtime"
+CONF_SENSOR_JETS2_LOW_RUNTIME = "jet2_low_total_runtime"
 CONF_SENSOR_POWER_ON_COUNTER = "power_on_counter"
 CONF_SENSOR_SALT_POWER = "salt_power"
 CONF_SENSOR_CONNECTION_COUNT = "connection_count"
@@ -123,6 +126,21 @@ CONFIG_SCHEMA = cv.Schema(
             icon=ICON_TIMER
         ),
         cv.Optional(CONF_SENSOR_LIGHTS_TOTAL_RUNTIME): sensor.sensor_schema(
+            unit_of_measurement=UNIT_SECOND,
+            accuracy_decimals=0,
+            icon=ICON_TIMER
+        ),
+        cv.Optional(CONF_SENSOR_CIRCULATION_PUMP_TOTAL_RUNTIME): sensor.sensor_schema(
+            unit_of_measurement=UNIT_SECOND,
+            accuracy_decimals=0,
+            icon=ICON_TIMER
+        ),
+        cv.Optional(CONF_SENSOR_JETS1_LOW_RUNTIME): sensor.sensor_schema(
+            unit_of_measurement=UNIT_SECOND,
+            accuracy_decimals=0,
+            icon=ICON_TIMER
+        ),
+        cv.Optional(CONF_SENSOR_JETS2_LOW_RUNTIME): sensor.sensor_schema(
             unit_of_measurement=UNIT_SECOND,
             accuracy_decimals=0,
             icon=ICON_TIMER
@@ -259,6 +277,18 @@ async def to_code(config):
     if CONF_SENSOR_LIGHTS_TOTAL_RUNTIME in config:
         sens = await sensor.new_sensor(config[CONF_SENSOR_LIGHTS_TOTAL_RUNTIME])
         cg.add(server.set_lights_total_runtime_sensor(sens))
+
+    if CONF_SENSOR_CIRCULATION_PUMP_TOTAL_RUNTIME in config:
+        sens = await sensor.new_sensor(config[CONF_SENSOR_CIRCULATION_PUMP_TOTAL_RUNTIME])
+        cg.add(server.set_circ_pump_total_runtime_sensor(sens))
+
+    if CONF_SENSOR_JETS1_LOW_RUNTIME in config:
+        sens = await sensor.new_sensor(config[CONF_SENSOR_JETS1_LOW_RUNTIME])
+        cg.add(server.set_jet1_low_total_runtime_sensor(sens))
+
+    if CONF_SENSOR_JETS2_LOW_RUNTIME in config:
+        sens = await sensor.new_sensor(config[CONF_SENSOR_JETS2_LOW_RUNTIME])
+        cg.add(server.set_jet2_low_total_runtime_sensor(sens))
 
     if CONF_SENSOR_POWER_ON_COUNTER in config:
         sens = await sensor.new_sensor(config[CONF_SENSOR_POWER_ON_COUNTER])
