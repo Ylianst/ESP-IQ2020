@@ -2,6 +2,7 @@ import esphome.codegen as cg
 import esphome.config_validation as cv
 from esphome.components import binary_sensor
 from esphome.const import (
+    DEVICE_CLASS_SWITCH,
     DEVICE_CLASS_CONNECTIVITY,
     ENTITY_CATEGORY_DIAGNOSTIC,
 )
@@ -9,6 +10,7 @@ from . import ns, IQ2020Component
 
 CONF_SENSOR_CONNECTED = "connected"
 CONF_SENSOR_CONNECTIONKIT = "connectionkit"
+CONF_SENSOR_SALT_BOOST = "salt_boost"
 CONF_IQ2020_SERVER = "iq2020_server"
 
 CONFIG_SCHEMA = cv.Schema(
@@ -21,6 +23,9 @@ CONFIG_SCHEMA = cv.Schema(
         cv.Optional(CONF_SENSOR_CONNECTIONKIT): binary_sensor.binary_sensor_schema(
             device_class=DEVICE_CLASS_CONNECTIVITY,
             entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
+        ),
+        cv.Optional(CONF_SENSOR_SALT_BOOST): binary_sensor.binary_sensor_schema(
+            device_class=DEVICE_CLASS_SWITCH ,
         ),
     }
 )
@@ -35,3 +40,7 @@ async def to_code(config):
     if CONF_SENSOR_CONNECTIONKIT in config:
         sens = await binary_sensor.new_binary_sensor(config[CONF_SENSOR_CONNECTIONKIT])
         cg.add(server.set_connectionkit_sensor(sens))
+
+    if CONF_SENSOR_SALT_BOOST in config:
+        sens = await binary_sensor.new_binary_sensor(config[CONF_SENSOR_SALT_BOOST])
+        cg.add(server.set_salt_boost_sensor(sens))

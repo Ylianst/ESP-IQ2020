@@ -276,6 +276,13 @@ int IQ2020Component::processIQ2020Command() {
 		// This is a command from IQ2020 to the Salt System
 		//ESP_LOGD(TAG, "Salt REQ Data, len=%d, cmd=%02x%02x", cmdlen, processingBuffer[5], processingBuffer[6]);
 		//if (processingBuffer[7] <= 10) { setSwitchState(SWITCH_SALT_POWER, processingBuffer[7]); }
+
+#ifdef USE_BINARY_SENSOR
+		if (this->salt_boost_sensor_) {
+			if (processingBuffer[11] == 1) { this->salt_boost_sensor_->publish_state(true); }
+			if (processingBuffer[11] == 2) { this->salt_boost_sensor_->publish_state(false); }
+		}
+#endif
 	}
 
 	if ((processingBuffer[1] == 0x01) && ((processingBuffer[1] == 0x24) || (processingBuffer[1] == 0x29)) && (processingBuffer[4] == 0x80) && (cmdlen == 21) && (processingBuffer[5] == 0x1E) && (processingBuffer[6] == 0x01)) {
