@@ -412,10 +412,10 @@ Poll for heat pump status
 
 Heat pump data is as follows
 ```
-1F                - Destination Spa Connection Kit (0x1F).
-01                - Source IQ2020 (0x01).
-80                - Response (0x40 = Request, 0x80 = Response).
-1D07              - Command 0x1D07 Heat Pump Status
-FF                - Heat pump current operational status
-FF                - Heat pump current mode setting
+1F        - Destination Spa Connection Kit (0x1F).
+01        - Source IQ2020 (0x01).
+80        - Response (0x40 = Request, 0x80 = Response).
+1D07      - Command 0x1D07 Heat Pump Status
+FF        - Heat pump current operational status
+FF        - Heat pump current mode setting
 ```
