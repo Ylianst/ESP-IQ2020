@@ -5,6 +5,7 @@ from esphome.const import (
     UNIT_WATT,
     UNIT_SECOND,
     UNIT_CELSIUS,
+	UNIT_AMPERE,
     UNIT_VOLT,
     ICON_GAUGE,
     ICON_TIMER,
