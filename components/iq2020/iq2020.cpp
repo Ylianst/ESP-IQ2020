@@ -293,16 +293,15 @@ int IQ2020Component::processIQ2020Command() {
 #ifdef USE_SENSOR
 			if (this->salt_power_sensor_) this->salt_power_sensor_->publish_state(processingBuffer[7]);
 #endif
-			ESP_LOGD(TAG, "ACE Emulation, %d", processingBuffer[7]);
+			ESP_LOGD(TAG, "ACE Emulation, power = %d", processingBuffer[7]);
 			unsigned char cmd[] = { 0x1E, 0x01, processingBuffer[7], 0x00, 0x30, 0x00, 0x00, 0x05, 0x00, 0x00, 0x8C, 0x1B, 0x00, 0x00, 0x50 };
 			sendIQ2020Command(0x01, 0x24, 0x80, cmd, sizeof(cmd));
 		}
 	}
 
-	ESP_LOGD(TAG, "Salt1 RSP Data, len=%d, cmd=%02x%02x, power=%d", cmdlen, processingBuffer[5], processingBuffer[6], processingBuffer[7]);
 	if ((processingBuffer[1] == 0x01) && ((processingBuffer[2] == 0x24) || (processingBuffer[2] == 0x29)) && (processingBuffer[4] == 0x80) && (cmdlen == 21) && (processingBuffer[5] == 0x1E) && (processingBuffer[6] == 0x01)) {
 		// This is a reply command from the Salt System to the IQ2020
-		ESP_LOGD(TAG, "Salt2 RSP Data, len=%d, cmd=%02x%02x, power=%d", cmdlen, processingBuffer[5], processingBuffer[6], processingBuffer[7]);
+		//ESP_LOGD(TAG, "Salt RSP Data, len=%d, cmd=%02x%02x, power=%d", cmdlen, processingBuffer[5], processingBuffer[6], processingBuffer[7]);
 		if ((processingBuffer[7] <= 10) && (salt_power != processingBuffer[7])) {
 			salt_power = processingBuffer[7];
 			setSwitchState(SWITCH_SALT_POWER, processingBuffer[7]);
