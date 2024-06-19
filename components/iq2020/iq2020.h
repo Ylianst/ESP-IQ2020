@@ -70,6 +70,7 @@ public:
 	void set_jet2_low_total_runtime_sensor(esphome::sensor::Sensor *sensor) { this->jet2_low_total_runtime_sensor_ = sensor; }
 	void set_power_on_counter_sensor(esphome::sensor::Sensor *sensor) { this->power_on_counter_sensor_ = sensor; }
 	void set_salt_power_sensor(esphome::sensor::Sensor *sensor) { this->salt_power_sensor_ = sensor; }
+	void set_salt_content_sensor(esphome::sensor::Sensor *sensor) { this->salt_content_sensor_ = sensor; }
 	void set_voltage_l1_sensor(esphome::sensor::Sensor *sensor) { this->voltage_l1_sensor_ = sensor; }
 	void set_voltage_heater_sensor(esphome::sensor::Sensor *sensor) { this->voltage_heater_sensor_ = sensor; }
 	void set_voltage_l2_sensor(esphome::sensor::Sensor *sensor) { this->voltage_l2_sensor_ = sensor; }
@@ -148,6 +149,7 @@ protected:
 	esphome::sensor::Sensor *jet2_low_total_runtime_sensor_;
 	esphome::sensor::Sensor *power_on_counter_sensor_;
 	esphome::sensor::Sensor *salt_power_sensor_;
+	esphome::sensor::Sensor *salt_content_sensor_;
 	esphome::sensor::Sensor *voltage_l1_sensor_;
 	esphome::sensor::Sensor *voltage_heater_sensor_;
 	esphome::sensor::Sensor *voltage_l2_sensor_;
@@ -184,7 +186,8 @@ protected:
 	unsigned long next_poll = 0;
 	unsigned long next_retry = 0;
 	int next_retry_count = 0;
-	int salt_power = -1; // This is polled too frequently to send to HA each time. Only send when changes occur.
+	int salt_power = -1; // This is polled too frequently to send to HA each time.
+	int salt_content = -1; // This is polled too frequently to send to HA each time.
 
 	// IQ2020 processing
 	int nextPossiblePacket();

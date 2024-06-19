@@ -309,6 +309,12 @@ int IQ2020Component::processIQ2020Command() {
 			if (this->salt_power_sensor_) this->salt_power_sensor_->publish_state(processingBuffer[7]);
 #endif
 		}
+		if (salt_content != processingBuffer[17]) {
+			salt_content = processingBuffer[17];
+#ifdef USE_SENSOR
+			if (this->salt_content_sensor_) this->salt_content_sensor_->publish_state(processingBuffer[17]);
+#endif
+		}
 	}
 
 	if ((processingBuffer[1] == 0x1F) && (processingBuffer[2] == 0x01) && (processingBuffer[4] == 0x80)) {

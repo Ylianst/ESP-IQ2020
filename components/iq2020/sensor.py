@@ -37,6 +37,7 @@ CONF_SENSOR_JETS1_LOW_RUNTIME = "jet1_low_total_runtime"
 CONF_SENSOR_JETS2_LOW_RUNTIME = "jet2_low_total_runtime"
 CONF_SENSOR_POWER_ON_COUNTER = "power_on_counter"
 CONF_SENSOR_SALT_POWER = "salt_power"
+CONF_SENSOR_SALT_CONTENT = "salt_content"
 CONF_SENSOR_CONNECTION_COUNT = "connection_count"
 CONF_SENSOR_VOLTAGE_L1 = "voltage_l1"
 CONF_SENSOR_VOLTAGE_HEATER = "voltage_heater"
@@ -150,6 +151,10 @@ CONFIG_SCHEMA = cv.Schema(
             icon=ICON_COUNTER
         ),
         cv.Optional(CONF_SENSOR_SALT_POWER): sensor.sensor_schema(
+            accuracy_decimals=0,
+            icon=ICON_GAUGE
+        ),
+        cv.Optional(CONF_SENSOR_SALT_CONTENT): sensor.sensor_schema(
             accuracy_decimals=0,
             icon=ICON_GAUGE
         ),
@@ -297,6 +302,10 @@ async def to_code(config):
     if CONF_SENSOR_SALT_POWER in config:
         sens = await sensor.new_sensor(config[CONF_SENSOR_SALT_POWER])
         cg.add(server.set_salt_power_sensor(sens))
+
+    if CONF_SENSOR_SALT_CONTENT in config:
+        sens = await sensor.new_sensor(config[CONF_SENSOR_SALT_CONTENT])
+        cg.add(server.set_salt_content_sensor(sens))
 
     if CONF_SENSOR_VOLTAGE_L1 in config:
         sens = await sensor.new_sensor(config[CONF_SENSOR_VOLTAGE_L1])
