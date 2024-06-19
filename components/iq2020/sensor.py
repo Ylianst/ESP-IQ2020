@@ -180,21 +180,18 @@ CONFIG_SCHEMA = cv.Schema(
         cv.Optional(CONF_SENSOR_POWER_L1): sensor.sensor_schema(
             unit_of_measurement=UNIT_WATT,
             state_class=STATE_CLASS_MEASUREMENT,
-            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
             accuracy_decimals=0,
             icon=ICON_CURRENT_AC
         ),
         cv.Optional(CONF_SENSOR_POWER_HEATER): sensor.sensor_schema(
             unit_of_measurement=UNIT_WATT,
             state_class=STATE_CLASS_MEASUREMENT,
-            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
             accuracy_decimals=0,
             icon=ICON_CURRENT_AC
         ),
         cv.Optional(CONF_SENSOR_POWER_L2): sensor.sensor_schema(
             unit_of_measurement=UNIT_WATT,
             state_class=STATE_CLASS_MEASUREMENT,
-            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
             accuracy_decimals=0,
             icon=ICON_CURRENT_AC
         ),
