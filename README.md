@@ -68,8 +68,6 @@ sensor:
       name: Target Temperature
     outlet_f_temperature:
       name: Heater Outlet
-    heater_wattage:
-      name: Heater Power
     heater_total_runtime:
       name: Heater Runtime
     jets1_total_runtime:
@@ -84,6 +82,14 @@ sensor:
       name: Lights Runtime
     power_on_counter:
       name: Power On Counter
+    power_l1:
+      name: Power L1
+    power_heater:
+      name: Power Heater
+    power_l2:
+      name: Power L2
+    pcb_temperature:
+      name: PCB Temperature
 #    salt_power:
 #      name: Salt System Power
 
