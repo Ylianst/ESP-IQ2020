@@ -80,6 +80,12 @@ sensor:
 #      name: Jets 3 Runtime
     lights_total_runtime:
       name: Lights Runtime
+    circulation_pump_total_runtime:
+      name: Circulation Pump Runtime
+#    jet1_low_total_runtime:
+#      name: Jets 1 Low Runtime
+    jet2_low_total_runtime:
+      name: Jets 2 Low Runtime
     power_on_counter:
       name: Power On Counter
     power_l1:
@@ -89,7 +95,7 @@ sensor:
     power_l2:
       name: Heater Power
     pcb_temperature:
-      name: PCB Temperature
+      name: Controller Temperature
 #    salt_power:
 #      name: Salt System Power
 
