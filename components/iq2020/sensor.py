@@ -5,11 +5,11 @@ from esphome.const import (
     UNIT_WATT,
     UNIT_SECOND,
     UNIT_CELSIUS,
-	UNIT_VOLTS,
+    UNIT_VOLT,
     ICON_GAUGE,
     ICON_TIMER,
     ICON_COUNTER,
-	ICON_CURRENT_AC,
+    ICON_CURRENT_AC,
     ICON_THERMOMETER,
     ICON_HEATING_COIL,
     STATE_CLASS_MEASUREMENT,
@@ -142,21 +142,21 @@ CONFIG_SCHEMA = cv.Schema(
             icon=ICON_GAUGE
         ),
         cv.Optional(CONF_SENSOR_VOLTAGE_L1): sensor.sensor_schema(
-            unit_of_measurement=UNIT_VOLTS,
+            unit_of_measurement=UNIT_VOLT,
             state_class=STATE_CLASS_MEASUREMENT,
             entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
             accuracy_decimals=0,
             icon=ICON_CURRENT_AC
         ),
         cv.Optional(CONF_SENSOR_VOLTAGE_HEATER): sensor.sensor_schema(
-            unit_of_measurement=UNIT_VOLTS,
+            unit_of_measurement=UNIT_VOLT,
             state_class=STATE_CLASS_MEASUREMENT,
             entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
             accuracy_decimals=0,
             icon=ICON_CURRENT_AC
         ),
         cv.Optional(CONF_SENSOR_VOLTAGE_L2): sensor.sensor_schema(
-            unit_of_measurement=UNIT_VOLTS,
+            unit_of_measurement=UNIT_VOLT,
             state_class=STATE_CLASS_MEASUREMENT,
             entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
             accuracy_decimals=0,
