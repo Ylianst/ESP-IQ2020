@@ -307,10 +307,10 @@ FF - g3_sensor_status
 FF - ?
 00 - g3_level2_errors
 6800FF - ?
-07 - salline_test
-FF - g3_chlor_test_data
-00 - g3_ph_test_data
-00 - g3_clrmtr_test_data
+07 - salline_test (salinity test)
+FF - g3_chlor_test_data (chlorine test)
+00 - g3_ph_test_data (Ph)
+00 - g3_clrmtr_test_data (colorimeter test)
 B3100040 - ?
 ```
 
