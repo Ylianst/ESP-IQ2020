@@ -171,6 +171,7 @@ CONFIG_SCHEMA = cv.Schema(
         cv.Optional(CONF_SENSOR_PCB_TEMPERATURE): sensor.sensor_schema(
             unit_of_measurement=UNIT_FAHRENHEIT,
             state_class=STATE_CLASS_MEASUREMENT,
+            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
             accuracy_decimals=0,
             icon=ICON_THERMOMETER
         )
