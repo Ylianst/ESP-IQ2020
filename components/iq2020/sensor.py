@@ -156,6 +156,7 @@ CONFIG_SCHEMA = cv.Schema(
         ),
         cv.Optional(CONF_SENSOR_SALT_CONTENT): sensor.sensor_schema(
             accuracy_decimals=0,
+            state_class=STATE_CLASS_MEASUREMENT,
             icon=ICON_GAUGE
         ),
         cv.Optional(CONF_SENSOR_VOLTAGE_L1): sensor.sensor_schema(
