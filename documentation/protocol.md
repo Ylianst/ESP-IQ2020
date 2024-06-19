@@ -290,10 +290,28 @@ Temperature string. The value encode the temperature set point and current tempr
 "38.039.0" = 33382E3033392E30 (celsius)
 ```
 
-Read FreshWater Salt Module Data (Polled)
+Read FreshWater/ACE Salt Module Data (Polled)
 ```
 <-- 01 1F 40 1E03
 <-- 1F 01 80 1E030003FFFF00FF006800FF07FF0000B3100040
+```
+
+FreshWater/ACE Salt Module Data Decoding
+```
+1E03
+00 - spa_usage (0 to 10)
+03 - spa_size
+FF - g3_sensor_data
+FF - g3_sensor_status
+00 - dosing_state
+FF - ?
+00 - g3_level2_errors
+6800FF - ?
+07 - salline_test
+FF - g3_chlor_test_data
+00 - g3_ph_test_data
+00 - g3_clrmtr_test_data
+B3100040 - ?
 ```
 
 Freshwater Salt System - Set Power
