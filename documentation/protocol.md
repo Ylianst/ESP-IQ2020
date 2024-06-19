@@ -367,6 +367,22 @@ Poll for audio module status
 <-- 1F 01 80 190100190000000B0004010000
 ```
 
+Audio module data is as follows
+```
+1F                - Destination Spa Connection Kit (0x1F).
+01                - Source IQ2020 (0x01).
+80                - Response (0x40 = Request, 0x80 = Response).
+1901              - Command 0x1D07 Audio Module Status
+00                - ?
+19                - Audio volume
+000000            - ?
+0B                - Subwoofer volume
+00                - ?
+04                - Audio source selection
+01                - Audio wireless channel
+0000              - ?
+```
+
 Poll for heat pump status
 ```
 <-- 01 1F 40 1D07FF
