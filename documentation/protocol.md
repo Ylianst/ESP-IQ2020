@@ -391,14 +391,17 @@ Audio module data is as follows
 01                - Source IQ2020 (0x01).
 80                - Response (0x40 = Request, 0x80 = Response).
 1901              - Command 0x1D07 Audio Module Status
-00                - ?
-19                - Audio volume
-000000            - ?
-0B                - Subwoofer volume
-00                - ?
-04                - Audio source selection
-01                - Audio wireless channel
-0000              - ?
+00 - Power
+19 - Volume
+00 - Treble
+00 - Bass
+00 - Balance
+0B - Subwoofer volume
+00 - Play/pause status
+04 - Source selection
+01 - Wireless channel
+00 - Radio_signal strength
+00 - Bluetooth pairing
 ```
 
 Poll for heat pump status
