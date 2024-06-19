@@ -241,18 +241,19 @@ Main status decoding
 201C201C201C      - Pump1, Pump2, Pump3 timeouts (3 x 16bit Big-Endian)
 8403              - Blower timeout
 6054              - Lights timeout
-00000000          - ?
+00000000          - Pump1 speed, pump2 speed, pump3 speed, blower speed
 31303346          - "103F" ASCII string, the heater outlet temperature.
 02937400          - Heater total runtime in seconds (Big-Endian)
 ABC90A00          - Jets 1 total runtime in seconds (Big-Endian)
 033CDC05          - Lifetime 1 runtime in seconds (Big-Endian)
 45000000          - Power on / Boot counter (Big-Endian)
-00000000          - ?
+00000000          - Flags: stm_state, spa_lock_state, temp_lock_state, clean_lock_state
 7BD30C00          - Jets 2 total runtime in seconds (Big-Endian)
 00000000          - Jets 3 total runtime in seconds (Big-Endian)
-00000000          - Unknown counter
+00000000          - Blower total runtime in seconds (Big-Endian)
 B8AF0F00          - Lights total runtime in seconds (Big-Endian)
-0200              - ?
+02                - SPA state
+00                - SPA light state
 E902DC05          - Circulation pump runtime in seconds (Big-Endian)
 00000000          - Jets 1 low operation in seconds (Big-Endian)
 C2790A00          - Jets 2 low operation in seconds (Big-Endian)
@@ -261,14 +262,21 @@ C2790A00          - Jets 2 low operation in seconds (Big-Endian)
 F700              - Voltage Heater (Big-Endian)
 F700              - Voltage L2 (Big-Endian)
 0000              - Voltage Jet 3 (Big-Endian)
-00000000  - ?
-0F                - Water heater relay. 0x00 = Off, 0x0F = On
-0000000000        - ?
-5C00              - L1 wattage (Big-Endian)
-F30E              - Water heater wattage (Big-Endian)
-0000              - L2 wattage? (Big-Endian)
-013C001E00006A6F00  - ?
-080800            - Real-Time-Clock SS:MM:HH Seconds (0 to 59), Minutes (0 to 59), Hours (0 to 24).
+0000              - Current L1
+0000              - Current Heater
+0F00              - Current L2 (Heater power: 0x0000 = Off, 0x0F00 = On)
+0000              - Current Jet 3
+0000              - Power L1 wattage (Big-Endian)
+5C00              - Power Heater wattage (Big-Endian)
+F30E              - Power L2 wattage - Water heater wattage (Big-Endian)
+0000              - Power Jet 3 (Big-Endian)
+01                - Daily Clear Cycle
+3C00              - Filter Time 1
+1E00              - Filter Time 2
+00                - Flags: Hawk status econ / Hawl status circ
+6A                - PCB temperature
+6F                - Peripheral Current
+00080800          - Real-Time-Clock SS:MM:HH Seconds (0 to 59), Minutes (0 to 59), Hours (0 to 24).
 1300D407          - Real-Time-Clock DD:MM:YYYY Days (1 to 31), Month (0 to 11), Year (2 byte Big-Endian).
 01                - Real-Time-Clock Status
 ```
