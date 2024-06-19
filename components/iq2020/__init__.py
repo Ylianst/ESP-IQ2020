@@ -10,6 +10,7 @@ from esphome import pins
 AUTO_LOAD = ["socket"]
 
 DEPENDENCIES = ["uart", "network"]
+CONF_ACE_EMULATION = "ace_emulation"
 
 CONF_TEMP_UNIT = "temp_unit"
 MULTI_CONF = False
@@ -30,6 +31,7 @@ CONFIG_SCHEMA = cv.All(
             cv.Optional(CONF_PORT, default = 0): cv.port,
             cv.Optional(CONF_BUFFER_SIZE, default = 128): cv.All(cv.positive_int, validate_buffer_size),
             cv.Optional(CONF_FLOW_CONTROL_PIN): pins.gpio_output_pin_schema,
+            cv.Optional(CONF_ACE_EMULATION, default = false): cv.boolean,
         }
     )
     .extend(cv.COMPONENT_SCHEMA)
@@ -40,6 +42,7 @@ async def to_code(config):
     var = cg.new_Pvariable(config[CONF_ID])
     cg.add(var.set_port(config[CONF_PORT]))
     cg.add(var.set_buffer_size(config[CONF_BUFFER_SIZE]))
+    cg.add(var.set_ace_emulation(config[CONF_ACE_EMULATION]))
 
     if CONF_FLOW_CONTROL_PIN in config:
         pin = await gpio_pin_expression(config[CONF_FLOW_CONTROL_PIN])
