@@ -400,7 +400,7 @@ Audio module data is as follows
 00       - Play/pause status
 04       - Source selection (2 = Wireless, 3 = Aux, 4 = Bluetooth)
 01       - Wireless channel
-00       - Radio_signal strength
+00       - Radio signal strength
 00       - Bluetooth pairing
 ```
 
