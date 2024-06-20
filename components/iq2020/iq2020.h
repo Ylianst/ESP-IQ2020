@@ -80,7 +80,8 @@ public:
 	void set_power_l1_sensor(esphome::sensor::Sensor *sensor) { this->power_l1_sensor_ = sensor; }
 	void set_power_heater_sensor(esphome::sensor::Sensor *sensor) { this->power_heater_sensor_ = sensor; }
 	void set_power_l2_sensor(esphome::sensor::Sensor *sensor) { this->power_l2_sensor_ = sensor; }
-	void set_pcb_temperature_sensor(esphome::sensor::Sensor *sensor) { this->pcb_temperature_sensor_ = sensor; }
+	void set_pcb_f_temperature_sensor(esphome::sensor::Sensor *sensor) { this->pcb_temperature_f_sensor_ = sensor; }
+	void set_pcb_c_temperature_sensor(esphome::sensor::Sensor *sensor) { this->pcb_temperature_c_sensor_ = sensor; }
 #endif
 #ifdef USE_TEXT_SENSOR
 	void set_version_sensor(esphome::text_sensor::TextSensor *text) { this->version_sensor_ = text; }
@@ -159,7 +160,8 @@ protected:
 	esphome::sensor::Sensor *power_l1_sensor_;
 	esphome::sensor::Sensor *power_heater_sensor_;
 	esphome::sensor::Sensor *power_l2_sensor_;
-	esphome::sensor::Sensor *pcb_temperature_sensor_;
+	esphome::sensor::Sensor *pcb_f_temperature_sensor_;
+	esphome::sensor::Sensor *pcb_c_temperature_sensor_;
 #endif
 #ifdef USE_TEXT_SENSOR
 	esphome::text_sensor::TextSensor *version_sensor_;

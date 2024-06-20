@@ -495,7 +495,8 @@ int IQ2020Component::processIQ2020Command() {
 			if (this->power_l2_sensor_) this->power_l2_sensor_->publish_state((float)(processingBuffer[118] + (processingBuffer[119] << 8)));
 
 			// Misc sensors
-			if (this->pcb_temperature_sensor_) this->pcb_temperature_sensor_->publish_state((float)processingBuffer[128]);
+			if (this->pcb_f_temperature_sensor_) this->pcb_f_temperature_sensor_->publish_state((float)processingBuffer[128]);
+			if (this->pcb_c_temperature_sensor_) this->pcb_c_temperature_sensor_->publish_state(fahrenheit_to_celsius((float)processingBuffer[128]));
 			if (this->salt_power_sensor_ && (salt_power >= 0)) this->salt_power_sensor_->publish_state(salt_power);
 			if (this->salt_content_sensor_ && (salt_content >= 0)) this->salt_content_sensor_->publish_state((float)salt_content);
 #endif

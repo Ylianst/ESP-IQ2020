@@ -48,7 +48,8 @@ CONF_SENSOR_CURRENT_L2 = "current_l2"
 CONF_SENSOR_POWER_L1 = "power_l1"
 CONF_SENSOR_POWER_HEATER = "power_heater"
 CONF_SENSOR_POWER_L2 = "power_l2"
-CONF_SENSOR_PCB_TEMPERATURE = "pcb_temperature"
+CONF_SENSOR_PCB_F_TEMPERATURE = "pcb_f_temperature"
+CONF_SENSOR_PCB_C_TEMPERATURE = "pcb_c_temperature"
 CONF_IQ2020_SERVER = "iq2020_server"
 
 CONFIG_SCHEMA = cv.Schema(
@@ -219,11 +220,18 @@ CONFIG_SCHEMA = cv.Schema(
             accuracy_decimals=0,
             icon=ICON_HEATING_COIL
         ),
-        cv.Optional(CONF_SENSOR_PCB_TEMPERATURE): sensor.sensor_schema(
+        cv.Optional(CONF_SENSOR_PCB_F_TEMPERATURE): sensor.sensor_schema(
             unit_of_measurement=UNIT_FAHRENHEIT,
             state_class=STATE_CLASS_MEASUREMENT,
             entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
             accuracy_decimals=0,
+            icon=ICON_THERMOMETER
+        ),
+        cv.Optional(CONF_SENSOR_PCB_C_TEMPERATURE): sensor.sensor_schema(
+            unit_of_measurement=UNIT_CELSIUS,
+            state_class=STATE_CLASS_MEASUREMENT,
+            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
+            accuracy_decimals=1,
             icon=ICON_THERMOMETER
         )
     }
@@ -344,6 +352,10 @@ async def to_code(config):
         sens = await sensor.new_sensor(config[CONF_SENSOR_POWER_L2])
         cg.add(server.set_power_l2_sensor(sens))
 
-    if CONF_SENSOR_PCB_TEMPERATURE in config:
-        sens = await sensor.new_sensor(config[CONF_SENSOR_PCB_TEMPERATURE])
-        cg.add(server.set_pcb_temperature_sensor(sens))
+    if CONF_SENSOR_PCB_F_TEMPERATURE in config:
+        sens = await sensor.new_sensor(config[CONF_SENSOR_PCB_F_TEMPERATURE])
+        cg.add(server.set_pcb_f_temperature_sensor(sens))
+
+    if CONF_SENSOR_PCB_C_TEMPERATURE in config:
+        sens = await sensor.new_sensor(config[CONF_SENSOR_PCB_C_TEMPERATURE])
+        cg.add(server.set_pcb_c_temperature_sensor(sens))
