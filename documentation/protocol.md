@@ -404,6 +404,26 @@ Audio module data is as follows
 00       - Bluetooth pairing
 ```
 
+Audio commands from and to the internet kit
+```
+01 1F 40 1900030400   - Audio Bluetooth
+01 1F 40 1900030300   - Audio aux
+01 1F 40 1900030200   - Audio wireless
+01 1F 40 1900040000   - Audio off
+1F 01 80 190006       - Confirmation
+```
+
+Audio commands to the audio module
+```
+33 01 40 190100       - Poll state
+33 01 40 190101       - Audio on
+33 01 40 190102       - Audio off
+33 01 40 190302       - Audio source wireless
+33 01 40 190303       - Audio source aux
+33 01 40 190304       - Audio source Bluetooth
+01 33 80 190100190000000B0004010000 - Confirmation
+```
+
 Poll for heat pump status
 ```
 <-- 01 1F 40 1D07FF
