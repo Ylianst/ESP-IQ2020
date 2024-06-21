@@ -251,6 +251,12 @@ int IQ2020Component::nextPossiblePacket() {
 	return processingBufferLen;
 }
 
+int IQ2020Component::setAudioButton(int button) {
+#ifdef USE_SENSOR
+	if (this->audio_buttons_sensor_) this->audio_buttons_sensor_->publish_state(button);
+#endif
+}
+
 int IQ2020Component::processIQ2020Command() {
 	if (processingBufferLen < 6) return 0; // Need more data
 	if ((processingBuffer[0] != 0x1C) || ((processingBuffer[4] != 0x40) && (processingBuffer[4] != 0x80))) { ESP_LOGD(TAG, "Receive buffer out of sync!"); return nextPossiblePacket(); } // Out of sync
@@ -277,11 +283,12 @@ int IQ2020Component::processIQ2020Command() {
 
 	if ((processingBuffer[1] == 0x33) && (processingBuffer[2] == 0x01) && (processingBuffer[4] == 0x40) && (cmdlen >= 8)) {
 		// This is a command from IQ2020 to the audio module
-		ESP_LOGD(TAG, "Audio REQ Data, len=%d, cmd=%02x%02x", cmdlen, processingBuffer[5], processingBuffer[6]);
-		 
+		//ESP_LOGD(TAG, "Audio REQ Data, len=%d, cmd=%02x%02x", cmdlen, processingBuffer[5], processingBuffer[6]);
+
 		int responded = 0;
 		if ((processingBuffer[5] == 0x19) && (cmdlen >= 9)) {
 			if ((processingBuffer[6] == 0x01) && (cmdlen == 9)) { // Audio controls
+				setAudioButton(processingBuffer[7]);
 				switch (processingBuffer[7]) {
 				case 1: ESP_LOGD(TAG, "AUDIO - PLAY"); break;
 				case 2: ESP_LOGD(TAG, "AUDIO - PAUSE"); break;
@@ -298,6 +305,9 @@ int IQ2020Component::processIQ2020Command() {
 			}
 			else if ((processingBuffer[6] == 0x00) && (processingBuffer[7] == 0x01) && (cmdlen == 14)) { // Audio settings
 				ESP_LOGD(TAG, "AUDIO - Volume=%d, Tremble=%d, Bass=%d, Balance=%d, Subwoofer=%d", processingBuffer[8], processingBuffer[9], processingBuffer[10], processingBuffer[11], processingBuffer[12]);
+#ifdef USE_SENSOR
+				if (this->audio_volume_sensor_) this->audio_volume_sensor_->publish_state(processingBuffer[8]);
+#endif
 			}
 			else if (processingBuffer[6] == 0x06) { // Song title
 				const char* song = "\x19\x06Sample Song";

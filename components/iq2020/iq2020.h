@@ -84,6 +84,8 @@ public:
 	void set_power_l2_sensor(esphome::sensor::Sensor *sensor) { this->power_l2_sensor_ = sensor; }
 	void set_pcb_f_temperature_sensor(esphome::sensor::Sensor *sensor) { this->pcb_f_temperature_sensor_ = sensor; }
 	void set_pcb_c_temperature_sensor(esphome::sensor::Sensor *sensor) { this->pcb_c_temperature_sensor_ = sensor; }
+	void set_audio_buttons_sensor(esphome::sensor::Sensor *sensor) { this->audio_buttons_sensor_ = sensor; }
+	void set_audio_volume_sensor(esphome::sensor::Sensor *sensor) { this->audio_volume_sensor_ = sensor; }
 #endif
 #ifdef USE_TEXT_SENSOR
 	void set_version_sensor(esphome::text_sensor::TextSensor *text) { this->version_sensor_ = text; }
@@ -102,6 +104,7 @@ public:
 
 protected:
 	void publish_sensor();
+	int setAudioButton(int button);
 
 	void accept();
 	void cleanup();
@@ -166,6 +169,8 @@ protected:
 	esphome::sensor::Sensor *power_l2_sensor_;
 	esphome::sensor::Sensor *pcb_f_temperature_sensor_;
 	esphome::sensor::Sensor *pcb_c_temperature_sensor_;
+	esphome::sensor::Sensor *audio_buttons_sensor_;
+	esphome::sensor::Sensor *audio_volume_sensor_;
 #endif
 #ifdef USE_TEXT_SENSOR
 	esphome::text_sensor::TextSensor *version_sensor_;

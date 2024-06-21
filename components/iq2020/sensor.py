@@ -50,6 +50,8 @@ CONF_SENSOR_POWER_HEATER = "power_heater"
 CONF_SENSOR_POWER_L2 = "power_l2"
 CONF_SENSOR_PCB_F_TEMPERATURE = "pcb_f_temperature"
 CONF_SENSOR_PCB_C_TEMPERATURE = "pcb_c_temperature"
+CONF_SENSOR_AUDIO_BUTTONS = "audio_buttons"
+CONF_SENSOR_AUDIO_VOLUME = "audio_volume"
 CONF_IQ2020_SERVER = "iq2020_server"
 
 CONFIG_SCHEMA = cv.Schema(
@@ -233,6 +235,13 @@ CONFIG_SCHEMA = cv.Schema(
             entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
             accuracy_decimals=1,
             icon=ICON_THERMOMETER
+        ),
+        cv.Optional(CONF_SENSOR_AUDIO_BUTTONS): sensor.sensor_schema(
+            accuracy_decimals=0
+        ),
+        cv.Optional(CONF_SENSOR_AUDIO_VOLUME): sensor.sensor_schema(
+            accuracy_decimals=0,
+            device_class=DEVICE_CLASS_VOLUME
         )
     }
 )
@@ -359,3 +368,11 @@ async def to_code(config):
     if CONF_SENSOR_PCB_C_TEMPERATURE in config:
         sens = await sensor.new_sensor(config[CONF_SENSOR_PCB_C_TEMPERATURE])
         cg.add(server.set_pcb_c_temperature_sensor(sens))
+
+    if CONF_SENSOR_AUDIO_BUTTONS in config:
+        sens = await sensor.new_sensor(config[CONF_SENSOR_AUDIO_BUTTONS])
+        cg.add(server.set_audio_buttons_sensor(sens))
+
+    if CONF_SENSOR_AUDIO_VOLUME in config:
+        sens = await sensor.new_sensor(config[CONF_SENSOR_AUDIO_VOLUME])
+        cg.add(server.set_audio_volume_sensor(sens))
