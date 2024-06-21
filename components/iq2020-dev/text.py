@@ -10,7 +10,7 @@ CONF_IQ2020_SERVER = "iq2020_server"
 CONF_TEXT_DATAPOINT = "datapoint"
 
 iq2020_text_ns = cg.esphome_ns.namespace('iq2020_text')
-IQ2020Text = iq2020_text_ns.class_('IQ2020Test', text.Text, cg.Component)
+IQ2020Text = iq2020_text_ns.class_('IQ2020Text', text.Text, cg.Component)
 
 CONFIG_SCHEMA = text.TEXT_SCHEMA.extend({
     cv.GenerateID(): cv.declare_id(IQ2020Text)
