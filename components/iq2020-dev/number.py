@@ -19,7 +19,6 @@ CONFIG_SCHEMA = number.NUMBER_SCHEMA.extend({
 async def to_code(config):
     server = cg.new_Pvariable(config[CONF_ID])
     await cg.register_component(server, config)
-    await number.register_number(server, config)
+    await number.register_number(server, config, min_value=0, max_value=100, step=4)
 
-    if config[CONF_NUMBER_DATAPOINT] == 0:
-        cg.add(server.set_number_id(config[CONF_NUMBER_DATAPOINT], min_value=0, max_value=100, step=4))
+    cg.add(server.set_number_id(config[CONF_NUMBER_DATAPOINT]))
