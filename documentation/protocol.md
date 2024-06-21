@@ -419,17 +419,17 @@ Audio commands to the audio module
 33 01 40 1900 0128 0000000B - Set Volume Max
 33 01 40 1900 0110 0000000B - Set Volume 1
 33 01 40 1900 010F 0000000B - Set Volume 0
-33 01 40 190100             - Poll state
-33 01 40 190101             - Audio Play
-33 01 40 190102             - Audio Pause
-33 01 40 190103             - Audio Next
-33 01 40 190104             - Audio Previous
-33 01 40 190302             - Audio source wireless (TV)
-33 01 40 190303             - Audio source aux
-33 01 40 190304             - Audio source Bluetooth
-33 01 40 190600             - Poll song/artist name
-33 01 40 190700             - Poll song/artist name
-01 33 80 190100190000000B0004010000 - Confirm with state
+33 01 40 1901 00            - Poll state
+33 01 40 1901 01            - Audio Play
+33 01 40 1901 02            - Audio Pause
+33 01 40 1901 03            - Audio Next
+33 01 40 1901 04            - Audio Previous
+33 01 40 1903 02            - Audio source wireless (TV)
+33 01 40 1903 03            - Audio source aux
+33 01 40 1903 04            - Audio source Bluetooth
+33 01 40 1906 00            - Poll song/artist name
+33 01 40 1907 00            - Poll song/artist name
+01 33 80 1901 00190000000B0004010000 - Confirm with state
 ```
 
 Poll for heat pump status
