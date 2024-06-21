@@ -406,12 +406,12 @@ Audio module data is as follows
 
 Audio commands from and to the internet kit
 ```
-01 1F 40 1900030400   - Audio source Bluetooth
-01 1F 40 1900030300   - Audio source aux
-01 1F 40 1900030200   - Audio source wireless
-01 1F 40 1900040100   - Audio on
-01 1F 40 1900040000   - Audio off
-1F 01 80 190006       - Confirmation
+01 1F 40 1900 030400        - Audio source Bluetooth
+01 1F 40 1900 030300        - Audio source aux
+01 1F 40 1900 030200        - Audio source wireless
+01 1F 40 1900 040100        - Audio on
+01 1F 40 1900 040000        - Audio off
+1F 01 80 1900 06            - Confirmation
 ```
 
 Audio commands to the audio module
@@ -434,8 +434,8 @@ Audio commands to the audio module
 
 Poll for heat pump status
 ```
-01 1F 40 1D07FF
-1F 01 80 1D07FFFF
+01 1F 40 1D07 FF
+1F 01 80 1D07 FFFF
 ```
 
 Heat pump data is as follows
