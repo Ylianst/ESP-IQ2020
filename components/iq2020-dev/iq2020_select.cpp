@@ -28,9 +28,9 @@ namespace iq2020_select {
 	}
 
 	void IQ2020Select::publish_state_ex(int value) {
-		if (value == 2) this->publish_state_ex("TV");
-		if (value == 3) this->publish_state_ex("Aux");
-		if (value == 4) this->publish_state_ex("Bluetooth");
+		if (value == 2) this->publish_state("TV");
+		if (value == 3) this->publish_state("Aux");
+		if (value == 4) this->publish_state("Bluetooth");
 	}
 
 	void IQ2020Select::dump_config() {
