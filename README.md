@@ -181,4 +181,4 @@ For added details:
   - [Audio Module Emulation](https://github.com/Ylianst/ESP-IQ2020/blob/main/documentation/audio.md)
 
 Known Issues:
-  - Jets 3 and 4 may work but will not show the running state properly, but if we have such a hot tub and can send me traffic logs, I can probably add support for it.
+  - Jet 3 may work but will not show the running state properly, but if we have such a hot tub and can send me traffic logs, I can probably add support for it.
