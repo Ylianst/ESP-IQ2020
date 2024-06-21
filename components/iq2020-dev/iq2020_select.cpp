@@ -16,7 +16,7 @@ namespace iq2020_select {
 	}
 
 	void IQ2020Select::control(const std::string &value) {
-		ESP_LOGD(TAG, "Select:%d control state: %s", select_id, value);
+		//ESP_LOGD(TAG, "Select:%d control state: %s", select_id, value);
 		this->publish_state(value);
 
 		// TV = 2, Aux = 3, Bluetooth = 4
@@ -28,10 +28,10 @@ namespace iq2020_select {
 	}
 
 	void IQ2020Select::publish_state_ex(int value) {
-		ESP_LOGD(TAG, "xxxxx Select:%d publish_state_ex: %d", select_id, value);
-		if (value == 2) { ESP_LOGD(TAG, "AA2"); this->publish_state("TV"); }
-		if (value == 3) { ESP_LOGD(TAG, "AA3"); this->publish_state("Aux"); }
-		if (value == 4) { ESP_LOGD(TAG, "AA4"); this->publish_state("Bluetooth"); }
+		//ESP_LOGD(TAG, "Select:%d publish_state_ex: %d", select_id, value);
+		if (value == 2) { this->publish_state("TV"); }
+		if (value == 3) { this->publish_state("Aux"); }
+		if (value == 4) { this->publish_state("Bluetooth"); }
 	}
 
 	void IQ2020Select::dump_config() {
