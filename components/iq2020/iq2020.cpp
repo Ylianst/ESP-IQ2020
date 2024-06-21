@@ -95,7 +95,9 @@ void IQ2020Component::dump_config() {
 	if (this->flow_control_pin_ != nullptr) {
 		ESP_LOGCONFIG(TAG, "  Flow Control Pin: ", this->flow_control_pin_);
 	}
-	ESP_LOGCONFIG(TAG, "  Polling Rate: %d", polling_rate_);
+	if (this->ace_emulation_) { ESP_LOGCONFIG(TAG, "  Ace Emulation Enabled"); }
+	if (this->audio_emulation_) { ESP_LOGCONFIG(TAG, "  Audio Emulation Enabled"); }
+	ESP_LOGCONFIG(TAG, "  Polling Rate: %d", this->polling_rate_);
 #ifdef USE_BINARY_SENSOR
 	LOG_BINARY_SENSOR("  ", "Connected:", this->connected_sensor_);
 #endif
@@ -405,7 +407,8 @@ int IQ2020Component::processIQ2020Command() {
 
 		if ((cmdlen == 140) && (processingBuffer[5] == 0x02) && (processingBuffer[6] == 0x56)) {
 			// This is the main status data (jets, temperature)
-			if (!versionstr.empty()) { next_poll = ::millis() + (polling_rate_ * 1000); } // Next poll in 65 seconds
+			//if (!versionstr.empty()) { next_poll = ::millis() + (this->polling_rate_ * 1000); } // Next poll
+			if (!versionstr.empty()) { next_poll = ::millis() + 65000; } // Next poll in 65 seconds
 
 			// Read state flags
 			unsigned char flags1 = processingBuffer[9];

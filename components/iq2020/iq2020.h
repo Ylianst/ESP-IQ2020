@@ -46,7 +46,7 @@ public:
 	void set_flow_control_pin(esphome::GPIOPin *flow_control_pin) { this->flow_control_pin_ = flow_control_pin; }
 	void set_ace_emulation(bool ace_emulation) { this->ace_emulation_ = ace_emulation; }
 	void set_audio_emulation(bool audio_emulation) { this->audio_emulation_ = audio_emulation; }
-	void set_polling_rate(bool polling_rate) { if (polling_rate >= 5) { this->polling_rate_ = polling_rate; } }
+	void set_polling_rate(bool polling_rate) { this->polling_rate_ = polling_rate; }
 
 #ifdef USE_BINARY_SENSOR
 	void set_connected_sensor(esphome::binary_sensor::BinarySensor *connected) { this->connected_sensor_ = connected; }
