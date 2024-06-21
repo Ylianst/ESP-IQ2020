@@ -289,7 +289,7 @@ int IQ2020Component::processIQ2020Command() {
 		int responded = 0;
 		if ((processingBuffer[5] == 0x19) && (cmdlen >= 9)) {
 			if ((processingBuffer[6] == 0x01) && (cmdlen == 9)) { // Audio controls
-				setAudioButton(processingBuffer[7]);
+				if (processingBuffer[7] > 0) { setAudioButton(processingBuffer[7]); }
 				switch (processingBuffer[7]) {
 				case 1: ESP_LOGD(TAG, "AUDIO - PLAY"); break;
 				case 2: ESP_LOGD(TAG, "AUDIO - PAUSE"); break;
