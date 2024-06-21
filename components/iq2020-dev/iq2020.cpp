@@ -32,9 +32,9 @@ float celsius_to_fahrenheit(float c) { return c * 9 / 5 + 32; }
 int readCounter(unsigned char* data, int offset) { return (data[offset]) + (data[offset + 1] << 8) + (data[offset + 2] << 16) + (data[offset + 3] << 24); }
 
 void IQ2020Component::setup() {
-	for (int i = 0; i < SWITCHCOUNT; i++) { switch_state[i] = switch_pending[i] = -1; }
-	for (int i = 0; i < SELECTCOUNT; i++) { select_state[i] = select_pending[i] = -1; }
-	for (int i = 0; i < NUMBERCOUNT; i++) { number_state[i] = number_pending[i] = -1; }
+	for (int i = 0; i < SWITCHCOUNT; i++) { switch_state[i] = switch_pending[i] = NOT_SET; }
+	for (int i = 0; i < SELECTCOUNT; i++) { select_state[i] = select_pending[i] = NOT_SET; }
+	for (int i = 0; i < NUMBERCOUNT; i++) { number_state[i] = number_pending[i] = NOT_SET; }
 	g_iq2020_main = this;
 	if (this->flow_control_pin_ != nullptr) { this->flow_control_pin_->setup(); }
 	//ESP_LOGD(TAG, "Setting up IQ2020...");
@@ -49,7 +49,6 @@ void IQ2020Component::setup() {
 #else
 		socklen_t bind_addrlen = socket::set_sockaddr_any(reinterpret_cast<struct sockaddr *>(&bind_addr), sizeof(bind_addr), htons(this->port_));
 #endif
-
 		this->socket_ = socket::socket_ip(SOCK_STREAM, PF_INET);
 		this->socket_->setblocking(false);
 		this->socket_->bind(reinterpret_cast<struct sockaddr *>(&bind_addr), bind_addrlen);
@@ -74,7 +73,7 @@ void IQ2020Component::loop() {
 	// Check if there is any pending commands that need retry
 	if ((next_retry_count > 0) && (next_retry < now)) {
 		for (int switchid = 0; switchid < SWITCHCOUNT; switchid++) {
-			if (switch_pending[switchid] != -1) {
+			if (switch_pending[switchid] != NOT_SET) {
 				ESP_LOGE(TAG, "Retry %d set to %d", switchid, switch_pending[switchid]);
 				switchAction(switchid, switch_pending[switchid]); // Try again
 				next_retry_count--; // Setup for the next retry
@@ -83,7 +82,7 @@ void IQ2020Component::loop() {
 			}
 		}
 		for (int selectid = 0; selectid < SELECTCOUNT; selectid++) {
-			if (select_pending[selectid] != -1) {
+			if (select_pending[selectid] != NOT_SET) {
 				ESP_LOGE(TAG, "Retry %d set to %d", selectid, select_pending[selectid]);
 				selectAction(selectid, select_pending[selectid]); // Try again
 				next_retry_count--; // Setup for the next retry
@@ -320,6 +319,10 @@ int IQ2020Component::processIQ2020Command() {
 			else if ((processingBuffer[6] == 0x00) && (processingBuffer[7] == 0x01) && (cmdlen == 14)) { // Audio settings
 				ESP_LOGD(TAG, "AUDIO - Volume=%d, Tremble=%d, Bass=%d, Balance=%d, Subwoofer=%d", processingBuffer[8], processingBuffer[9], processingBuffer[10], processingBuffer[11], processingBuffer[12]);
 				setNumberState(NUMBER_AUDIO_VOLUME, (processingBuffer[8] - 15) * 4);
+				setNumberState(NUMBER_AUDIO_TREMBLE, processingBuffer[9]);
+				setNumberState(NUMBER_AUDIO_BASS, processingBuffer[10]);
+				setNumberState(NUMBER_AUDIO_BALANCE, processingBuffer[11]);
+				setNumberState(NUMBER_AUDIO_SUBWOOFER, processingBuffer[12]);
 #ifdef USE_SENSOR
 				if (this->audio_volume_sensor_) this->audio_volume_sensor_->publish_state((processingBuffer[8] - 15) * 4);
 #endif
@@ -410,18 +413,22 @@ int IQ2020Component::processIQ2020Command() {
 
 		if ((cmdlen == 9) && (processingBuffer[5] == 0xE1) && (processingBuffer[6] == 0x02) && (processingBuffer[7] == 0x06)) {
 			// Confirmation that the fresh water salt system has changed power state
-			setSwitchState(SWITCH_SALT_POWER, -1);
+			setSwitchState(SWITCH_SALT_POWER, NOT_SET);
 		}
 
 		if ((cmdlen == 9) && (processingBuffer[5] == 0x19) && (processingBuffer[6] == 0x00) && (processingBuffer[7] == 0x06)) {
 			// Confirmation that the audio command was received
-			setSelectState(SELECT_AUDIO_SOURCE, -1);
+			setSelectState(SELECT_AUDIO_SOURCE, NOT_SET);
 		}
 
 		if ((cmdlen == 19) && (processingBuffer[5] == 0x19) && (processingBuffer[6] == 0x01)) {
 			// Status of audio module
 			setSelectState(SELECT_AUDIO_SOURCE, processingBuffer[14]); // Audio Source
 			setNumberState(NUMBER_AUDIO_VOLUME, (processingBuffer[8] - 15) * 4);
+			setNumberState(NUMBER_AUDIO_TREMBLE, processingBuffer[9]);
+			setNumberState(NUMBER_AUDIO_BASS, processingBuffer[10]);
+			setNumberState(NUMBER_AUDIO_BALANCE, processingBuffer[11]);
+			setNumberState(NUMBER_AUDIO_SUBWOOFER, processingBuffer[12]);
 #ifdef USE_SENSOR
 			if (this->audio_volume_sensor_) { this->audio_volume_sensor_->publish_state((processingBuffer[8] - 15) * 4); } // Audio Volume
 #endif
@@ -437,7 +444,7 @@ int IQ2020Component::processIQ2020Command() {
 
 		if ((cmdlen == 9) && (processingBuffer[5] == 0x17) && (processingBuffer[6] == 0x02) && (processingBuffer[7] == 0x06)) {
 			// Confirmation that the pending light command was received
-			setSwitchState(SWITCH_LIGHTS, -1);
+			setSwitchState(SWITCH_LIGHTS, NOT_SET);
 		}
 
 		if ((cmdlen == 9) && (processingBuffer[5] == 0x0B) && (processingBuffer[6] == 0x1D)) {
@@ -482,12 +489,12 @@ int IQ2020Component::processIQ2020Command() {
 			pollState();
 		}
 
-		if ((pending_temp != -1) && (cmdlen == 9) && (processingBuffer[5] == 0x01) && (processingBuffer[6] == 0x09) && (processingBuffer[7] == 0x06)) {
+		if ((pending_temp != NOT_SET) && (cmdlen == 9) && (processingBuffer[5] == 0x01) && (processingBuffer[6] == 0x09) && (processingBuffer[7] == 0x06)) {
 			// Confirmation that the pending temperature change command was received
 			target_temp = pending_temp_cmd;
-			if (pending_temp == pending_temp_cmd) { pending_temp = -1; pending_temp_retry = 0; }
-			pending_temp = -1;
-			pending_temp_cmd = -1;
+			if (pending_temp == pending_temp_cmd) { pending_temp = NOT_SET; pending_temp_retry = 0; }
+			pending_temp = NOT_SET;
+			pending_temp_cmd = NOT_SET;
 			ESP_LOGD(TAG, "Temp Set Confirmation, Target Temp: %.1f", target_temp);
 #ifdef USE_SENSOR
 			if (temp_celsius) {
@@ -505,7 +512,7 @@ int IQ2020Component::processIQ2020Command() {
 
 		if ((cmdlen == 140) && (processingBuffer[5] == 0x02) && (processingBuffer[6] == 0x56)) {
 			// This is the main status data (jets, temperature)
-			if (!versionstr.empty() && (select_state[SELECT_AUDIO_SOURCE] != -1)) { next_poll = ::millis() + (this->polling_rate_ * 1000); } // Next poll
+			if (!versionstr.empty() && (select_state[SELECT_AUDIO_SOURCE] != NOT_SET)) { next_poll = ::millis() + (this->polling_rate_ * 1000); } // Next poll
 
 			// Read state flags
 			unsigned char flags1 = processingBuffer[9];
@@ -602,9 +609,9 @@ int IQ2020Component::processIQ2020Command() {
 			if (this->salt_content_sensor_ && (salt_content >= 0)) this->salt_content_sensor_->publish_state((float)salt_content);
 #endif
 
-			if (pending_temp != -1) {
+			if (pending_temp != NOT_SET) {
 				if (pending_temp == target_temp) {
-					pending_temp = -1;
+					pending_temp = NOT_SET;
 				} else {
 					if (pending_temp_retry > 0) { // Try to adjust the temperature again
 						unsigned char deltaSteps = ((temp_celsius ? 2 : 1) * (pending_temp - target_temp));
@@ -614,10 +621,10 @@ int IQ2020Component::processIQ2020Command() {
 							sendIQ2020Command(0x01, 0x1F, 0x40, changeTempCmd, 4); // Adjust temp
 							pending_temp_retry--;
 						} else {
-							pending_temp = -1;
+							pending_temp = NOT_SET;
 						}
 					} else {
-						pending_temp = -1; // Give up
+						pending_temp = NOT_SET; // Give up
 					}
 				}
 			}
@@ -700,7 +707,7 @@ void IQ2020Component::switchAction(unsigned int switchid, int state) {
 		switch_pending[switchid] = state; // 0 = OFF ... 10 = HIGH
 		unsigned char cmd[] = { 0x1E, 0x02, 0x01, (unsigned char)state, 0x00 };
 		sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd));
-		salt_power = -1;
+		salt_power = NOT_SET;
 		break;
 	}
 	default: { return; }
@@ -726,17 +733,18 @@ void IQ2020Component::selectAction(unsigned int selectid, int state) {
 	next_retry = ::millis() + SWITCH_RETRY_TIME;
 }
 
-void IQ2020Component::numberAction(unsigned int selectid, int state) {
-	ESP_LOGD(TAG, "numberAction, selectid = %d, status = %d", selectid, state);
-	switch (selectid) {
-	case NUMBER_AUDIO_VOLUME: // Audio Volume
-	{
-		//select_pending[NUMBER_AUDIO_VOLUME] = state;
-		//unsigned char cmd[] = { 0x19, 0x00, 0x03, (unsigned char)state, 0x00 };
-		//sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Change audio volume
-		break;
-	}
-	}
+void IQ2020Component::numberAction(unsigned int numberid, int value) {
+	ESP_LOGD(TAG, "numberAction, numberid = %d, value = %d", numberid, value);
+	select_pending[numberid] = value;
+
+	int volume = (select_pending[NUMBER_AUDIO_VOLUME] != NOT_SET) ? select_pending[NUMBER_AUDIO_VOLUME] : number_state[NUMBER_AUDIO_VOLUME];
+	int tremble = (select_pending[NUMBER_AUDIO_TREMBLE] != NOT_SET) ? select_pending[NUMBER_AUDIO_TREMBLE] : number_state[NUMBER_AUDIO_TREMBLE];
+	int bass = (select_pending[NUMBER_AUDIO_BASS] != NOT_SET) ? select_pending[NUMBER_AUDIO_BASS] : number_state[NUMBER_AUDIO_BASS];
+	int balance = (select_pending[NUMBER_AUDIO_BALANCE] != NOT_SET) ? select_pending[NUMBER_AUDIO_BALANCE] : number_state[NUMBER_AUDIO_BALANCE];
+	int subwoofer = (select_pending[NUMBER_AUDIO_SUBWOOFER] != NOT_SET) ? select_pending[NUMBER_AUDIO_SUBWOOFER] : number_state[NUMBER_AUDIO_SUBWOOFER];
+	unsigned char cmd[] = { 0x19, 0x00, 0x01, volume, tremble, bass, balance, subwoofer };
+	sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Change audio source
+
 	// If the command does not get confirmed, setup to try again
 	next_retry_count += SWITCH_RETRY_COUNT;
 	next_retry = ::millis() + SWITCH_RETRY_TIME;
@@ -752,10 +760,10 @@ void IQ2020Component::setTempAction(float newtemp) {
 	}
 	pending_temp_retry = 2;
 	
-	if (pending_temp_cmd == -1) { // If there are no outstanding temp commands in-flight, send one now.
+	if (pending_temp_cmd == NOT_SET) { // If there are no outstanding temp commands in-flight, send one now.
 		unsigned char deltaSteps = ((temp_celsius ? 2 : 1) * (pending_temp - target_temp));
 		ESP_LOGD(TAG, "setTempAction: new=%f, target=%f, deltasteps=%d", pending_temp, target_temp, deltaSteps);
-		if (deltaSteps == 0) { pending_temp = -1; return; }
+		if (deltaSteps == 0) { pending_temp = NOT_SET; return; }
 		pending_temp_cmd = pending_temp;
 		unsigned char changeTempCmd[] = { 0x01, 0x09, 0xFF, deltaSteps };
 		sendIQ2020Command(0x01, 0x1F, 0x40, changeTempCmd, 4); // Adjust temp
@@ -763,50 +771,50 @@ void IQ2020Component::setTempAction(float newtemp) {
 }
 
 // Update the state of a switch or jet from the hot tub.
-// If you set state to -1, that indicates that whatever state we wanted to go to, we got a confirmation.
+// If you set state to NOT_SET, that indicates that whatever state we wanted to go to, we got a confirmation.
 void IQ2020Component::setSwitchState(unsigned int switchid, int state) {
 	ESP_LOGD(TAG, "setSwitchState, switchid = %d, status = %d", switchid, state);
-	if (state == -1) {
-		if (switch_pending[switchid] == -1) return;
+	if (state == NOT_SET) {
+		if (switch_pending[switchid] == NOT_SET) return;
 		state = switch_pending[switchid];
-		switch_pending[switchid] = -1;
+		switch_pending[switchid] = NOT_SET;
 	}
 	if (state != switch_state[switchid]) {
 		switch_state[switchid] = state;
-		switch_pending[switchid] = -1;
+		switch_pending[switchid] = NOT_SET;
 		if (g_iq2020_switch[switchid] != NULL) { g_iq2020_switch[switchid]->publish_state(state != 0); }
 		if ((switchid >= SWITCH_JETS1) && (switchid <= SWITCH_JETS4) && (g_iq2020_fan[switchid - SWITCH_JETS1] != NULL)) { g_iq2020_fan[switchid - SWITCH_JETS1]->updateState(state); }
 	}
 }
 
 // Update the state of a selector
-// If you set state to -1, that indicates that whatever state we wanted to go to, we got a confirmation.
+// If you set state to NOT_SET, that indicates that whatever state we wanted to go to, we got a confirmation.
 void IQ2020Component::setSelectState(unsigned int selectid, int state) {
 	ESP_LOGD(TAG, "setSelectState, selectid = %d, status = %d", selectid, state);
-	if (state == -1) {
-		if (select_pending[selectid] == -1) return;
+	if (state == NOT_SET) {
+		if (select_pending[selectid] == NOT_SET) return;
 		state = select_pending[selectid];
-		select_pending[selectid] = -1;
+		select_pending[selectid] = NOT_SET;
 	}
 	if (state != select_state[selectid]) {
 		select_state[selectid] = state;
-		select_pending[selectid] = -1;
+		select_pending[selectid] = NOT_SET;
 		if (g_iq2020_select[selectid] != NULL) { g_iq2020_select[selectid]->publish_state_ex(state); }
 	}
 }
 
 // Update the state of a number
-// If you set state to -1, that indicates that whatever state we wanted to go to, we got a confirmation.
+// If you set state to NOT_SET, that indicates that whatever state we wanted to go to, we got a confirmation.
 void IQ2020Component::setNumberState(unsigned int numberid, int value) {
 	ESP_LOGD(TAG, "setNumberState, numberid = %d, value = %d", numberid, value);
-	if (value == -1) {
-		if (number_pending[numberid] == -1) return;
+	if (value == NOT_SET) {
+		if (number_pending[numberid] == NOT_SET) return;
 		value = number_pending[numberid];
-		number_pending[numberid] = -1;
+		number_pending[numberid] = NOT_SET;
 	}
 	if (value != number_state[numberid]) {
 		number_state[numberid] = value;
-		number_pending[numberid] = -1;
+		number_pending[numberid] = NOT_SET;
 		if (g_iq2020_number[numberid] != NULL) { g_iq2020_number[numberid]->publish_state(value); }
 	}
 }
@@ -821,7 +829,7 @@ void IQ2020Component::pollState() {
 	}
 
 	// If we don't have the audio status, fetch it now.
-	if (select_state[SELECT_AUDIO_SOURCE] == -1) {
+	if (select_state[SELECT_AUDIO_SOURCE] == NOT_SET) {
 		ESP_LOGD(TAG, "Poll Audio");
 		unsigned char cmd[] = { 0x19, 0x01 };
 		sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Get version string

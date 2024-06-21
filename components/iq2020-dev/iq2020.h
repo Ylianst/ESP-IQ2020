@@ -41,8 +41,13 @@
 #define TEXTCOUNT 2
 #define TEXT_SONG_TITLE 0
 #define TEXT_ARTIST_NAME 1
-#define NUMBERCOUNT 1
+#define NUMBERCOUNT 5
 #define NUMBER_AUDIO_VOLUME 0
+#define NUMBER_AUDIO_TREMBLE 1
+#define NUMBER_AUDIO_BASS 2
+#define NUMBER_AUDIO_BALANCE 3
+#define NUMBER_AUDIO_SUBWOOFER 4
+#define NOT_SET -127
 
 class IQ2020Component : public esphome::Component {
 public:
@@ -200,18 +205,18 @@ protected:
 	int number_pending[NUMBERCOUNT]; // Desired state of all numbers
 	unsigned long connectionKit = 0; // The time the spa connection kit was last seen
 	bool temp_celsius = false;
-	int temp_action = -1;
-	float target_temp = -1;
-	float current_temp = -1;
-	float outlet_temp = -1;
-	float pending_temp = -1;
-	float pending_temp_cmd = -1;
+	int temp_action = NOT_SET;
+	float target_temp = NOT_SET;
+	float current_temp = NOT_SET;
+	float outlet_temp = NOT_SET;
+	float pending_temp = NOT_SET;
+	float pending_temp_cmd = NOT_SET;
 	int pending_temp_retry = 0;
 	unsigned long next_poll = 0;
 	unsigned long next_retry = 0;
 	int next_retry_count = 0;
-	int salt_power = -1; // This is polled too frequently to send to HA each time.
-	int salt_content = -1; // This is polled too frequently to send to HA each time.
+	int salt_power = NOT_SET; // This is polled too frequently to send to HA each time.
+	int salt_content = NOT_SET; // This is polled too frequently to send to HA each time.
 	std::string audio_song_title;
 	std::string audio_artist_name;
 
