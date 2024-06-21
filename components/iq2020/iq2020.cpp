@@ -278,7 +278,7 @@ int IQ2020Component::processIQ2020Command() {
 	if ((processingBuffer[1] == 0x33) && (processingBuffer[2] == 0x01) && (processingBuffer[4] == 0x40) && (cmdlen >= 8)) {
 		// This is a command from IQ2020 to the audio module
 		ESP_LOGD(TAG, "Audio REQ Data, len=%d, cmd=%02x%02x", cmdlen, processingBuffer[5], processingBuffer[6]);
-
+		 
 		int responded = 0;
 		if ((processingBuffer[5] == 0x19) && (cmdlen >= 9)) {
 			if ((processingBuffer[6] == 0x01) && (cmdlen == 9)) { // Audio controls
