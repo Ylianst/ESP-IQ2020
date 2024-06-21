@@ -9,7 +9,7 @@ namespace iq2020_select {
 	class IQ2020Select : public select::Select, public Component {
 	public:
 		void setup() override;
-		//void write_state(bool state) override;
+		void control(const std::string &value) override;
 		void dump_config() override;
 		void set_select_id(unsigned int id) { this->select_id = id; }
 
