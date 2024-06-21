@@ -321,13 +321,27 @@ int IQ2020Component::processIQ2020Command() {
 #endif
 			}
 			else if (processingBuffer[6] == 0x06) { // Song title
-				const char* song = "\x19\x06Home Assistant";
-				sendIQ2020Command(0x01, 0x33, 0x80, (unsigned char*)song, strlen(song));
+				int text_len = 2;
+				char text[22];
+				text[0] = 0x19;
+				text[1] = 0x07;
+				if (g_iq2020_text[TEXT_SONG_TITLE] != NULL) {
+					text_len += g_iq2020_text[TEXT_SONG_TITLE].size();
+					memcpy(text + 2, g_iq2020_text[TEXT_SONG_TITLE].c_str(), text_len - 2);
+				}
+				sendIQ2020Command(0x01, 0x33, 0x80, (unsigned char*)text, text_len);
 				responded = 1;
 			}
 			else if (processingBuffer[6] == 0x07) { // Artist name
-				const char* artist = "\x19\x07Remote Control";
-				sendIQ2020Command(0x01, 0x33, 0x80, (unsigned char*)artist, strlen(artist));
+				int text_len = 2;
+				char text[22];
+				text[0] = 0x19;
+				text[1] = 0x07;
+				if (g_iq2020_text[TEXT_ARTIST_NAME] != NULL) {
+					text_len += g_iq2020_text[TEXT_ARTIST_NAME].size();
+					memcpy(text + 2, g_iq2020_text[TEXT_ARTIST_NAME].c_str(), text_len - 2);
+				}
+				sendIQ2020Command(0x01, 0x33, 0x80, (unsigned char*)text, text_len);
 				responded = 1;
 			}
 		}
@@ -706,14 +720,6 @@ void IQ2020Component::selectAction(unsigned int selectid, int state) {
 	next_retry_count += SWITCH_RETRY_COUNT;
 	next_retry = ::millis() + SWITCH_RETRY_TIME;
 }
-
-/*
-void IQ2020Component::textAction(unsigned int textid, const std::string &value) {
-	ESP_LOGD(TAG, "textAction, textid = %d, status = %s", textid, value.c_str());
-	if (textid == 0) { audio_song_title = value; }
-	if (textid == 1) { audio_artist_name = value; }
-}
-*/
 
 void IQ2020Component::setTempAction(float newtemp) {
 	//ESP_LOGD(TAG, "setTempAction: new=%f", newtemp);
