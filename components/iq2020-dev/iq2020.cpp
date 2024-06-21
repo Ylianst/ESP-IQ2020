@@ -2,6 +2,7 @@
 #include "iq2020_fan.h"
 #include "iq2020_switch.h"
 #include "iq2020_select.h"
+#include "iq2020_text.h"
 #include "iq2020_climate.h"
 
 #include "esphome/core/helpers.h"
@@ -18,6 +19,7 @@ static const char *TAG = "iq2020";
 IQ2020Component* g_iq2020_main = NULL;
 esphome::iq2020_switch::IQ2020Switch* g_iq2020_switch[SWITCHCOUNT];
 esphome::iq2020_select::IQ2020Select* g_iq2020_select[SELECTCOUNT];
+esphome::iq2020_text::IQ2020Text* g_iq2020_text[TEXTCOUNT];
 esphome::iq2020_fan::IQ2020Fan* g_iq2020_fan[FANCOUNT];
 esphome::iq2020_climate::IQ2020Climate* g_iq2020_climate = NULL;
 

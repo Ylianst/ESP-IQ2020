@@ -38,6 +38,9 @@
 #define SWITCH_SALT_POWER 9  // Freshwater Salt System Power Level
 #define SELECTCOUNT 1
 #define SELECT_AUDIO_SOURCE 0
+#define TEXTCOUNT 2
+#define TEXT_SONG_TITLE 0
+#define TEXT_ARTIST_NAME 1
 
 class IQ2020Component : public esphome::Component {
 public:
