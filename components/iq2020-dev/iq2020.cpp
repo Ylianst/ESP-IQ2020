@@ -768,7 +768,7 @@ void IQ2020Component::pollState() {
 	}
 
 	// If we don't have the audio status, fetch it now.
-	if (g_iq2020_select[SELECT_AUDIO_SOURCE] == -1) {
+	if (select_state[SELECT_AUDIO_SOURCE] == -1) {
 		ESP_LOGD(TAG, "Poll Audio");
 		unsigned char cmd[] = { 0x19, 0x01 };
 		sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Get version string
