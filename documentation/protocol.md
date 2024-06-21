@@ -434,8 +434,8 @@ Audio commands to the audio module
 
 Poll for heat pump status
 ```
-<-- 01 1F 40 1D07FF
-<-- 1F 01 80 1D07FFFF
+01 1F 40 1D07FF
+1F 01 80 1D07FFFF
 ```
 
 Heat pump data is as follows
