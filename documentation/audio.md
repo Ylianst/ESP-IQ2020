@@ -24,6 +24,8 @@ Once done, reflash and you should see two more sensors in your hot tub device:
 
 ![image](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/c8cbca21-a56a-45c0-b055-8db8baaf21e1)
 
+You will need to reset the hot tub remote to see the new music icon. To do this, press and hold any inactive part of the display for about 15 seconds and the remote will go black and reset. [Video demonstration here](https://youtu.be/od5SB6RIO1s?si=Db0cwpKzg9-m2b_o&t=14).
+
 The volume sensor is as you would expect, except it goes from 15 to 40 right now, I will fix this to go from 0 to 100 in the future.
 
 The audio button sensor will show 0 or unknown, but will momenteraly pulse to the following values when a button is pressed:
