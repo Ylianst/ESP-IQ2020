@@ -246,12 +246,12 @@ void IQ2020Component::processRawIQ2020Data(unsigned char *data, int len) {
 	}
 }
 
-void IQ2020Component::nextPossiblePacket() {
+int IQ2020Component::nextPossiblePacket() {
 	for (int i = 1; i < processingBufferLen; i++) { if (processingBuffer[i] == 0x1C) return i; }
 	return processingBufferLen;
 }
 
-int IQ2020Component::setAudioButton(int button) {
+void IQ2020Component::setAudioButton(int button) {
 #ifdef USE_SENSOR
 	if (this->audio_buttons_sensor_) this->audio_buttons_sensor_->publish_state(button);
 #endif
