@@ -742,7 +742,7 @@ void IQ2020Component::numberAction(unsigned int numberid, int value) {
 	int bass = (select_pending[NUMBER_AUDIO_BASS] != NOT_SET) ? select_pending[NUMBER_AUDIO_BASS] : number_state[NUMBER_AUDIO_BASS];
 	int balance = (select_pending[NUMBER_AUDIO_BALANCE] != NOT_SET) ? select_pending[NUMBER_AUDIO_BALANCE] : number_state[NUMBER_AUDIO_BALANCE];
 	int subwoofer = (select_pending[NUMBER_AUDIO_SUBWOOFER] != NOT_SET) ? select_pending[NUMBER_AUDIO_SUBWOOFER] : number_state[NUMBER_AUDIO_SUBWOOFER];
-	unsigned char cmd[] = { 0x19, 0x00, 0x01, volume, tremble, bass, balance, subwoofer };
+	unsigned char cmd[] = { 0x19, 0x00, 0x01, (unsigned char)volume, (unsigned char)tremble, (unsigned char)bass, (unsigned char)balance, (unsigned char)subwoofer };
 	sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Change audio source
 
 	// If the command does not get confirmed, setup to try again
