@@ -208,7 +208,7 @@ protected:
 	int next_retry_count = 0;
 	int salt_power = -1; // This is polled too frequently to send to HA each time.
 	int salt_content = -1; // This is polled too frequently to send to HA each time.
-	std::string audio_song_title
+	std::string audio_song_title;
 	std::string audio_artist_name;
 
 	// IQ2020 processing
