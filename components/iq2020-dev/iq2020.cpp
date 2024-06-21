@@ -398,7 +398,7 @@ int IQ2020Component::processIQ2020Command() {
 			setSelectState(SELECT_AUDIO_SOURCE, -1);
 		}
 
-		if ((cmdlen == 10) && (processingBuffer[5] == 0x19) && (processingBuffer[6] == 0x01)) {
+		if ((cmdlen == 19) && (processingBuffer[5] == 0x19) && (processingBuffer[6] == 0x01)) {
 			// Status of audio module
 			setSelectState(SELECT_AUDIO_SOURCE, processingBuffer[14]); // Audio Source
 #ifdef USE_SENSOR
