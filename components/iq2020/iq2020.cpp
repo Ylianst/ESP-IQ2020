@@ -300,11 +300,11 @@ int IQ2020Component::processIQ2020Command() {
 				ESP_LOGD(TAG, "AUDIO - VOLUME %d", processingBuffer[8]);
 			}
 			else if (processingBuffer[6] == 0x06) { // Song title
-				unsigned char* song = "\x19\x06" "Sample Song";
+				unsigned char* song = "\x19\x06Sample Song";
 				sendIQ2020Command(0x01, 0x33, 0x80, song, sizeof(song));
 			}
 			else if (processingBuffer[6] == 0x07) { // Artist name
-				unsigned char* artist = "\x19\x07" "Sample Artist";
+				unsigned char* artist = "\x19\x07Sample Artist";
 				sendIQ2020Command(0x01, 0x33, 0x80, artist, sizeof(artist));
 			}
 		}
