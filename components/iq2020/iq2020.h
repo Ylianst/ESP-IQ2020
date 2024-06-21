@@ -126,9 +126,9 @@ protected:
 	uint16_t port_;
 	size_t buf_size_;
 	esphome::GPIOPin *flow_control_pin_{ nullptr };
-	bool ace_emulation_ = 0;
-	bool audio_emulation_ = 0;
-	int polling_rate_ = 65;
+	bool ace_emulation_;
+	bool audio_emulation_;
+	int polling_rate_;
 
 #ifdef USE_BINARY_SENSOR
 	esphome::binary_sensor::BinarySensor *connected_sensor_;
