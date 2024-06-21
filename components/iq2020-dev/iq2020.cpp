@@ -707,11 +707,13 @@ void IQ2020Component::selectAction(unsigned int selectid, int state) {
 	next_retry = ::millis() + SWITCH_RETRY_TIME;
 }
 
+/*
 void IQ2020Component::textAction(unsigned int textid, const std::string &value) {
 	ESP_LOGD(TAG, "textAction, textid = %d, status = %s", textid, value.c_str());
 	if (textid == 0) { audio_song_title = value; }
 	if (textid == 1) { audio_artist_name = value; }
 }
+*/
 
 void IQ2020Component::setTempAction(float newtemp) {
 	//ESP_LOGD(TAG, "setTempAction: new=%f", newtemp);

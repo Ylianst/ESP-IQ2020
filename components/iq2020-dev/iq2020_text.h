@@ -12,6 +12,8 @@ namespace iq2020_text {
 		void control(const std::string &value) override;
 		void dump_config() override;
 		void set_text_id(unsigned int id) { this->text_id = id; }
+		void set_value(const std::string &value) { this->text_value = value; }
+		std::string text_value;
 
 	protected:
 		unsigned int text_id;

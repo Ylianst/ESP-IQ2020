@@ -106,7 +106,7 @@ public:
 	void set_port(uint16_t port) { this->port_ = port; }
 	void switchAction(unsigned int switchid, int state);
 	void selectAction(unsigned int selectid, int state);
-	void textAction(unsigned int textid, const std::string &value);
+	//void textAction(unsigned int textid, const std::string &value);
 	void setTempAction(float newtemp);
 
 protected:
