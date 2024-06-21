@@ -310,20 +310,7 @@ int IQ2020Component::processIQ2020Command() {
 				}
 			}
 			else if ((processingBuffer[6] == 0x03) && (cmdlen == 9)) { // Audio source
-				switch (processingBuffer[7]) {
-				case 2:
-					ESP_LOGD(TAG, "AUDIO - TV"); 
-					setSelectState(SELECT_AUDIO_SOURCE, 2);
-					break;
-				case 3:
-					ESP_LOGD(TAG, "AUDIO - AUX");
-					setSelectState(SELECT_AUDIO_SOURCE, 3);
-					break;
-				case 4:
-					ESP_LOGD(TAG, "AUDIO - BLUETOOTH");
-					setSelectState(SELECT_AUDIO_SOURCE, 4);
-					break;
-				}
+				setSelectState(SELECT_AUDIO_SOURCE, processingBuffer[7]);
 			}
 			else if ((processingBuffer[6] == 0x00) && (processingBuffer[7] == 0x01) && (cmdlen == 14)) { // Audio settings
 				ESP_LOGD(TAG, "AUDIO - Volume=%d, Tremble=%d, Bass=%d, Balance=%d, Subwoofer=%d", processingBuffer[8], processingBuffer[9], processingBuffer[10], processingBuffer[11], processingBuffer[12]);
@@ -411,6 +398,14 @@ int IQ2020Component::processIQ2020Command() {
 			setSelectState(SELECT_AUDIO_SOURCE, -1);
 		}
 
+		if ((cmdlen == 10) && (processingBuffer[5] == 0x19) && (processingBuffer[6] == 0x01)) {
+			// Status of audio module
+			setSelectState(SELECT_AUDIO_SOURCE, processingBuffer[14]); // Audio Source
+#ifdef USE_SENSOR
+			if (this->audio_volume_sensor_) { this->audio_volume_sensor_->publish_state(processingBuffer[8]); } // Audio Volume
+#endif
+		}
+
 		if ((cmdlen == 26) && (processingBuffer[5] == 0x1E) && (processingBuffer[6] == 0x03)) {
 			// Status of the Freshwater Salt System
 			if (salt_power != processingBuffer[7]) {
@@ -456,13 +451,13 @@ int IQ2020Component::processIQ2020Command() {
 
 		if ((cmdlen > 10) && (processingBuffer[5] == 0x01) && (processingBuffer[6] == 0x00)) {
 			// Version string
-#ifdef USE_TEXT_SENSOR
 			processingBuffer[cmdlen - 1] = 0;
 			std::string vstr((char*)(processingBuffer + 7));
 			versionstr = vstr;
+#ifdef USE_TEXT_SENSOR
 			if (this->version_sensor_) this->version_sensor_->publish_state(versionstr);
-			ESP_LOGD(TAG, "Version string: %d", versionstr.c_str());
 #endif
+			ESP_LOGD(TAG, "Version: %d", versionstr.c_str());
 			pollState();
 		}
 
@@ -489,7 +484,7 @@ int IQ2020Component::processIQ2020Command() {
 
 		if ((cmdlen == 140) && (processingBuffer[5] == 0x02) && (processingBuffer[6] == 0x56)) {
 			// This is the main status data (jets, temperature)
-			if (!versionstr.empty()) { next_poll = ::millis() + (this->polling_rate_ * 1000); } // Next poll
+			if (!versionstr.empty() && (select_state[SELECT_AUDIO_SOURCE] != -1)) { next_poll = ::millis() + (this->polling_rate_ * 1000); } // Next poll
 
 			// Read state flags
 			unsigned char flags1 = processingBuffer[9];
@@ -759,24 +754,27 @@ void IQ2020Component::setSelectState(unsigned int selectid, int state) {
 	if (state != select_state[selectid]) {
 		select_state[selectid] = state;
 		select_pending[selectid] = -1;
-		ESP_LOGD(TAG, "t1 %d", selectid);
-		if (g_iq2020_select[selectid] != NULL) {
-			ESP_LOGD(TAG, "t2");
-			g_iq2020_select[selectid]->publish_state_ex(state);
-		}
+		if (g_iq2020_select[selectid] != NULL) { g_iq2020_select[selectid]->publish_state_ex(state); }
 	}
 }
 
 void IQ2020Component::pollState() {
-#ifdef USE_TEXT_SENSOR
 	// If we don't have the version string, fetch it now.
 	if (versionstr.empty()) {
-		ESP_LOGD(TAG, "Poll Version Str");
+		ESP_LOGD(TAG, "Poll Version");
 		unsigned char cmd[] = { 0x01, 0x00 };
 		sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Get version string
 		return;
 	}
-#endif
+
+	// If we don't have the audio status, fetch it now.
+	if (g_iq2020_select[SELECT_AUDIO_SOURCE] == -1) {
+		ESP_LOGD(TAG, "Poll Audio");
+		unsigned char cmd[] = { 0x19, 0x01 };
+		sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Get version string
+		return;
+	}
+
 	ESP_LOGD(TAG, "Poll");
 	unsigned char generalPollCmd[] = { 0x02, 0x56 };
 	sendIQ2020Command(0x01, 0x1F, 0x40, generalPollCmd, 2); // Poll general state
