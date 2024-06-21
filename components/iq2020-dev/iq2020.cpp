@@ -700,11 +700,13 @@ void IQ2020Component::switchAction(unsigned int switchid, int state) {
 void IQ2020Component::selectAction(unsigned int selectid, int state) {
 	ESP_LOGD(TAG, "selectAction, selectid = %d, status = %d", selectid, state);
 	switch (selectid) {
-	case SELECT_AUDIO_SOURCE: { // Audio Source
+	case SELECT_AUDIO_SOURCE: // Audio Source
+	{
 		select_pending[SELECT_AUDIO_SOURCE] = state;
 		unsigned char cmd[] = { 0x19, 0x00, 0x03, (unsigned char)state, 0x00 };
 		sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Change audio source
 		break;
+	}
 	}
 	// If the command does not get confirmed, setup to try again
 	next_retry_count += SWITCH_RETRY_COUNT;
