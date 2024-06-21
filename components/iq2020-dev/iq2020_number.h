@@ -9,7 +9,7 @@ namespace iq2020_number {
 	class IQ2020Number : public number::Number, public Component {
 	public:
 		void setup() override;
-		void write_state(bool state) override;
+		void control(float value) override;
 		void dump_config() override;
 		void set_number_id(unsigned int id) { this->number_id = id; }
 

@@ -723,6 +723,22 @@ void IQ2020Component::selectAction(unsigned int selectid, int state) {
 	next_retry = ::millis() + SWITCH_RETRY_TIME;
 }
 
+void IQ2020Component::numberAction(unsigned int selectid, int state) {
+	ESP_LOGD(TAG, "numberAction, selectid = %d, status = %d", selectid, state);
+	switch (selectid) {
+	case NUMBER_AUDIO_VOLUME: // Audio Volume
+	{
+		//select_pending[NUMBER_AUDIO_VOLUME] = state;
+		//unsigned char cmd[] = { 0x19, 0x00, 0x03, (unsigned char)state, 0x00 };
+		//sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Change audio volume
+		break;
+	}
+	}
+	// If the command does not get confirmed, setup to try again
+	next_retry_count += SWITCH_RETRY_COUNT;
+	next_retry = ::millis() + SWITCH_RETRY_TIME;
+}
+
 void IQ2020Component::setTempAction(float newtemp) {
 	//ESP_LOGD(TAG, "setTempAction: new=%f", newtemp);
 

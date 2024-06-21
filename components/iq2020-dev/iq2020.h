@@ -42,7 +42,7 @@
 #define TEXT_SONG_TITLE 0
 #define TEXT_ARTIST_NAME 1
 #define NUMBERCOUNT 1
-#define NUMBER_VOLUME 0
+#define NUMBER_AUDIO_VOLUME 0
 
 class IQ2020Component : public esphome::Component {
 public:
@@ -108,6 +108,7 @@ public:
 	void set_port(uint16_t port) { this->port_ = port; }
 	void switchAction(unsigned int switchid, int state);
 	void selectAction(unsigned int selectid, int state);
+	void numberAction(unsigned int numberid, int state);
 	void setTempAction(float newtemp);
 
 protected:

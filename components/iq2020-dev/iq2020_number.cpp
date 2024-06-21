@@ -15,10 +15,10 @@ namespace iq2020_number {
 		//ESP_LOGD(TAG, "Number:%d Setup", switch_id);
 	}
 
-	void IQ2020Number::write_state(bool state) {
-		ESP_LOGD(TAG, "Number:%d write state: %d", number_id, state);
-		//this->publish_state(state);
-		if (g_iq2020_main != NULL) { g_iq2020_main->numberAction(number_id, state); }
+	void IQ2020Number::control(float value) {
+		ESP_LOGD(TAG, "Number:%d write value: %d", number_id, value);
+		this->publish_state(value);
+		if (g_iq2020_main != NULL) { g_iq2020_main->numberAction(number_id, value); }
 	}
 
 	void IQ2020Number::dump_config() {
