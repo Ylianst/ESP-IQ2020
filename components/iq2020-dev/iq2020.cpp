@@ -326,8 +326,8 @@ int IQ2020Component::processIQ2020Command() {
 				text[0] = 0x19;
 				text[1] = 0x07;
 				if (g_iq2020_text[TEXT_SONG_TITLE] != NULL) {
-					text_len += g_iq2020_text[TEXT_SONG_TITLE].size();
-					memcpy(text + 2, g_iq2020_text[TEXT_SONG_TITLE].c_str(), text_len - 2);
+					text_len += g_iq2020_text[TEXT_SONG_TITLE]->size();
+					memcpy(text + 2, g_iq2020_text[TEXT_SONG_TITLE]->c_str(), text_len - 2);
 				}
 				sendIQ2020Command(0x01, 0x33, 0x80, (unsigned char*)text, text_len);
 				responded = 1;
@@ -338,8 +338,8 @@ int IQ2020Component::processIQ2020Command() {
 				text[0] = 0x19;
 				text[1] = 0x07;
 				if (g_iq2020_text[TEXT_ARTIST_NAME] != NULL) {
-					text_len += g_iq2020_text[TEXT_ARTIST_NAME].size();
-					memcpy(text + 2, g_iq2020_text[TEXT_ARTIST_NAME].c_str(), text_len - 2);
+					text_len += g_iq2020_text[TEXT_ARTIST_NAME]->size();
+					memcpy(text + 2, g_iq2020_text[TEXT_ARTIST_NAME]->c_str(), text_len - 2);
 				}
 				sendIQ2020Command(0x01, 0x33, 0x80, (unsigned char*)text, text_len);
 				responded = 1;
