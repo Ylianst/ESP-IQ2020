@@ -76,9 +76,18 @@ void IQ2020Component::loop() {
 				next_retry = ::millis() + SWITCH_RETRY_TIME;
 				break; // Only retry one command
 			}
-			// No commands that need retry, clear the retry state
-			next_retry_count = 0;
 		}
+		for (int selectid = 0; selectid < SELECTCOUNT; selectid++) {
+			if (select_pending[selectid] != -1) {
+				ESP_LOGE(TAG, "Retry %d set to %d", selectid, select_pending[selectid]);
+				selectAction(selectid, select_pending[selectid]); // Try again
+				next_retry_count--; // Setup for the next retry
+				next_retry = ::millis() + SWITCH_RETRY_TIME;
+				break; // Only retry one command
+			}
+		}
+		// No commands that need retry, clear the retry state
+		next_retry_count = 0;
 	}
 
 	// Check if it's time to poll for state. We poll each 10 seconds, but add 50 seconds if we get status.
@@ -305,17 +314,17 @@ int IQ2020Component::processIQ2020Command() {
 				case 2:
 					ESP_LOGD(TAG, "AUDIO - TV"); 
 					select_state[SELECT_AUDIO_SOURCE] = 2;
-					if (g_iq2020_select[SELECT_AUDIO_SOURCE] != NULL) { g_iq2020_select[SELECT_AUDIO_SOURCE]->publish_state("TV"); }
+					if (g_iq2020_select[SELECT_AUDIO_SOURCE] != NULL) { g_iq2020_select[SELECT_AUDIO_SOURCE]->publish_state_ex(2); }
 					break;
 				case 3:
 					ESP_LOGD(TAG, "AUDIO - AUX");
 					select_state[SELECT_AUDIO_SOURCE] = 3;
-					if (g_iq2020_select[SELECT_AUDIO_SOURCE] != NULL) { g_iq2020_select[SELECT_AUDIO_SOURCE]->publish_state("Aux"); }
+					if (g_iq2020_select[SELECT_AUDIO_SOURCE] != NULL) { g_iq2020_select[SELECT_AUDIO_SOURCE]->publish_state_ex(3); }
 					break;
 				case 4:
 					ESP_LOGD(TAG, "AUDIO - BLUETOOTH");
 					select_state[SELECT_AUDIO_SOURCE] = 4;
-					if (g_iq2020_select[SELECT_AUDIO_SOURCE] != NULL) { g_iq2020_select[SELECT_AUDIO_SOURCE]->publish_state("Bluetooth"); }
+					if (g_iq2020_select[SELECT_AUDIO_SOURCE] != NULL) { g_iq2020_select[SELECT_AUDIO_SOURCE]->publish_state_ex(4); }
 					break;
 				}
 			}
@@ -398,6 +407,11 @@ int IQ2020Component::processIQ2020Command() {
 		if ((cmdlen == 9) && (processingBuffer[5] == 0xE1) && (processingBuffer[6] == 0x02) && (processingBuffer[7] == 0x06)) {
 			// Confirmation that the fresh water salt system has changed power state
 			setSwitchState(SWITCH_SALT_POWER, -1);
+		}
+
+		if ((cmdlen == 9) && (processingBuffer[5] == 0x19) && (processingBuffer[6] == 0x00) && (processingBuffer[7] == 0x06)) {
+			// Confirmation that the audio command was received
+			setSelectState(SELECT_AUDIO_SOURCE, -1);
 		}
 
 		if ((cmdlen == 26) && (processingBuffer[5] == 0x1E) && (processingBuffer[6] == 0x03)) {
@@ -689,9 +703,12 @@ void IQ2020Component::selectAction(unsigned int selectid, int state) {
 	case SELECT_AUDIO_SOURCE: { // Audio Source
 		select_pending[SELECT_AUDIO_SOURCE] = state;
 		unsigned char cmd[] = { 0x19, 0x00, 0x03, (unsigned char)state, 0x00 };
-		sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Turn on/off lights
+		sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Change audio source
 		break;
 	}
+	// If the command does not get confirmed, setup to try again
+	next_retry_count += SWITCH_RETRY_COUNT;
+	next_retry = ::millis() + SWITCH_RETRY_TIME;
 }
 
 void IQ2020Component::setTempAction(float newtemp) {
@@ -728,6 +745,22 @@ void IQ2020Component::setSwitchState(unsigned int switchid, int state) {
 		switch_pending[switchid] = -1;
 		if (g_iq2020_switch[switchid] != NULL) { g_iq2020_switch[switchid]->publish_state(state != 0); }
 		if ((switchid >= SWITCH_JETS1) && (switchid <= SWITCH_JETS4) && (g_iq2020_fan[switchid - SWITCH_JETS1] != NULL)) { g_iq2020_fan[switchid - SWITCH_JETS1]->updateState(state); }
+	}
+}
+
+// Update the state of a selector
+// If you set state to -1, that indicates that whatever state we wanted to go to, we got a confirmation.
+void IQ2020Component::setSelectState(unsigned int selectid, int state) {
+	ESP_LOGD(TAG, "setSelectState, selectid = %d, status = %d", selectid, state);
+	if (state == -1) {
+		if (select_pending[selectid] == -1) return;
+		state = select_pending[selectid];
+		select_pending[selectid] = -1;
+	}
+	if (state != switch_state[selectid]) {
+		select_state[selectid] = state;
+		select_pending[selectid] = -1;
+		if (g_iq2020_select[selectid] != NULL) { g_iq2020_select[selectid]->publish_state_ex(state); }
 	}
 }
 

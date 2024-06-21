@@ -12,6 +12,7 @@ namespace iq2020_select {
 		void control(const std::string &value) override;
 		void dump_config() override;
 		void set_select_id(unsigned int id) { this->select_id = id; }
+		void publish_state_ex(int value);
 
 	protected:
 		unsigned int select_id;
