@@ -29,6 +29,7 @@ int readCounter(unsigned char* data, int offset) { return (data[offset]) + (data
 
 void IQ2020Component::setup() {
 	for (int i = 0; i < SWITCHCOUNT; i++) { switch_state[i] = switch_pending[i] = -1; }
+	for (int i = 0; i < SELECTCOUNT; i++) { select_state[i] = select_pending[i] = -1; }
 	g_iq2020_main = this;
 	if (this->flow_control_pin_ != nullptr) { this->flow_control_pin_->setup(); }
 	//ESP_LOGD(TAG, "Setting up IQ2020...");
@@ -303,14 +304,17 @@ int IQ2020Component::processIQ2020Command() {
 				switch (processingBuffer[7]) {
 				case 2:
 					ESP_LOGD(TAG, "AUDIO - TV"); 
+					select_state[SELECT_AUDIO_SOURCE] = 2;
 					if (g_iq2020_select[SELECT_AUDIO_SOURCE] != NULL) { g_iq2020_select[SELECT_AUDIO_SOURCE]->publish_state("TV"); }
 					break;
 				case 3:
 					ESP_LOGD(TAG, "AUDIO - AUX");
+					select_state[SELECT_AUDIO_SOURCE] = 3;
 					if (g_iq2020_select[SELECT_AUDIO_SOURCE] != NULL) { g_iq2020_select[SELECT_AUDIO_SOURCE]->publish_state("Aux"); }
 					break;
 				case 4:
 					ESP_LOGD(TAG, "AUDIO - BLUETOOTH");
+					select_state[SELECT_AUDIO_SOURCE] = 4;
 					if (g_iq2020_select[SELECT_AUDIO_SOURCE] != NULL) { g_iq2020_select[SELECT_AUDIO_SOURCE]->publish_state("Bluetooth"); }
 					break;
 				}
@@ -677,6 +681,17 @@ void IQ2020Component::switchAction(unsigned int switchid, int state) {
 	// If the command does not get confirmed, setup to try again
 	next_retry_count += SWITCH_RETRY_COUNT;
 	next_retry = ::millis() + SWITCH_RETRY_TIME;
+}
+
+void IQ2020Component::selectAction(unsigned int selectid, int state) {
+	ESP_LOGD(TAG, "selectAction, selectid = %d, status = %d", selectid, state);
+	switch (selectid) {
+	case SELECT_AUDIO_SOURCE: { // Audio Source
+		select_pending[SELECT_AUDIO_SOURCE] = state;
+		unsigned char cmd[] = { 0x19, 0x00, 0x03, (unsigned char)state, 0x00 };
+		sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Turn on/off lights
+		break;
+	}
 }
 
 void IQ2020Component::setTempAction(float newtemp) {

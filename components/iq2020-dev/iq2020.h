@@ -102,6 +102,7 @@ public:
 
 	void set_port(uint16_t port) { this->port_ = port; }
 	void switchAction(unsigned int switchid, int state);
+	void selectAction(unsigned int selectid, int state);
 	void setTempAction(float newtemp);
 
 protected:
@@ -187,6 +188,8 @@ protected:
 	std::string versionstr;
 	int switch_state[SWITCHCOUNT];   // Current state of all switches
 	int switch_pending[SWITCHCOUNT]; // Desired state of all switches
+	int select_state[SELECTCOUNT];   // Current state of all selects
+	int select_pending[SELECTCOUNT]; // Desired state of all selects
 	unsigned long connectionKit = 0; // The time the spa connection kit was last seen
 	bool temp_celsius = false;
 	int temp_action = -1;
