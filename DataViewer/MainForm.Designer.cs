@@ -40,6 +40,7 @@
             this.actionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.annotateLogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.scanToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.pollStateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.filterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.noneToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.connectionKitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -76,11 +77,10 @@
             this.dataListView = new System.Windows.Forms.ListView();
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.scanTimer = new System.Windows.Forms.Timer(this.components);
-            this.logSaveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.stateDecodeTabPage = new System.Windows.Forms.TabPage();
             this.stateDecodeTextBox = new System.Windows.Forms.TextBox();
-            this.pollStateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.scanTimer = new System.Windows.Forms.Timer(this.components);
+            this.logSaveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.pollTimer = new System.Windows.Forms.Timer(this.components);
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
@@ -175,6 +175,13 @@
             this.scanToolStripMenuItem.Size = new System.Drawing.Size(183, 26);
             this.scanToolStripMenuItem.Text = "&Scan";
             this.scanToolStripMenuItem.Click += new System.EventHandler(this.scanToolStripMenuItem_Click);
+            // 
+            // pollStateToolStripMenuItem
+            // 
+            this.pollStateToolStripMenuItem.Name = "pollStateToolStripMenuItem";
+            this.pollStateToolStripMenuItem.Size = new System.Drawing.Size(183, 26);
+            this.pollStateToolStripMenuItem.Text = "&Poll State";
+            this.pollStateToolStripMenuItem.Click += new System.EventHandler(this.pollStateToolStripMenuItem_Click);
             // 
             // filterToolStripMenuItem
             // 
@@ -531,19 +538,6 @@
             this.columnHeader3.Text = "Value";
             this.columnHeader3.Width = 336;
             // 
-            // scanTimer
-            // 
-            this.scanTimer.Interval = 300;
-            this.scanTimer.Tick += new System.EventHandler(this.scanTimer_Tick);
-            // 
-            // logSaveFileDialog
-            // 
-            this.logSaveFileDialog.DefaultExt = "txt";
-            this.logSaveFileDialog.FileName = "logfile.txt";
-            this.logSaveFileDialog.Filter = "Text File|*.txt|All Files|*.*";
-            this.logSaveFileDialog.OverwritePrompt = false;
-            this.logSaveFileDialog.Title = "Capture Traffic";
-            // 
             // stateDecodeTabPage
             // 
             this.stateDecodeTabPage.Controls.Add(this.stateDecodeTextBox);
@@ -568,12 +562,18 @@
             this.stateDecodeTextBox.TabIndex = 7;
             this.stateDecodeTextBox.WordWrap = false;
             // 
-            // pollStateToolStripMenuItem
+            // scanTimer
             // 
-            this.pollStateToolStripMenuItem.Name = "pollStateToolStripMenuItem";
-            this.pollStateToolStripMenuItem.Size = new System.Drawing.Size(183, 26);
-            this.pollStateToolStripMenuItem.Text = "&Poll State";
-            this.pollStateToolStripMenuItem.Click += new System.EventHandler(this.pollStateToolStripMenuItem_Click);
+            this.scanTimer.Interval = 300;
+            this.scanTimer.Tick += new System.EventHandler(this.scanTimer_Tick);
+            // 
+            // logSaveFileDialog
+            // 
+            this.logSaveFileDialog.DefaultExt = "txt";
+            this.logSaveFileDialog.FileName = "logfile.txt";
+            this.logSaveFileDialog.Filter = "Text File|*.txt|All Files|*.*";
+            this.logSaveFileDialog.OverwritePrompt = false;
+            this.logSaveFileDialog.Title = "Capture Traffic";
             // 
             // pollTimer
             // 

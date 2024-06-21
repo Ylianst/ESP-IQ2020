@@ -196,7 +196,6 @@ namespace DataViewer
             //AppendText(" <-- " + ConvertByteArrayToHexString(data, 0, len));
             if (len < 5) return 0;
 
-
             if ((data[0] != 0x1c) && ((data[1] != 0x01) || (data[2] != 0x01)) && ((data[4] != 0x40) || (data[4] != 0x80))) {
                 AppendPacketDataText("Out of sync: " + ConvertByteArrayToHexString(data, 0, len));
                 for (var i = 1; i < len; i++) { if (data[i] == 0x1c) { return i; } }
@@ -350,6 +349,8 @@ namespace DataViewer
                 }
             }
 
+            if (data[1] == 0x33) { SendPacket("01 33 80 190100190000000B0004010000"); } // Audio emulation
+
             return totallen;
         }
 
@@ -370,8 +371,11 @@ namespace DataViewer
             SendPacket(hexComboBox.Text);
         }
 
+        public delegate void SendPacketHandler(string textPacket);
+
         private void SendPacket(string textPacket)
         {
+            if (InvokeRequired) { Invoke(new SendPacketHandler(SendPacket), textPacket); return; }
             textPacket = textPacket.Replace("<", "").Replace("-", "").Replace(":", "").Replace(" ", "").Replace(",", "");
             byte[] raw = ConvertHexStringToByteArray(textPacket);
             if (raw.Length < 4) return;

@@ -45,6 +45,8 @@ public:
 	void set_buffer_size(size_t size) { this->buf_size_ = size; }
 	void set_flow_control_pin(esphome::GPIOPin *flow_control_pin) { this->flow_control_pin_ = flow_control_pin; }
 	void set_ace_emulation(bool ace_emulation) { this->ace_emulation_ = ace_emulation; }
+	void set_audio_emulation(bool audio_emulation) { this->audio_emulation_ = audio_emulation; }
+	void set_polling_rate(bool polling_rate) { this->polling_rate_ = (polling_rate * 1000); }
 
 #ifdef USE_BINARY_SENSOR
 	void set_connected_sensor(esphome::binary_sensor::BinarySensor *connected) { this->connected_sensor_ = connected; }
@@ -125,6 +127,8 @@ protected:
 	size_t buf_size_;
 	esphome::GPIOPin *flow_control_pin_{ nullptr };
 	bool ace_emulation_;
+	bool audio_emulation_;
+	int polling_rate_;
 
 #ifdef USE_BINARY_SENSOR
 	esphome::binary_sensor::BinarySensor *connected_sensor_;

@@ -11,6 +11,8 @@ AUTO_LOAD = ["socket"]
 
 DEPENDENCIES = ["uart", "network"]
 CONF_ACE_EMULATION = "ace_emulation"
+CONF_AUDIO_EMULATION = "audio_emulation"
+CONF_POLLING_RATE = "polling_rate"
 
 CONF_TEMP_UNIT = "temp_unit"
 MULTI_CONF = False
@@ -23,6 +25,11 @@ def validate_buffer_size(buffer_size):
         raise cv.Invalid("Buffer size must be a power of two.")
     return buffer_size
 
+def validate_polling_rate(polling_rate):
+    if polling_rate < 5:
+        raise cv.Invalid("Polling rate must be 5 or above.")
+    return polling_rate
+
 CONFIG_SCHEMA = cv.All(
     cv.require_esphome_version(2022, 3, 0),
     cv.Schema(
@@ -32,6 +39,8 @@ CONFIG_SCHEMA = cv.All(
             cv.Optional(CONF_BUFFER_SIZE, default = 128): cv.All(cv.positive_int, validate_buffer_size),
             cv.Optional(CONF_FLOW_CONTROL_PIN): pins.gpio_output_pin_schema,
             cv.Optional(CONF_ACE_EMULATION, default = 'false'): cv.boolean,
+            cv.Optional(CONF_AUDIO_EMULATION, default = 'false'): cv.boolean,
+            cv.Optional(CONF_POLLING_RATE, default = 65): cv.All(cv.positive_int, validate_polling_rate),
         }
     )
     .extend(cv.COMPONENT_SCHEMA)
@@ -43,6 +52,8 @@ async def to_code(config):
     cg.add(var.set_port(config[CONF_PORT]))
     cg.add(var.set_buffer_size(config[CONF_BUFFER_SIZE]))
     cg.add(var.set_ace_emulation(config[CONF_ACE_EMULATION]))
+	cg.add(var.set_audio_emulation(config[CONF_AUDIO_EMULATION]))
+    cg.add(var.set_polling_rate(config[CONF_POLLING_RATE]))
 
     if CONF_FLOW_CONTROL_PIN in config:
         pin = await gpio_pin_expression(config[CONF_FLOW_CONTROL_PIN])
