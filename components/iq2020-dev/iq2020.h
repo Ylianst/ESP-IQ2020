@@ -223,5 +223,6 @@ protected:
 	void sendIQ2020Command(unsigned char dst, unsigned char src, unsigned char op, unsigned char *data, int len);
 	void setSwitchState(unsigned int switchid, int state);
 	void setSelectState(unsigned int selectid, int state);
+	void setNumberState(unsigned int numberid, int value);
 	void pollState();
 };
