@@ -416,9 +416,15 @@ Audio commands from and to the internet kit
 
 Audio commands to the audio module
 ```
-33 01 40 1900 0128 0000000B - Set Volume Max
-33 01 40 1900 0110 0000000B - Set Volume 1
-33 01 40 1900 010F 0000000B - Set Volume 0
+33 01 40 190001130B000800
+               VVTTCCBBSS
+
+VV = Volume (0x0F to 0x18)
+TT = Tremble (0xFB to 0x05)
+CC = Bass (0xFB to 0x05)
+BB = Balance (0xFB to 0x05)
+SS = Subwoofer (0x00 to 0x0B)
+
 33 01 40 1901 00            - Poll state
 33 01 40 1901 01            - Audio Play
 33 01 40 1901 02            - Audio Pause
