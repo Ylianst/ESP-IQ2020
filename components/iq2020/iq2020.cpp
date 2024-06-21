@@ -302,10 +302,12 @@ int IQ2020Component::processIQ2020Command() {
 			else if (processingBuffer[6] == 0x06) { // Song title
 				const char* song = "\x19\x06Sample Song";
 				sendIQ2020Command(0x01, 0x33, 0x80, (unsigned char*)song, strlen(song));
+				responded = 1;
 			}
 			else if (processingBuffer[6] == 0x07) { // Artist name
 				const char* artist = "\x19\x07Sample Artist";
 				sendIQ2020Command(0x01, 0x33, 0x80, (unsigned char*)artist, strlen(artist));
+				responded = 1;
 			}
 		}
 
