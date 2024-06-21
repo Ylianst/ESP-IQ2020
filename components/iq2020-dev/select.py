@@ -14,7 +14,9 @@ IQ2020Select = iq2020_select_ns.class_('IQ2020Select', select.Select, cg.Compone
 
 CONFIG_SCHEMA = select.SELECT_SCHEMA.extend({
     cv.GenerateID(): cv.declare_id(IQ2020Select)
-}).extend({ cv.Required(CONF_SELECT_DATAPOINT): cv.positive_int }).extend(cv.COMPONENT_SCHEMA)
+}).extend(cv.COMPONENT_SCHEMA)
+
+# .extend({ cv.Required(CONF_SELECT_DATAPOINT): cv.positive_int })
 
 async def to_code(config):
     server = cg.new_Pvariable(config[CONF_ID])
