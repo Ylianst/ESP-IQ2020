@@ -21,7 +21,5 @@ async def to_code(config):
     await cg.register_component(server, config)
     await number.register_number(server, config)
 
-#    paren = await cg.get_variable(config[CONF_IQ2020_ID])
-#    cg.add(server.set_iq2020_parent(paren))
-#   cg.add(server.set_number_id(config[CONF_ID]))
-    cg.add(server.set_number_id(config[CONF_NUMBER_DATAPOINT]))
+    if config[CONF_NUMBER_DATAPOINT] = 0:
+        cg.add(server.set_number_id(config[CONF_NUMBER_DATAPOINT], min_value: 0, max_value: 100, step: 4))
