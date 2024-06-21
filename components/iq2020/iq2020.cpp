@@ -407,8 +407,7 @@ int IQ2020Component::processIQ2020Command() {
 
 		if ((cmdlen == 140) && (processingBuffer[5] == 0x02) && (processingBuffer[6] == 0x56)) {
 			// This is the main status data (jets, temperature)
-			//if (!versionstr.empty()) { next_poll = ::millis() + (this->polling_rate_ * 1000); } // Next poll
-			if (!versionstr.empty()) { next_poll = ::millis() + 65000; } // Next poll in 65 seconds
+			if (!versionstr.empty()) { next_poll = ::millis() + (this->polling_rate_ * 1000); } // Next poll
 
 			// Read state flags
 			unsigned char flags1 = processingBuffer[9];
