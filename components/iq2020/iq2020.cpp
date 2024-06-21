@@ -95,6 +95,7 @@ void IQ2020Component::dump_config() {
 	if (this->flow_control_pin_ != nullptr) {
 		ESP_LOGCONFIG(TAG, "  Flow Control Pin: ", this->flow_control_pin_);
 	}
+	ESP_LOGCONFIG(TAG, "  Polling Rate: %d", polling_rate_);
 #ifdef USE_BINARY_SENSOR
 	LOG_BINARY_SENSOR("  ", "Connected:", this->connected_sensor_);
 #endif
