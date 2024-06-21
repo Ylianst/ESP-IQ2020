@@ -246,7 +246,7 @@ void IQ2020Component::processRawIQ2020Data(unsigned char *data, int len) {
 	}
 }
 
-int IQ2020Component::nextPossiblePacket() {
+void IQ2020Component::nextPossiblePacket() {
 	for (int i = 1; i < processingBufferLen; i++) { if (processingBuffer[i] == 0x1C) return i; }
 	return processingBufferLen;
 }

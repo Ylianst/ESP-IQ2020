@@ -104,7 +104,7 @@ public:
 
 protected:
 	void publish_sensor();
-	int setAudioButton(int button);
+	void setAudioButton(int button);
 
 	void accept();
 	void cleanup();
