@@ -52,7 +52,7 @@ async def to_code(config):
     cg.add(var.set_port(config[CONF_PORT]))
     cg.add(var.set_buffer_size(config[CONF_BUFFER_SIZE]))
     cg.add(var.set_ace_emulation(config[CONF_ACE_EMULATION]))
-	cg.add(var.set_audio_emulation(config[CONF_AUDIO_EMULATION]))
+    cg.add(var.set_audio_emulation(config[CONF_AUDIO_EMULATION]))
     cg.add(var.set_polling_rate(config[CONF_POLLING_RATE]))
 
     if CONF_FLOW_CONTROL_PIN in config:
