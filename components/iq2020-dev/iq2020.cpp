@@ -756,7 +756,7 @@ void IQ2020Component::setSelectState(unsigned int selectid, int state) {
 		state = select_pending[selectid];
 		select_pending[selectid] = -1;
 	}
-	if (state != switch_state[selectid]) {
+	if (state != select_state[selectid]) {
 		select_state[selectid] = state;
 		select_pending[selectid] = -1;
 		if (g_iq2020_select[selectid] != NULL) { g_iq2020_select[selectid]->publish_state_ex(state); }
