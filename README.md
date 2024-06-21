@@ -56,6 +56,7 @@ uart:
 
 iq2020:
    uart_id: SpaConnection
+   polling_rate: 65
 #   flow_control_pin: GPIO0
    port: 1234
 
