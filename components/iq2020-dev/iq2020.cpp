@@ -318,8 +318,9 @@ int IQ2020Component::processIQ2020Command() {
 			}
 			else if ((processingBuffer[6] == 0x00) && (processingBuffer[7] == 0x01) && (cmdlen == 14)) { // Audio settings
 				ESP_LOGD(TAG, "AUDIO - Volume=%d, Tremble=%d, Bass=%d, Balance=%d, Subwoofer=%d", processingBuffer[8], processingBuffer[9], processingBuffer[10], processingBuffer[11], processingBuffer[12]);
+				setNumberState(NUMBER_AUDIO_VOLUME, (processingBuffer[8] - 15) * 4);
 #ifdef USE_SENSOR
-				if (this->audio_volume_sensor_) this->audio_volume_sensor_->publish_state(processingBuffer[8]);
+				if (this->audio_volume_sensor_) this->audio_volume_sensor_->publish_state((processingBuffer[8] - 15) * 4);
 #endif
 			}
 			else if (processingBuffer[6] == 0x06) { // Song title
@@ -419,8 +420,9 @@ int IQ2020Component::processIQ2020Command() {
 		if ((cmdlen == 19) && (processingBuffer[5] == 0x19) && (processingBuffer[6] == 0x01)) {
 			// Status of audio module
 			setSelectState(SELECT_AUDIO_SOURCE, processingBuffer[14]); // Audio Source
+			setNumberState(NUMBER_AUDIO_VOLUME, (processingBuffer[8] - 15) * 4);
 #ifdef USE_SENSOR
-			if (this->audio_volume_sensor_) { this->audio_volume_sensor_->publish_state(processingBuffer[8]); } // Audio Volume
+			if (this->audio_volume_sensor_) { this->audio_volume_sensor_->publish_state((processingBuffer[8] - 15) * 4); } // Audio Volume
 #endif
 		}
 
@@ -789,6 +791,22 @@ void IQ2020Component::setSelectState(unsigned int selectid, int state) {
 		select_state[selectid] = state;
 		select_pending[selectid] = -1;
 		if (g_iq2020_select[selectid] != NULL) { g_iq2020_select[selectid]->publish_state_ex(state); }
+	}
+}
+
+// Update the state of a number
+// If you set state to -1, that indicates that whatever state we wanted to go to, we got a confirmation.
+void IQ2020Component::setNumberState(unsigned int numberid, int value) {
+	ESP_LOGD(TAG, "setNumberState, selectid = %d, value = %d", numberid, value);
+	if (state == -1) {
+		if (number_pending[numberid] == -1) return;
+		state = number_pending[numberid];
+		number_pending[numberid] = -1;
+	}
+	if (state != select_state[numberid]) {
+		number_state[numberid] = state;
+		number_pending[numberid] = -1;
+		if (g_iq2020_number[numberid] != NULL) { g_iq2020_number[numberid]->publish_state(value); }
 	}
 }
 
