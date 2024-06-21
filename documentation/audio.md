@@ -35,7 +35,7 @@ The audio button sensor will show 0 or unknown, but will momenteraly pulse to th
 4 - Back
 ```
 
-The pulse is very quick, but you can register automations. When entity `audio button` goes to 4 (Back button) you can trigger the automation.
+The pulse is very quick, but you can register automations. When entity `audio button` goes to a value (In the example below, 4 is the back button) you can trigger the automation.
 
 ![image](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/4733fbae-1796-4a15-81e1-31ec6ab28036)
 
