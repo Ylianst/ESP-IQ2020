@@ -315,7 +315,8 @@ int IQ2020Component::processIQ2020Command() {
 
 		// Audio emulation
 		if (audio_emulation_) {
-			unsigned char cmd[] = { processingBuffer[5], processingBuffer[6] }; // Echo back the command with no data
+			unsigned char cmd[] = { 0x19, 0x01, 0x00, 0x19, 0x00, 0x00, 0x00, 0x0B, 0x00, 0x04, 0x01, 0x00, 0x00 };
+			//unsigned char cmd[] = { processingBuffer[5], processingBuffer[6] }; // Echo back the command with no data
 			sendIQ2020Command(0x01, 0x33, 0x80, cmd, sizeof(cmd));
 		}
 	}
