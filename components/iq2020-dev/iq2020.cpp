@@ -21,6 +21,7 @@ esphome::iq2020_switch::IQ2020Switch* g_iq2020_switch[SWITCHCOUNT];
 esphome::iq2020_select::IQ2020Select* g_iq2020_select[SELECTCOUNT];
 esphome::iq2020_text::IQ2020Text* g_iq2020_text[TEXTCOUNT];
 esphome::iq2020_fan::IQ2020Fan* g_iq2020_fan[FANCOUNT];
+esphome::iq2020_number::IQ2020Number* g_iq2020_number[NUMBERCOUNT];
 esphome::iq2020_climate::IQ2020Climate* g_iq2020_climate = NULL;
 
 using namespace esphome;

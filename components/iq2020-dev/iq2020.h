@@ -41,6 +41,8 @@
 #define TEXTCOUNT 2
 #define TEXT_SONG_TITLE 0
 #define TEXT_ARTIST_NAME 1
+#define NUMBERCOUNT 1
+#define NUMBER_VOLUME 0
 
 class IQ2020Component : public esphome::Component {
 public:
