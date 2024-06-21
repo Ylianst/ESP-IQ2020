@@ -800,11 +800,11 @@ void IQ2020Component::setNumberState(unsigned int numberid, int value) {
 	ESP_LOGD(TAG, "setNumberState, selectid = %d, value = %d", numberid, value);
 	if (value == -1) {
 		if (number_pending[numberid] == -1) return;
-		state = number_pending[numberid];
+		value = number_pending[numberid];
 		number_pending[numberid] = -1;
 	}
 	if (value != select_state[numberid]) {
-		number_state[numberid] = state;
+		number_state[numberid] = value;
 		number_pending[numberid] = -1;
 		if (g_iq2020_number[numberid] != NULL) { g_iq2020_number[numberid]->publish_state(value); }
 	}
