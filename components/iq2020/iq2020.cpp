@@ -277,7 +277,7 @@ int IQ2020Component::processIQ2020Command() {
 
 	if ((processingBuffer[1] == 0x33) && (processingBuffer[2] == 0x01) && (processingBuffer[4] == 0x40) && (cmdlen >= 8)) {
 		// This is a command from IQ2020 to the audio module
-		//ESP_LOGD(TAG, "Audio REQ Data, len=%d, cmd=%02x%02x", cmdlen, processingBuffer[5], processingBuffer[6]);
+		ESP_LOGD(TAG, "Audio REQ Data, len=%d, cmd=%02x%02x", cmdlen, processingBuffer[5], processingBuffer[6]);
 
 		int responded = 0;
 		if ((processingBuffer[5] == 0x19) && (cmdlen >= 9)) {
@@ -296,8 +296,8 @@ int IQ2020Component::processIQ2020Command() {
 				case 4: ESP_LOGD(TAG, "AUDIO - BLUETOOTH"); break;
 				}
 			}
-			else if ((processingBuffer[6] == 0x00) && (processingBuffer[7] == 0x01) && (cmdlen >= 10)) { // Audio volume
-				ESP_LOGD(TAG, "AUDIO - VOLUME %d", processingBuffer[8]);
+			else if ((processingBuffer[6] == 0x00) && (processingBuffer[7] == 0x01) && (cmdlen == 14)) { // Audio settings
+				ESP_LOGD(TAG, "AUDIO - Volume=%d, Tremble=%d, Bass=%d, Balance=%d, Subwoofer=%d", processingBuffer[8], processingBuffer[9], processingBuffer[10], processingBuffer[11], processingBuffer[12]);
 			}
 			else if (processingBuffer[6] == 0x06) { // Song title
 				const char* song = "\x19\x06Sample Song";
