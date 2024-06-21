@@ -427,9 +427,15 @@ Audio commands to the audio module
 33 01 40 1903 02            - Audio source wireless (TV)
 33 01 40 1903 03            - Audio source aux
 33 01 40 1903 04            - Audio source Bluetooth
-33 01 40 1906 00            - Poll song/artist name
-33 01 40 1907 00            - Poll song/artist name
+33 01 40 1906 00            - Poll song name
+33 01 40 1907 00            - Poll artist name
 01 33 80 1901 00190000000B0004010000 - Confirm with state
+```
+
+Return song/artist name
+```
+01 33 80 1906 xxxx          - ASCII song title, 20 chars max
+01 33 80 1907 xxxx          - ASCII artist name, 20 chars max
 ```
 
 Poll for heat pump status
