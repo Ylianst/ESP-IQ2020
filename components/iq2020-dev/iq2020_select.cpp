@@ -12,7 +12,7 @@ namespace iq2020_select {
 
 	void IQ2020Select::setup() {
 		if (select_id < SELECTCOUNT) { g_iq2020_select[select_id] = this; }
-		ESP_LOGD(TAG, "Switch:%d Setup", switch_id);
+		ESP_LOGD(TAG, "Select:%d Setup", select_id);
 	}
 
 	void IQ2020Select::control(const std::string &value) {
