@@ -35,7 +35,7 @@
 #define SWITCH_JETS2 6
 #define SWITCH_JETS3 7
 #define SWITCH_JETS4 8
-#define SWITCH_SALT_POWER 9  // Freshwater Salt System Power Level
+#define SWITCH_SALT_POWER 9  // ACE/Freshwater Salt System Power Level
 #define SELECTCOUNT 1
 #define SELECT_AUDIO_SOURCE 0
 #define TEXTCOUNT 2

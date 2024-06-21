@@ -21,6 +21,11 @@ namespace iq2020_number {
 		if (g_iq2020_main != NULL) { g_iq2020_main->numberAction(number_id, value); }
 	}
 
+	number::NumberTraits IQ2020Climate::traits() {
+		auto traits = number::NumberTraits();
+		return traits;
+	}
+
 	void IQ2020Number::dump_config() {
 		//ESP_LOGCONFIG(TAG, "Number:%d config", switch_id);
 	}
