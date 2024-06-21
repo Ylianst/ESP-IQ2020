@@ -1,6 +1,7 @@
 #include "iq2020.h"
 #include "iq2020_fan.h"
 #include "iq2020_switch.h"
+#include "iq2020_select.h"
 #include "iq2020_climate.h"
 
 #include "esphome/core/helpers.h"
@@ -16,6 +17,7 @@ static const char *TAG = "iq2020";
 // These globals are ugly, but I can't figure out the correct system yet.
 IQ2020Component* g_iq2020_main = NULL;
 esphome::iq2020_switch::IQ2020Switch* g_iq2020_switch[SWITCHCOUNT];
+esphome::iq2020_select::IQ2020Select* g_iq2020_select[SELECTCOUNT];
 esphome::iq2020_fan::IQ2020Fan* g_iq2020_fan[FANCOUNT];
 esphome::iq2020_climate::IQ2020Climate* g_iq2020_climate = NULL;
 
@@ -299,9 +301,18 @@ int IQ2020Component::processIQ2020Command() {
 			}
 			else if ((processingBuffer[6] == 0x03) && (cmdlen == 9)) { // Audio source
 				switch (processingBuffer[7]) {
-				case 2: ESP_LOGD(TAG, "AUDIO - TV"); break;
-				case 3: ESP_LOGD(TAG, "AUDIO - AUX"); break;
-				case 4: ESP_LOGD(TAG, "AUDIO - BLUETOOTH"); break;
+				case 2:
+					ESP_LOGD(TAG, "AUDIO - TV"); 
+					if (g_iq2020_select[SELECT_AUDIO_SOURCE] != NULL) { g_iq2020_select[SELECT_AUDIO_SOURCE]->publish_state("TV"); }
+					break;
+				case 3:
+					ESP_LOGD(TAG, "AUDIO - AUX");
+					if (g_iq2020_select[SELECT_AUDIO_SOURCE] != NULL) { g_iq2020_select[SELECT_AUDIO_SOURCE]->publish_state("Aux"); }
+					break;
+				case 4:
+					ESP_LOGD(TAG, "AUDIO - BLUETOOTH");
+					if (g_iq2020_select[SELECT_AUDIO_SOURCE] != NULL) { g_iq2020_select[SELECT_AUDIO_SOURCE]->publish_state("Bluetooth"); }
+					break;
 				}
 			}
 			else if ((processingBuffer[6] == 0x00) && (processingBuffer[7] == 0x01) && (cmdlen == 14)) { // Audio settings

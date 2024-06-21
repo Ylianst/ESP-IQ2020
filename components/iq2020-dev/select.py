@@ -19,6 +19,6 @@ CONFIG_SCHEMA = select.SELECT_SCHEMA.extend({
 async def to_code(config):
     server = cg.new_Pvariable(config[CONF_ID])
     await cg.register_component(server, config)
-    options = ["Option 1", "Option 2", "Option 3"]
+    options = ["TV", "Aux", "Bluetooth"]
     await select.register_select(server, config, options=options)
     cg.add(server.set_select_id(config[CONF_SELECT_DATAPOINT]))

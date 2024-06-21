@@ -36,6 +36,8 @@
 #define SWITCH_JETS3 7
 #define SWITCH_JETS4 8
 #define SWITCH_SALT_POWER 9  // Freshwater Salt System Power Level
+#define SELECTCOUNT 1
+#define SELECT_AUDIO_SOURCE 0
 
 class IQ2020Component : public esphome::Component {
 public:
