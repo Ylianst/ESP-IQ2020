@@ -15,7 +15,7 @@ namespace iq2020_select {
 		//ESP_LOGD(TAG, "Switch:%d Setup", switch_id);
 	}
 
-	void control(const std::string &value) {
+	void IQ2020Select::control(const std::string &value) {
 		ESP_LOGD(TAG, "Select:%d control state: %s", select_id, value);
 	}
 
