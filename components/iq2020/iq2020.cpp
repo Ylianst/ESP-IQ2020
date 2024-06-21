@@ -295,8 +295,8 @@ int IQ2020Component::processIQ2020Command() {
 					ESP_LOGD(TAG, "AUDIO - BACK");
 					break;
 				}
-			} else if ((processingBuffer[6] == 0x03) { // Audio source
-				switch (processingBuffer[7]) && (cmdlen == 9)) {
+			} else if (processingBuffer[6] == 0x03) { // Audio source
+				switch ((processingBuffer[7]) && (cmdlen == 9)) {
 				case 2:
 					ESP_LOGD(TAG, "AUDIO - TV");
 					break;
