@@ -6,7 +6,7 @@
 namespace esphome {
 namespace iq2020_switch {
 
-	class IQ2020Switch : public switch::Switch, public Component {
+	class IQ2020Switch : public switch_::Switch, public Component {
 	public:
 		void setup() override;
 		void write_state(bool state) override;

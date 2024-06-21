@@ -6,7 +6,7 @@
 namespace esphome {
 namespace iq2020_select {
 
-	class IQ2020Select : public select_::Select, public Component {
+	class IQ2020Select : public select::Select, public Component {
 	public:
 		void setup() override;
 		void write_state(bool state) override;
