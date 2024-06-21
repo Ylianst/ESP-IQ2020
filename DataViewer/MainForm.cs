@@ -349,8 +349,8 @@ namespace DataViewer
                 }
             }
 
-            //if (data[1] == 0x33) { SendPacket("01 33 80 190100190000000B0004010000"); } // Audio emulation
-            if (data[1] == 0x33) { SendPacket("01 33 80 1901"); } // Audio emulation
+            if (data[1] == 0x33) { SendPacket("01 33 80 190100190000000B0004010000"); } // Audio emulation
+            //if (data[1] == 0x33) { SendPacket("01 33 80 1901"); } // Audio emulation
 
             return totallen;
         }
