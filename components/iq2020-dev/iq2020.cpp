@@ -3,6 +3,7 @@
 #include "iq2020_switch.h"
 #include "iq2020_select.h"
 #include "iq2020_text.h"
+#include "iq2020_number.h"
 #include "iq2020_climate.h"
 
 #include "esphome/core/helpers.h"
