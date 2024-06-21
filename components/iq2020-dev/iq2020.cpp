@@ -707,7 +707,7 @@ void IQ2020Component::selectAction(unsigned int selectid, int state) {
 	next_retry = ::millis() + SWITCH_RETRY_TIME;
 }
 
-void IQ2020Component::textAction(unsigned int textid, const std::string &value);
+void IQ2020Component::textAction(unsigned int textid, const std::string &value) {
 	ESP_LOGD(TAG, "textAction, selectid = %d, status = %s", selectid, value.c_str());
 	if (textid == 0) { audio_song_title = value; }
 	if (textid == 1) { audio_artist_name = value; }
