@@ -34,6 +34,7 @@ int readCounter(unsigned char* data, int offset) { return (data[offset]) + (data
 void IQ2020Component::setup() {
 	for (int i = 0; i < SWITCHCOUNT; i++) { switch_state[i] = switch_pending[i] = -1; }
 	for (int i = 0; i < SELECTCOUNT; i++) { select_state[i] = select_pending[i] = -1; }
+	for (int i = 0; i < NUMBERCOUNT; i++) { number_state[i] = number_pending[i] = -1; }
 	g_iq2020_main = this;
 	if (this->flow_control_pin_ != nullptr) { this->flow_control_pin_->setup(); }
 	//ESP_LOGD(TAG, "Setting up IQ2020...");
@@ -797,13 +798,13 @@ void IQ2020Component::setSelectState(unsigned int selectid, int state) {
 // Update the state of a number
 // If you set state to -1, that indicates that whatever state we wanted to go to, we got a confirmation.
 void IQ2020Component::setNumberState(unsigned int numberid, int value) {
-	ESP_LOGD(TAG, "setNumberState, selectid = %d, value = %d", numberid, value);
+	ESP_LOGD(TAG, "setNumberState, numberid = %d, value = %d", numberid, value);
 	if (value == -1) {
 		if (number_pending[numberid] == -1) return;
 		value = number_pending[numberid];
 		number_pending[numberid] = -1;
 	}
-	if (value != select_state[numberid]) {
+	if (value != number_state[numberid]) {
 		number_state[numberid] = value;
 		number_pending[numberid] = -1;
 		if (g_iq2020_number[numberid] != NULL) { g_iq2020_number[numberid]->publish_state(value); }

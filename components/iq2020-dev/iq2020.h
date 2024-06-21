@@ -196,6 +196,8 @@ protected:
 	int switch_pending[SWITCHCOUNT]; // Desired state of all switches
 	int select_state[SELECTCOUNT];   // Current state of all selects
 	int select_pending[SELECTCOUNT]; // Desired state of all selects
+	int number_state[NUMBERCOUNT];   // Current state of all numbers
+	int number_pending[NUMBERCOUNT]; // Desired state of all numbers
 	unsigned long connectionKit = 0; // The time the spa connection kit was last seen
 	bool temp_celsius = false;
 	int temp_action = -1;
