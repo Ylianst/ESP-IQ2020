@@ -21,5 +21,5 @@ async def to_code(config):
     await cg.register_component(server, config)
     await number.register_number(server, config)
 
-    if config[CONF_NUMBER_DATAPOINT] = 0:
+    if config[CONF_NUMBER_DATAPOINT] == 0:
         cg.add(server.set_number_id(config[CONF_NUMBER_DATAPOINT], min_value: 0, max_value: 100, step: 4))
