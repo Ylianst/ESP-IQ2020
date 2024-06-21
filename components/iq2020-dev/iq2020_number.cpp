@@ -11,7 +11,7 @@ namespace iq2020_number {
 	static const char *TAG = "iq2020.switch";
 
 	void IQ2020Number::setup() {
-		if (switch_id < NUMBERCOUNT) { g_iq2020_number[number_id] = this; }
+		if (number_id < NUMBERCOUNT) { g_iq2020_number[number_id] = this; }
 		//ESP_LOGD(TAG, "Number:%d Setup", switch_id);
 	}
 
