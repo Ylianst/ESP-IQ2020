@@ -279,43 +279,39 @@ int IQ2020Component::processIQ2020Command() {
 		// This is a command from IQ2020 to the audio module
 		//ESP_LOGD(TAG, "Audio REQ Data, len=%d, cmd=%02x%02x", cmdlen, processingBuffer[5], processingBuffer[6]);
 
+		int responded = 0;
 		if ((processingBuffer[5] == 0x19) && (cmdlen >= 9)) {
 			if ((processingBuffer[6] == 0x01) && (cmdlen == 9)) { // Audio controls
 				switch (processingBuffer[7]) {
-				case 1:
-					ESP_LOGD(TAG, "AUDIO - PLAY");
-					break;
-				case 2:
-					ESP_LOGD(TAG, "AUDIO - PAUSE");
-					break;
-				case 3:
-					ESP_LOGD(TAG, "AUDIO - NEXT");
-					break;
-				case 4:
-					ESP_LOGD(TAG, "AUDIO - BACK");
-					break;
+				case 1: ESP_LOGD(TAG, "AUDIO - PLAY"); break;
+				case 2: ESP_LOGD(TAG, "AUDIO - PAUSE"); break;
+				case 3: ESP_LOGD(TAG, "AUDIO - NEXT"); break;
+				case 4: ESP_LOGD(TAG, "AUDIO - BACK"); break;
 				}
-			} else if ((processingBuffer[6] == 0x03) && (cmdlen == 9)) { // Audio source
+			}
+			else if ((processingBuffer[6] == 0x03) && (cmdlen == 9)) { // Audio source
 				switch (processingBuffer[7]) {
-				case 2:
-					ESP_LOGD(TAG, "AUDIO - TV");
-					break;
-				case 3:
-					ESP_LOGD(TAG, "AUDIO - AUX");
-					break;
-				case 4:
-					ESP_LOGD(TAG, "AUDIO - BLUETOOTH");
-					break;
+				case 2: ESP_LOGD(TAG, "AUDIO - TV"); break;
+				case 3: ESP_LOGD(TAG, "AUDIO - AUX"); break;
+				case 4: ESP_LOGD(TAG, "AUDIO - BLUETOOTH"); break;
 				}
 			}
 			else if ((processingBuffer[6] == 0x00) && (processingBuffer[7] == 0x01) && (cmdlen >= 10)) { // Audio volume
 				ESP_LOGD(TAG, "AUDIO - VOLUME %d", processingBuffer[8]);
 			}
+			else if (processingBuffer[6] == 0x06) { // Song title
+				unsigned char* song = "\x19\x06" "Sample Song";
+				sendIQ2020Command(0x01, 0x33, 0x80, song, sizeof(song));
+			}
+			else if (processingBuffer[6] == 0x07) { // Artist name
+				unsigned char* artist = "\x19\x07" "Sample Artist";
+				sendIQ2020Command(0x01, 0x33, 0x80, artist, sizeof(artist));
+			}
 		}
 
 		// Audio emulation
-		if (audio_emulation_) {
-			ESP_LOGD(TAG, "AUDIO - Enumlate");
+		if (audio_emulation_ && (responded == 0)) {
+			//ESP_LOGD(TAG, "AUDIO - Enumlate");
 			unsigned char cmd[] = { 0x19, 0x01, 0x00, 0x19, 0x00, 0x00, 0x00, 0x0B, 0x00, 0x04, 0x01, 0x00, 0x00 };
 			//unsigned char cmd[] = { processingBuffer[5], processingBuffer[6] }; // Echo back the command with no data
 			sendIQ2020Command(0x01, 0x33, 0x80, cmd, sizeof(cmd));
