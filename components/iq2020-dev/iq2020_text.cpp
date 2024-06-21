@@ -15,13 +15,11 @@ namespace iq2020_text {
 		//ESP_LOGD(TAG, "Text:%d Setup", text_id);
 	}
 
-	/*
-	void IQ2020Text::write_state(bool state) {
+	void IQ2020Text::control(const std::string &value) {
 		ESP_LOGD(TAG, "Text:%d write state: %d", text_id, state);
 		//this->publish_state(state);
-		if (g_iq2020_main != NULL) { g_iq2020_main->textAction(text_id, state); }
+		//if (g_iq2020_main != NULL) { g_iq2020_main->textAction(text_id, state); }
 	}
-	*/
 
 	void IQ2020Text::dump_config() {
 		//ESP_LOGCONFIG(TAG, "Text:%d config", text_id);
