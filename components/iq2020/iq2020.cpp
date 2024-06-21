@@ -592,7 +592,7 @@ void IQ2020Component::sendIQ2020Command(unsigned char dst, unsigned char src, un
 	this->stream_->write_array(outboundBuffer, len + 6);
 	this->stream_->flush();
 	if (this->flow_control_pin_ != nullptr) { this->flow_control_pin_->digital_write(false); }
-	ESP_LOGD(TAG, "IQ2020 transmit, dst:%02x src:%02x op:%02x datalen:%d", outboundBuffer[1], outboundBuffer[2], outboundBuffer[4], outboundBuffer[3]);
+	//ESP_LOGD(TAG, "IQ2020 transmit, dst:%02x src:%02x op:%02x datalen:%d", outboundBuffer[1], outboundBuffer[2], outboundBuffer[4], outboundBuffer[3]);
 }
 
 void IQ2020Component::switchAction(unsigned int switchid, int state) {
