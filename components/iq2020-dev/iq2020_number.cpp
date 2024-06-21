@@ -3,7 +3,7 @@
 #include "iq2020.h"
 
 extern IQ2020Component* g_iq2020_main;
-extern esphome::iq2020_number::IQ2020Switch* g_iq2020_number[NUMBERCOUNT];
+extern esphome::iq2020_number::IQ2020Number* g_iq2020_number[NUMBERCOUNT];
 
 namespace esphome {
 namespace iq2020_number {
