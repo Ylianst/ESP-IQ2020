@@ -313,18 +313,15 @@ int IQ2020Component::processIQ2020Command() {
 				switch (processingBuffer[7]) {
 				case 2:
 					ESP_LOGD(TAG, "AUDIO - TV"); 
-					select_state[SELECT_AUDIO_SOURCE] = 2;
-					if (g_iq2020_select[SELECT_AUDIO_SOURCE] != NULL) { g_iq2020_select[SELECT_AUDIO_SOURCE]->publish_state_ex(2); }
+					setSelectState(SELECT_AUDIO_SOURCE, 2);
 					break;
 				case 3:
 					ESP_LOGD(TAG, "AUDIO - AUX");
-					select_state[SELECT_AUDIO_SOURCE] = 3;
-					if (g_iq2020_select[SELECT_AUDIO_SOURCE] != NULL) { g_iq2020_select[SELECT_AUDIO_SOURCE]->publish_state_ex(3); }
+					setSelectState(SELECT_AUDIO_SOURCE, 3);
 					break;
 				case 4:
 					ESP_LOGD(TAG, "AUDIO - BLUETOOTH");
-					select_state[SELECT_AUDIO_SOURCE] = 4;
-					if (g_iq2020_select[SELECT_AUDIO_SOURCE] != NULL) { g_iq2020_select[SELECT_AUDIO_SOURCE]->publish_state_ex(4); }
+					setSelectState(SELECT_AUDIO_SOURCE, 4);
 					break;
 				}
 			}

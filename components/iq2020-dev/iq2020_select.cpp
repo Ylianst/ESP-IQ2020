@@ -21,9 +21,9 @@ namespace iq2020_select {
 
 		// TV = 2, Aux = 3, Bluetooth = 4
 		if (g_iq2020_main != NULL) {
-			if (value == "TV") { g_iq2020_main->selectAction(select_id, 2); }
-			if (value == "Aux") { g_iq2020_main->selectAction(select_id, 3); }
-			if (value == "Bluetooth") { g_iq2020_main->selectAction(select_id, 4); }
+			if (value.compare("TV")) { g_iq2020_main->selectAction(select_id, 2); }
+			if (value.compare("Aux")) { g_iq2020_main->selectAction(select_id, 3); }
+			if (value.compare("Bluetooth")) { g_iq2020_main->selectAction(select_id, 4); }
 		}
 	}
 
