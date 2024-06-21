@@ -275,6 +275,51 @@ int IQ2020Component::processIQ2020Command() {
 		ESP_LOGD(TAG, "SCK CMD Data, len=%d, cmd=%02x%02x", cmdlen, processingBuffer[5], processingBuffer[6]);
 	}
 
+	if ((processingBuffer[1] == 0x33) && (processingBuffer[2] == 0x01) && (processingBuffer[4] == 0x40) && (cmdlen >= 8)) {
+		// This is a command from IQ2020 to the audio module
+		//ESP_LOGD(TAG, "Audio REQ Data, len=%d, cmd=%02x%02x", cmdlen, processingBuffer[5], processingBuffer[6]);
+
+		if ((processingBuffer[5] == 0x19) && (cmdlen >= 9)) {
+			if ((processingBuffer[6] == 0x01) && (cmdlen == 9)) { // Audio controls
+				switch (processingBuffer[7]) {
+				case 1:
+					ESP_LOGD(TAG, "AUDIO - PLAY");
+					break;
+				case 2:
+					ESP_LOGD(TAG, "AUDIO - PAUSE");
+					break;
+				case 3:
+					ESP_LOGD(TAG, "AUDIO - NEXT");
+					break;
+				case 4:
+					ESP_LOGD(TAG, "AUDIO - BACK");
+					break;
+				}
+			} else if ((processingBuffer[6] == 0x03) { // Audio source
+				switch (processingBuffer[7]) && (cmdlen == 9)) {
+				case 2:
+					ESP_LOGD(TAG, "AUDIO - TV");
+					break;
+				case 3:
+					ESP_LOGD(TAG, "AUDIO - AUX");
+					break;
+				case 4:
+					ESP_LOGD(TAG, "AUDIO - BLUETOOTH");
+					break;
+				}
+			}
+			else if ((processingBuffer[6] == 0x00) && (processingBuffer[7] == 0x01) && (cmdlen >= 10)) { // Audio volume
+				ESP_LOGD(TAG, "AUDIO - VOLUME %d", processingBuffer[8]);
+			}
+		}
+
+		// Audio emulation
+		if (audio_emulation_) {
+			unsigned char cmd[] = { processingBuffer[5], processingBuffer[6] }; // Echo back the command with no data
+			sendIQ2020Command(0x01, 0x33, 0x80, cmd, sizeof(cmd));
+		}
+	}
+
 	if (((processingBuffer[1] == 0x24) || (processingBuffer[1] == 0x29)) && (processingBuffer[2] == 0x01) && (processingBuffer[4] == 0x40) && (cmdlen == 21) && (processingBuffer[5] == 0x1E) && (processingBuffer[6] == 0x01)) {
 		// This is a command from IQ2020 to the Salt System
 		//ESP_LOGD(TAG, "Salt REQ Data, len=%d, cmd=%02x%02x", cmdlen, processingBuffer[5], processingBuffer[6]);
