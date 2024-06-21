@@ -14,12 +14,11 @@ IQ2020Select = iq2020_select_ns.class_('IQ2020Select', select.Select, cg.Compone
 
 CONFIG_SCHEMA = select.SELECT_SCHEMA.extend({
     cv.GenerateID(): cv.declare_id(IQ2020Select)
-}).extend(cv.COMPONENT_SCHEMA)
-
-# .extend({ cv.Required(CONF_SELECT_DATAPOINT): cv.positive_int })
+}).extend({ cv.Required(CONF_SELECT_DATAPOINT): cv.positive_int }).extend(cv.COMPONENT_SCHEMA)
 
 async def to_code(config):
     server = cg.new_Pvariable(config[CONF_ID])
     await cg.register_component(server, config)
-    await select.register_select(server, config)
+    options = ["Option 1", "Option 2", "Option 3"]
+    await select.register_select(server, config, options=options)
     cg.add(server.set_select_id(config[CONF_SELECT_DATAPOINT]))
