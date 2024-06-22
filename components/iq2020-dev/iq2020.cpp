@@ -93,6 +93,7 @@ void IQ2020Component::loop() {
 				break; // Only retry one command
 			}
 		}
+#ifdef USE_SELECT
 		for (int selectid = 0; selectid < SELECTCOUNT; selectid++) {
 			if (select_pending[selectid] != NOT_SET) {
 				ESP_LOGE(TAG, "Retry select %d set to %d", selectid, select_pending[selectid]);
@@ -102,6 +103,8 @@ void IQ2020Component::loop() {
 				break; // Only retry one command
 			}
 		}
+#endif
+#ifdef USE_NUMBER
 		for (int numberid = 0; numberid < NUMBERCOUNT; numberid++) {
 			if (number_pending[numberid] != NOT_SET) {
 				ESP_LOGE(TAG, "Retry number %d set to %d", numberid, number_pending[numberid]);
@@ -111,6 +114,7 @@ void IQ2020Component::loop() {
 				break; // Only retry one command
 			}
 		}
+#endif
 		// No commands that need retry, clear the retry state
 		next_retry_count = 0;
 	}
@@ -746,6 +750,7 @@ void IQ2020Component::switchAction(unsigned int switchid, int state) {
 	next_retry = ::millis() + SWITCH_RETRY_TIME;
 }
 
+#ifdef USE_SELECT
 void IQ2020Component::selectAction(unsigned int selectid, int state) {
 	ESP_LOGD(TAG, "selectAction, selectid = %d, status = %d", selectid, state);
 	switch (selectid) {
@@ -761,7 +766,9 @@ void IQ2020Component::selectAction(unsigned int selectid, int state) {
 	next_retry_count += SWITCH_RETRY_COUNT;
 	next_retry = ::millis() + SWITCH_RETRY_TIME;
 }
+#endif
 
+#ifdef USE_NUMBER
 void IQ2020Component::numberAction(unsigned int numberid, int value) {
 	ESP_LOGD(TAG, "numberAction, numberid = %d, value = %d", numberid, value);
 	select_pending[numberid] = value;
@@ -807,6 +814,7 @@ void IQ2020Component::numberAction(unsigned int numberid, int value) {
 	next_retry_count += SWITCH_RETRY_COUNT;
 	next_retry = ::millis() + SWITCH_RETRY_TIME;
 }
+#endif
 
 void IQ2020Component::setTempAction(float newtemp) {
 	//ESP_LOGD(TAG, "setTempAction: new=%f", newtemp);
