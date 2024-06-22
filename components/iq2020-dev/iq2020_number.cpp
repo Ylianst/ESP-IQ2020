@@ -17,7 +17,7 @@ namespace iq2020_number {
 		switch (number_id) {
 		case NUMBER_AUDIO_VOLUME:
 			this->traits.set_min_value(0);
-			this->traits.set_max_value(50);
+			this->traits.set_max_value(100);
 			this->traits.set_step(4);
 			break;
 		case NUMBER_AUDIO_TREMBLE:

@@ -318,7 +318,7 @@ int IQ2020Component::processIQ2020Command() {
 			}
 			else if ((processingBuffer[6] == 0x00) && (processingBuffer[7] == 0x01) && (cmdlen == 14)) { // Audio settings
 				ESP_LOGD(TAG, "AUDIO - Volume=%d, Tremble=%d, Bass=%d, Balance=%d, Subwoofer=%d", processingBuffer[8], processingBuffer[9], processingBuffer[10], processingBuffer[11], processingBuffer[12]);
-				setNumberState(NUMBER_AUDIO_VOLUME, (processingBuffer[8] - 15) * 4);
+				setNumberState(NUMBER_AUDIO_VOLUME, (processingBuffer[8] - 15) << 2);
 				setNumberState(NUMBER_AUDIO_TREMBLE, processingBuffer[9]);
 				setNumberState(NUMBER_AUDIO_BASS, processingBuffer[10]);
 				setNumberState(NUMBER_AUDIO_BALANCE, processingBuffer[11]);
@@ -424,7 +424,7 @@ int IQ2020Component::processIQ2020Command() {
 		if ((cmdlen == 19) && (processingBuffer[5] == 0x19) && (processingBuffer[6] == 0x01)) {
 			// Status of audio module
 			setSelectState(SELECT_AUDIO_SOURCE, processingBuffer[14]); // Audio Source
-			setNumberState(NUMBER_AUDIO_VOLUME, (processingBuffer[8] - 15) * 4);
+			setNumberState(NUMBER_AUDIO_VOLUME, (processingBuffer[8] - 15) << 2);
 			setNumberState(NUMBER_AUDIO_TREMBLE, processingBuffer[9]);
 			setNumberState(NUMBER_AUDIO_BASS, processingBuffer[10]);
 			setNumberState(NUMBER_AUDIO_BALANCE, processingBuffer[11]);
@@ -736,13 +736,12 @@ void IQ2020Component::selectAction(unsigned int selectid, int state) {
 void IQ2020Component::numberAction(unsigned int numberid, int value) {
 	ESP_LOGD(TAG, "numberAction, numberid = %d, value = %d", numberid, value);
 	select_pending[numberid] = value;
-
 	int volume = (select_pending[NUMBER_AUDIO_VOLUME] != NOT_SET) ? select_pending[NUMBER_AUDIO_VOLUME] : number_state[NUMBER_AUDIO_VOLUME];
 	int tremble = (select_pending[NUMBER_AUDIO_TREMBLE] != NOT_SET) ? select_pending[NUMBER_AUDIO_TREMBLE] : number_state[NUMBER_AUDIO_TREMBLE];
 	int bass = (select_pending[NUMBER_AUDIO_BASS] != NOT_SET) ? select_pending[NUMBER_AUDIO_BASS] : number_state[NUMBER_AUDIO_BASS];
 	int balance = (select_pending[NUMBER_AUDIO_BALANCE] != NOT_SET) ? select_pending[NUMBER_AUDIO_BALANCE] : number_state[NUMBER_AUDIO_BALANCE];
 	int subwoofer = (select_pending[NUMBER_AUDIO_SUBWOOFER] != NOT_SET) ? select_pending[NUMBER_AUDIO_SUBWOOFER] : number_state[NUMBER_AUDIO_SUBWOOFER];
-	unsigned char cmd[] = { 0x19, 0x00, 0x01, (unsigned char)volume, (unsigned char)tremble, (unsigned char)bass, (unsigned char)balance, (unsigned char)subwoofer };
+	unsigned char cmd[] = { 0x19, 0x00, 0x01, (unsigned char)((volume >> 2) + 15), (unsigned char)tremble, (unsigned char)bass, (unsigned char)balance, (unsigned char)subwoofer };
 	sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Change audio source
 
 	// If the command does not get confirmed, setup to try again
