@@ -16,8 +16,6 @@ Also, add the following two sensors in the `sensor` section:
 sensor:
     audio_buttons:
       name: Audio Buttons
-    audio_volume:
-      name: Audio Volume
 ```
 
 Them, replace the empty `select`, `number`, and `text` sections with this:
