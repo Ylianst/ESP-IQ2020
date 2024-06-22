@@ -35,7 +35,19 @@
 #define SWITCH_JETS2 6
 #define SWITCH_JETS3 7
 #define SWITCH_JETS4 8
-#define SWITCH_SALT_POWER 9  // Freshwater Salt System Power Level
+#define SWITCH_SALT_POWER 9  // ACE/Freshwater Salt System Power Level
+#define SELECTCOUNT 1
+#define SELECT_AUDIO_SOURCE 0
+#define TEXTCOUNT 2
+#define TEXT_SONG_TITLE 0
+#define TEXT_ARTIST_NAME 1
+#define NUMBERCOUNT 5
+#define NUMBER_AUDIO_VOLUME 0
+#define NUMBER_AUDIO_TREMBLE 1
+#define NUMBER_AUDIO_BASS 2
+#define NUMBER_AUDIO_BALANCE 3
+#define NUMBER_AUDIO_SUBWOOFER 4
+#define NOT_SET -127
 
 class IQ2020Component : public esphome::Component {
 public:
@@ -85,7 +97,6 @@ public:
 	void set_pcb_f_temperature_sensor(esphome::sensor::Sensor *sensor) { this->pcb_f_temperature_sensor_ = sensor; }
 	void set_pcb_c_temperature_sensor(esphome::sensor::Sensor *sensor) { this->pcb_c_temperature_sensor_ = sensor; }
 	void set_audio_buttons_sensor(esphome::sensor::Sensor *sensor) { this->audio_buttons_sensor_ = sensor; }
-	void set_audio_volume_sensor(esphome::sensor::Sensor *sensor) { this->audio_volume_sensor_ = sensor; }
 #endif
 #ifdef USE_TEXT_SENSOR
 	void set_version_sensor(esphome::text_sensor::TextSensor *text) { this->version_sensor_ = text; }
@@ -100,6 +111,12 @@ public:
 
 	void set_port(uint16_t port) { this->port_ = port; }
 	void switchAction(unsigned int switchid, int state);
+#ifdef USE_SELECT
+	void selectAction(unsigned int selectid, int state);
+#endif
+#ifdef USE_NUMBER
+	void numberAction(unsigned int numberid, int state);
+#endif
 	void setTempAction(float newtemp);
 
 protected:
@@ -170,7 +187,6 @@ protected:
 	esphome::sensor::Sensor *pcb_f_temperature_sensor_;
 	esphome::sensor::Sensor *pcb_c_temperature_sensor_;
 	esphome::sensor::Sensor *audio_buttons_sensor_;
-	esphome::sensor::Sensor *audio_volume_sensor_;
 #endif
 #ifdef USE_TEXT_SENSOR
 	esphome::text_sensor::TextSensor *version_sensor_;
@@ -185,20 +201,30 @@ protected:
 	std::string versionstr;
 	int switch_state[SWITCHCOUNT];   // Current state of all switches
 	int switch_pending[SWITCHCOUNT]; // Desired state of all switches
+#ifdef USE_SELECT
+	int select_state[SELECTCOUNT];   // Current state of all selects
+	int select_pending[SELECTCOUNT]; // Desired state of all selects
+#endif
+#ifdef USE_NUMBER
+	int number_state[NUMBERCOUNT];   // Current state of all numbers
+	int number_pending[NUMBERCOUNT]; // Desired state of all numbers
+#endif
 	unsigned long connectionKit = 0; // The time the spa connection kit was last seen
 	bool temp_celsius = false;
-	int temp_action = -1;
-	float target_temp = -1;
-	float current_temp = -1;
-	float outlet_temp = -1;
-	float pending_temp = -1;
-	float pending_temp_cmd = -1;
+	int temp_action = NOT_SET;
+	float target_temp = NOT_SET;
+	float current_temp = NOT_SET;
+	float outlet_temp = NOT_SET;
+	float pending_temp = NOT_SET;
+	float pending_temp_cmd = NOT_SET;
 	int pending_temp_retry = 0;
 	unsigned long next_poll = 0;
 	unsigned long next_retry = 0;
 	int next_retry_count = 0;
-	int salt_power = -1; // This is polled too frequently to send to HA each time.
-	int salt_content = -1; // This is polled too frequently to send to HA each time.
+	int salt_power = NOT_SET; // This is polled too frequently to send to HA each time.
+	int salt_content = NOT_SET; // This is polled too frequently to send to HA each time.
+	std::string audio_song_title;
+	std::string audio_artist_name;
 
 	// IQ2020 processing
 	int nextPossiblePacket();
@@ -209,5 +235,7 @@ protected:
 	int processIQ2020Command();
 	void sendIQ2020Command(unsigned char dst, unsigned char src, unsigned char op, unsigned char *data, int len);
 	void setSwitchState(unsigned int switchid, int state);
+	void setSelectState(unsigned int selectid, int state);
+	void setNumberState(unsigned int numberid, int value);
 	void pollState();
 };
