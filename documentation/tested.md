@@ -69,3 +69,8 @@ fan:
  - Status: Works great but lifetime indicator shows over 29 years which is not accurate.
  - Version: 1.08.D0172E002HL1.02
  - Modules: None
+
+## Hotspring Relay 2024
+
+- IQ2020 Watkins 1303401-1 controller
+- Status: Works, but power indicators for Pumps & Heater always shows zero.
