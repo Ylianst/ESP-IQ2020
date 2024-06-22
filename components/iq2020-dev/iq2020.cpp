@@ -41,8 +41,12 @@ int readCounter(unsigned char* data, int offset) { return (data[offset]) + (data
 
 void IQ2020Component::setup() {
 	for (int i = 0; i < SWITCHCOUNT; i++) { switch_state[i] = switch_pending[i] = NOT_SET; }
+#ifdef USE_SELECT
 	for (int i = 0; i < SELECTCOUNT; i++) { select_state[i] = select_pending[i] = NOT_SET; }
+#endif
+#ifdef USE_SELECT
 	for (int i = 0; i < NUMBERCOUNT; i++) { number_state[i] = number_pending[i] = NOT_SET; }
+#endif
 	g_iq2020_main = this;
 	if (this->flow_control_pin_ != nullptr) { this->flow_control_pin_->setup(); }
 	//ESP_LOGD(TAG, "Setting up IQ2020...");
@@ -533,7 +537,11 @@ int IQ2020Component::processIQ2020Command() {
 
 		if ((cmdlen == 140) && (processingBuffer[5] == 0x02) && (processingBuffer[6] == 0x56)) {
 			// This is the main status data (jets, temperature)
+#ifdef USE_SELECT
 			if (!versionstr.empty() && (select_state[SELECT_AUDIO_SOURCE] != NOT_SET)) { next_poll = ::millis() + (this->polling_rate_ * 1000); } // Next poll
+#else
+			if (!versionstr.empty()) { next_poll = ::millis() + (this->polling_rate_ * 1000); } // Next poll
+#endif
 
 			// Read state flags
 			unsigned char flags1 = processingBuffer[9];
@@ -882,6 +890,7 @@ void IQ2020Component::pollState() {
 		return;
 	}
 
+#ifdef USE_SELECT
 	// If we don't have the audio status, fetch it now.
 	if (select_state[SELECT_AUDIO_SOURCE] == NOT_SET) {
 		ESP_LOGD(TAG, "Poll Audio");
@@ -889,6 +898,7 @@ void IQ2020Component::pollState() {
 		sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Get version string
 		return;
 	}
+#endif
 
 	ESP_LOGD(TAG, "Poll");
 	unsigned char generalPollCmd[] = { 0x02, 0x56 };
