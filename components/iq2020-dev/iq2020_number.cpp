@@ -1,5 +1,3 @@
-#ifdef USE_NUMBER
-
 #include "esphome/core/log.h"
 #include "iq2020_number.h"
 #include "iq2020.h"
@@ -10,7 +8,7 @@ extern esphome::iq2020_number::IQ2020Number* g_iq2020_number[NUMBERCOUNT];
 namespace esphome {
 namespace iq2020_number {
 
-	static const char *TAG = "iq2020.switch";
+	static const char *TAG = "iq2020.number";
 
 	void IQ2020Number::setup() {
 		if (number_id < NUMBERCOUNT) { g_iq2020_number[number_id] = this; }
@@ -53,5 +51,3 @@ namespace iq2020_number {
 
 } //namespace iq2020_number
 } //namespace esphome
-
-#endif
