@@ -328,9 +328,9 @@ int IQ2020Component::processIQ2020Command() {
 			else if ((processingBuffer[6] == 0x00) && (processingBuffer[7] == 0x01) && (cmdlen == 14)) { // Audio settings
 				ESP_LOGD(TAG, "AUDIO - Volume=%d, Tremble=%d, Bass=%d, Balance=%d, Subwoofer=%d", processingBuffer[8], processingBuffer[9], processingBuffer[10], processingBuffer[11], processingBuffer[12]);
 				setNumberState(NUMBER_AUDIO_VOLUME, (processingBuffer[8] - 15) << 2);
-				setNumberState(NUMBER_AUDIO_TREMBLE, processingBuffer[9]);
-				setNumberState(NUMBER_AUDIO_BASS, processingBuffer[10]);
-				setNumberState(NUMBER_AUDIO_BALANCE, processingBuffer[11]);
+				setNumberState(NUMBER_AUDIO_TREMBLE, (char)processingBuffer[9]);
+				setNumberState(NUMBER_AUDIO_BASS, (char)processingBuffer[10]);
+				setNumberState(NUMBER_AUDIO_BALANCE, (char)processingBuffer[11]);
 				setNumberState(NUMBER_AUDIO_SUBWOOFER, processingBuffer[12]);
 			}
 			else if (processingBuffer[6] == 0x06) { // Song title
@@ -431,9 +431,9 @@ int IQ2020Component::processIQ2020Command() {
 			// Status of audio module
 			setSelectState(SELECT_AUDIO_SOURCE, processingBuffer[14]); // Audio Source
 			setNumberState(NUMBER_AUDIO_VOLUME, (processingBuffer[8] - 15) << 2);
-			setNumberState(NUMBER_AUDIO_TREMBLE, processingBuffer[9]);
-			setNumberState(NUMBER_AUDIO_BASS, processingBuffer[10]);
-			setNumberState(NUMBER_AUDIO_BALANCE, processingBuffer[11]);
+			setNumberState(NUMBER_AUDIO_TREMBLE, (char)processingBuffer[9]);
+			setNumberState(NUMBER_AUDIO_BASS, (char)processingBuffer[10]);
+			setNumberState(NUMBER_AUDIO_BALANCE, (char)processingBuffer[11]);
 			setNumberState(NUMBER_AUDIO_SUBWOOFER, processingBuffer[12]);
 		}
 
