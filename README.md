@@ -183,6 +183,7 @@ For added details:
   - [Home Assistant Sensor Templates](https://github.com/Ylianst/ESP-IQ2020/blob/main/documentation/templates.md)
   - [Variable Electric Rate Savings](https://github.com/Ylianst/ESP-IQ2020/blob/main/documentation/electric.md)
   - [Audio Module Emulation](https://github.com/Ylianst/ESP-IQ2020/blob/main/documentation/audio.md)
+  - [More Sensors and Extras](https://github.com/Ylianst/ESP-IQ2020/blob/main/documentation/extras.md)
 
 Known Issues:
   - Jet 3 may work but will not show the running state properly, but if we have such a hot tub and can send me traffic logs, I can probably add support for it.
