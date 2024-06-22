@@ -13,8 +13,30 @@ namespace iq2020_number {
 	void IQ2020Number::setup() {
 		if (number_id < NUMBERCOUNT) { g_iq2020_number[number_id] = this; }
 		//ESP_LOGD(TAG, "Number:%d Setup", switch_id);
-		this->traits.set_min_value(0);
-		this->traits.set_max_value(50);
+
+		switch (number_id) {
+		case NUMBER_AUDIO_VOLUME:
+			this->traits.set_min_value(0);
+			this->traits.set_max_value(50);
+			this->traits.set_step(4);
+			break;
+		case NUMBER_AUDIO_TREMBLE:
+			this->traits.set_min_value(-5);
+			this->traits.set_max_value(5);
+			break;
+		case NUMBER_AUDIO_BASS:
+			this->traits.set_min_value(-5);
+			this->traits.set_max_value(5);
+			break;
+		case NUMBER_AUDIO_BALANCE:
+			this->traits.set_min_value(-5);
+			this->traits.set_max_value(5);
+			break;
+		case NUMBER_AUDIO_SUBWOOFER:
+			this->traits.set_min_value(0);
+			this->traits.set_max_value(11);
+			break;
+		}
 	}
 
 	void IQ2020Number::control(float value) {
@@ -22,13 +44,6 @@ namespace iq2020_number {
 		this->publish_state(value);
 		if (g_iq2020_main != NULL) { g_iq2020_main->numberAction(number_id, value); }
 	}
-
-	/*
-	number::NumberTraits IQ2020Climate::traits() {
-		auto traits = number::NumberTraits();
-		return traits;
-	}
-	*/
 
 	void IQ2020Number::dump_config() {
 		//ESP_LOGCONFIG(TAG, "Number:%d config", switch_id);
