@@ -752,7 +752,7 @@ void IQ2020Component::numberAction(unsigned int numberid, int value) {
 		select_pending[NUMBER_AUDIO_TREMBLE] = value;
 		unsigned char cmd[] = { 0x19, 0x00, 0x05, (unsigned char)value };
 		sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Change tremble
-		break;
+		break; 
 	}
 	case NUMBER_AUDIO_BASS:
 	{
