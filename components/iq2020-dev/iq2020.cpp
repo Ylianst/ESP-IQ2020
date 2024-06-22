@@ -337,7 +337,7 @@ int IQ2020Component::processIQ2020Command() {
 				int text_len = 2;
 				char text[22];
 				text[0] = 0x19;
-				text[1] = 0x07;
+				text[1] = 0x06;
 				if (g_iq2020_text[TEXT_SONG_TITLE] != NULL) {
 					text_len += g_iq2020_text[TEXT_SONG_TITLE]->text_value.size();
 					memcpy(text + 2, g_iq2020_text[TEXT_SONG_TITLE]->text_value.c_str(), text_len - 2);
@@ -752,7 +752,7 @@ void IQ2020Component::numberAction(unsigned int numberid, int value) {
 		select_pending[NUMBER_AUDIO_TREMBLE] = value;
 		unsigned char cmd[] = { 0x19, 0x00, 0x05, (unsigned char)value };
 		sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Change tremble
-		break; 
+		break;
 	}
 	case NUMBER_AUDIO_BASS:
 	{
