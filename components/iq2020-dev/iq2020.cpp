@@ -29,7 +29,6 @@ using namespace esphome;
 
 float fahrenheit_to_celsius(float f) { return (f - 32) * 5 / 9; }
 float celsius_to_fahrenheit(float c) { return c * 9 / 5 + 32; }
-int signedIntExpand(unsigned chat x) { if (x < 128) { return x; } return }
 int readCounter(unsigned char* data, int offset) { return (data[offset]) + (data[offset + 1] << 8) + (data[offset + 2] << 16) + (data[offset + 3] << 24); }
 
 void IQ2020Component::setup() {
