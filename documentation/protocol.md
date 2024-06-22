@@ -411,6 +411,14 @@ Audio commands from and to the internet kit
 01 1F 40 1900 030200        - Audio source wireless
 01 1F 40 1900 040100        - Audio on
 01 1F 40 1900 040000        - Audio off
+01 1F 40 1900 01xx          - Set Volume
+01 1F 40 1900 02xx          - Set Play/Pause/Next/Back
+01 1F 40 1900 03xx          - Set Source
+01 1F 40 1900 05xx          - Set Tremble
+01 1F 40 1900 06xx          - Set Base
+01 1F 40 1900 07xx          - Set Balance
+01 1F 40 1900 08xx          - Set Subwoofer
+01 1F 40 1900 09xx          - Set Unknown ?
 1F 01 80 1900 06            - Confirmation
 ```
 
