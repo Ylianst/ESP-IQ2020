@@ -12,7 +12,7 @@ namespace iq2020_number {
 		void control(float value) override;
 		void dump_config() override;
 		void set_number_id(unsigned int id) { this->number_id = id; }
-		number::NumberTraits traits() override;
+		//number::NumberTraits traits();
 	protected:
 		unsigned int number_id;
 	};
