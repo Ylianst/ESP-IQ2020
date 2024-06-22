@@ -111,8 +111,12 @@ public:
 
 	void set_port(uint16_t port) { this->port_ = port; }
 	void switchAction(unsigned int switchid, int state);
+#ifdef USE_SELECT
 	void selectAction(unsigned int selectid, int state);
+#endif
+#ifdef USE_NUMBER
 	void numberAction(unsigned int numberid, int state);
+#endif
 	void setTempAction(float newtemp);
 
 protected:
@@ -197,10 +201,14 @@ protected:
 	std::string versionstr;
 	int switch_state[SWITCHCOUNT];   // Current state of all switches
 	int switch_pending[SWITCHCOUNT]; // Desired state of all switches
+#ifdef USE_SELECT
 	int select_state[SELECTCOUNT];   // Current state of all selects
 	int select_pending[SELECTCOUNT]; // Desired state of all selects
+#endif
+#ifdef USE_NUMBER
 	int number_state[NUMBERCOUNT];   // Current state of all numbers
 	int number_pending[NUMBERCOUNT]; // Desired state of all numbers
+#endif
 	unsigned long connectionKit = 0; // The time the spa connection kit was last seen
 	bool temp_celsius = false;
 	int temp_action = NOT_SET;

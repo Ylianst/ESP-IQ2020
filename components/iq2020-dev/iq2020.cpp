@@ -1,9 +1,13 @@
 #include "iq2020.h"
 #include "iq2020_fan.h"
 #include "iq2020_switch.h"
+#ifdef USE_SELECT
 #include "iq2020_select.h"
+#endif
 #include "iq2020_text.h"
+#ifdef USE_NUMBER
 #include "iq2020_number.h"
+#endif
 #include "iq2020_climate.h"
 
 #include "esphome/core/helpers.h"
@@ -19,10 +23,14 @@ static const char *TAG = "iq2020";
 // These globals are ugly, but I can't figure out the correct system yet.
 IQ2020Component* g_iq2020_main = NULL;
 esphome::iq2020_switch::IQ2020Switch* g_iq2020_switch[SWITCHCOUNT];
+#ifdef USE_SELECT
 esphome::iq2020_select::IQ2020Select* g_iq2020_select[SELECTCOUNT];
+#endif
 esphome::iq2020_text::IQ2020Text* g_iq2020_text[TEXTCOUNT];
 esphome::iq2020_fan::IQ2020Fan* g_iq2020_fan[FANCOUNT];
+#ifdef USE_NUMBER
 esphome::iq2020_number::IQ2020Number* g_iq2020_number[NUMBERCOUNT];
+#endif
 esphome::iq2020_climate::IQ2020Climate* g_iq2020_climate = NULL;
 
 using namespace esphome;
@@ -323,15 +331,19 @@ int IQ2020Component::processIQ2020Command() {
 				}
 			}
 			else if ((processingBuffer[6] == 0x03) && (cmdlen == 9)) { // Audio source
+#ifdef USE_SELECT
 				setSelectState(SELECT_AUDIO_SOURCE, processingBuffer[7]);
+#endif
 			}
 			else if ((processingBuffer[6] == 0x00) && (processingBuffer[7] == 0x01) && (cmdlen == 14)) { // Audio settings
+#ifdef USE_NUMBER
 				ESP_LOGD(TAG, "AUDIO - Volume=%d, Tremble=%d, Bass=%d, Balance=%d, Subwoofer=%d", processingBuffer[8], processingBuffer[9], processingBuffer[10], processingBuffer[11], processingBuffer[12]);
 				setNumberState(NUMBER_AUDIO_VOLUME, (processingBuffer[8] - 15) << 2);
 				setNumberState(NUMBER_AUDIO_TREMBLE, (signed char)(processingBuffer[9]));
 				setNumberState(NUMBER_AUDIO_BASS, (signed char)(processingBuffer[10]));
 				setNumberState(NUMBER_AUDIO_BALANCE, (signed char)(processingBuffer[11]));
 				setNumberState(NUMBER_AUDIO_SUBWOOFER, processingBuffer[12]);
+#endif
 			}
 			else if (processingBuffer[6] == 0x06) { // Song title
 				int text_len = 2;
@@ -424,17 +436,23 @@ int IQ2020Component::processIQ2020Command() {
 
 		if ((cmdlen == 9) && (processingBuffer[5] == 0x19) && (processingBuffer[6] == 0x00) && (processingBuffer[7] == 0x06)) {
 			// Confirmation that the audio command was received
+#ifdef USE_SELECT
 			setSelectState(SELECT_AUDIO_SOURCE, NOT_SET);
+#endif
 		}
 
 		if ((cmdlen == 19) && (processingBuffer[5] == 0x19) && (processingBuffer[6] == 0x01)) {
 			// Status of audio module
+#ifdef USE_SELECT
 			setSelectState(SELECT_AUDIO_SOURCE, processingBuffer[14]); // Audio Source
+#endif
+#ifdef USE_NUMBER
 			setNumberState(NUMBER_AUDIO_VOLUME, (processingBuffer[8] - 15) << 2);
 			setNumberState(NUMBER_AUDIO_TREMBLE, (signed char)processingBuffer[9]);
 			setNumberState(NUMBER_AUDIO_BASS, (signed char)processingBuffer[10]);
 			setNumberState(NUMBER_AUDIO_BALANCE, (signed char)processingBuffer[11]);
 			setNumberState(NUMBER_AUDIO_SUBWOOFER, processingBuffer[12]);
+#endif
 		}
 
 		if ((cmdlen == 26) && (processingBuffer[5] == 0x1E) && (processingBuffer[6] == 0x03)) {
@@ -821,6 +839,7 @@ void IQ2020Component::setSwitchState(unsigned int switchid, int state) {
 
 // Update the state of a selector
 // If you set state to NOT_SET, that indicates that whatever state we wanted to go to, we got a confirmation.
+#ifdef USE_SELECT
 void IQ2020Component::setSelectState(unsigned int selectid, int state) {
 	ESP_LOGD(TAG, "setSelectState, selectid = %d, status = %d", selectid, state);
 	if (state == NOT_SET) {
@@ -834,9 +853,11 @@ void IQ2020Component::setSelectState(unsigned int selectid, int state) {
 		if (g_iq2020_select[selectid] != NULL) { g_iq2020_select[selectid]->publish_state_ex(state); }
 	}
 }
+#endif
 
 // Update the state of a number
 // If you set state to NOT_SET, that indicates that whatever state we wanted to go to, we got a confirmation.
+#ifdef USE_NUMBER
 void IQ2020Component::setNumberState(unsigned int numberid, int value) {
 	ESP_LOGD(TAG, "setNumberState, numberid = %d, value = %d", numberid, value);
 	if (value == NOT_SET) {
@@ -850,6 +871,7 @@ void IQ2020Component::setNumberState(unsigned int numberid, int value) {
 		if (g_iq2020_number[numberid] != NULL) { g_iq2020_number[numberid]->publish_state(value); }
 	}
 }
+#endif
 
 void IQ2020Component::pollState() {
 	// If we don't have the version string, fetch it now.
