@@ -48,6 +48,7 @@ sensor:
 ```
 Note that you can't have two `sensor:` sections, so just add all of these lines except `sensor:` to your existing section. You can add them at the top or bottom, order is not important. Once re-flashed, you should see new values in the diagnostic section of Home Assistant.
 
+![image](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/14deafa5-322c-42ff-8983-7fd3f1e8e878)
 
 ## Templates for seconds sensors
 
