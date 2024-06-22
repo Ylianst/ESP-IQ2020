@@ -60,6 +60,10 @@ iq2020:
 #   flow_control_pin: GPIO0
    port: 1234
 
+select:
+number:
+text:
+
 # If using celsius units on the hot tub remote, replace _f_ with _c_ in the three entries below.
 # Feel free to remove any sensor that are not relevent for your hot tub.
 sensor:
