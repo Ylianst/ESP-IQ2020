@@ -323,9 +323,6 @@ int IQ2020Component::processIQ2020Command() {
 				setNumberState(NUMBER_AUDIO_BASS, processingBuffer[10]);
 				setNumberState(NUMBER_AUDIO_BALANCE, processingBuffer[11]);
 				setNumberState(NUMBER_AUDIO_SUBWOOFER, processingBuffer[12]);
-#ifdef USE_SENSOR
-				if (this->audio_volume_sensor_) this->audio_volume_sensor_->publish_state((processingBuffer[8] - 15) * 4);
-#endif
 			}
 			else if (processingBuffer[6] == 0x06) { // Song title
 				int text_len = 2;
@@ -429,9 +426,6 @@ int IQ2020Component::processIQ2020Command() {
 			setNumberState(NUMBER_AUDIO_BASS, processingBuffer[10]);
 			setNumberState(NUMBER_AUDIO_BALANCE, processingBuffer[11]);
 			setNumberState(NUMBER_AUDIO_SUBWOOFER, processingBuffer[12]);
-#ifdef USE_SENSOR
-			if (this->audio_volume_sensor_) { this->audio_volume_sensor_->publish_state((processingBuffer[8] - 15) * 4); } // Audio Volume
-#endif
 		}
 
 		if ((cmdlen == 26) && (processingBuffer[5] == 0x1E) && (processingBuffer[6] == 0x03)) {
