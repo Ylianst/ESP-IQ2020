@@ -1,3 +1,5 @@
+#ifdef USE_TEXT
+
 #include "esphome/core/log.h"
 #include "iq2020_text.h"
 #include "iq2020.h"
@@ -27,3 +29,5 @@ namespace iq2020_text {
 
 } //namespace iq2020_text
 } //namespace esphome
+
+#endif

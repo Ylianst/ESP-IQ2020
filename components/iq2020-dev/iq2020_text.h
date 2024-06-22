@@ -1,3 +1,5 @@
+#ifdef USE_TEXT
+
 #pragma once
 
 #include "esphome/core/component.h"
@@ -24,3 +26,5 @@ namespace iq2020_text {
 
 } //namespace iq2020_text
 } //namespace esphome
+
+#endif
