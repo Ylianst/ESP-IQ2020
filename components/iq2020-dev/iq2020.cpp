@@ -74,7 +74,7 @@ void IQ2020Component::loop() {
 	if ((next_retry_count > 0) && (next_retry < now)) {
 		for (int switchid = 0; switchid < SWITCHCOUNT; switchid++) {
 			if (switch_pending[switchid] != NOT_SET) {
-				ESP_LOGE(TAG, "Retry %d set to %d", switchid, switch_pending[switchid]);
+				ESP_LOGE(TAG, "Retry switch %d set to %d", switchid, switch_pending[switchid]);
 				switchAction(switchid, switch_pending[switchid]); // Try again
 				next_retry_count--; // Setup for the next retry
 				next_retry = ::millis() + SWITCH_RETRY_TIME;
@@ -83,8 +83,17 @@ void IQ2020Component::loop() {
 		}
 		for (int selectid = 0; selectid < SELECTCOUNT; selectid++) {
 			if (select_pending[selectid] != NOT_SET) {
-				ESP_LOGE(TAG, "Retry %d set to %d", selectid, select_pending[selectid]);
+				ESP_LOGE(TAG, "Retry select %d set to %d", selectid, select_pending[selectid]);
 				selectAction(selectid, select_pending[selectid]); // Try again
+				next_retry_count--; // Setup for the next retry
+				next_retry = ::millis() + SWITCH_RETRY_TIME;
+				break; // Only retry one command
+			}
+		}
+		for (int numberid = 0; numberid < NUMBERCOUNT; numberid++) {
+			if (number_pending[numberid] != NOT_SET) {
+				ESP_LOGE(TAG, "Retry number %d set to %d", numberid, number_pending[numberid]);
+				numberAction(numberid, number_pending[numberid]); // Try again
 				next_retry_count--; // Setup for the next retry
 				next_retry = ::millis() + SWITCH_RETRY_TIME;
 				break; // Only retry one command
@@ -730,13 +739,43 @@ void IQ2020Component::selectAction(unsigned int selectid, int state) {
 void IQ2020Component::numberAction(unsigned int numberid, int value) {
 	ESP_LOGD(TAG, "numberAction, numberid = %d, value = %d", numberid, value);
 	select_pending[numberid] = value;
-	int volume = (select_pending[NUMBER_AUDIO_VOLUME] != NOT_SET) ? select_pending[NUMBER_AUDIO_VOLUME] : number_state[NUMBER_AUDIO_VOLUME];
-	int tremble = (select_pending[NUMBER_AUDIO_TREMBLE] != NOT_SET) ? select_pending[NUMBER_AUDIO_TREMBLE] : number_state[NUMBER_AUDIO_TREMBLE];
-	int bass = (select_pending[NUMBER_AUDIO_BASS] != NOT_SET) ? select_pending[NUMBER_AUDIO_BASS] : number_state[NUMBER_AUDIO_BASS];
-	int balance = (select_pending[NUMBER_AUDIO_BALANCE] != NOT_SET) ? select_pending[NUMBER_AUDIO_BALANCE] : number_state[NUMBER_AUDIO_BALANCE];
-	int subwoofer = (select_pending[NUMBER_AUDIO_SUBWOOFER] != NOT_SET) ? select_pending[NUMBER_AUDIO_SUBWOOFER] : number_state[NUMBER_AUDIO_SUBWOOFER];
-	unsigned char cmd[] = { 0x19, 0x00, 0x01, (unsigned char)((volume >> 2) + 15), (unsigned char)tremble, (unsigned char)bass, (unsigned char)balance, (unsigned char)subwoofer };
-	sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Change audio source
+	switch (numberid) {
+	case NUMBER_AUDIO_VOLUME:
+	{
+		select_pending[NUMBER_AUDIO_VOLUME] = value;
+		unsigned char cmd[] = { 0x19, 0x00, 0x01, (unsigned char)((value >> 2) + 15) };
+		sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Change volume
+		break;
+	}
+	case NUMBER_AUDIO_TREMBLE:
+	{
+		select_pending[NUMBER_AUDIO_TREMBLE] = value;
+		unsigned char cmd[] = { 0x19, 0x00, 0x05, (unsigned char)value };
+		sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Change tremble
+		break;
+	}
+	case NUMBER_AUDIO_BASS:
+	{
+		select_pending[NUMBER_AUDIO_BASS] = value;
+		unsigned char cmd[] = { 0x19, 0x00, 0x06, (unsigned char)value };
+		sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Change bass
+		break;
+	}
+	case NUMBER_AUDIO_BALANCE:
+	{
+		select_pending[NUMBER_AUDIO_BALANCE] = value;
+		unsigned char cmd[] = { 0x19, 0x00, 0x07, (unsigned char)value };
+		sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Change balance
+		break;
+	}
+	case NUMBER_AUDIO_SUBWOOFER:
+	{
+		select_pending[NUMBER_AUDIO_SUBWOOFER] = value;
+		unsigned char cmd[] = { 0x19, 0x00, 0x08, (unsigned char)value };
+		sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Change subwoofer
+		break;
+	}
+	}
 
 	// If the command does not get confirmed, setup to try again
 	next_retry_count += SWITCH_RETRY_COUNT;

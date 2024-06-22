@@ -82,6 +82,7 @@
             this.scanTimer = new System.Windows.Forms.Timer(this.components);
             this.logSaveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.pollTimer = new System.Windows.Forms.Timer(this.components);
+            this.audioToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.topPanel.SuspendLayout();
@@ -189,7 +190,8 @@
             this.noneToolStripMenuItem,
             this.connectionKitToolStripMenuItem,
             this.connectionKitX0256ToolStripMenuItem,
-            this.freshWaterToolStripMenuItem});
+            this.freshWaterToolStripMenuItem,
+            this.audioToolStripMenuItem});
             this.filterToolStripMenuItem.Name = "filterToolStripMenuItem";
             this.filterToolStripMenuItem.Size = new System.Drawing.Size(54, 24);
             this.filterToolStripMenuItem.Text = "F&ilter";
@@ -580,6 +582,13 @@
             this.pollTimer.Interval = 2000;
             this.pollTimer.Tick += new System.EventHandler(this.pollTimer_Tick);
             // 
+            // audioToolStripMenuItem
+            // 
+            this.audioToolStripMenuItem.Name = "audioToolStripMenuItem";
+            this.audioToolStripMenuItem.Size = new System.Drawing.Size(232, 26);
+            this.audioToolStripMenuItem.Text = "Audio";
+            this.audioToolStripMenuItem.Click += new System.EventHandler(this.audioToolStripMenuItem_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -673,6 +682,7 @@
         private System.Windows.Forms.TextBox stateDecodeTextBox;
         private System.Windows.Forms.ToolStripMenuItem pollStateToolStripMenuItem;
         private System.Windows.Forms.Timer pollTimer;
+        private System.Windows.Forms.ToolStripMenuItem audioToolStripMenuItem;
     }
 }
 

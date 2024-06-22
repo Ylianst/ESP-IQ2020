@@ -555,6 +555,7 @@ namespace DataViewer
             connectionKitToolStripMenuItem.Checked = false;
             connectionKitX0256ToolStripMenuItem.Checked = false;
             freshWaterToolStripMenuItem.Checked = false;
+            audioToolStripMenuItem.Checked = false;
         }
 
         private void connectionKitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -566,6 +567,7 @@ namespace DataViewer
             connectionKitToolStripMenuItem.Checked = true;
             connectionKitX0256ToolStripMenuItem.Checked = false;
             freshWaterToolStripMenuItem.Checked = false;
+            audioToolStripMenuItem.Checked = false;
         }
 
         private void connectionKitX0256ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -577,6 +579,7 @@ namespace DataViewer
             connectionKitToolStripMenuItem.Checked = false;
             connectionKitX0256ToolStripMenuItem.Checked = true;
             freshWaterToolStripMenuItem.Checked = false;
+            audioToolStripMenuItem.Checked = false;
         }
 
         private void freshWaterToolStripMenuItem_Click(object sender, EventArgs e)
@@ -588,6 +591,19 @@ namespace DataViewer
             connectionKitToolStripMenuItem.Checked = false;
             connectionKitX0256ToolStripMenuItem.Checked = false;
             freshWaterToolStripMenuItem.Checked = true;
+            audioToolStripMenuItem.Checked = false;
+        }
+
+        private void audioToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Filter = 0x33;
+            FilterCmd1 = 0;
+            FilterCmd2 = 0;
+            noneToolStripMenuItem.Checked = false;
+            connectionKitToolStripMenuItem.Checked = false;
+            connectionKitX0256ToolStripMenuItem.Checked = false;
+            freshWaterToolStripMenuItem.Checked = false;
+            audioToolStripMenuItem.Checked = true;
         }
 
         private void MainForm_Resize(object sender, EventArgs e)
@@ -665,5 +681,6 @@ namespace DataViewer
         {
             SendPacket("01 1F 40 0256"); // Ask status
         }
+
     }
 }
