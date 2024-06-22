@@ -83,6 +83,8 @@ There is a RS485 command sent on the bus right away when a button is pressed, so
 
 ![image](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/4733fbae-1796-4a15-81e1-31ec6ab28036)
 
+You can show any text you like for the Song Title and Artist Name, but there is a 20 character limit.
+
 ![audio1](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/a69a4daf-988e-4551-9632-7e24f7df4380)
 
 ![audio2](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/f4381d2f-4501-499c-9310-606992fa220d)
