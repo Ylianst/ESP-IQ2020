@@ -85,4 +85,9 @@ There is a RS485 command sent on the bus right away when a button is pressed, so
 
 ![audio1](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/a69a4daf-988e-4551-9632-7e24f7df4380)
 
+
+Known Issues:
+
+- The balance, bass and tremble are values that go from -5 to +5. You can change them from the spa remote and it will show up correctly in Home Assistant. However, trying to change these values from Home Assistant will not work in the negative ranges. The root cause looks like a bug in the IQ2020 firmware. There are commands for these 3 settings, but they don't see to work for negavive values. Not a big surprise, these commands may never have gotten any use outside of this integration.
+
 ![audio2](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/f4381d2f-4501-499c-9310-606992fa220d)
