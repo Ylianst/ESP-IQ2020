@@ -399,7 +399,7 @@ int IQ2020Component::processIQ2020Command() {
 	if (((processingBuffer[1] == 0x24) || (processingBuffer[1] == 0x29)) && (processingBuffer[2] == 0x01) && (processingBuffer[4] == 0x40) && (cmdlen == 21) && (processingBuffer[5] == 0x1E) && (processingBuffer[6] == 0x01)) {
 		// This is a command from IQ2020 to the Salt System
 		//ESP_LOGD(TAG, "Salt REQ Data, len=%d, cmd=%02x%02x", cmdlen, processingBuffer[5], processingBuffer[6]);
-		//if (processingBuffer[7] <= 10) { setSwitchState(SWITCH_SALT_POWER, processingBuffer[7]); }
+		if (processingBuffer[7] <= 10) { setNumberState(NUMBER_SALT_POWER, processingBuffer[7]); }
 
 #ifdef USE_BINARY_SENSOR
 		if (this->salt_boost_sensor_) {
@@ -733,15 +733,6 @@ void IQ2020Component::switchAction(unsigned int switchid, int state) {
 		switch_pending[switchid] = state; // 0 = OFF, 1 = MEDIUM, 2 = HIGH
 		unsigned char cmd[] = { 0x0B, (unsigned char)(switchid - 3), (unsigned char)(state + 1) };
 		sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd));
-		break;
-	}
-	case SWITCH_SALT_POWER:
-	{
-		if ((state < 0) || (state > 10)) break;
-		switch_pending[switchid] = state; // 0 = OFF ... 10 = HIGH
-		unsigned char cmd[] = { 0x1E, 0x02, 0x01, (unsigned char)state, 0x00 };
-		sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd));
-		salt_power = NOT_SET;
 		break;
 	}
 	default: { return; }
