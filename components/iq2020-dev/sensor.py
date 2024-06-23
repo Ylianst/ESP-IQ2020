@@ -10,6 +10,7 @@ from esphome.const import (
     ICON_GAUGE,
     ICON_TIMER,
     ICON_COUNTER,
+	ICON_LIGHTBULB,
     ICON_CURRENT_AC,
     ICON_THERMOMETER,
     ICON_HEATING_COIL,
@@ -52,6 +53,7 @@ CONF_SENSOR_POWER_L2 = "power_l2"
 CONF_SENSOR_PCB_F_TEMPERATURE = "pcb_f_temperature"
 CONF_SENSOR_PCB_C_TEMPERATURE = "pcb_c_temperature"
 CONF_SENSOR_AUDIO_BUTTONS = "audio_buttons"
+CONF_SENSOR_LOGO_LIGHTS = "logo_lights"
 CONF_IQ2020_SERVER = "iq2020_server"
 
 CONFIG_SCHEMA = cv.Schema(
@@ -238,6 +240,10 @@ CONFIG_SCHEMA = cv.Schema(
         ),
         cv.Optional(CONF_SENSOR_AUDIO_BUTTONS): sensor.sensor_schema(
             accuracy_decimals=0
+        ),
+        cv.Optional(CONF_SENSOR_LOGO_LIGHTS): sensor.sensor_schema(
+            accuracy_decimals=0,
+			icon=ICON_LIGHTBULB
         )
     }
 )
@@ -368,3 +374,7 @@ async def to_code(config):
     if CONF_SENSOR_AUDIO_BUTTONS in config:
         sens = await sensor.new_sensor(config[CONF_SENSOR_AUDIO_BUTTONS])
         cg.add(server.set_audio_buttons_sensor(sens))
+
+    if CONF_SENSOR_LOGO_LIGHTS in config:
+        sens = await sensor.new_sensor(config[CONF_SENSOR_LOGO_LIGHTS])
+        cg.add(server.set_logo_lights_sensor(sens))
