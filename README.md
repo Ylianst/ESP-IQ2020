@@ -61,8 +61,13 @@ iq2020:
    port: 1234
 
 select:
-number:
 text:
+number:
+#   Frashwater / ACE system
+#  - platform: iq2020-dev
+#    id: salt_power
+#    name: Salt System Power
+#    datapoint: 5
 
 # If using celsius units on the hot tub remote, replace _f_ with _c_ in the three entries below.
 # Feel free to remove any sensor that are not relevent for your hot tub.
@@ -102,6 +107,7 @@ sensor:
       name: Heater Power
     pcb_f_temperature:
       name: Controller Temperature
+#   Frashwater / ACE system
 #    salt_content:
 #      name: Salt Content
 
