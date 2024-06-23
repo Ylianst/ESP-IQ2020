@@ -235,7 +235,9 @@ Main status decoding
 04                - Flags: 0x01 = Jet1 Medium, 0x02 = Jet2 Medium, 0x04 = AlwaysSet?. 4 upper bits are spa lights: 0x0 = Off, 0x1 = Min Bright, 0x5 = Max Bright
 0000              - ?
 06                - Model type.
-04000A0622F2      - ?
+0400              - ?
+0A                - Logo status right. 0x0A both blue & green on, 0x02 only blue is on.
+0622F2            - ?
 11                - Flags: 0x40 is Celsius
 00                - ?
 201C201C201C      - Pump1, Pump2, Pump3 timeouts (3 x 16bit Big-Endian)
