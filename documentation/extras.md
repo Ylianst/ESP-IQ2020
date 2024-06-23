@@ -2,6 +2,29 @@
 
 In this file, I keep extra tips and tricks for the Home Assistant pro's.
 
+## Logo Lights
+
+The green and blue light at the front of the hot tub can also be reported by this integration. You can, for example, have a picture your your hot tub in Home Assistant and make the lights on the image match the light on the actual hot tub. In the `sensor` section of the configuration file, add the `logo_lights` sensor.
+
+```
+sensor:
+    logo_lights:
+      name: Logo Lights
+```
+
+Once reflashed, this new sensor will be an integer. The values are as follows:
+
+```
+0 = Unknown
+1 = Power on
+2 = Power on & ready on
+3 = Ready flash
+4 = Power flash
+5 = Power and ready flash
+6 = Power and ready alternate
+7 = Power and ready salt error
+```
+
 ## Adding WIFI signal strength sensor
 
 You can setup two additional sensors in the ESP Home integration to get a report of the WIFI signal strength of the ESP32 device to your WIFI access point. It's easy, just add the follow lines in the `sensor:` section of the ESP home configuration:
