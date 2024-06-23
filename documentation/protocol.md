@@ -291,7 +291,7 @@ Power flash                =   xx == 0x09
 Power & ready on           =   xx == 0x0A
 Power on                   =   xx == 0x02
 Power & ready alternate    =   xx & 35 == 32
-Power & ready salt err     =   xx & 28 == 16
+Power & ready salt error   =   xx & 28 == 16
 ```
 
 Temperature string. The value encode the temperature set point and current temprature in ASCII encoding. The F indicates fahrenheit. For example:
