@@ -79,21 +79,21 @@ The Spa Connection Kit sends all it's commands from address 0x1F. Sending the co
 024C - Unknown (024C1B0C110300E80701)
 0255 - Get status short
 0256 - Get status long
-0B02 - Jets 1 & Lights on/off - (0B028F)
-0B03 - Jets 2 on/off - (0B038E)
-0B04 - Jets 3? on/off - (0B0400)
-0B07 - Jets 4? on/off - (0B0700)
+0B02 - Set Jets 1 speed - (0B028F)
+0B03 - Set Jets 2 speed - (0B038E)
+0B04 - Set Jets 3 speed - (0B0400)
+0B07 - Set Blower
 0B1C - Summer Timer
 0B1D - Spa Lock
 0B1E - Temperature Lock
 0B1F - Clean Cycle
 0B20 - Unknown (0B2001)
 0B27 - Unknown (0B278C)
-1702 - Lights on/off
-1705 - Read lights status
+1702 - Set Lights on/off
+1705 - Get Lights status
 1900 - Audio Module Command (190015)
 1901 - Get Audio Module Data (190100190000000B0004010000)
-1D07 - Get Heat Pump Data (1D07FFFF)
+1D07 - Get/Set Heat Pump Mode (1D07FFFF)
 1E02 - Freshwater Salt System - Set Power / Start Test
 1E03 - Get FreshWater Salt Module Data
 ```
@@ -235,7 +235,9 @@ Main status decoding
 04                - Flags: 0x01 = Jet1 Medium, 0x02 = Jet2 Medium, 0x04 = AlwaysSet?. 4 upper bits are spa lights: 0x0 = Off, 0x1 = Min Bright, 0x5 = Max Bright
 0000              - ?
 06                - Model type.
-04000A0622F2      - ?
+0400              - ?
+0A                - Logo status right. 0x0A both blue & green on, 0x02 only blue is on... see below for all states.
+0622F2            - ?
 11                - Flags: 0x40 is Celsius
 00                - ?
 201C201C201C      - Pump1, Pump2, Pump3 timeouts (3 x 16bit Big-Endian)
@@ -279,6 +281,17 @@ F30E              - Power L2 wattage - Water heater wattage (Big-Endian)
 00080800          - Real-Time-Clock SS:MM:HH Seconds (0 to 59), Minutes (0 to 59), Hours (0 to 24).
 1300D407          - Real-Time-Clock DD:MM:YYYY Days (1 to 31), Month (0 to 11), Year (2 byte Big-Endian).
 01                - Real-Time-Clock Status
+```
+
+Logo lights state
+```
+Ready flash                =   xx == 0x06
+Power and ready flash      =   xx == 0x05
+Power flash                =   xx == 0x09
+Power & ready on           =   xx == 0x0A
+Power on                   =   xx == 0x02
+Power & ready alternate    =   xx & 35 == 32
+Power & ready salt error   =   xx & 28 == 16
 ```
 
 Temperature string. The value encode the temperature set point and current temprature in ASCII encoding. The F indicates fahrenheit. For example:
