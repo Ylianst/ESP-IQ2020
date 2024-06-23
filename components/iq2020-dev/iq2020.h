@@ -12,7 +12,7 @@
 #ifdef USE_TEXT_SENSOR
 #include "esphome/components/text_sensor/text_sensor.h"
 #endif
-
+ 
 #include <memory>
 #include <string>
 #include <vector>

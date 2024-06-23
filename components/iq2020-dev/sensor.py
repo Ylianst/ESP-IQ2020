@@ -55,7 +55,7 @@ CONF_SENSOR_PCB_C_TEMPERATURE = "pcb_c_temperature"
 CONF_SENSOR_AUDIO_BUTTONS = "audio_buttons"
 CONF_SENSOR_LOGO_LIGHTS = "logo_lights"
 CONF_IQ2020_SERVER = "iq2020_server"
-
+ 
 CONFIG_SCHEMA = cv.Schema(
     {
         cv.GenerateID(CONF_IQ2020_SERVER): cv.use_id(IQ2020Component),
