@@ -290,7 +290,7 @@ Power and ready flash      =   xx == 0x05
 Power flash                =   xx == 0x09
 Power & ready on           =   xx == 0x0A
 Power on                   =   xx == 0x02
-Power & ready alter        =   xx & 35 == 32
+Power & ready alternate    =   xx & 35 == 32
 Power & ready salt err     =   xx & 28 == 16
 ```
 
