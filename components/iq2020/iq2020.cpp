@@ -641,6 +641,16 @@ int IQ2020Component::processIQ2020Command() {
 			if (this->pcb_f_temperature_sensor_) this->pcb_f_temperature_sensor_->publish_state((float)processingBuffer[128]);
 			if (this->pcb_c_temperature_sensor_) this->pcb_c_temperature_sensor_->publish_state((float)esphome::fahrenheit_to_celsius((float)processingBuffer[128]));
 			if (this->salt_content_sensor_ && (salt_content >= 0)) this->salt_content_sensor_->publish_state((float)salt_content);
+
+			int logo_lights = 0;
+			if (processingBuffer[16] == 0x02) logo_lights = 1; // Power on
+			if (processingBuffer[16] == 0x0A) logo_lights = 2; // Power & ready on
+			if (processingBuffer[16] == 0x06) logo_lights = 3; // Ready flash
+			if (processingBuffer[16] == 0x09) logo_lights = 4; // Power flash
+			if (processingBuffer[16] == 0x05) logo_lights = 5; // Power and ready flash
+			if ((processingBuffer[16] & 0x20) == 0x20) logo_lights = 6; // Power & ready alternate
+			if ((processingBuffer[16] & 0x1C) == 0x10) logo_lights = 7; // Power & ready salt error
+			if (this->logo_lights_sensor_) this->logo_lights_sensor_->publish_state(logo_lights);
 #endif
 
 			if (pending_temp != NOT_SET) {
