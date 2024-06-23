@@ -35,18 +35,18 @@
 #define SWITCH_JETS2 6
 #define SWITCH_JETS3 7
 #define SWITCH_JETS4 8
-#define SWITCH_SALT_POWER 9  // ACE/Freshwater Salt System Power Level
 #define SELECTCOUNT 1
 #define SELECT_AUDIO_SOURCE 0
 #define TEXTCOUNT 2
 #define TEXT_SONG_TITLE 0
 #define TEXT_ARTIST_NAME 1
-#define NUMBERCOUNT 5
+#define NUMBERCOUNT 6
 #define NUMBER_AUDIO_VOLUME 0
 #define NUMBER_AUDIO_TREMBLE 1
 #define NUMBER_AUDIO_BASS 2
 #define NUMBER_AUDIO_BALANCE 3
 #define NUMBER_AUDIO_SUBWOOFER 4
+#define NUMBER_SALT_POWER 5 // ACE/Freshwater Salt System Power Level
 #define NOT_SET -127
 
 class IQ2020Component : public esphome::Component {
@@ -83,7 +83,6 @@ public:
 	void set_jet1_low_total_runtime_sensor(esphome::sensor::Sensor *sensor) { this->jet1_low_total_runtime_sensor_ = sensor; }
 	void set_jet2_low_total_runtime_sensor(esphome::sensor::Sensor *sensor) { this->jet2_low_total_runtime_sensor_ = sensor; }
 	void set_power_on_counter_sensor(esphome::sensor::Sensor *sensor) { this->power_on_counter_sensor_ = sensor; }
-	void set_salt_power_sensor(esphome::sensor::Sensor *sensor) { this->salt_power_sensor_ = sensor; }
 	void set_salt_content_sensor(esphome::sensor::Sensor *sensor) { this->salt_content_sensor_ = sensor; }
 	void set_voltage_l1_sensor(esphome::sensor::Sensor *sensor) { this->voltage_l1_sensor_ = sensor; }
 	void set_voltage_heater_sensor(esphome::sensor::Sensor *sensor) { this->voltage_heater_sensor_ = sensor; }
@@ -173,7 +172,6 @@ protected:
 	esphome::sensor::Sensor *jet1_low_total_runtime_sensor_;
 	esphome::sensor::Sensor *jet2_low_total_runtime_sensor_;
 	esphome::sensor::Sensor *power_on_counter_sensor_;
-	esphome::sensor::Sensor *salt_power_sensor_;
 	esphome::sensor::Sensor *salt_content_sensor_;
 	esphome::sensor::Sensor *voltage_l1_sensor_;
 	esphome::sensor::Sensor *voltage_heater_sensor_;
