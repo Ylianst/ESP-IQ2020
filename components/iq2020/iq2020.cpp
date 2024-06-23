@@ -623,19 +623,37 @@ int IQ2020Component::processIQ2020Command() {
 			if (this->jet2_low_total_runtime_sensor_) this->jet2_low_total_runtime_sensor_->publish_state(readCounter(processingBuffer, 86));
 
 			// Voltage sensors
-			if (this->voltage_l1_sensor_) this->voltage_l1_sensor_->publish_state((float)(processingBuffer[98] + (processingBuffer[99] << 8)));
-			if (this->voltage_heater_sensor_) this->voltage_heater_sensor_->publish_state((float)(processingBuffer[100] + (processingBuffer[101] << 8)));
-			if (this->voltage_l2_sensor_) this->voltage_l2_sensor_->publish_state((float)(processingBuffer[102] + (processingBuffer[103] << 8)));
+			int voltage_l1 = (processingBuffer[98] + (processingBuffer[99] << 8));
+			int voltage_heater = (processingBuffer[100] + (processingBuffer[101] << 8));
+			int voltage_l2 = (processingBuffer[102] + (processingBuffer[103] << 8));
+			if (this->voltage_l1_sensor_) this->voltage_l1_sensor_->publish_state((float)voltage_l1);
+			if (this->voltage_heater_sensor_) this->voltage_heater_sensor_->publish_state((float)voltage_heater);
+			if (this->voltage_l2_sensor_) this->voltage_l2_sensor_->publish_state((float)voltage_l2);
 
 			// Current sensors
-			if (this->current_l1_sensor_) this->current_l1_sensor_->publish_state((float)(processingBuffer[106] + (processingBuffer[107] << 8)));
-			if (this->current_heater_sensor_) this->current_heater_sensor_->publish_state((float)(processingBuffer[108] + (processingBuffer[109] << 8)));
-			if (this->current_l2_sensor_) this->current_l2_sensor_->publish_state((float)(processingBuffer[110] + (processingBuffer[111] << 8)));
+			int current_l1 = (processingBuffer[106] + (processingBuffer[107] << 8));
+			int current_heater = (processingBuffer[108] + (processingBuffer[109] << 8));
+			int current_l2 = (processingBuffer[110] + (processingBuffer[111] << 8));
+			if (this->current_l1_sensor_) this->current_l1_sensor_->publish_state((float)current_l1);
+			if (this->current_heater_sensor_) this->current_heater_sensor_->publish_state((float)current_heater);
+			if (this->current_l2_sensor_) this->current_l2_sensor_->publish_state((float)current_l2);
 
 			// Power sensors
-			if (this->power_l1_sensor_) this->power_l1_sensor_->publish_state((float)(processingBuffer[114] + (processingBuffer[115] << 8)));
-			if (this->power_heater_sensor_) this->power_heater_sensor_->publish_state((float)(processingBuffer[116] + (processingBuffer[117] << 8)));
-			if (this->power_l2_sensor_) this->power_l2_sensor_->publish_state((float)(processingBuffer[118] + (processingBuffer[119] << 8)));
+			if (this->power_l1_sensor_) {
+				int power_l1 = (processingBuffer[114] + (processingBuffer[115] << 8));
+				if ((power_l1 == 0) && (current_l1 != 0) && (voltage_l1 != 0)) { power_l1 = current_l1 * voltage_l1; } // If there is now power sensor, use volts * amps.
+				this->power_l1_sensor_->publish_state((float)power_l1);
+			}
+			if (this->power_heater_sensor_) {
+				int power_heater = (processingBuffer[116] + (processingBuffer[117] << 8));
+				if ((power_heater == 0) && (current_heater != 0) && (voltage_heater != 0)) { power_heater = current_heater * voltage_heater; } // If there is now power sensor, use volts * amps.
+				this->power_heater_sensor_->publish_state((float)power_heater);
+			}
+			if (this->power_l2_sensor_) {
+				int power_l2 = (processingBuffer[118] + (processingBuffer[119] << 8));
+				if ((power_l2 == 0) && (current_l2 != 0) && (voltage_l2 != 0)) { power_l2 = current_l2 * voltage_l2; } // If there is now power sensor, use volts * amps.
+				this->power_l2_sensor_->publish_state((float)power_l2);
+			}
 
 			// Misc sensors
 			if (this->pcb_f_temperature_sensor_) this->pcb_f_temperature_sensor_->publish_state((float)processingBuffer[128]);
