@@ -236,7 +236,7 @@ Main status decoding
 0000              - ?
 06                - Model type.
 0400              - ?
-0A                - Logo status right. 0x0A both blue & green on, 0x02 only blue is on.
+0A                - Logo status right. 0x0A both blue & green on, 0x02 only blue is on... see below for all states.
 0622F2            - ?
 11                - Flags: 0x40 is Celsius
 00                - ?
@@ -281,6 +281,17 @@ F30E              - Power L2 wattage - Water heater wattage (Big-Endian)
 00080800          - Real-Time-Clock SS:MM:HH Seconds (0 to 59), Minutes (0 to 59), Hours (0 to 24).
 1300D407          - Real-Time-Clock DD:MM:YYYY Days (1 to 31), Month (0 to 11), Year (2 byte Big-Endian).
 01                - Real-Time-Clock Status
+```
+
+Logo lights state
+```
+Ready flash                =   xx == 0x06
+Power and ready flash      =   xx == 0x05
+Power flash                =   xx == 0x09
+Power & ready on           =   xx == 0x0A
+Power on                   =   xx == 0x02
+Power & ready alter        =   xx & 35 == 32
+Power & ready salt err     =   xx & 28 == 16
 ```
 
 Temperature string. The value encode the temperature set point and current temprature in ASCII encoding. The F indicates fahrenheit. For example:
