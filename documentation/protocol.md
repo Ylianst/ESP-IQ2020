@@ -82,7 +82,7 @@ The Spa Connection Kit sends all it's commands from address 0x1F. Sending the co
 0B02 - Jets 1 & Lights on/off - (0B028F)
 0B03 - Jets 2 on/off - (0B038E)
 0B04 - Jets 3? on/off - (0B0400)
-0B07 - Jets 4? on/off - (0B0700)
+0B07 - Unknown (0B0700)
 0B1C - Summer Timer
 0B1D - Spa Lock
 0B1E - Temperature Lock
