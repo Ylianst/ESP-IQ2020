@@ -102,8 +102,6 @@ sensor:
       name: Heater Power
     pcb_f_temperature:
       name: Controller Temperature
-#    salt_power:
-#      name: Salt System Power
 #    salt_content:
 #      name: Salt Content
 
