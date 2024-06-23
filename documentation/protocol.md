@@ -79,21 +79,21 @@ The Spa Connection Kit sends all it's commands from address 0x1F. Sending the co
 024C - Unknown (024C1B0C110300E80701)
 0255 - Get status short
 0256 - Get status long
-0B02 - Jets 1 & Lights on/off - (0B028F)
-0B03 - Jets 2 on/off - (0B038E)
-0B04 - Jets 3? on/off - (0B0400)
-0B07 - Unknown (0B0700)
+0B02 - Set Jets 1 speed - (0B028F)
+0B03 - Set Jets 2 speed - (0B038E)
+0B04 - Set Jets 3 speed - (0B0400)
+0B07 - Set Blower
 0B1C - Summer Timer
 0B1D - Spa Lock
 0B1E - Temperature Lock
 0B1F - Clean Cycle
 0B20 - Unknown (0B2001)
 0B27 - Unknown (0B278C)
-1702 - Lights on/off
-1705 - Read lights status
+1702 - Set Lights on/off
+1705 - Get Lights status
 1900 - Audio Module Command (190015)
 1901 - Get Audio Module Data (190100190000000B0004010000)
-1D07 - Get Heat Pump Data (1D07FFFF)
+1D07 - Get/Set Heat Pump Mode (1D07FFFF)
 1E02 - Freshwater Salt System - Set Power / Start Test
 1E03 - Get FreshWater Salt Module Data
 ```
