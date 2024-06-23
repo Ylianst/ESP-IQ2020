@@ -412,11 +412,8 @@ int IQ2020Component::processIQ2020Command() {
 		if (ace_emulation_ && (processingBuffer[1] == 0x24)) {
 			if (processingBuffer[7] <= 10) {
 				salt_power = processingBuffer[7];
-				setSwitchState(SWITCH_SALT_POWER, salt_power);
+				setNumberState(NUMBER_SALT_POWER, salt_power);
 			}
-#ifdef USE_SENSOR
-			if (this->salt_power_sensor_) this->salt_power_sensor_->publish_state(processingBuffer[7]);
-#endif
 			ESP_LOGD(TAG, "ACE Emulation, power = %d", processingBuffer[7]);
 			unsigned char cmd[] = { 0x1E, 0x01, processingBuffer[7], 0x00, 0x30, 0x00, 0x00, 0x05, 0x00, 0x00, 0x8C, 0x1B, 0x00, 0x00, 0x50 };
 			sendIQ2020Command(0x01, 0x24, 0x80, cmd, sizeof(cmd));
@@ -428,10 +425,7 @@ int IQ2020Component::processIQ2020Command() {
 		//ESP_LOGD(TAG, "Salt RSP Data, len=%d, cmd=%02x%02x, power=%d", cmdlen, processingBuffer[5], processingBuffer[6], processingBuffer[7]);
 		if ((processingBuffer[7] <= 10) && (salt_power != processingBuffer[7])) {
 			salt_power = processingBuffer[7];
-			setSwitchState(SWITCH_SALT_POWER, processingBuffer[7]);
-#ifdef USE_SENSOR
-			if (this->salt_power_sensor_) this->salt_power_sensor_->publish_state(processingBuffer[7]);
-#endif
+			setNumberState(NUMBER_SALT_POWER, salt_power);
 		}
 		if (salt_content != processingBuffer[9]) {
 			salt_content = processingBuffer[9];
@@ -447,7 +441,7 @@ int IQ2020Component::processIQ2020Command() {
 
 		if ((cmdlen == 9) && (processingBuffer[5] == 0xE1) && (processingBuffer[6] == 0x02) && (processingBuffer[7] == 0x06)) {
 			// Confirmation that the fresh water salt system has changed power state
-			setSwitchState(SWITCH_SALT_POWER, NOT_SET);
+			setNumberState(NUMBER_SALT_POWER, NOT_SET);
 		}
 
 		if ((cmdlen == 9) && (processingBuffer[5] == 0x19) && (processingBuffer[6] == 0x00) && (processingBuffer[7] == 0x06)) {
@@ -475,7 +469,7 @@ int IQ2020Component::processIQ2020Command() {
 			// Status of the Freshwater Salt System
 			if (salt_power != processingBuffer[7]) {
 				salt_power = processingBuffer[7];
-				setSwitchState(SWITCH_SALT_POWER, processingBuffer[7]); // Power level
+				setNumberState(NUMBER_SALT_POWER, salt_power);
 			}
 		}
 
@@ -646,7 +640,6 @@ int IQ2020Component::processIQ2020Command() {
 			// Misc sensors
 			if (this->pcb_f_temperature_sensor_) this->pcb_f_temperature_sensor_->publish_state((float)processingBuffer[128]);
 			if (this->pcb_c_temperature_sensor_) this->pcb_c_temperature_sensor_->publish_state((float)esphome::fahrenheit_to_celsius((float)processingBuffer[128]));
-			if (this->salt_power_sensor_ && (salt_power >= 0)) this->salt_power_sensor_->publish_state(salt_power);
 			if (this->salt_content_sensor_ && (salt_content >= 0)) this->salt_content_sensor_->publish_state((float)salt_content);
 #endif
 
@@ -779,41 +772,48 @@ void IQ2020Component::selectAction(unsigned int selectid, int state) {
 #ifdef USE_NUMBER
 void IQ2020Component::numberAction(unsigned int numberid, int value) {
 	ESP_LOGD(TAG, "numberAction, numberid = %d, value = %d", numberid, value);
-	select_pending[numberid] = value;
+	number_pending[numberid] = value;
 	switch (numberid) {
 	case NUMBER_AUDIO_VOLUME:
 	{
-		select_pending[NUMBER_AUDIO_VOLUME] = value;
+		number_pending[NUMBER_AUDIO_VOLUME] = value;
 		unsigned char cmd[] = { 0x19, 0x00, 0x01, (unsigned char)((value >> 2) + 15) };
 		sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Change volume
 		break;
 	}
 	case NUMBER_AUDIO_TREMBLE:
 	{
-		select_pending[NUMBER_AUDIO_TREMBLE] = value;
+		number_pending[NUMBER_AUDIO_TREMBLE] = value;
 		unsigned char cmd[] = { 0x19, 0x00, 0x05, (unsigned char)value };
 		sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Change tremble
 		break;
 	}
 	case NUMBER_AUDIO_BASS:
 	{
-		select_pending[NUMBER_AUDIO_BASS] = value;
+		number_pending[NUMBER_AUDIO_BASS] = value;
 		unsigned char cmd[] = { 0x19, 0x00, 0x06, (unsigned char)value };
 		sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Change bass
 		break;
 	}
 	case NUMBER_AUDIO_BALANCE:
 	{
-		select_pending[NUMBER_AUDIO_BALANCE] = value;
+		number_pending[NUMBER_AUDIO_BALANCE] = value;
 		unsigned char cmd[] = { 0x19, 0x00, 0x07, (unsigned char)value };
 		sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Change balance
 		break;
 	}
 	case NUMBER_AUDIO_SUBWOOFER:
 	{
-		select_pending[NUMBER_AUDIO_SUBWOOFER] = value;
+		number_pending[NUMBER_AUDIO_SUBWOOFER] = value;
 		unsigned char cmd[] = { 0x19, 0x00, 0x08, (unsigned char)value };
 		sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Change subwoofer
+		break;
+	}
+	case NUMBER_SALT_POWER:
+	{
+		number_pending[NUMBER_SALT_POWER] = value;
+		unsigned char cmd[] = { 0x1E, 0x02, 0x01, (unsigned char)value, 0x00 };
+		sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Change salt power
 		break;
 	}
 	}

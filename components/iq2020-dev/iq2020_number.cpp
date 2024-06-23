@@ -36,6 +36,10 @@ namespace iq2020_number {
 			this->traits.set_min_value(0);
 			this->traits.set_max_value(11);
 			break;
+		case NUMBER_SALT_POWER:
+			this->traits.set_min_value(0);
+			this->traits.set_max_value(10);
+			break;
 		}
 	}
 
