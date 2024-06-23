@@ -652,7 +652,7 @@ int IQ2020Component::processIQ2020Command() {
 			if ((processingBuffer[16] & 0x1C) == 0x10) logo_lights = 7; // Power & ready salt error
 			if (this->logo_lights_sensor_) this->logo_lights_sensor_->publish_state(logo_lights);
 #endif
-			 
+
 			if (pending_temp != NOT_SET) {
 				if (pending_temp == target_temp) {
 					pending_temp = NOT_SET;
