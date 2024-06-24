@@ -1,6 +1,6 @@
 ## Extras
 
-In this file, I keep extra tips and tricks for the Home Assistant pro's.
+In this file, I keep extra sensors, tips and tricks for the Home Assistant pro's.
 
 ## Lights Intensity and Color
 
