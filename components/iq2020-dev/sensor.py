@@ -54,6 +54,16 @@ CONF_SENSOR_PCB_F_TEMPERATURE = "pcb_f_temperature"
 CONF_SENSOR_PCB_C_TEMPERATURE = "pcb_c_temperature"
 CONF_SENSOR_AUDIO_BUTTONS = "audio_buttons"
 CONF_SENSOR_LOGO_LIGHTS = "logo_lights"
+CONF_SENSOR_LIGHTS_INTENSITY = "lights_intensity"
+CONF_SENSOR_LIGHTS_INTENSITY_UNDERWATER = "lights_underwater_intensity"
+CONF_SENSOR_LIGHTS_INTENSITY_BARTOP = "lights_bartop_intensity"
+CONF_SENSOR_LIGHTS_INTENSITY_PILLOW = "lights_pillow_intensity"
+CONF_SENSOR_LIGHTS_INTENSITY_EXTERIOR = "lights_exterior_intensity"
+CONF_SENSOR_LIGHTS_COLOR_UNDERWATER = "lights_underwater_color"
+CONF_SENSOR_LIGHTS_COLOR_BARTOP = "lights_bartop_color"
+CONF_SENSOR_LIGHTS_COLOR_PILLOW = "lights_pillow_color"
+CONF_SENSOR_LIGHTS_COLOR_EXTERIOR = "lights_exterior_color"
+
 CONF_IQ2020_SERVER = "iq2020_server"
 
 CONFIG_SCHEMA = cv.Schema(
@@ -243,7 +253,43 @@ CONFIG_SCHEMA = cv.Schema(
         ),
         cv.Optional(CONF_SENSOR_LOGO_LIGHTS): sensor.sensor_schema(
             accuracy_decimals=0,
-			icon=ICON_LIGHTBULB
+            icon=ICON_LIGHTBULB
+        ),
+        cv.Optional(CONF_SENSOR_LIGHTS_INTENSITY): sensor.sensor_schema(
+            accuracy_decimals=0,
+            icon=ICON_LIGHTBULB
+        ),
+        cv.Optional(CONF_SENSOR_LIGHTS_INTENSITY_UNDERWATER): sensor.sensor_schema(
+            accuracy_decimals=0,
+            icon=ICON_LIGHTBULB
+        ),
+        cv.Optional(CONF_SENSOR_LIGHTS_INTENSITY_BARTOP): sensor.sensor_schema(
+            accuracy_decimals=0,
+            icon=ICON_LIGHTBULB
+        ),
+        cv.Optional(CONF_SENSOR_LIGHTS_INTENSITY_PILLOW): sensor.sensor_schema(
+            accuracy_decimals=0,
+            icon=ICON_LIGHTBULB
+        ),
+        cv.Optional(CONF_SENSOR_LIGHTS_INTENSITY_EXTERIOR): sensor.sensor_schema(
+            accuracy_decimals=0,
+            icon=ICON_LIGHTBULB
+        ),
+        cv.Optional(CONF_SENSOR_LIGHTS_COLOR_UNDERWATER): sensor.sensor_schema(
+            accuracy_decimals=0,
+            icon=ICON_LIGHTBULB
+        ),
+        cv.Optional(CONF_SENSOR_LIGHTS_COLOR_BARTOP): sensor.sensor_schema(
+            accuracy_decimals=0,
+            icon=ICON_LIGHTBULB
+        ),
+        cv.Optional(CONF_SENSOR_LIGHTS_COLOR_PILLOW): sensor.sensor_schema(
+            accuracy_decimals=0,
+            icon=ICON_LIGHTBULB
+        ),
+        cv.Optional(CONF_SENSOR_LIGHTS_COLOR_EXTERIOR): sensor.sensor_schema(
+            accuracy_decimals=0,
+            icon=ICON_LIGHTBULB
         )
     }
 )
@@ -378,3 +424,39 @@ async def to_code(config):
     if CONF_SENSOR_LOGO_LIGHTS in config:
         sens = await sensor.new_sensor(config[CONF_SENSOR_LOGO_LIGHTS])
         cg.add(server.set_logo_lights_sensor(sens))
+
+    if CONF_SENSOR_LIGHTS_INTENSITY in config:
+        sens = await sensor.new_sensor(config[CONF_SENSOR_LIGHTS_INTENSITY])
+        cg.add(server.set_lights_intensity_sensor(sens))
+
+    if CONF_SENSOR_LIGHTS_INTENSITY_UNDERWATER in config:
+        sens = await sensor.new_sensor(config[CONF_SENSOR_LIGHTS_INTENSITY_UNDERWATER])
+        cg.add(server.set_lights_intensity_underwater_sensor(sens))
+
+    if CONF_SENSOR_LIGHTS_INTENSITY_BARTOP in config:
+        sens = await sensor.new_sensor(config[CONF_SENSOR_LIGHTS_INTENSITY_BARTOP])
+        cg.add(server.set_lights_intensity_bartop_sensor(sens))
+
+    if CONF_SENSOR_LIGHTS_INTENSITY_PILLOW in config:
+        sens = await sensor.new_sensor(config[CONF_SENSOR_LIGHTS_INTENSITY_PILLOW])
+        cg.add(server.set_lights_intensity_pillow_sensor(sens))
+
+    if CONF_SENSOR_LIGHTS_INTENSITY_EXTERIOR in config:
+        sens = await sensor.new_sensor(config[CONF_SENSOR_LIGHTS_INTENSITY_EXTERIOR])
+        cg.add(server.set_lights_intensity_exterior_sensor(sens))
+
+    if CONF_SENSOR_LIGHTS_COLOR_UNDERWATER in config:
+        sens = await sensor.new_sensor(config[CONF_SENSOR_LIGHTS_COLOR_UNDERWATER])
+        cg.add(server.set_lights_color_underwater_sensor(sens))
+
+    if CONF_SENSOR_LIGHTS_COLOR_BARTOP in config:
+        sens = await sensor.new_sensor(config[CONF_SENSOR_LIGHTS_COLOR_BARTOP])
+        cg.add(server.set_lights_color_bartop_sensor(sens))
+
+    if CONF_SENSOR_LIGHTS_COLOR_PILLOW in config:
+        sens = await sensor.new_sensor(config[CONF_SENSOR_LIGHTS_COLOR_PILLOW])
+        cg.add(server.set_lights_color_pillow_sensor(sens))
+
+    if CONF_SENSOR_LIGHTS_COLOR_EXTERIOR in config:
+        sens = await sensor.new_sensor(config[CONF_SENSOR_LIGHTS_COLOR_EXTERIOR])
+        cg.add(server.set_lights_color_exterior_sensor(sens))

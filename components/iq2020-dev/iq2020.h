@@ -97,6 +97,15 @@ public:
 	void set_pcb_c_temperature_sensor(esphome::sensor::Sensor *sensor) { this->pcb_c_temperature_sensor_ = sensor; }
 	void set_audio_buttons_sensor(esphome::sensor::Sensor *sensor) { this->audio_buttons_sensor_ = sensor; }
 	void set_logo_lights_sensor(esphome::sensor::Sensor *sensor) { this->logo_lights_sensor_ = sensor; }
+	void set_lights_intensity_sensor(esphome::sensor::Sensor *sensor) { this->lights_intensity_sensor_ = sensor; }
+	void set_lights_intensity_underwater_sensor(esphome::sensor::Sensor *sensor) { this->lights_intensity_underwater_sensor_ = sensor; }
+	void set_lights_intensity_bartop_sensor(esphome::sensor::Sensor *sensor) { this->lights_intensity_bartop_sensor_ = sensor; }
+	void set_lights_intensity_pillow_sensor(esphome::sensor::Sensor *sensor) { this->lights_intensity_pillow_sensor_ = sensor; }
+	void set_lights_intensity_exterior_sensor(esphome::sensor::Sensor *sensor) { this->lights_intensity_exterior_sensor_ = sensor; }
+	void set_lights_color_underwater_sensor(esphome::sensor::Sensor *sensor) { this->lights_color_underwater_sensor_ = sensor; }
+	void set_lights_color_bartop_sensor(esphome::sensor::Sensor *sensor) { this->lights_color_bartop_sensor_ = sensor; }
+	void set_lights_color_pillow_sensor(esphome::sensor::Sensor *sensor) { this->lights_color_pillow_sensor_ = sensor; }
+	void set_lights_color_exterior_sensor(esphome::sensor::Sensor *sensor) { this->lights_color_exterior_sensor_ = sensor; }
 #endif
 #ifdef USE_TEXT_SENSOR
 	void set_version_sensor(esphome::text_sensor::TextSensor *text) { this->version_sensor_ = text; }
@@ -187,6 +196,16 @@ protected:
 	esphome::sensor::Sensor *pcb_c_temperature_sensor_;
 	esphome::sensor::Sensor *audio_buttons_sensor_;
 	esphome::sensor::Sensor *logo_lights_sensor_;
+	esphome::sensor::Sensor *lights_intensity_sensor_;
+	esphome::sensor::Sensor *lights_intensity_underwater_sensor_;
+	esphome::sensor::Sensor *lights_intensity_bartop_sensor_;
+	esphome::sensor::Sensor *lights_intensity_pillow_sensor_;
+	esphome::sensor::Sensor *lights_intensity_exterior_sensor_;
+	esphome::sensor::Sensor *lights_color_underwater_sensor_;
+	esphome::sensor::Sensor *lights_color_bartop_sensor_;
+	esphome::sensor::Sensor *lights_color_pillow_sensor_;
+	esphome::sensor::Sensor *lights_color_exterior_sensor_;
+
 #endif
 #ifdef USE_TEXT_SENSOR
 	esphome::text_sensor::TextSensor *version_sensor_;
