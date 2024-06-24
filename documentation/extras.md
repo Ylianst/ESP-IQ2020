@@ -2,6 +2,22 @@
 
 In this file, I keep extra tips and tricks for the Home Assistant pro's.
 
+## ACE / Freshwater salt systems
+
+If you have a ACE or Freshwater module attached to your hot tub, this integration will allow you to see the salt sensor and control the power level (0 to 10) of the salt system. To do this, add the following under the `number` and `sensor` sections:
+
+```
+number:
+  - platform: iq2020-dev
+    id: salt_power
+    name: Salt System Power
+    datapoint: 5
+
+sensor:
+    salt_content:
+      name: Salt Content
+```
+
 ## Logo Lights
 
 The green and blue light at the front of the hot tub can also be reported by this integration. You can, for example, have a picture your your hot tub in Home Assistant and make the lights on the image match the light on the actual hot tub. In the `sensor` section of the configuration file, add the `logo_lights` sensor.
