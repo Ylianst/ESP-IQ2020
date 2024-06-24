@@ -73,24 +73,6 @@ sensor:
       name: Target Temperature
     outlet_f_temperature:
       name: Heater Outlet
-    heater_total_runtime:
-      name: Heater Runtime
-    jets1_total_runtime:
-      name: Jets 1 Runtime
-    lifetime_runtime:
-      name: Lifetime Runtime
-    jets2_total_runtime:
-      name: Jets 2 Runtime
-    lights_total_runtime:
-      name: Lights Runtime
-    circulation_pump_total_runtime:
-      name: Circulation Pump Runtime
-#    jet1_low_total_runtime:
-#      name: Jets 1 Low Runtime
-    jet2_low_total_runtime:
-      name: Jets 2 Low Runtime
-    power_on_counter:
-      name: Power On Counter
     power_l1:
       name: Pumps Power
 #    power_heater:
