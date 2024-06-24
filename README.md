@@ -75,8 +75,8 @@ sensor:
       name: Heater Outlet
     power_l1:
       name: Pumps Power
-#    power_heater:
-#      name: Power Heater
+    power_heater:
+      name: Power Heater
     power_l2:
       name: Heater Power
     pcb_f_temperature:
