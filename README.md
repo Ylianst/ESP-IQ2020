@@ -57,17 +57,11 @@ uart:
 iq2020:
    uart_id: SpaConnection
    polling_rate: 65
-#   flow_control_pin: GPIO0
    port: 1234
 
 select:
 text:
 number:
-#   Frashwater / ACE system
-#  - platform: iq2020-dev
-#    id: salt_power
-#    name: Salt System Power
-#    datapoint: 5
 
 # If using celsius units on the hot tub remote, replace _f_ with _c_ in the three entries below.
 # Feel free to remove any sensor that are not relevent for your hot tub.
@@ -87,8 +81,6 @@ sensor:
       name: Lifetime Runtime
     jets2_total_runtime:
       name: Jets 2 Runtime
-#    jets3_total_runtime:
-#      name: Jets 3 Runtime
     lights_total_runtime:
       name: Lights Runtime
     circulation_pump_total_runtime:
@@ -107,9 +99,6 @@ sensor:
       name: Heater Power
     pcb_f_temperature:
       name: Controller Temperature
-#   Frashwater / ACE system
-#    salt_content:
-#      name: Salt Content
 
 switch:
   - platform: iq2020
