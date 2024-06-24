@@ -2,6 +2,45 @@
 
 In this file, I keep extra tips and tricks for the Home Assistant pro's.
 
+## Lights Intensity and Color
+
+You can add sensors to look at the current light color and intensity of each color zones. Add the following in the `sensor` section if needed:
+
+```
+sensor:
+    lights_intensity:
+      name: Light Intensity
+    lights_underwater_intensity:
+      name: Underwater Light Intensity
+    lights_bartop_intensity:
+      name: Bartop Light Intensity
+    lights_pillow_intensity:
+      name: Pillow Light Intensity
+    lights_exterior_intensity:
+      name: Exterior Light Intensity
+    lights_underwater_color:
+      name: Underwater Light Color
+    lights_bartop_color:
+      name: Bartop Light Color
+    lights_pillow_color:
+      name: Pillow Light Color
+    lights_exterior_color:
+      name: Exterior Light Color
+```
+
+Intensity values are from 0 for off to 5 for maximum brightness. For colors, here are the possible values for the color sensors:
+
+```
+1 = Violet
+2 = Blue
+3 = Cyan
+4 = Green
+5 = White
+6 = Yellow
+7 = Red
+8 = Color Cycle
+```
+
 ## ACE / Freshwater salt systems
 
 If you have a ACE or Freshwater module attached to your hot tub, this integration will allow you to see the salt sensor and control the power level (0 to 10) of the salt system. To do this, add the following under the `number` and `sensor` sections:
