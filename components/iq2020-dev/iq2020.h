@@ -127,7 +127,7 @@ public:
 	void numberAction(unsigned int numberid, int state);
 #endif
 	void setTempAction(float newtemp);
-	 
+
 protected:
 	void publish_sensor();
 	void setAudioButton(int button);
