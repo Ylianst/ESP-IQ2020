@@ -74,3 +74,7 @@ fan:
 
 - IQ2020 Watkins 1303401-1 controller
 - Status: Works, but power indicators for Pumps & Heater always shows zero.
+
+## HotSpring HotSpot SX
+
+- Status: Works, however the light colors and cycles are not currently supported correctly.
