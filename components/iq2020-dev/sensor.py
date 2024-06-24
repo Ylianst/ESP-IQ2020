@@ -63,7 +63,7 @@ CONF_SENSOR_LIGHTS_COLOR_UNDERWATER = "lights_underwater_color"
 CONF_SENSOR_LIGHTS_COLOR_BARTOP = "lights_bartop_color"
 CONF_SENSOR_LIGHTS_COLOR_PILLOW = "lights_pillow_color"
 CONF_SENSOR_LIGHTS_COLOR_EXTERIOR = "lights_exterior_color"
-
+ 
 CONF_IQ2020_SERVER = "iq2020_server"
 
 CONFIG_SCHEMA = cv.Schema(
