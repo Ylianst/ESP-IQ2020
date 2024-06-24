@@ -506,6 +506,16 @@ int IQ2020Component::processIQ2020Command() {
 		if ((cmdlen == 28) && (processingBuffer[5] == 0x17) && (processingBuffer[6] == 0x05)) {
 			// This is an update on the status of the spa lights (enabled, intensity, color)
 			setSwitchState(SWITCH_LIGHTS, (processingBuffer[24] & 1));
+#ifdef USE_SENSOR
+			if (this->lights_intensity_underwater_sensor_) this->lights_intensity_underwater_sensor_->publish_state((float)processingBuffer[8]);
+			if (this->lights_intensity_bartop_sensor_) this->lights_intensity_bartop_sensor_->publish_state((float)processingBuffer[9]);
+			if (this->lights_intensity_pillow_sensor_) this->lights_intensity_pillow_sensor_->publish_state((float)processingBuffer[10]);
+			if (this->lights_intensity_exterior_sensor_) this->lights_intensity_exterior_sensor_->publish_state((float)processingBuffer[11]);
+			if (this->lights_color_underwater_sensor_) this->lights_color_underwater_sensor_->publish_state((float)processingBuffer[20]);
+			if (this->lights_color_bartop_sensor_) this->lights_color_bartop_sensor_->publish_state((float)processingBuffer[21]);
+			if (this->lights_color_pillow_sensor_) this->lights_color_pillow_sensor_->publish_state((float)processingBuffer[22]);
+			if (this->lights_color_exterior_sensor_) this->lights_color_exterior_sensor_->publish_state((float)processingBuffer[23]);
+#endif
 		}
 
 		if ((cmdlen > 10) && (processingBuffer[5] == 0x01) && (processingBuffer[6] == 0x00)) {
@@ -659,6 +669,7 @@ int IQ2020Component::processIQ2020Command() {
 			if (this->pcb_f_temperature_sensor_) this->pcb_f_temperature_sensor_->publish_state((float)processingBuffer[128]);
 			if (this->pcb_c_temperature_sensor_) this->pcb_c_temperature_sensor_->publish_state((float)esphome::fahrenheit_to_celsius((float)processingBuffer[128]));
 			if (this->salt_content_sensor_ && (salt_content >= 0)) this->salt_content_sensor_->publish_state((float)salt_content);
+			if (this->lights_intensity_sensor_) this->lights_intensity_sensor_->publish_state((float)(flags2 >> 4));
 
 			int logo_lights = 0;
 			if (processingBuffer[16] == 0x02) logo_lights = 1; // Power on
