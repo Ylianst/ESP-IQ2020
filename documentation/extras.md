@@ -128,6 +128,32 @@ Note that you can't have two `sensor:` sections, so just add all of these lines 
 
 ![image](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/14deafa5-322c-42ff-8983-7fd3f1e8e878)
 
+## Runtime Sensors
+
+The IQ2020 controller keeps a running count of the usage of the jets, heater, lights and more. You can add the following sensors if you would like to see these values:
+
+```
+sensors:
+    heater_total_runtime:
+      name: Heater Runtime
+    jets1_total_runtime:
+      name: Jets 1 Runtime
+    lifetime_runtime:
+      name: Lifetime Runtime
+    jets2_total_runtime:
+      name: Jets 2 Runtime
+    lights_total_runtime:
+      name: Lights Runtime
+    circulation_pump_total_runtime:
+      name: Circulation Pump Runtime
+    jet1_low_total_runtime:
+      name: Jets 1 Low Runtime
+    jet2_low_total_runtime:
+      name: Jets 2 Low Runtime
+    power_on_counter:
+      name: Power On Counter
+```
+
 ## Templates for seconds sensors
 
 A lot of the sensor values returned by this integration are large numbers of seconds like the lifetime of the hot tub, jets or lights. On this page, we have Home Assistant template sensors you can add to change the seconds value into anything you like. Below in the templates that will make the seconds show up as days and hours like this:
