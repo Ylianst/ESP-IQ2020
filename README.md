@@ -158,6 +158,7 @@ For added details:
   - [Details on the RS485 serial protocol](https://github.com/Ylianst/ESP-IQ2020/blob/main/documentation/protocol.md)
   - [Debugging RS485 traffic](https://github.com/Ylianst/ESP-IQ2020/blob/main/documentation/debugging.md)
   - [Variable Electric Rate Savings](https://github.com/Ylianst/ESP-IQ2020/blob/main/documentation/electric.md)
+  - [Full configuration](https://github.com/Ylianst/ESP-IQ2020/blob/main/documentation/configuration.md)
 
 Known Issues:
   - Jet 3 may work but will not show the running state properly, but if we have such a hot tub and can send me traffic logs, I can probably add support for it.
