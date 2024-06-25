@@ -77,4 +77,6 @@ fan:
 
 ## HotSpring HotSpot SX
 
+- Version string: 112T b5e1A002 v3.0
+- M5stack atom lite + Atomic RS485 base
 - Status: Works, however the light colors and cycles are not currently supported correctly.
