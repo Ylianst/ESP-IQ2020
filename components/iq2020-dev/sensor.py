@@ -63,6 +63,7 @@ CONF_SENSOR_LIGHTS_COLOR_UNDERWATER = "lights_underwater_color"
 CONF_SENSOR_LIGHTS_COLOR_BARTOP = "lights_bartop_color"
 CONF_SENSOR_LIGHTS_COLOR_PILLOW = "lights_pillow_color"
 CONF_SENSOR_LIGHTS_COLOR_EXTERIOR = "lights_exterior_color"
+CONF_SENSOR_LIGHTS_MAIN_LOOP_SPEED = "lights_main_loop_speed"
 
 CONF_IQ2020_SERVER = "iq2020_server"
 
@@ -290,6 +291,10 @@ CONFIG_SCHEMA = cv.Schema(
         cv.Optional(CONF_SENSOR_LIGHTS_COLOR_EXTERIOR): sensor.sensor_schema(
             accuracy_decimals=0,
             icon=ICON_LIGHTBULB
+        ),
+        cv.Optional(CONF_SENSOR_LIGHTS_MAIN_LOOP_SPEED): sensor.sensor_schema(
+            accuracy_decimals=0,
+            icon=ICON_LIGHTBULB
         )
     }
 )
@@ -460,3 +465,7 @@ async def to_code(config):
     if CONF_SENSOR_LIGHTS_COLOR_EXTERIOR in config:
         sens = await sensor.new_sensor(config[CONF_SENSOR_LIGHTS_COLOR_EXTERIOR])
         cg.add(server.set_lights_color_exterior_sensor(sens))
+
+    if CONF_SENSOR_LIGHTS_MAIN_LOOP_SPEED in config:
+        sens = await sensor.new_sensor(config[CONF_SENSOR_LIGHTS_MAIN_LOOP_SPEED])
+        cg.add(server.set_lights_main_loop_speed_sensor(sens))
