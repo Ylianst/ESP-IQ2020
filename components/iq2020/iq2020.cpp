@@ -511,6 +511,7 @@ int IQ2020Component::processIQ2020Command() {
 			if (this->lights_intensity_bartop_sensor_) this->lights_intensity_bartop_sensor_->publish_state((float)processingBuffer[9]);
 			if (this->lights_intensity_pillow_sensor_) this->lights_intensity_pillow_sensor_->publish_state((float)processingBuffer[10]);
 			if (this->lights_intensity_exterior_sensor_) this->lights_intensity_exterior_sensor_->publish_state((float)processingBuffer[11]);
+			if (this->lights_main_loop_speed_sensor_) this->lights_main_loop_speed_sensor_->publish_state((float)processingBuffer[16]);
 			if (this->lights_color_underwater_sensor_) this->lights_color_underwater_sensor_->publish_state((float)processingBuffer[20]);
 			if (this->lights_color_bartop_sensor_) this->lights_color_bartop_sensor_->publish_state((float)processingBuffer[21]);
 			if (this->lights_color_pillow_sensor_) this->lights_color_pillow_sensor_->publish_state((float)processingBuffer[22]);

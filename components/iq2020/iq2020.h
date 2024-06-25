@@ -106,6 +106,7 @@ public:
 	void set_lights_color_bartop_sensor(esphome::sensor::Sensor *sensor) { this->lights_color_bartop_sensor_ = sensor; }
 	void set_lights_color_pillow_sensor(esphome::sensor::Sensor *sensor) { this->lights_color_pillow_sensor_ = sensor; }
 	void set_lights_color_exterior_sensor(esphome::sensor::Sensor *sensor) { this->lights_color_exterior_sensor_ = sensor; }
+	void set_lights_main_loop_speed_sensor(esphome::sensor::Sensor *sensor) { this->lights_main_loop_speed_sensor_ = sensor; }
 #endif
 #ifdef USE_TEXT_SENSOR
 	void set_version_sensor(esphome::text_sensor::TextSensor *text) { this->version_sensor_ = text; }
@@ -205,7 +206,7 @@ protected:
 	esphome::sensor::Sensor *lights_color_bartop_sensor_;
 	esphome::sensor::Sensor *lights_color_pillow_sensor_;
 	esphome::sensor::Sensor *lights_color_exterior_sensor_;
-
+	esphome::sensor::Sensor *lights_main_loop_speed_sensor_;
 #endif
 #ifdef USE_TEXT_SENSOR
 	esphome::text_sensor::TextSensor *version_sensor_;
