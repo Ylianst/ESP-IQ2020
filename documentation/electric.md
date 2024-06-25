@@ -8,7 +8,7 @@ Power on the electric grid is not generated at a fixed price all day and year lo
 
 So, it makes a big difference if you can power your hot tub using off-peak power rates. With this IQ2020 integration, we can do that by dynamically setting the hot tub temperature to use as much cheap power as possible.
 
-First, I have 3 automations in Home Assistant that trigger at Off-Peak, Mid-Peak and On-Peak rates. I do a bunch of things with these to cut power use during the On-Peak times. I lower the temperature at mid-peak and lower again at on-peak. I also use another automation to increase the heat and hour before the mid-peak rate. Here is what the temperature graph looks like for 48 hours.
+First, I have 3 automations in Home Assistant that trigger at Off-Peak, Mid-Peak and On-Peak rates. I do a bunch of things with these to cut power use during the On-Peak times. I lower the temperature at mid-peak and lower again at on-peak. I also use another automation to increase the heat one hour before the mid-peak rate. Here is what the temperature graph looks like for 48 hours.
 
 ![image](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/5c56901e-731b-40b2-af83-fdf881bc15ce)
 
