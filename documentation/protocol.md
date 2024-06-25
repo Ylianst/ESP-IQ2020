@@ -43,10 +43,10 @@ The source address is 0x01 which is the address of the IQ2020 controller on the 
 
 ```
 0x01 - IQ2020 controller
-0x21 - Unknown device 1 (Audio or Coolzone)
-0x24 - ACE Salt System
-0x29 - Freshwater Salt System (This is the one I have)
-0x33 - Unknown device 2 (Audio or Coolzone)
+0x21 - Coolzone module
+0x24 - ACE Salt System module
+0x29 - Freshwater Salt System module
+0x33 - Audio/Music module 
 0x1F - Spa Connection Kit
 ```
 
