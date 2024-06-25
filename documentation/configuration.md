@@ -1,6 +1,6 @@
 ## Full Configuration
 
-Below is an example of a full configuration with most sensors turned on. The example below has a lot of great ideas for enhancing sensors, using substitutions and more.
+Below is an example of a full configuration with most sensors turned on. The example below has a lot of great ideas for enhancing sensors, using substitutions and more. As always, you are encoraged to adapt this configuration to your own needs.
 
 ```
 substitutions:
