@@ -46,6 +46,7 @@
             this.connectionKitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.connectionKitX0256ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.freshWaterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.audioToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.commandsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.askLightsStatusToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
@@ -82,7 +83,7 @@
             this.scanTimer = new System.Windows.Forms.Timer(this.components);
             this.logSaveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.pollTimer = new System.Windows.Forms.Timer(this.components);
-            this.audioToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.aCEModuleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.topPanel.SuspendLayout();
@@ -191,6 +192,7 @@
             this.connectionKitToolStripMenuItem,
             this.connectionKitX0256ToolStripMenuItem,
             this.freshWaterToolStripMenuItem,
+            this.aCEModuleToolStripMenuItem,
             this.audioToolStripMenuItem});
             this.filterToolStripMenuItem.Name = "filterToolStripMenuItem";
             this.filterToolStripMenuItem.Size = new System.Drawing.Size(54, 24);
@@ -224,8 +226,15 @@
             // 
             this.freshWaterToolStripMenuItem.Name = "freshWaterToolStripMenuItem";
             this.freshWaterToolStripMenuItem.Size = new System.Drawing.Size(232, 26);
-            this.freshWaterToolStripMenuItem.Text = "Fresh Water";
+            this.freshWaterToolStripMenuItem.Text = "Freshwater Module";
             this.freshWaterToolStripMenuItem.Click += new System.EventHandler(this.freshWaterToolStripMenuItem_Click);
+            // 
+            // audioToolStripMenuItem
+            // 
+            this.audioToolStripMenuItem.Name = "audioToolStripMenuItem";
+            this.audioToolStripMenuItem.Size = new System.Drawing.Size(232, 26);
+            this.audioToolStripMenuItem.Text = "Audio Module";
+            this.audioToolStripMenuItem.Click += new System.EventHandler(this.audioToolStripMenuItem_Click);
             // 
             // commandsToolStripMenuItem
             // 
@@ -582,12 +591,12 @@
             this.pollTimer.Interval = 2000;
             this.pollTimer.Tick += new System.EventHandler(this.pollTimer_Tick);
             // 
-            // audioToolStripMenuItem
+            // aCEModuleToolStripMenuItem
             // 
-            this.audioToolStripMenuItem.Name = "audioToolStripMenuItem";
-            this.audioToolStripMenuItem.Size = new System.Drawing.Size(232, 26);
-            this.audioToolStripMenuItem.Text = "Audio";
-            this.audioToolStripMenuItem.Click += new System.EventHandler(this.audioToolStripMenuItem_Click);
+            this.aCEModuleToolStripMenuItem.Name = "aCEModuleToolStripMenuItem";
+            this.aCEModuleToolStripMenuItem.Size = new System.Drawing.Size(232, 26);
+            this.aCEModuleToolStripMenuItem.Text = "ACE Module";
+            this.aCEModuleToolStripMenuItem.Click += new System.EventHandler(this.aCEModuleToolStripMenuItem_Click);
             // 
             // MainForm
             // 
@@ -683,6 +692,7 @@
         private System.Windows.Forms.ToolStripMenuItem pollStateToolStripMenuItem;
         private System.Windows.Forms.Timer pollTimer;
         private System.Windows.Forms.ToolStripMenuItem audioToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem aCEModuleToolStripMenuItem;
     }
 }
 
