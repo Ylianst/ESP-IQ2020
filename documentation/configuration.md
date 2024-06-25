@@ -1,6 +1,6 @@
 ## Full Configuration
 
-Below is an example of a full configuration with most sensors turned on. The example below has a lot of great ideas for enhancing sensors, using substitutions and more. As always, you are encoraged to adapt this configuration to your own needs.
+Below is an example of a full configuration with most sensors turned on. The example below has a lot of great ideas for enhancing sensors, using substitutions and more. As always, you are encoraged to adapt this configuration to your own needs. Images of the sensors below.
 
 ```
 substitutions:
@@ -473,3 +473,15 @@ text_sensor:
           (String(seconds)) 
           ).c_str()};
 ```
+
+![image](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/a9e5ae66-2a6f-4c07-8f1f-cb7c52e3e7d9)
+
+![image](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/546b25bf-d984-46ab-9516-90899fe588a2)
+
+![image](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/c5b25972-1409-4477-964a-1dc21645407e)
+
+![image](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/1561b409-8329-48f7-a581-f6841265b1d5)
+
+
+
+
