@@ -79,6 +79,7 @@ The Spa Connection Kit sends all it's commands from address 0x1F. Sending the co
 024C - Unknown (024C1B0C110300E80701)
 0255 - Get status short
 0256 - Get status long
+0273 - System reset
 0B02 - Set Jets 1 speed - (0B028F)
 0B03 - Set Jets 2 speed - (0B038E)
 0B04 - Set Jets 3 speed - (0B0400)
