@@ -1,6 +1,6 @@
 # Optimizing your hot tub for variable electric rates
 
-Power on the electric grid is not generated at a fixed price all day and year long. The power compagny pays more at some times and less at other times. In some parts of the world, you can sign up for variable electric rates where you get charged less at nights and weekends and more during peak hours. Here in Oregon, the power compagny has the a [time of day rates](https://portlandgeneral.com/about/info/pricing-plans/time-of-day) that offer significant discounts at night and on weekends. A hot tub makes use of significant abount of electricity. In the first 6 months of 2024, mine used over 1500KWh of energy. For me in 2024, the power rates are as follows:
+Power on the electric grid is not generated at a fixed price all day and year long. The power compagny pays more at some times and less at other times. In some parts of the world, you can sign up for variable electric rates where you get charged less at nights and weekends and more during peak hours. Here in Oregon, the power compagny has the a [time of day rates](https://portlandgeneral.com/about/info/pricing-plans/time-of-day) that offer significant discounts at night and on weekends. A hot tub makes use of significant amount of electricity. In the first 6 months of 2024, mine used over 1500KWh of energy. For me in 2024, the power rates are as follows:
 
  - Off-peak = 8.39¢ / KWh
  - Mid-peak = 15.77¢ / KWh
