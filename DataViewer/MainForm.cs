@@ -248,7 +248,7 @@ namespace DataViewer
                         int day = data[134];
                         int month = data[135] + 1;
                         int year = data[136] + (data[137] << 8);
-                        addDecodedData("Time", new DateTime(year, month, day, hours, minutes, seconds).ToString());
+                        try { addDecodedData("Time", new DateTime(year, month, day, hours, minutes, seconds).ToString()); } catch (Exception) { }
 
                         int HeaterTotalRuntime = getIntFromByteArray(data, 40);
                         int Jets1TotalRuntime = getIntFromByteArray(data, 44);
