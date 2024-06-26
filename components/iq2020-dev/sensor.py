@@ -185,22 +185,16 @@ CONFIG_SCHEMA = cv.Schema(
         ),
         cv.Optional(CONF_SENSOR_POWER_ON_COUNTER): sensor.sensor_schema(
             accuracy_decimals=0,
-            icon=ICON_TIMER,
-            state_class=STATE_CLASS_TOTAL_INCREASING,
-            device_class=DEVICE_CLASS_DURATION
+            icon=ICON_COUNTER
         ),
         cv.Optional(CONF_SENSOR_SALT_POWER): sensor.sensor_schema(
             accuracy_decimals=0,
-            icon=ICON_TIMER,
-            state_class=STATE_CLASS_TOTAL_INCREASING,
-            device_class=DEVICE_CLASS_DURATION
+            icon=ICON_GAUGE
         ),
         cv.Optional(CONF_SENSOR_SALT_CONTENT): sensor.sensor_schema(
             accuracy_decimals=0,
             state_class=STATE_CLASS_MEASUREMENT,
-            icon=ICON_TIMER,
-            state_class=STATE_CLASS_TOTAL_INCREASING,
-            device_class=DEVICE_CLASS_DURATION
+            icon=ICON_GAUGE
         ),
         cv.Optional(CONF_SENSOR_VOLTAGE_L1): sensor.sensor_schema(
             unit_of_measurement=UNIT_VOLT,
