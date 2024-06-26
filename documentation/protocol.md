@@ -483,3 +483,8 @@ Heat pump data is as follows
 FF        - Heat pump current operational status
 FF        - Heat pump current mode setting
 ```
+
+IQ2020 Reboot Command
+```
+01 1F 40 0273 3487E5
+```
