@@ -47,7 +47,7 @@ If you have a ACE or Freshwater module attached to your hot tub, this integratio
 
 ```
 number:
-  - platform: iq2020-dev
+  - platform: iq2020
     id: salt_power
     name: Salt System Power
     datapoint: 5
