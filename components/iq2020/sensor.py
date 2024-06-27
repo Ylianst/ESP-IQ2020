@@ -5,21 +5,24 @@ from esphome.const import (
     UNIT_WATT,
     UNIT_SECOND,
     UNIT_CELSIUS,
-	UNIT_AMPERE,
+    UNIT_AMPERE,
     UNIT_VOLT,
     ICON_GAUGE,
     ICON_TIMER,
     ICON_COUNTER,
-	ICON_LIGHTBULB,
+    ICON_LIGHTBULB,
     ICON_CURRENT_AC,
     ICON_THERMOMETER,
     ICON_HEATING_COIL,
     STATE_CLASS_MEASUREMENT,
-	DEVICE_CLASS_VOLUME,
+    STATE_CLASS_TOTAL_INCREASING,
+    DEVICE_CLASS_VOLUME,
     DEVICE_CLASS_TEMPERATURE,
-    ENTITY_CATEGORY_DIAGNOSTIC,
+    DEVICE_CLASS_DURATION,
+    ENTITY_CATEGORY_DIAGNOSTIC
 )
 from . import ns, IQ2020Component
+
 
 UNIT_FAHRENHEIT = "°F"
 CONF_SENSOR_CURRENT_F_TEMPERATURE = "current_f_temperature"
@@ -120,47 +123,65 @@ CONFIG_SCHEMA = cv.Schema(
         cv.Optional(CONF_SENSOR_HEATER_TOTAL_RUNTIME): sensor.sensor_schema(
             unit_of_measurement=UNIT_SECOND,
             accuracy_decimals=0,
-            icon=ICON_TIMER
+            icon=ICON_TIMER,
+            state_class=STATE_CLASS_TOTAL_INCREASING,
+            device_class=DEVICE_CLASS_DURATION
         ),
         cv.Optional(CONF_SENSOR_JETS1_TOTAL_RUNTIME): sensor.sensor_schema(
             unit_of_measurement=UNIT_SECOND,
             accuracy_decimals=0,
-            icon=ICON_TIMER
+            icon=ICON_TIMER,
+            state_class=STATE_CLASS_TOTAL_INCREASING,
+            device_class=DEVICE_CLASS_DURATION
         ),
         cv.Optional(CONF_SENSOR_LIFETIME_RUNTIME): sensor.sensor_schema(
             unit_of_measurement=UNIT_SECOND,
             accuracy_decimals=0,
-            icon=ICON_TIMER
+            icon=ICON_TIMER,
+            state_class=STATE_CLASS_TOTAL_INCREASING,
+            device_class=DEVICE_CLASS_DURATION
         ),
         cv.Optional(CONF_SENSOR_JETS2_TOTAL_RUNTIME): sensor.sensor_schema(
             unit_of_measurement=UNIT_SECOND,
             accuracy_decimals=0,
-            icon=ICON_TIMER
+            icon=ICON_TIMER,
+            state_class=STATE_CLASS_TOTAL_INCREASING,
+            device_class=DEVICE_CLASS_DURATION
         ),
         cv.Optional(CONF_SENSOR_JETS3_TOTAL_RUNTIME): sensor.sensor_schema(
             unit_of_measurement=UNIT_SECOND,
             accuracy_decimals=0,
-            icon=ICON_TIMER
+            icon=ICON_TIMER,
+            state_class=STATE_CLASS_TOTAL_INCREASING,
+            device_class=DEVICE_CLASS_DURATION
         ),
         cv.Optional(CONF_SENSOR_LIGHTS_TOTAL_RUNTIME): sensor.sensor_schema(
             unit_of_measurement=UNIT_SECOND,
             accuracy_decimals=0,
-            icon=ICON_TIMER
+            icon=ICON_TIMER,
+            state_class=STATE_CLASS_TOTAL_INCREASING,
+            device_class=DEVICE_CLASS_DURATION
         ),
         cv.Optional(CONF_SENSOR_CIRCULATION_PUMP_TOTAL_RUNTIME): sensor.sensor_schema(
             unit_of_measurement=UNIT_SECOND,
             accuracy_decimals=0,
-            icon=ICON_TIMER
+            icon=ICON_TIMER,
+            state_class=STATE_CLASS_TOTAL_INCREASING,
+            device_class=DEVICE_CLASS_DURATION
         ),
         cv.Optional(CONF_SENSOR_JETS1_LOW_RUNTIME): sensor.sensor_schema(
             unit_of_measurement=UNIT_SECOND,
             accuracy_decimals=0,
-            icon=ICON_TIMER
+            icon=ICON_TIMER,
+            state_class=STATE_CLASS_TOTAL_INCREASING,
+            device_class=DEVICE_CLASS_DURATION
         ),
         cv.Optional(CONF_SENSOR_JETS2_LOW_RUNTIME): sensor.sensor_schema(
             unit_of_measurement=UNIT_SECOND,
             accuracy_decimals=0,
-            icon=ICON_TIMER
+            icon=ICON_TIMER,
+            state_class=STATE_CLASS_TOTAL_INCREASING,
+            device_class=DEVICE_CLASS_DURATION
         ),
         cv.Optional(CONF_SENSOR_POWER_ON_COUNTER): sensor.sensor_schema(
             accuracy_decimals=0,
