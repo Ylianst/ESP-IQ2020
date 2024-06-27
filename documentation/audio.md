@@ -22,41 +22,41 @@ Them, replace the empty `select`, `number`, and `text` sections with this:
 
 ```
 select:
-  - platform: iq2020-dev
+  - platform: iq2020
     name: Audio Source
     id: audio_source
     datapoint: 0
 
 number:
-  - platform: iq2020-dev
+  - platform: iq2020
     name: Volume
     id: audio_volume
     datapoint: 0
-  - platform: iq2020-dev
+  - platform: iq2020
     name: Tremble
     id: audio_tremble
     datapoint: 1
-  - platform: iq2020-dev
+  - platform: iq2020
     name: Bass
     id: audio_bass
     datapoint: 2
-  - platform: iq2020-dev
+  - platform: iq2020
     name: Balance
     id: audio_balance
     datapoint: 3
-  - platform: iq2020-dev
+  - platform: iq2020
     name: Subwoofer
     id: audio_subwoofer
     datapoint: 4
 
 text:
-  - platform: iq2020-dev
+  - platform: iq2020
     name: Song Title
     id: song_title
     datapoint: 0
     mode: text
     value: "Home Assistant"
-  - platform: iq2020-dev
+  - platform: iq2020
     name: Artist Name
     id: artist_name
     datapoint: 1
