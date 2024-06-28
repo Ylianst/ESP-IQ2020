@@ -11,6 +11,7 @@ AUTO_LOAD = ["socket"]
 
 DEPENDENCIES = ["uart", "network"]
 CONF_ACE_EMULATION = "ace_emulation"
+CONF_FRESHWATER_EMULATION = "freshwater_emulation"
 CONF_AUDIO_EMULATION = "audio_emulation"
 CONF_POLLING_RATE = "polling_rate"
 
@@ -40,6 +41,7 @@ CONFIG_SCHEMA = cv.All(
             cv.Optional(CONF_FLOW_CONTROL_PIN): pins.gpio_output_pin_schema,
             cv.Optional(CONF_POLLING_RATE, default = 65): cv.All(cv.positive_int, validate_polling_rate),
             cv.Optional(CONF_ACE_EMULATION, default = 'false'): cv.boolean,
+            cv.Optional(CONF_FRESHWATER_EMULATION, default = 'false'): cv.boolean,
             cv.Optional(CONF_AUDIO_EMULATION, default = 'false'): cv.boolean,
         }
     )
@@ -53,6 +55,7 @@ async def to_code(config):
     cg.add(var.set_buffer_size(config[CONF_BUFFER_SIZE]))
     cg.add(var.set_polling_rate(config[CONF_POLLING_RATE]))
     cg.add(var.set_ace_emulation(config[CONF_ACE_EMULATION]))
+    cg.add(var.set_freshwater_emulation(config[CONF_FRESHWATER_EMULATION]))
     cg.add(var.set_audio_emulation(config[CONF_AUDIO_EMULATION]))
 
     if CONF_FLOW_CONTROL_PIN in config:
