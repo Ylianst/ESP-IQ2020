@@ -157,7 +157,7 @@ protected:
 	size_t buf_size_;
 	esphome::GPIOPin *flow_control_pin_{ nullptr };
 	bool ace_emulation_;
-	int ace_flags = 1; // 0x01 = Functioning, 0x04 = Boosting, 0x08 = Testing
+	unsigned char ace_flags = 1; // 0x01 = Functioning, 0x04 = Boosting, 0x08 = Testing
 	bool freshwater_emulation_;
 	bool audio_emulation_;
 	int polling_rate_;
