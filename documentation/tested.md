@@ -2,7 +2,7 @@
 
 In this document, I want to keep notes on the currently tested and confirmed to work hot tubs with notes on configuration changes, etc.
 
-## Hotsprings Grandee
+## Hotspring Grandee
 
 - Status: Works great. Lights, temperature, Pump1 with 1 speed, Pump2 with 2 speeds.
 - Version: WR4.04de1cE002DK4.00
@@ -72,17 +72,21 @@ fan:
 
 ## Hotspring Relay 2024
 
-- IQ2020 Watkins 1303401-1 controller
 - Status: Works, but power indicators for Pumps & Heater always shows zero.
+- IQ2020 Watkins 1303401-1 controller
 
 ## HotSpring HotSpot SX
 
-- Version string: 112T b5e1A002 v3.0
-- M5stack atom lite + Atomic RS485 base
 - Status: Works, however the light color cycle, use the following sensor:
+- Version: 112T b5e1A002 v3.0
+- M5stack atom lite + Atomic RS485 base
 
 ```
 sensor:
   lights_main_loop_speed:
     name: Lights Main Loop Speed
 ```
+## Caldera Niagara (Utopia Series) 2022
+
+- Status: Works great, Reports power and everything.
+- Version: EU2.039018E0020.00.0
