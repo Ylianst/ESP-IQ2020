@@ -423,7 +423,7 @@ int IQ2020Component::processIQ2020Command() {
 			if (processingBuffer[7] <= 10) {
 				salt_power = processingBuffer[7];
 				setNumberState(NUMBER_SALT_POWER, salt_power);
-			} 
+			}
 			ESP_LOGD(TAG, "Freshwater Emulation, power = %d", processingBuffer[7]);
 			unsigned char cmd[] = { 0x1E, 0x01, processingBuffer[7], 0x00, 0x30, 0x00, 0x00, 0x05, 0x00, 0x00, 0x8C, 0x1B, 0x00, 0x00, 0x50 };
 			sendIQ2020Command(0x01, 0x29, 0x80, cmd, sizeof(cmd));
