@@ -72,8 +72,8 @@ fan:
 
 ## Hotspring Relay 2024
 
-- IQ2020 Watkins 1303401-1 controller
 - Status: Works, but power indicators for Pumps & Heater always shows zero.
+- IQ2020 Watkins 1303401-1 controller
 
 ## HotSpring HotSpot SX
 
