@@ -86,3 +86,6 @@ sensor:
   lights_main_loop_speed:
     name: Lights Main Loop Speed
 ```
+## Caldera Niagara (Utopia Series) 2022
+
+- Status: Works great, Reports power and everything.
