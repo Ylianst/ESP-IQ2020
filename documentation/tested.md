@@ -77,9 +77,9 @@ fan:
 
 ## HotSpring HotSpot SX
 
-- Version string: 112T b5e1A002 v3.0
-- M5stack atom lite + Atomic RS485 base
 - Status: Works, however the light color cycle, use the following sensor:
+- Version: 112T b5e1A002 v3.0
+- M5stack atom lite + Atomic RS485 base
 
 ```
 sensor:
@@ -89,3 +89,4 @@ sensor:
 ## Caldera Niagara (Utopia Series) 2022
 
 - Status: Works great, Reports power and everything.
+- Version: EU2.039018E0020.00.0
