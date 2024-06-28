@@ -158,7 +158,7 @@ protected:
 	esphome::GPIOPin *flow_control_pin_{ nullptr };
 	bool ace_emulation_;
 	unsigned char ace_flags = 1;    // 0x01 = Functioning, 0x04 = Boosting, 0x08 = Testing
-	unsigned char ace_level = 0x38; // 0x00 = Min, 0x40 = Perfect, 0x7F = Max (error)
+	unsigned char ace_level = 0x3F; // 0x00 = Min, 0x38 = Ok 1/3 green, 0x40 = Error, 0x7F = Max (error)
 	bool freshwater_emulation_;
 	bool audio_emulation_;
 	int polling_rate_;
