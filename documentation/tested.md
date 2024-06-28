@@ -2,7 +2,7 @@
 
 In this document, I want to keep notes on the currently tested and confirmed to work hot tubs with notes on configuration changes, etc.
 
-## Hotsprings Grandee
+## Hotspring Grandee
 
 - Status: Works great. Lights, temperature, Pump1 with 1 speed, Pump2 with 2 speeds.
 - Version: WR4.04de1cE002DK4.00
