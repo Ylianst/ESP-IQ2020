@@ -158,7 +158,7 @@ protected:
 	size_t buf_size_;
 	esphome::GPIOPin *flow_control_pin_{ nullptr };
 	bool ace_emulation_;
-	bool freshwater_emulation_;
+	bool freshwater_emulation_; 
 	bool audio_emulation_;
 	int polling_rate_;
 
