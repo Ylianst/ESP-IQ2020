@@ -421,7 +421,7 @@ int IQ2020Component::processIQ2020Command() {
 			if (processingBuffer[11] == 2) { if ((ace_flags & 4) != 0) { ace_flags -= 4; } setAudioButton(8); } // Salt Boost off
 
 			// ace_flags : 0x01 = Functioning, 0x04 = Boosting, 0x08 = Testing
-			// ace_level : 0x00 = Min, 0x3F = Perfect, 0x7F = Max (error)
+			// ace_level : 0x00 = Min, 0x40 = Perfect, 0x7F = Max (error)
 			unsigned char cmd[] = { 0x1E, 0x01, processingBuffer[7], 0x00, ace_level, 0x00, 0x00, ace_flags, 0x00, 0x00, 0x8C, 0x1B, 0x00, 0x00, 0x90 }; // Max - Inspect Cell Check Salt
 
 			sendIQ2020Command(0x01, 0x24, 0x80, cmd, sizeof(cmd));
