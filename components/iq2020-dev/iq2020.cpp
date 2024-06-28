@@ -416,13 +416,14 @@ int IQ2020Component::processIQ2020Command() {
 				setNumberState(NUMBER_SALT_POWER, salt_power);
 			}
 			ESP_LOGD(TAG, "ACE Emulation, power = %d", processingBuffer[7]);
-			if (processingBuffer[16] == 1) { if ((ace_flags & 8) == 0) { ace_flags += 8; } else { ace_flags -= 8; } setAudioButton(6); } // Salt Test
+			if (processingBuffer[16] == 1) { /*if ((ace_flags & 8) == 0) { ace_flags += 8; } else { ace_flags -= 8; }*/ setAudioButton(6); } // Salt Test
 			if (processingBuffer[11] == 1) { if ((ace_flags & 4) == 0) { ace_flags += 4; } setAudioButton(7); } // Salt Boost on
 			if (processingBuffer[11] == 2) { if ((ace_flags & 4) != 0) { ace_flags -= 4; } setAudioButton(8); } // Salt Boost off
 
 			// ace_flags : 0x01 = Functioning, 0x04 = Boosting, 0x08 = Testing
-			unsigned char cmd[] = { 0x1E, 0x01, processingBuffer[7], 0x00, 0x38, 0x00, 0x00, ace_flags, 0x00, 0x00, 0x8C, 0x1B, 0x00, 0x00, 0x90 };
-			
+			//unsigned char cmd[] = { 0x1E, 0x01, processingBuffer[7], 0x00, 0x38, 0x00, 0x00, ace_flags, 0x00, 0x00, 0x8C, 0x1B, 0x00, 0x00, 0x90 }; // 1/3 green
+			unsigned char cmd[] = { 0x1E, 0x01, processingBuffer[7], 0x00, 0x10, 0x00, 0x00, ace_flags, 0x00, 0x00, 0x8C, 0x1B, 0x00, 0x00, 0xA0 };
+
 			sendIQ2020Command(0x01, 0x24, 0x80, cmd, sizeof(cmd));
 		}
 		else if (freshwater_emulation_ && (processingBuffer[1] == 0x29)) {
