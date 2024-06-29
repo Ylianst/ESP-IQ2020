@@ -23,7 +23,7 @@
 #define FAN_JETS2 1
 #define FAN_JETS3 2
 #define FAN_JETS4 3
-#define SWITCHCOUNT 10
+#define SWITCHCOUNT 9
 #define SWITCH_RETRY_COUNT 3
 #define SWITCH_RETRY_TIME 200
 #define SWITCH_LIGHTS 0
@@ -34,19 +34,20 @@
 #define SWITCH_JETS1 5
 #define SWITCH_JETS2 6
 #define SWITCH_JETS3 7
-#define SWITCH_JETS4 8
+#define SWITCH_SALT_BOOST 8
 #define SELECTCOUNT 1
 #define SELECT_AUDIO_SOURCE 0
 #define TEXTCOUNT 2
 #define TEXT_SONG_TITLE 0
 #define TEXT_ARTIST_NAME 1
-#define NUMBERCOUNT 6
+#define NUMBERCOUNT 7
 #define NUMBER_AUDIO_VOLUME 0
 #define NUMBER_AUDIO_TREMBLE 1
 #define NUMBER_AUDIO_BASS 2
 #define NUMBER_AUDIO_BALANCE 3
 #define NUMBER_AUDIO_SUBWOOFER 4
-#define NUMBER_SALT_POWER 5 // ACE/Freshwater Salt System Power Level
+#define NUMBER_SALT_POWER 5    // ACE/Freshwater Salt System Power Level
+#define NUMBER_SALT_STATUS 6   // ACE Status 0 to 15
 #define NOT_SET -127
 
 class IQ2020Component : public esphome::Component {
@@ -158,7 +159,7 @@ protected:
 	esphome::GPIOPin *flow_control_pin_{ nullptr };
 	bool ace_emulation_;
 	unsigned char ace_flags = 1;    // 0x01 = Functioning, 0x04 = Boosting, 0x08 = Testing
-	unsigned char ace_level = 0x48; // Upper 4 bits is level 0x0 = min, 0x4 = green, 0x8 = max. Lower 4 bits status = 0x08 = ok, 0x0F = error.
+	unsigned char ace_status = 7;    // 0 to 15 with 7 or 8 being ideal.
 	bool freshwater_emulation_;
 	bool audio_emulation_;
 	int polling_rate_;
