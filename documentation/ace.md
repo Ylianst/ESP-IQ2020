@@ -43,7 +43,7 @@ The button pressed will show rapidly and so, no need to increase the polling rat
 
 ![image](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/34c13270-c80d-43e1-808c-b342e6a9cd72)
 
-You will see a new screen on your remote that looks like this:
+You will see a new screen on your remote that looks like this. The "Salt System Status" is set by Home Assistant, but read-only on the remote. Other values can be changes on both remote and Home Assistant.
 
 ![image](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/09665e9a-f9d7-43c2-b364-45ced6b1492d)
 
