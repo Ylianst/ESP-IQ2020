@@ -10,12 +10,12 @@ iq2020:
    audio_emulation: true
 ```
 
-Also, add the following two sensors in the `sensor` section:
+Also, add the following sensor in the `sensor` section:
 
 ```
 sensor:
-    audio_buttons:
-      name: Audio Buttons
+    buttons:
+      name: Buttons
 ```
 
 Them, replace the empty `select`, `number`, and `text` sections with this:
@@ -70,7 +70,7 @@ Once done, reflash and you should see many more sensors in your hot tub device:
 
 You will need to reset the hot tub remote to see the new music icon. To do this, press and hold any inactive part of the display for about 15 seconds and the remote will go black and reset. [Video demonstration here](https://youtu.be/od5SB6RIO1s?si=Db0cwpKzg9-m2b_o&t=14). The remote takes a few minutes to reboot, it's not a fast device.
 
-The audio button sensor will show 0 or unknown, but will momenteraly pulse to the following values when a button is pressed:
+The button sensor will show 0 or unknown, but will momenteraly pulse to the following values when a button is pressed:
 
 ```
 1 - Play
