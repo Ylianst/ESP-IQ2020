@@ -1,6 +1,6 @@
 # Audio Module Emulation
 
-This integration allows the ESP32 device to emulate the music module and so, show the extra music option on the SPA remote. Once shown, buttons and volume values will be relayed back to Home Assistant for processing. This allows you to control home lights and trigger automations based on button presses on the spa remote. This works really well and is fast.
+This integration allows the ESP32 device to emulate the music module and so, show the extra music option on the SPA remote. Once shown, buttons and volume values will be relayed back to Home Assistant for processing. This allows you to control home lights and trigger automations based on button presses on the spa remote. This is much like the [ACE module emulation](https://github.com/Ylianst/ESP-IQ2020/blob/main/documentation/ace.md). This works really well and is fast.
 
 To get this working, add the line `audio_emulation: true` in the `iq2020` section like this:
 
@@ -10,7 +10,7 @@ iq2020:
    audio_emulation: true
 ```
 
-Also, add the following sensor in the `sensor` section:
+Also, add the following sensor in the `sensor` section. If the use the ACE module emulation, you will already have this sensor.
 
 ```
 sensor:
