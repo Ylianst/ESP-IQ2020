@@ -8,7 +8,7 @@ iq2020-dev:
    ace_emulation: true
 ```
 
-Then, add the following in each of the corresponding sections:
+Then, add the following in each of the corresponding sections. If you use the audio module emulation, you will already have the `buttons` sensor.
 
 ```
 sensor:
@@ -39,8 +39,12 @@ The button sensor will show 0 or unknown, but will momenteraly pulse to the foll
 7 - Boost off
 ```
 
+The sensors will look like this:
+
 ![image](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/34c13270-c80d-43e1-808c-b342e6a9cd72)
 
-
+You will see a new screen on your remote that looks like this:
 
 ![image](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/09665e9a-f9d7-43c2-b364-45ced6b1492d)
+
+It's up to you to create your own Home Assistant automations to make this screen do anything you like.
