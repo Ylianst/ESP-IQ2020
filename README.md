@@ -151,7 +151,7 @@ In the picture below you will notice I have the expansion board attached with 8 
 
 Once done, power your hot tub back on and you should see data flowing into Home Assistant. You can see the current temperature, set the target temperature, lock the remote control, turn on lights & jets and graph the temperature and power usage. The spa data is polled by the device every minute, so, if you change a setting using the tub's remote, it may take up to a minute to update on Home Assistant. If something does not work right, [please open an issue in GitHub](https://github.com/Ylianst/ESP-IQ2020/issues). As with all Home Assistant integrations, you can use automations. For example, I am on a electric time-of-day plan and so, I adjust lower the temperature automatically a few minutes before 5pm and turn it back up at 9pm. There are also sensors provided so you can create tracking graphs.
 
-For added details:
+For added features and details:
   - [More Sensors, Templates and Extras](https://github.com/Ylianst/ESP-IQ2020/blob/main/documentation/extras.md)
   - [Audio Module Emulation](https://github.com/Ylianst/ESP-IQ2020/blob/main/documentation/audio.md)
   - [ACE Module Emulation](https://github.com/Ylianst/ESP-IQ2020/blob/main/documentation/ace.md)
