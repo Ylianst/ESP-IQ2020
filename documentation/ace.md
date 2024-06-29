@@ -47,4 +47,4 @@ You will see a new screen on your remote that looks like this:
 
 ![image](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/09665e9a-f9d7-43c2-b364-45ced6b1492d)
 
-It's up to you to create your own Home Assistant automations to make this screen do anything you like.
+If you change values from Home Assistant, you will need to move out of the ACE screen and back to see the new values. Otherwise, it's up to you to create your own Home Assistant automations to make this screen do anything you like.
