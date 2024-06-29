@@ -79,7 +79,7 @@ The button sensor will show 0 or unknown, but will momenteraly pulse to the foll
 4 - Back
 ```
 
-There is a RS485 command sent on the bus right away when a button is pressed, so there is no delay. The pulse is very quick and is made so you can register automations. When entity `audio button` goes to a value (In the example below, 4 is the back button) you can trigger the automation. Pressing the same button multiple times will pulse the entity multiple times, so triggering a automation that toggles a light will work correctly.
+There is a RS485 command sent on the bus right away when a button is pressed, so there is no delay. The pulse is very quick and is made so you can register automations. When entity `buttons` goes to a value (In the example below, 4 is the back button) you can trigger the automation. Pressing the same button multiple times will pulse the entity multiple times, so triggering a automation that toggles a light will work correctly.
 
 ![image](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/4733fbae-1796-4a15-81e1-31ec6ab28036)
 
