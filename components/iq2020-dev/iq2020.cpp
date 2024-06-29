@@ -805,6 +805,7 @@ void IQ2020Component::switchAction(unsigned int switchid, int state) {
 	{
 		if ((state == 0) && ((ace_flags & 4) != 0)) { ace_flags -= 4; }
 		if ((state != 0) && ((ace_flags & 4) == 0)) { ace_flags += 4; }
+		switch_state[switchid] = switch_pending[switchid] = state;
 		break;
 	}
 	default: { return; }
