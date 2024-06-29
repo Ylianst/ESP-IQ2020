@@ -23,7 +23,7 @@
 #define FAN_JETS2 1
 #define FAN_JETS3 2
 #define FAN_JETS4 3
-#define SWITCHCOUNT 10
+#define SWITCHCOUNT 9
 #define SWITCH_RETRY_COUNT 3
 #define SWITCH_RETRY_TIME 200
 #define SWITCH_LIGHTS 0
@@ -34,19 +34,20 @@
 #define SWITCH_JETS1 5
 #define SWITCH_JETS2 6
 #define SWITCH_JETS3 7
-#define SWITCH_JETS4 8
+#define SWITCH_SALT_BOOST 8
 #define SELECTCOUNT 1
 #define SELECT_AUDIO_SOURCE 0
 #define TEXTCOUNT 2
 #define TEXT_SONG_TITLE 0
 #define TEXT_ARTIST_NAME 1
-#define NUMBERCOUNT 6
+#define NUMBERCOUNT 7
 #define NUMBER_AUDIO_VOLUME 0
 #define NUMBER_AUDIO_TREMBLE 1
 #define NUMBER_AUDIO_BASS 2
 #define NUMBER_AUDIO_BALANCE 3
 #define NUMBER_AUDIO_SUBWOOFER 4
-#define NUMBER_SALT_POWER 5 // ACE/Freshwater Salt System Power Level
+#define NUMBER_SALT_POWER 5    // ACE/Freshwater Salt System Power Level
+#define NUMBER_SALT_STATUS 6   // ACE Status 0 to 15
 #define NOT_SET -127
 
 class IQ2020Component : public esphome::Component {
@@ -57,9 +58,9 @@ public:
 	void set_buffer_size(size_t size) { this->buf_size_ = size; }
 	void set_flow_control_pin(esphome::GPIOPin *flow_control_pin) { this->flow_control_pin_ = flow_control_pin; }
 	void set_ace_emulation(bool ace_emulation) { this->ace_emulation_ = ace_emulation; }
+	void set_freshwater_emulation(bool freshwater_emulation) { this->freshwater_emulation_ = freshwater_emulation; }
 	void set_audio_emulation(bool audio_emulation) { this->audio_emulation_ = audio_emulation; }
 	void set_polling_rate(int polling_rate) { this->polling_rate_ = polling_rate; }
-
 #ifdef USE_BINARY_SENSOR
 	void set_connected_sensor(esphome::binary_sensor::BinarySensor *connected) { this->connected_sensor_ = connected; }
 	void set_connectionkit_sensor(esphome::binary_sensor::BinarySensor *present) { this->connectionkit_sensor_ = present; }
@@ -95,7 +96,7 @@ public:
 	void set_power_l2_sensor(esphome::sensor::Sensor *sensor) { this->power_l2_sensor_ = sensor; }
 	void set_pcb_f_temperature_sensor(esphome::sensor::Sensor *sensor) { this->pcb_f_temperature_sensor_ = sensor; }
 	void set_pcb_c_temperature_sensor(esphome::sensor::Sensor *sensor) { this->pcb_c_temperature_sensor_ = sensor; }
-	void set_audio_buttons_sensor(esphome::sensor::Sensor *sensor) { this->audio_buttons_sensor_ = sensor; }
+	void set_buttons_sensor(esphome::sensor::Sensor *sensor) { this->buttons_sensor_ = sensor; }
 	void set_logo_lights_sensor(esphome::sensor::Sensor *sensor) { this->logo_lights_sensor_ = sensor; }
 	void set_lights_intensity_sensor(esphome::sensor::Sensor *sensor) { this->lights_intensity_sensor_ = sensor; }
 	void set_lights_intensity_underwater_sensor(esphome::sensor::Sensor *sensor) { this->lights_intensity_underwater_sensor_ = sensor; }
@@ -157,6 +158,9 @@ protected:
 	size_t buf_size_;
 	esphome::GPIOPin *flow_control_pin_{ nullptr };
 	bool ace_emulation_;
+	unsigned char ace_flags = 1;     // 0x01 = Functioning, 0x04 = Boosting, 0x08 = Testing
+	unsigned char ace_status = 3;    // 0 to 7 with 3 or 4 being ideal.
+	bool freshwater_emulation_;
 	bool audio_emulation_;
 	int polling_rate_;
 
@@ -195,7 +199,7 @@ protected:
 	esphome::sensor::Sensor *power_l2_sensor_;
 	esphome::sensor::Sensor *pcb_f_temperature_sensor_;
 	esphome::sensor::Sensor *pcb_c_temperature_sensor_;
-	esphome::sensor::Sensor *audio_buttons_sensor_;
+	esphome::sensor::Sensor *buttons_sensor_;
 	esphome::sensor::Sensor *logo_lights_sensor_;
 	esphome::sensor::Sensor *lights_intensity_sensor_;
 	esphome::sensor::Sensor *lights_intensity_underwater_sensor_;

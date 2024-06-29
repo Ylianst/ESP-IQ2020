@@ -72,6 +72,10 @@ void IQ2020Component::setup() {
 	}
 
 	this->publish_sensor();
+
+#ifdef USE_NUMBER
+	setNumberState(NUMBER_SALT_STATUS, ace_status);
+#endif
 	
 	// Send initial polling commands
 	next_poll = ::millis() + 5000;
@@ -141,6 +145,7 @@ void IQ2020Component::dump_config() {
 		ESP_LOGCONFIG(TAG, "  Flow Control Pin: ", this->flow_control_pin_);
 	}
 	if (this->ace_emulation_) { ESP_LOGCONFIG(TAG, "  Ace Emulation Enabled"); }
+	if (this->freshwater_emulation_) { ESP_LOGCONFIG(TAG, "  Freshwater Emulation Enabled"); }
 	if (this->audio_emulation_) { ESP_LOGCONFIG(TAG, "  Audio Emulation Enabled"); }
 	ESP_LOGCONFIG(TAG, "  Polling Rate: %d", this->polling_rate_);
 #ifdef USE_BINARY_SENSOR
@@ -298,8 +303,8 @@ int IQ2020Component::nextPossiblePacket() {
 
 void IQ2020Component::setAudioButton(int button) {
 #ifdef USE_SENSOR
-	if (this->audio_buttons_sensor_) this->audio_buttons_sensor_->publish_state(button);
-	if (this->audio_buttons_sensor_) this->audio_buttons_sensor_->publish_state(0);
+	if (this->buttons_sensor_) this->buttons_sensor_->publish_state(button);
+	if (this->buttons_sensor_) this->buttons_sensor_->publish_state(0);
 #endif
 }
 
@@ -415,8 +420,30 @@ int IQ2020Component::processIQ2020Command() {
 				setNumberState(NUMBER_SALT_POWER, salt_power);
 			}
 			ESP_LOGD(TAG, "ACE Emulation, power = %d", processingBuffer[7]);
-			unsigned char cmd[] = { 0x1E, 0x01, processingBuffer[7], 0x00, 0x30, 0x00, 0x00, 0x05, 0x00, 0x00, 0x8C, 0x1B, 0x00, 0x00, 0x50 };
+			if (processingBuffer[16] == 1) { /*if ((ace_flags & 8) == 0) { ace_flags += 8; } else { ace_flags -= 8; }*/ setAudioButton(6); } // Salt Test
+			if (processingBuffer[11] == 1) { if ((ace_flags & 4) == 0) { ace_flags += 4; } setAudioButton(7); } // Salt Boost on
+			if (processingBuffer[11] == 2) { if ((ace_flags & 4) != 0) { ace_flags -= 4; } setAudioButton(8); } // Salt Boost off
+
+			setSwitchState(SWITCH_SALT_BOOST, ((ace_flags & 4) != 0));
+
+			// ace_flags : 0x01 = Functioning, 0x04 = Boosting, 0x08 = Testing
+			// ace_status : Upper 4 bits is level 0x0 = min, 0x4 = green, 0x8 = max. Lower 4 bits status = 0x08 = ok, 0x0F = error.
+			//unsigned char cmd[] = { 0x1E, 0x01, processingBuffer[7], 0x00, 0x38, 0x00, 0x00, ace_flags, 0x00, 0x00, 0x8C, 0x1B, 0x00, 0x00, 0x90 }; // 1/3 green
+			//unsigned char cmd[] = { 0x1E, 0x01, processingBuffer[7], 0x00, 0x10, 0x00, 0x00, ace_flags, 0x00, 0x00, 0x8C, 0x1B, 0x00, 0x00, 0xA0 }; // Half Yellow
+			//unsigned char cmd[] = { 0x1E, 0x01, processingBuffer[7], 0x00, 0x80, 0x00, 0x00, ace_flags, 0x00, 0x00, 0x8C, 0x1B, 0x00, 0x00, 0x90 }; // All way down
+			//unsigned char cmd[] = { 0x1E, 0x01, processingBuffer[7], 0x00, 0x70, 0x00, 0x00, ace_flags, 0x00, 0x00, 0x8C, 0x1B, 0x00, 0x00, 0x90 }; // Mid Red
+			//unsigned char cmd[] = { 0x1E, 0x01, processingBuffer[7], 0x00, 0x7F, 0x00, 0x00, ace_flags, 0x00, 0x00, 0x8C, 0x1B, 0x00, 0x00, 0x90 }; // Max - Inspect Cell Check Salt
+			unsigned char cmd[] = { 0x1E, 0x01, processingBuffer[7], 0x00, (unsigned char)((ace_status << 4) + 8), 0x00, 0x00, ace_flags, 0x00, 0x00, 0x8C, 0x1B, 0x00, 0x00, 0x90 };
 			sendIQ2020Command(0x01, 0x24, 0x80, cmd, sizeof(cmd));
+		}
+		else if (freshwater_emulation_ && (processingBuffer[1] == 0x29)) {
+			if (processingBuffer[7] <= 10) {
+				salt_power = processingBuffer[7];
+				setNumberState(NUMBER_SALT_POWER, salt_power);
+			}
+			ESP_LOGD(TAG, "Freshwater Emulation, power = %d", processingBuffer[7]);
+			unsigned char cmd[] = { 0x1E, 0x01, processingBuffer[7], 0x00, 0x30, 0x00, 0x00, 0x05, 0x00, 0x00, 0x8C, 0x1B, 0x00, 0x00, 0x50 };
+			sendIQ2020Command(0x01, 0x29, 0x80, cmd, sizeof(cmd));
 		}
 	}
 
@@ -767,12 +794,18 @@ void IQ2020Component::switchAction(unsigned int switchid, int state) {
 	case SWITCH_JETS1: // CMD 0x02 (Tested)
 	case SWITCH_JETS2: // CMD 0x03 (Tested)
 	case SWITCH_JETS3: // CMD 0x04 (I never testing this, but I assume this is the correct command)
-	case SWITCH_JETS4: // CMD 0x05 (I never testing this, but I assume this is the correct command)
 	{
 		if ((state < 0) || (state > 2)) break;
 		switch_pending[switchid] = state; // 0 = OFF, 1 = MEDIUM, 2 = HIGH
 		unsigned char cmd[] = { 0x0B, (unsigned char)(switchid - 3), (unsigned char)(state + 1) };
 		sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd));
+		break;
+	}
+	case SWITCH_SALT_BOOST: // ACE Boost
+	{
+		if ((state == 0) && ((ace_flags & 4) != 0)) { ace_flags -= 4; }
+		if ((state != 0) && ((ace_flags & 4) == 0)) { ace_flags += 4; }
+		switch_state[switchid] = switch_pending[switchid] = state;
 		break;
 	}
 	default: { return; }
@@ -847,6 +880,11 @@ void IQ2020Component::numberAction(unsigned int numberid, int value) {
 		sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Change salt power
 		break;
 	}
+	case NUMBER_SALT_STATUS:
+	{
+		ace_status = value;
+		break;
+	}
 	}
 
 	// If the command does not get confirmed, setup to try again
@@ -888,7 +926,7 @@ void IQ2020Component::setSwitchState(unsigned int switchid, int state) {
 		switch_state[switchid] = state;
 		switch_pending[switchid] = NOT_SET;
 		if (g_iq2020_switch[switchid] != NULL) { g_iq2020_switch[switchid]->publish_state(state != 0); }
-		if ((switchid >= SWITCH_JETS1) && (switchid <= SWITCH_JETS4) && (g_iq2020_fan[switchid - SWITCH_JETS1] != NULL)) { g_iq2020_fan[switchid - SWITCH_JETS1]->updateState(state); }
+		if ((switchid >= SWITCH_JETS1) && (switchid <= SWITCH_JETS3) && (g_iq2020_fan[switchid - SWITCH_JETS1] != NULL)) { g_iq2020_fan[switchid - SWITCH_JETS1]->updateState(state); }
 	}
 }
 
