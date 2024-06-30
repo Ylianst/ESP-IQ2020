@@ -882,7 +882,7 @@ void IQ2020Component::selectAction(unsigned int selectid, int state) {
 	{
 		select_state[selectid] = state;
 		next_poll = ::millis() + 100;
-		break;
+		return;
 	}
 	case SELECT_LIGHTS1_COLOR:
 	case SELECT_LIGHTS2_COLOR:
