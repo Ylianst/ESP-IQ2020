@@ -31,7 +31,7 @@ namespace iq2020_select {
 	}
 
 	void IQ2020Select::control(const std::string &value) {
-		//ESP_LOGD(TAG, "Select:%d control state: %s", select_id, value);
+		ESP_LOGD(TAG, "Select:%d control state: %s", select_id, value);
 		this->publish_state(value);
 		if (g_iq2020_main == NULL) return;
 		if (select_id == 0) { // Audio Source, TV = 2, Aux = 3, Bluetooth = 4
@@ -39,7 +39,7 @@ namespace iq2020_select {
 			if (value.compare("Aux")) { g_iq2020_main->selectAction(select_id, 3); }
 			if (value.compare("Bluetooth")) { g_iq2020_main->selectAction(select_id, 4); }
 		} else {
-			if (value.compare("XViolet")) { g_iq2020_main->selectAction(select_id, 1); }
+			if (value.compare("Violet")) { g_iq2020_main->selectAction(select_id, 1); }
 			if (value.compare("Blue")) { g_iq2020_main->selectAction(select_id, 2); }
 			if (value.compare("Cyan")) { g_iq2020_main->selectAction(select_id, 3); }
 			if (value.compare("Green")) { g_iq2020_main->selectAction(select_id, 4); }
@@ -51,7 +51,7 @@ namespace iq2020_select {
 	}
 
 	void IQ2020Select::publish_state_ex(int value) {
-		//ESP_LOGD(TAG, "Select:%d publish_state_ex: %d", select_id, value);
+		ESP_LOGD(TAG, "Select:%d publish_state_ex: %d", select_id, value);
 		if (select_id == 0) { // Audio Source, TV = 2, Aux = 3, Bluetooth = 4
 			if (value == 2) { this->publish_state("TV"); }
 			if (value == 3) { this->publish_state("Aux"); }

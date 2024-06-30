@@ -841,7 +841,7 @@ void IQ2020Component::switchAction(unsigned int switchid, int state) {
 
 #ifdef USE_SELECT
 void IQ2020Component::selectAction(unsigned int selectid, int state) {
-	ESP_LOGD(TAG, "selectAction, selectid = %d, status = %d", selectid, state);
+	ESP_LOGD(TAG, "selectAction, selectid = %d, state = %d", selectid, state);
 	switch (selectid) {
 	case SELECT_AUDIO_SOURCE: // Audio Source
 	{
