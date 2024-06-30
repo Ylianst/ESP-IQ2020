@@ -2,6 +2,54 @@
 
 In this file, I keep extra sensors, tips and tricks for the Home Assistant pro's.
 
+## Controlling Lights Color, Intensity and Cycle Speed
+
+You can control the color, intensite and cycle speed of the lights in your hot tub from Home Assistant. The controls will look like this:
+
+![image](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/65da5635-d19f-42cb-a938-febb1737da7e)
+
+```
+select:
+  - platform: iq2020-dev
+    name: Color Underwater
+    id: lights1_color
+    datapoint: 1
+  - platform: iq2020-dev
+    name: Color Bartop
+    id: lights2_color
+    datapoint: 2
+  - platform: iq2020-dev
+    name: Color Pillow
+    id: lights3_color
+    datapoint: 3
+  - platform: iq2020-dev
+    name: Color Exterior
+    id: lights4_color
+    datapoint: 4
+  - platform: iq2020-dev
+    name: Color Cycle Speed
+    id: lights_cycle_speed
+    datapoint: 5
+
+number:
+  - platform: iq2020
+    id: lights1_intensity
+    name: Intensity Underwater
+    datapoint: 7
+  - platform: iq2020
+    id: lights2_intensity
+    name: Intensity Bartop
+    datapoint: 8
+  - platform: iq2020
+    id: lights3_intensity
+    name: Intensity Pillow
+    datapoint: 9
+  - platform: iq2020
+    id: lights4_intensity
+    name: Intensity Exterior
+    datapoint: 10
+```
+
 ## Lights Intensity and Color (Read only)
 
 These sensors may be removed in the future as new sensors that can monitor and change the lights have been added. You can add sensors to look at the current light color and intensity of each color zones. Add the following in the `sensor` section if needed:
