@@ -550,7 +550,7 @@ int IQ2020Component::processIQ2020Command() {
 
 			// Fix the lights cycle speed if needed
 			if (select_state[SELECT_LIGHTS_CYCLE_SPEED] == NOT_SET) { select_state[SELECT_LIGHTS_CYCLE_SPEED] = 2; }
-			ESP_LOGD(TAG, "** x2");
+			ESP_LOGD(TAG, "** x2, cycspeed = %d", select_state[SELECT_LIGHTS_CYCLE_SPEED]);
 			for (int i = 0; i < 4; i++) {
 				ESP_LOGD(TAG, "** x3, i = %d", i);
 				if (processingBuffer[20 + i] == 8) {
