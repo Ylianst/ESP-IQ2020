@@ -204,7 +204,7 @@ BB = Bartop light intensity
 CC = Pillow light intensity
 DD = Exterior light intensity
 LL = Main loop speed
-WW = Underwater light color     (0x01 = Violet, 0x02 = Blue, 0x03 = Cyan, 0x04 = Green, 0x05 = White, 0x06 = Yellow, 0x07 = Red, 0x07 = Color Cycle)
+WW = Underwater light color     (0x01 = Violet, 0x02 = Blue, 0x03 = Cyan, 0x04 = Green, 0x05 = White, 0x06 = Yellow, 0x07 = Red, 0x08 = Color Cycle)
 XX = Bartop light color
 YY = Pillow light color
 ZZ = Exterior light color
