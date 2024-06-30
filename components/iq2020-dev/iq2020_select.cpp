@@ -31,22 +31,22 @@ namespace iq2020_select {
 	}
 
 	void IQ2020Select::control(const std::string &value) {
-		ESP_LOGD(TAG, "Select:%d control state: %s", select_id, value);
+		ESP_LOGD(TAG, "Select:%d control state: %s", select_id, value.c_str());
 		this->publish_state(value);
 		if (g_iq2020_main == NULL) return;
 		if (select_id == 0) { // Audio Source, TV = 2, Aux = 3, Bluetooth = 4
 			if (value.compare("TV")) { g_iq2020_main->selectAction(select_id, 2); }
-			if (value.compare("Aux")) { g_iq2020_main->selectAction(select_id, 3); }
-			if (value.compare("Bluetooth")) { g_iq2020_main->selectAction(select_id, 4); }
+			else if (value.compare("Aux")) { g_iq2020_main->selectAction(select_id, 3); }
+			else if (value.compare("Bluetooth")) { g_iq2020_main->selectAction(select_id, 4); }
 		} else {
 			if (value.compare("Violet")) { g_iq2020_main->selectAction(select_id, 1); }
-			if (value.compare("Blue")) { g_iq2020_main->selectAction(select_id, 2); }
-			if (value.compare("Cyan")) { g_iq2020_main->selectAction(select_id, 3); }
-			if (value.compare("Green")) { g_iq2020_main->selectAction(select_id, 4); }
-			if (value.compare("White")) { g_iq2020_main->selectAction(select_id, 5); }
-			if (value.compare("Yellow")) { g_iq2020_main->selectAction(select_id, 6); }
-			if (value.compare("Red")) { g_iq2020_main->selectAction(select_id, 7); }
-			if (value.compare("Cycle")) { g_iq2020_main->selectAction(select_id, 8); }
+			else if (value.compare("Blue")) { g_iq2020_main->selectAction(select_id, 2); }
+			else if (value.compare("Cyan")) { g_iq2020_main->selectAction(select_id, 3); }
+			else if (value.compare("Green")) { g_iq2020_main->selectAction(select_id, 4); }
+			else if (value.compare("White")) { g_iq2020_main->selectAction(select_id, 5); }
+			else if (value.compare("Yellow")) { g_iq2020_main->selectAction(select_id, 6); }
+			else if (value.compare("Red")) { g_iq2020_main->selectAction(select_id, 7); }
+			else if (value.compare("Cycle")) { g_iq2020_main->selectAction(select_id, 8); }
 		}
 	}
 
