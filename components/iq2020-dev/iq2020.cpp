@@ -465,7 +465,7 @@ int IQ2020Component::processIQ2020Command() {
 
 	if ((processingBuffer[1] == 0x1F) && (processingBuffer[2] == 0x01) && (processingBuffer[4] == 0x80)) {
 		// This is response data going towards the SPA connection kit.
-		//ESP_LOGD(TAG, "SCK RSP Data, len=%d, cmd=%02x%02x", cmdlen, processingBuffer[5], processingBuffer[6]);
+		ESP_LOGD(TAG, "SCK RSP Data, len=%d, cmd=%02x%02x", cmdlen, processingBuffer[5], processingBuffer[6]);
 
 		if ((cmdlen == 9) && (processingBuffer[5] == 0xE1) && (processingBuffer[6] == 0x02) && (processingBuffer[7] == 0x06)) {
 			// Confirmation that the ACE/Freshwater salt system has changed state (not sure what state however)
@@ -983,7 +983,7 @@ void IQ2020Component::setSwitchState(unsigned int switchid, int state) {
 // If you set state to NOT_SET, that indicates that whatever state we wanted to go to, we got a confirmation.
 #ifdef USE_SELECT
 void IQ2020Component::setSelectState(unsigned int selectid, int state) {
-	ESP_LOGD(TAG, "setSelectState, selectid = %d, status = %d", selectid, state);
+	XXESP_LOGD(TAG, "setSelectState, selectid = %d, status = %d", selectid, state);
 	if (state == NOT_SET) {
 		if (select_pending[selectid] == NOT_SET) return;
 		state = select_pending[selectid];
