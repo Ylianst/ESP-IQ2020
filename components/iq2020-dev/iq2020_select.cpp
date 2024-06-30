@@ -38,6 +38,15 @@ namespace iq2020_select {
 			if (value.compare("TV")) { g_iq2020_main->selectAction(select_id, 2); }
 			if (value.compare("Aux")) { g_iq2020_main->selectAction(select_id, 3); }
 			if (value.compare("Bluetooth")) { g_iq2020_main->selectAction(select_id, 4); }
+		} else {
+			if (value.compare("Violet")) { g_iq2020_main->selectAction(select_id, 1); }
+			if (value.compare("Blue")) { g_iq2020_main->selectAction(select_id, 2); }
+			if (value.compare("Cyan")) { g_iq2020_main->selectAction(select_id, 3); }
+			if (value.compare("Green")) { g_iq2020_main->selectAction(select_id, 4); }
+			if (value.compare("White")) { g_iq2020_main->selectAction(select_id, 5); }
+			if (value.compare("Yellow")) { g_iq2020_main->selectAction(select_id, 6); }
+			if (value.compare("Red")) { g_iq2020_main->selectAction(select_id, 7); }
+			if (value.compare("Cycle")) { g_iq2020_main->selectAction(select_id, 8); }
 		}
 	}
 
@@ -47,6 +56,15 @@ namespace iq2020_select {
 			if (value == 2) { this->publish_state("TV"); }
 			if (value == 3) { this->publish_state("Aux"); }
 			if (value == 4) { this->publish_state("Bluetooth"); }
+		} else {
+			if (value == 1) { this->publish_state("Violet"); }
+			if (value == 2) { this->publish_state("Blue"); }
+			if (value == 3) { this->publish_state("Cyan"); }
+			if (value == 4) { this->publish_state("Green"); }
+			if (value == 5) { this->publish_state("White"); }
+			if (value == 6) { this->publish_state("Yellow"); }
+			if (value == 7) { this->publish_state("Red"); }
+			if (value == 8) { this->publish_state("Cycle"); }
 		}
 	}
 

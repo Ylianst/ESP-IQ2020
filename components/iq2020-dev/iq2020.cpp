@@ -102,7 +102,7 @@ void IQ2020Component::loop() {
 			}
 		}
 #ifdef USE_SELECT
-		for (int selectid = 0; selectid < SELECTCOUNT; selectid++) {
+		for (int selectid = 0; selectid <= SELECT_AUDIO_SOURCE; selectid++) {
 			if (select_pending[selectid] != NOT_SET) {
 				ESP_LOGE(TAG, "Retry select %d set to %d", selectid, select_pending[selectid]);
 				selectAction(selectid, select_pending[selectid]); // Try again
@@ -546,6 +546,19 @@ int IQ2020Component::processIQ2020Command() {
 			if (this->lights_color_pillow_sensor_) this->lights_color_pillow_sensor_->publish_state((float)processingBuffer[22]);
 			if (this->lights_color_exterior_sensor_) this->lights_color_exterior_sensor_->publish_state((float)processingBuffer[23]);
 #endif
+#ifdef USE_SELECT
+			select_state[SELECT_LIGHTS1_COLOR] = processingBuffer[20];
+			select_state[SELECT_LIGHTS2_COLOR] = processingBuffer[21];
+			select_state[SELECT_LIGHTS3_COLOR] = processingBuffer[22];
+			select_state[SELECT_LIGHTS4_COLOR] = processingBuffer[23];
+			for (var i = SELECT_LIGHTS1_COLOR; i <= SELECT_LIGHTS4_COLOR; i++) {
+				if ((select_pending[i] != NOT_SET) && (select_state[i] != select_pending[i)]) {
+					selectAction(i, select_pending[i]);
+				} else {
+					setSelectState(i, select_state[i]);
+				}
+			}
+#endif
 		}
 
 		if ((cmdlen > 10) && (processingBuffer[5] == 0x01) && (processingBuffer[6] == 0x00)) {
@@ -835,6 +848,29 @@ void IQ2020Component::selectAction(unsigned int selectid, int state) {
 		select_pending[SELECT_AUDIO_SOURCE] = state;
 		unsigned char cmd[] = { 0x19, 0x00, 0x03, (unsigned char)state, 0x00 };
 		sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Change audio source
+		break;
+	}
+	case SELECT_LIGHTS1_COLOR:
+	case SELECT_LIGHTS2_COLOR:
+	case SELECT_LIGHTS3_COLOR:
+	case SELECT_LIGHTS4_COLOR:
+	{
+		// We have to move forward or back to get to the right color
+		if (select_state[selectid] == NOT_SET) return;
+		select_pending[selectid] = state;
+		int current = select_state[selectid];
+		while (current != state) {
+			if (current > select_pending[selectid]) {
+				unsigned char cmd[] = { 0x17, 0x02, selectid - 1, 0x04 };
+				sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Previous color
+				current--;
+			}
+			else if (current < select_pending[selectid]) {
+				unsigned char cmd[] = { 0x17, 0x02, selectid - 1, 0x05 };
+				sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Next color
+				current++;
+			}
+		}
 		break;
 	}
 	}
