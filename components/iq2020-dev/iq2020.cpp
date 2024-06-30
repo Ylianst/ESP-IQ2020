@@ -861,11 +861,12 @@ void IQ2020Component::selectAction(unsigned int selectid, int state) {
 		int current = select_state[selectid];
 		while (current != state) {
 			if (current > select_pending[selectid]) {
+				ESP_LOGD(TAG, "** MOVE UP %d from %d to %d", selectid, current, select_pending[selectid]);
 				unsigned char cmd[] = { 0x17, 0x02, (unsigned char)(selectid - 1), 0x04 };
 				sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Previous color
 				current--;
-			}
-			else if (current < select_pending[selectid]) {
+			} else if (current < select_pending[selectid]) {
+				ESP_LOGD(TAG, "** MOVE DOWN %d from %d to %d", selectid, current, select_pending[selectid]);
 				unsigned char cmd[] = { 0x17, 0x02, (unsigned char)(selectid - 1), 0x05 };
 				sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Next color
 				current++;
