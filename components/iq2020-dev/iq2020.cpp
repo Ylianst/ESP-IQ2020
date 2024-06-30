@@ -550,9 +550,11 @@ int IQ2020Component::processIQ2020Command() {
 			for (var i = SELECT_LIGHTS1_COLOR; i <= SELECT_LIGHTS4_COLOR; i++) {
 				int val = processingBuffer[19 + i];
 				if ((select_pending[i] != NOT_SET) && (val != select_pending[i)]) {
+					ESP_LOGD(TAG, "** MOVE LIGHT %d to %d", i, select_pending[i]);
 					select_state[i] = val;
 					selectAction(i, select_pending[i]);
 				} else {
+					ESP_LOGD(TAG, "** SET LIGHT %d to %d", i, select_pending[i]);
 					setSelectState(i, select_state[i]);
 				}
 			}
