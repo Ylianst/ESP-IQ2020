@@ -63,7 +63,7 @@ switch:
     datapoint: 8
 ```
 
-Salt content is a value from 0 to 7 where values 3 or 4 is ideal.
+Salt content is a value from 0 to 7 where values 3 or 4 are ideal.
 
 ## Logo Lights
 
