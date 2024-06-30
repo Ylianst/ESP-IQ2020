@@ -39,7 +39,7 @@ namespace iq2020_select {
 			if (value.compare("Aux")) { g_iq2020_main->selectAction(select_id, 3); }
 			if (value.compare("Bluetooth")) { g_iq2020_main->selectAction(select_id, 4); }
 		} else {
-			if (value.compare("Violet")) { g_iq2020_main->selectAction(select_id, 1); }
+			if (value.compare("XViolet")) { g_iq2020_main->selectAction(select_id, 1); }
 			if (value.compare("Blue")) { g_iq2020_main->selectAction(select_id, 2); }
 			if (value.compare("Cyan")) { g_iq2020_main->selectAction(select_id, 3); }
 			if (value.compare("Green")) { g_iq2020_main->selectAction(select_id, 4); }

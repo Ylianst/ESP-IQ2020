@@ -983,7 +983,7 @@ void IQ2020Component::setSwitchState(unsigned int switchid, int state) {
 // If you set state to NOT_SET, that indicates that whatever state we wanted to go to, we got a confirmation.
 #ifdef USE_SELECT
 void IQ2020Component::setSelectState(unsigned int selectid, int state) {
-	XXESP_LOGD(TAG, "setSelectState, selectid = %d, status = %d", selectid, state);
+	ESP_LOGD(TAG, "setSelectState, selectid = %d, status = %d", selectid, state);
 	if (state == NOT_SET) {
 		if (select_pending[selectid] == NOT_SET) return;
 		state = select_pending[selectid];
