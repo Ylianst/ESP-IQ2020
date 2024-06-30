@@ -553,14 +553,14 @@ int IQ2020Component::processIQ2020Command() {
 					int c = processingBuffer[16 + i];
 					while (c != select_state[SELECT_LIGHTS_CYCLE_SPEED]) {
 						if ((c < select_state[SELECT_LIGHTS_CYCLE_SPEED])) {
-							ESP_LOGD(TAG, "** MOVE CYCLE UP %d from %d to %d", selectid, current, select_pending[selectid]);
+							ESP_LOGD(TAG, "** MOVE CYCLE UP %d from %d to %d", i, current, select_pending[selectid]);
 							unsigned char cmd[] = { 0x17, 0x02, (unsigned char)(selectid - 1), 0x07 };
 							sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Faster cycle
 							next_poll = ::millis() + 100;
 							c++;
 						}
 						else if ((c > select_state[SELECT_LIGHTS_CYCLE_SPEED])) {
-							ESP_LOGD(TAG, "** MOVE CYCLE DOWN %d from %d to %d", selectid, current, select_pending[selectid]);
+							ESP_LOGD(TAG, "** MOVE CYCLE DOWN %d from %d to %d", i, current, select_pending[selectid]);
 							unsigned char cmd[] = { 0x17, 0x02, (unsigned char)(selectid - 1), 0x06 };
 							sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Slower cycle
 							next_poll = ::millis() + 100;
