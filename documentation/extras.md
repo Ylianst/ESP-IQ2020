@@ -2,9 +2,9 @@
 
 In this file, I keep extra sensors, tips and tricks for the Home Assistant pro's.
 
-## Lights Intensity and Color
+## Lights Intensity and Color (Read only)
 
-You can add sensors to look at the current light color and intensity of each color zones. Add the following in the `sensor` section if needed:
+These sensors may be removed in the future as new sensors that can monitor and change the lights have been added. You can add sensors to look at the current light color and intensity of each color zones. Add the following in the `sensor` section if needed:
 
 ```
 sensor:
@@ -38,7 +38,7 @@ Intensity values are from 0 for off to 5 for maximum brightness. For colors, her
 5 = White
 6 = Yellow
 7 = Red
-8 = Color Cycle
+8 = Cycle
 ```
 
 ## ACE / Freshwater salt systems
