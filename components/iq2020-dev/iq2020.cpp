@@ -814,7 +814,7 @@ void IQ2020Component::switchAction(unsigned int switchid, int state) {
 		else
 		{   // Control a real ACE module
 			switch_pending[switchid] = state; // 0 = OFF, 1 = ON
-			unsigned char cmd[] = { 0x1E, 0x02, 0x03, state ? 0x08 : 0x00, 0x00 };
+			unsigned char cmd[] = { 0x1E, 0x02, 0x03, (unsigned char)(state ? 0x08 : 0x00), 0x00 };
 			sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd));
 		}
 		break;
