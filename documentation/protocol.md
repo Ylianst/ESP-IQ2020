@@ -218,7 +218,7 @@ Change light status
 
 --> 01 1F 40 17020102
                  NNAA
-NN = Light Number 0x00 to 0x03 for individual lights, 0x04 for all lights.
+NN = Light Number 0x00 to 0x03 for individual light, 0x04 for all lights. 0x05 to 0x08 seem to also work?
 AA = Action
   02 = Lower Brightness (0 to 5)
   03 = Increase Brightness (0 to 5)
@@ -226,6 +226,9 @@ AA = Action
   05 = Next color (1 to 7 and cycles back)
   06 = Previous Color Loop ?
   07 = Next Color Loop ?
+  08 = Set light to 8 state ?
+  10 = Turn off
+  11 = Turn on
 ```
 
 Change Temperature 1 step up or down
