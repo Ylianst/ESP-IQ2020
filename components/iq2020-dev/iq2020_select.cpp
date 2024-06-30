@@ -5,6 +5,9 @@
 extern IQ2020Component* g_iq2020_main;
 extern esphome::iq2020_select::IQ2020Select* g_iq2020_select[SELECTCOUNT];
 
+std::vector<std::string> audio_source_values = { "TV", "Aux", "Bluetooth" };
+std::vector<std::string> lights_colors_values = { "a", "b", "c" };
+
 namespace esphome {
 namespace iq2020_select {
 
@@ -13,6 +16,18 @@ namespace iq2020_select {
 	void IQ2020Select::setup() {
 		if (select_id < SELECTCOUNT) { g_iq2020_select[select_id] = this; }
 		ESP_LOGD(TAG, "Select:%d Setup", select_id);
+
+		switch (select_id) {
+		case SELECT_AUDIO_SOURCE:
+			this->traits.set_options(audio_source_values);
+			break;
+		case SELECT_LIGHTS1_COLOR:
+		case SELECT_LIGHTS2_COLOR:
+		case SELECT_LIGHTS3_COLOR:
+		case SELECT_LIGHTS4_COLOR:
+			this->traits.set_options(lights_colors_values);
+			break;
+		}
 	}
 
 	void IQ2020Select::control(const std::string &value) {
