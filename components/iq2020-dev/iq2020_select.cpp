@@ -6,7 +6,7 @@ extern IQ2020Component* g_iq2020_main;
 extern esphome::iq2020_select::IQ2020Select* g_iq2020_select[SELECTCOUNT];
 
 std::vector<std::string> audio_source_values = { "TV", "Aux", "Bluetooth" };
-std::vector<std::string> lights_colors_values = { "Violet", "Blue", "Cyan", "Green", "White", "Yellow", "Red", "Cycle" };
+std::vector<std::string> lights_colors_values = { "Violet", "Blue", "Cyan", "Green", "White", "Yellow", "Red", "Cycle Pause", "Cycle Slow", "Cycle Normal", "Cycle Fast" };
 
 namespace esphome {
 namespace iq2020_select {
@@ -46,7 +46,10 @@ namespace iq2020_select {
 			else if (value.compare("White") == 0) { g_iq2020_main->selectAction(select_id, 5); }
 			else if (value.compare("Yellow") == 0) { g_iq2020_main->selectAction(select_id, 6); }
 			else if (value.compare("Red") == 0) { g_iq2020_main->selectAction(select_id, 7); }
-			else if (value.compare("Cycle") == 0) { g_iq2020_main->selectAction(select_id, 8); }
+			else if (value.compare("Cycle Pause") == 0) { g_iq2020_main->selectAction(select_id, 8); }
+			else if (value.compare("Cycle Slow") == 0) { g_iq2020_main->selectAction(select_id, 9); }
+			else if (value.compare("Cycle Normal") == 0) { g_iq2020_main->selectAction(select_id, 10); }
+			else if (value.compare("Cycle Fast") == 0) { g_iq2020_main->selectAction(select_id, 11); }
 		}
 	}
 
@@ -64,7 +67,10 @@ namespace iq2020_select {
 			if (value == 5) { this->publish_state("White"); }
 			if (value == 6) { this->publish_state("Yellow"); }
 			if (value == 7) { this->publish_state("Red"); }
-			if (value == 8) { this->publish_state("Cycle"); }
+			if (value == 8) { this->publish_state("Cycle Pause"); }
+			if (value == 9) { this->publish_state("Cycle Slow"); }
+			if (value == 10) { this->publish_state("Cycle Normal"); }
+			if (value == 11) { this->publish_state("Cycle Fast"); }
 		}
 	}
 
