@@ -44,6 +44,13 @@ namespace iq2020_number {
 			this->traits.set_min_value(0);
 			this->traits.set_max_value(7);
 			break;
+		case NUMBER_LIGHTS1_BRIGHTNESS:
+		case NUMBER_LIGHTS2_BRIGHTNESS:
+		case NUMBER_LIGHTS3_BRIGHTNESS:
+		case NUMBER_LIGHTS4_BRIGHTNESS:
+			this->traits.set_min_value(0);
+			this->traits.set_max_value(5);
+			break;
 		}
 	}
 

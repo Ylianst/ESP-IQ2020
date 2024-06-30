@@ -53,6 +53,10 @@
 #define NUMBER_AUDIO_SUBWOOFER 4
 #define NUMBER_SALT_POWER 5    // ACE/Freshwater Salt System Power Level
 #define NUMBER_SALT_STATUS 6   // ACE Status 0 to 15
+#define NUMBER_LIGHTS1_BRIGHTNESS 7
+#define NUMBER_LIGHTS2_BRIGHTNESS 8
+#define NUMBER_LIGHTS3_BRIGHTNESS 9
+#define NUMBER_LIGHTS4_BRIGHTNESS 10
 #define NOT_SET -127
 
 class IQ2020Component : public esphome::Component {

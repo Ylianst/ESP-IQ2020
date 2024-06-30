@@ -548,6 +548,18 @@ int IQ2020Component::processIQ2020Command() {
 			if (this->lights_color_exterior_sensor_) this->lights_color_exterior_sensor_->publish_state((float)processingBuffer[23]);
 #endif
 
+#ifdef USE_NUMBER
+			for (int i = 0; i < 4; i++) {
+				int val = processingBuffer[8 + i];
+				if ((number_pending[NUMBER_LIGHTS1_BRIGHTNESS + i] != NOT_SET) && (val != number_pending[NUMBER_LIGHTS1_BRIGHTNESS + i])) {
+					number_state[NUMBER_LIGHTS1_BRIGHTNESS + i] = val;
+					numberAction(NUMBER_LIGHTS1_BRIGHTNESS + i, number_pending[i]);
+				} else {
+					setNumberState(NUMBER_LIGHTS1_BRIGHTNESS + i, val);
+				}
+			}
+#endif
+
 			// Fix the lights cycle speed if needed
 			if (select_state[SELECT_LIGHTS_CYCLE_SPEED] == NOT_SET) { select_state[SELECT_LIGHTS_CYCLE_SPEED] = 2; }
 			for (int i = 0; i < 4; i++) {
@@ -973,6 +985,35 @@ void IQ2020Component::numberAction(unsigned int numberid, int value) {
 	{
 		ace_status = value;
 		break;
+	}
+	case NUMBER_LIGHTS1_BRIGHTNESS:
+	case NUMBER_LIGHTS2_BRIGHTNESS:
+	case NUMBER_LIGHTS3_BRIGHTNESS:
+	case NUMBER_LIGHTS4_BRIGHTNESS:
+	{
+		// We have to move forward or back to get to the right brightness
+		if (number_state[selectid] == NOT_SET) return;
+		number_pending[selectid] = state;
+		int current = number_state[selectid];
+		int cmdsent = 0;
+		while (current != state) {
+			if (current > state) {
+				//ESP_LOGD(TAG, "** MOVE BRIGHTNESS DOWN %d from %d to %d", selectid, current, number_pending[selectid]);
+				unsigned char cmd[] = { 0x17, 0x02, (unsigned char)(selectid - 1), 0x02 };
+				sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Less brightness
+				cmdsent = 1;
+				current--;
+			}
+			else if (current < state) {
+				//ESP_LOGD(TAG, "** MOVE BRIGHTNESS UP %d from %d to %d", selectid, current, number_pending[selectid]);
+				unsigned char cmd[] = { 0x17, 0x02, (unsigned char)(selectid - 1), 0x03 };
+				sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // More brightness
+				cmdsent = 1;
+				current++;
+			}
+		}
+		if (cmdsent == 1) { next_poll = ::millis() + 100; }
+		return; // Don't do the normal retry logic.
 	}
 	}
 
