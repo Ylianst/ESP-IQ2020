@@ -880,6 +880,7 @@ void IQ2020Component::selectAction(unsigned int selectid, int state) {
 	}
 	case SELECT_LIGHTS_CYCLE_SPEED: // Lights cycle speed
 	{
+		g_iq2020_select[selectid]->publish_state_ex(state);
 		select_state[selectid] = state;
 		next_poll = ::millis() + 100;
 		return;
