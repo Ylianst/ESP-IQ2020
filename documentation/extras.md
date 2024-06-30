@@ -55,6 +55,12 @@ number:
 sensor:
     salt_content:
       name: Salt Content
+
+switch:
+  - platform: iq2020
+    name: Salt Boost
+    id: salt_system_boost
+    datapoint: 8
 ```
 
 Salt content is a value from 0 to 7 where values 3 or 4 is ideal.
