@@ -532,7 +532,9 @@ int IQ2020Component::processIQ2020Command() {
 			setSwitchState(processingBuffer[6] + 3, processingBuffer[7]);
 		}
 
+		ESP_LOGD(TAG, "** x1");
 		if ((cmdlen == 28) && (processingBuffer[5] == 0x17) && (processingBuffer[6] == 0x05)) {
+			ESP_LOGD(TAG, "** x2");
 			// This is an update on the status of the spa lights (enabled, intensity, color)
 			setSwitchState(SWITCH_LIGHTS, (processingBuffer[24] & 1));
 #ifdef USE_SENSOR
