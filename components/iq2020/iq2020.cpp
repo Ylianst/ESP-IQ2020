@@ -455,11 +455,12 @@ int IQ2020Component::processIQ2020Command() {
 			setNumberState(NUMBER_SALT_POWER, salt_power);
 		}
 		if (salt_content != processingBuffer[9]) {
-			salt_content = processingBuffer[9];
+			salt_content = processingBuffer[9] >> 4;
 #ifdef USE_SENSOR
-			if (this->salt_content_sensor_) this->salt_content_sensor_->publish_state((float)processingBuffer[9]);
+			if (this->salt_content_sensor_) this->salt_content_sensor_->publish_state((float)salt_content);
 #endif
 		}
+		setSwitchState(SWITCH_SALT_BOOST, (processingBuffer[12] & 0x04) != 0);
 	}
 
 	if ((processingBuffer[1] == 0x1F) && (processingBuffer[2] == 0x01) && (processingBuffer[4] == 0x80)) {
@@ -467,8 +468,9 @@ int IQ2020Component::processIQ2020Command() {
 		//ESP_LOGD(TAG, "SCK RSP Data, len=%d, cmd=%02x%02x", cmdlen, processingBuffer[5], processingBuffer[6]);
 
 		if ((cmdlen == 9) && (processingBuffer[5] == 0xE1) && (processingBuffer[6] == 0x02) && (processingBuffer[7] == 0x06)) {
-			// Confirmation that the fresh water salt system has changed power state
+			// Confirmation that the ACE/Freshwater salt system has changed state (not sure what state however)
 			setNumberState(NUMBER_SALT_POWER, NOT_SET);
+			setSwitchState(SWITCH_SALT_BOOST, NOT_SET);
 		}
 
 		if ((cmdlen == 9) && (processingBuffer[5] == 0x19) && (processingBuffer[6] == 0x00) && (processingBuffer[7] == 0x06)) {
@@ -803,9 +805,18 @@ void IQ2020Component::switchAction(unsigned int switchid, int state) {
 	}
 	case SWITCH_SALT_BOOST: // ACE Boost
 	{
-		if ((state == 0) && ((ace_flags & 4) != 0)) { ace_flags -= 4; }
-		if ((state != 0) && ((ace_flags & 4) == 0)) { ace_flags += 4; }
-		switch_state[switchid] = switch_pending[switchid] = state;
+		if (ace_emulation_)
+		{   // ACE emulation
+			if ((state == 0) && ((ace_flags & 4) != 0)) { ace_flags -= 4; }
+			if ((state != 0) && ((ace_flags & 4) == 0)) { ace_flags += 4; }
+			switch_state[switchid] = switch_pending[switchid] = state;
+		}
+		else
+		{   // Control a real ACE module
+			switch_pending[switchid] = state; // 0 = OFF, 1 = ON
+			unsigned char cmd[] = { 0x1E, 0x02, 0x03, (unsigned char)(state ? 0x08 : 0x00), 0x00 };
+			sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd));
+		}
 		break;
 	}
 	default: { return; }
