@@ -549,11 +549,16 @@ int IQ2020Component::processIQ2020Command() {
 #endif
 
 			// Fix the lights cycle speed if needed
+			ESP_LOGD(TAG, "** x1");
 			if (select_state[SELECT_LIGHTS_CYCLE_SPEED] != NOT_SET) {
+				ESP_LOGD(TAG, "** x2");
 				for (int i = 0; i < 4; i++) {
+					ESP_LOGD(TAG, "** x3");
 					if (processingBuffer[20 + i] == 8) {
+						ESP_LOGD(TAG, "** x4");
 						int c = processingBuffer[16 + i];
 						while (c != select_state[SELECT_LIGHTS_CYCLE_SPEED]) {
+							ESP_LOGD(TAG, "** x5");
 							if ((c < select_state[SELECT_LIGHTS_CYCLE_SPEED])) {
 								ESP_LOGD(TAG, "** MOVE CYCLE UP %d from %d to %d", i, c, select_state[SELECT_LIGHTS_CYCLE_SPEED]);
 								unsigned char cmd[] = { 0x17, 0x02, (unsigned char)i, 0x07 };
@@ -877,7 +882,7 @@ void IQ2020Component::selectAction(unsigned int selectid, int state) {
 	}
 	case SELECT_LIGHTS_CYCLE_SPEED: // Lights cycle speed
 	{
-		select_state[SELECT_LIGHTS_CYCLE_SPEED] = state;
+		select_state[selectid] = state;
 		next_poll = ::millis() + 100;
 		break;
 	}
