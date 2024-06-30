@@ -72,7 +72,7 @@ void IQ2020Component::setup() {
 	}
 
 	this->publish_sensor();
-	select_state[SELECT_LIGHTS_CYCLE_SPEED] = 2;
+	selectAction(SELECT_LIGHTS_CYCLE_SPEED, 2);
 
 #ifdef USE_NUMBER
 	setNumberState(NUMBER_SALT_STATUS, ace_status);
