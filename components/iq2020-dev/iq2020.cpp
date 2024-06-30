@@ -555,7 +555,7 @@ int IQ2020Component::processIQ2020Command() {
 					selectAction(i, select_pending[i]);
 				} else {
 					ESP_LOGD(TAG, "** SET LIGHT %d to %d", i, val);
-					setSelectState(i, select_state[i]);
+					setSelectState(i, val);
 				}
 			}
 #endif
