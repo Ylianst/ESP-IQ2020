@@ -35,18 +35,18 @@ namespace iq2020_select {
 		this->publish_state(value);
 		if (g_iq2020_main == NULL) return;
 		if (select_id == 0) { // Audio Source, TV = 2, Aux = 3, Bluetooth = 4
-			if (value.compare("TV")) { g_iq2020_main->selectAction(select_id, 2); }
-			else if (value.compare("Aux")) { g_iq2020_main->selectAction(select_id, 3); }
-			else if (value.compare("Bluetooth")) { g_iq2020_main->selectAction(select_id, 4); }
+			if (value.compare("TV") == 0) { g_iq2020_main->selectAction(select_id, 2); }
+			else if (value.compare("Aux") == 0) { g_iq2020_main->selectAction(select_id, 3); }
+			else if (value.compare("Bluetooth") == 0) { g_iq2020_main->selectAction(select_id, 4); }
 		} else {
-			if (value.compare("Violet")) { g_iq2020_main->selectAction(select_id, 1); }
-			else if (value.compare("Blue")) { g_iq2020_main->selectAction(select_id, 2); }
-			else if (value.compare("Cyan")) { g_iq2020_main->selectAction(select_id, 3); }
-			else if (value.compare("Green")) { g_iq2020_main->selectAction(select_id, 4); }
-			else if (value.compare("White")) { g_iq2020_main->selectAction(select_id, 5); }
-			else if (value.compare("Yellow")) { g_iq2020_main->selectAction(select_id, 6); }
-			else if (value.compare("Red")) { g_iq2020_main->selectAction(select_id, 7); }
-			else if (value.compare("Cycle")) { g_iq2020_main->selectAction(select_id, 8); }
+			if (value.compare("Violet") == 0) { g_iq2020_main->selectAction(select_id, 1); }
+			else if (value.compare("Blue") == 0) { g_iq2020_main->selectAction(select_id, 2); }
+			else if (value.compare("Cyan") == 0) { g_iq2020_main->selectAction(select_id, 3); }
+			else if (value.compare("Green") == 0) { g_iq2020_main->selectAction(select_id, 4); }
+			else if (value.compare("White") == 0) { g_iq2020_main->selectAction(select_id, 5); }
+			else if (value.compare("Yellow") == 0) { g_iq2020_main->selectAction(select_id, 6); }
+			else if (value.compare("Red") == 0) { g_iq2020_main->selectAction(select_id, 7); }
+			else if (value.compare("Cycle") == 0) { g_iq2020_main->selectAction(select_id, 8); }
 		}
 	}
 
