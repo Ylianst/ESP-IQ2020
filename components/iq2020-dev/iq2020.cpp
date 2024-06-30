@@ -875,8 +875,8 @@ void IQ2020Component::selectAction(unsigned int selectid, int state) {
 				current++;
 			}
 		}
-		if (cmdsent == 1) { next_retry = ::millis() + 100; } // Speed up the next update
-		break;
+		if (cmdsent == 1) { next_poll = ::millis() + 100; }
+		return; // Don't do the normal retry logic.
 	}
 	}
 	// If the command does not get confirmed, setup to try again
