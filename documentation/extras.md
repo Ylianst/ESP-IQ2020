@@ -43,7 +43,7 @@ Intensity values are from 0 for off to 5 for maximum brightness. For colors, her
 
 ## ACE / Freshwater salt systems
 
-If you have a ACE or Freshwater module attached to your hot tub, this integration will allow you to see the salt sensor and control the power level (0 to 10) of the salt system. To do this, add the following under the `number` and `sensor` sections:
+If you have a ACE or Freshwater module attached to your hot tub, this integration will allow you to see the salt sensor and control the power level (0 to 10) of the salt system. To do this, add the following under the `number`, `sensor` and `switch` sections:
 
 ```
 number:
