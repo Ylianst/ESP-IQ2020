@@ -993,18 +993,18 @@ void IQ2020Component::numberAction(unsigned int numberid, int value) {
 	{
 		// We have to move forward or back to get to the right brightness
 		if (number_state[numberid] == NOT_SET) return;
-		number_pending[numberid] = state;
+		number_pending[numberid] = value;
 		int current = number_state[numberid];
 		int cmdsent = 0;
-		while (current != state) {
-			if (current > state) {
+		while (current != value) {
+			if (current > value) {
 				//ESP_LOGD(TAG, "** MOVE BRIGHTNESS DOWN %d from %d to %d", selectid, current, number_pending[selectid]);
 				unsigned char cmd[] = { 0x17, 0x02, (unsigned char)(numberid - 1), 0x02 };
 				sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Less brightness
 				cmdsent = 1;
 				current--;
 			}
-			else if (current < state) {
+			else if (current < value) {
 				//ESP_LOGD(TAG, "** MOVE BRIGHTNESS UP %d from %d to %d", selectid, current, number_pending[selectid]);
 				unsigned char cmd[] = { 0x17, 0x02, (unsigned char)(numberid - 1), 0x03 };
 				sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // More brightness
