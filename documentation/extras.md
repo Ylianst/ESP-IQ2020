@@ -57,6 +57,8 @@ sensor:
       name: Salt Content
 ```
 
+Salt content is a value from 0 to 7 where values 3 or 4 is ideal.
+
 ## Logo Lights
 
 The green and blue light at the front of the hot tub can also be reported by this integration. You can, for example, have a picture your your hot tub in Home Assistant and make the lights on the image match the light on the actual hot tub. In the `sensor` section of the configuration file, add the `logo_lights` sensor.
