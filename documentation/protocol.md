@@ -211,6 +211,23 @@ ZZ = Exterior light color
 OO = 00 for lights are off, 01 for lights are on.
 ```
 
+Change light status
+```
+--> 01 1F 40 17020102
+<-- 1F 01 80 170206
+
+--> 01 1F 40 17020102
+                 NNAA
+NN = Light Number 0x00 to 0x03 for individual lights, 0x04 for all lights.
+AA = Action
+  02 = Lower Brightness (0 to 5)
+  03 = Increase Brightness (0 to 5)
+  04 = Previous color (1 to 7 and cycles back)
+  05 = Next color (1 to 7 and cycles back)
+  06 = Previous Color Loop ?
+  07 = Next Color Loop ?
+```
+
 Change Temperature 1 step up or down
 Temp limits are 80 to 104 Fahrenheit, 26.5 to 40 Celsius
 Steps are 1 fahrenheit or 0.5 celsius
