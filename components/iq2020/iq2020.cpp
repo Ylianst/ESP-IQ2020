@@ -51,6 +51,7 @@ void IQ2020Component::setup() {
 #ifdef USE_SELECT
 	for (int i = 0; i < NUMBERCOUNT; i++) { number_state[i] = number_pending[i] = NOT_SET; }
 #endif
+	select_state[SELECT_LIGHTS_CYCLE_SPEED] = 2;
 	g_iq2020_main = this;
 	if (this->flow_control_pin_ != nullptr) { this->flow_control_pin_->setup(); }
 	//ESP_LOGD(TAG, "Setting up IQ2020...");
@@ -102,7 +103,7 @@ void IQ2020Component::loop() {
 			}
 		}
 #ifdef USE_SELECT
-		for (int selectid = 0; selectid < SELECTCOUNT; selectid++) {
+		for (int selectid = 0; selectid <= SELECT_AUDIO_SOURCE; selectid++) {
 			if (select_pending[selectid] != NOT_SET) {
 				ESP_LOGE(TAG, "Retry select %d set to %d", selectid, select_pending[selectid]);
 				selectAction(selectid, select_pending[selectid]); // Try again
@@ -546,6 +547,54 @@ int IQ2020Component::processIQ2020Command() {
 			if (this->lights_color_pillow_sensor_) this->lights_color_pillow_sensor_->publish_state((float)processingBuffer[22]);
 			if (this->lights_color_exterior_sensor_) this->lights_color_exterior_sensor_->publish_state((float)processingBuffer[23]);
 #endif
+
+#ifdef USE_NUMBER
+			for (int i = 0; i < 4; i++) {
+				int val = processingBuffer[8 + i];
+				if ((number_pending[NUMBER_LIGHTS1_BRIGHTNESS + i] != NOT_SET) && (val != number_pending[NUMBER_LIGHTS1_BRIGHTNESS + i])) {
+					number_state[NUMBER_LIGHTS1_BRIGHTNESS + i] = val;
+					numberAction(NUMBER_LIGHTS1_BRIGHTNESS + i, number_pending[i]);
+				} else {
+					setNumberState(NUMBER_LIGHTS1_BRIGHTNESS + i, val);
+				}
+			}
+#endif
+
+			// Fix the lights cycle speed if needed
+			if (select_state[SELECT_LIGHTS_CYCLE_SPEED] == NOT_SET) { select_state[SELECT_LIGHTS_CYCLE_SPEED] = 2; }
+			for (int i = 0; i < 4; i++) {
+				if (processingBuffer[20 + i] == 8) {
+					int c = processingBuffer[16 + i];
+					while (c != select_state[SELECT_LIGHTS_CYCLE_SPEED]) {
+						if ((c < select_state[SELECT_LIGHTS_CYCLE_SPEED])) {
+							//ESP_LOGD(TAG, "** MOVE CYCLE UP %d from %d to %d", i, c, select_state[SELECT_LIGHTS_CYCLE_SPEED]);
+							unsigned char cmd[] = { 0x17, 0x02, (unsigned char)i, 0x07 };
+							sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Faster cycle
+							next_poll = ::millis() + 100;
+							c++;
+						}
+						else if ((c > select_state[SELECT_LIGHTS_CYCLE_SPEED])) {
+							//ESP_LOGD(TAG, "** MOVE CYCLE DOWN %d from %d to %d", i, c, select_state[SELECT_LIGHTS_CYCLE_SPEED]);
+							unsigned char cmd[] = { 0x17, 0x02, (unsigned char)i, 0x06 };
+							sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Slower cycle
+							next_poll = ::millis() + 100;
+							c--;
+						}
+					}
+				}
+			}
+
+#ifdef USE_SELECT
+			for (int i = SELECT_LIGHTS1_COLOR; i <= SELECT_LIGHTS4_COLOR; i++) {
+				int val = processingBuffer[19 + i];
+				if ((select_pending[i] != NOT_SET) && (val != select_pending[i])) {
+					select_state[i] = val;
+					selectAction(i, select_pending[i]);
+				} else {
+					setSelectState(i, val);
+				}
+			}
+#endif
 		}
 
 		if ((cmdlen > 10) && (processingBuffer[5] == 0x01) && (processingBuffer[6] == 0x00)) {
@@ -767,6 +816,7 @@ void IQ2020Component::switchAction(unsigned int switchid, int state) {
 		switch_pending[SWITCH_LIGHTS] = state;
 		unsigned char cmd[] = { 0x17, 0x02, 0x04, (state != 0) ? (unsigned char)0x11 : (unsigned char)0x10, 0x00 };
 		sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Turn on/off lights
+		next_poll = ::millis() + 100;
 		break;
 	}
 	case SWITCH_SPALOCK: { // Spa Lock Switch
@@ -828,7 +878,7 @@ void IQ2020Component::switchAction(unsigned int switchid, int state) {
 
 #ifdef USE_SELECT
 void IQ2020Component::selectAction(unsigned int selectid, int state) {
-	ESP_LOGD(TAG, "selectAction, selectid = %d, status = %d", selectid, state);
+	ESP_LOGD(TAG, "selectAction, selectid = %d, state = %d", selectid, state);
 	switch (selectid) {
 	case SELECT_AUDIO_SOURCE: // Audio Source
 	{
@@ -836,6 +886,47 @@ void IQ2020Component::selectAction(unsigned int selectid, int state) {
 		unsigned char cmd[] = { 0x19, 0x00, 0x03, (unsigned char)state, 0x00 };
 		sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Change audio source
 		break;
+	}
+	case SELECT_LIGHTS_CYCLE_SPEED: // Lights cycle speed
+	{
+		g_iq2020_select[selectid]->publish_state_ex(state);
+		select_state[selectid] = state;
+		next_poll = ::millis() + 100;
+		return;
+	}
+	case SELECT_LIGHTS1_COLOR:
+	case SELECT_LIGHTS2_COLOR:
+	case SELECT_LIGHTS3_COLOR:
+	case SELECT_LIGHTS4_COLOR:
+	{
+		// We have to move forward or back to get to the right color
+		if (select_state[selectid] == NOT_SET) return;
+		select_pending[selectid] = state;
+		int current = select_state[selectid];
+		int cmdsent = 0;
+		while (current != state) {
+			if ((state == 8) && (current < 8)) {
+				//ESP_LOGD(TAG, "** MOVE TO CYCLE %d", selectid);
+				unsigned char cmd[] = { 0x17, 0x02, (unsigned char)(selectid - 1), 0x08 };
+				sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Enable cycle state
+				cmdsent = 1;
+				current = state;
+			} else if (current > state) {
+				//ESP_LOGD(TAG, "** MOVE DOWN %d from %d to %d", selectid, current, select_pending[selectid]);
+				unsigned char cmd[] = { 0x17, 0x02, (unsigned char)(selectid - 1), 0x04 };
+				sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Previous color
+				cmdsent = 1;
+				current--;
+			} else if (current < state) {
+				//ESP_LOGD(TAG, "** MOVE UP %d from %d to %d", selectid, current, select_pending[selectid]);
+				unsigned char cmd[] = { 0x17, 0x02, (unsigned char)(selectid - 1), 0x05 };
+				sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Next color
+				cmdsent = 1;
+				current++;
+			}
+		}
+		if (cmdsent == 1) { next_poll = ::millis() + 100; }
+		return; // Don't do the normal retry logic.
 	}
 	}
 	// If the command does not get confirmed, setup to try again
@@ -895,6 +986,35 @@ void IQ2020Component::numberAction(unsigned int numberid, int value) {
 	{
 		ace_status = value;
 		break;
+	}
+	case NUMBER_LIGHTS1_BRIGHTNESS:
+	case NUMBER_LIGHTS2_BRIGHTNESS:
+	case NUMBER_LIGHTS3_BRIGHTNESS:
+	case NUMBER_LIGHTS4_BRIGHTNESS:
+	{
+		// We have to move forward or back to get to the right brightness
+		if (number_state[numberid] == NOT_SET) return;
+		number_pending[numberid] = value;
+		int current = number_state[numberid];
+		int cmdsent = 0;
+		while (current != value) {
+			if (current > value) {
+				//ESP_LOGD(TAG, "** MOVE BRIGHTNESS DOWN %d from %d to %d", selectid, current, number_pending[selectid]);
+				unsigned char cmd[] = { 0x17, 0x02, (unsigned char)(numberid - NUMBER_LIGHTS1_BRIGHTNESS), 0x02 };
+				sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Less brightness
+				cmdsent = 1;
+				current--;
+			}
+			else if (current < value) {
+				//ESP_LOGD(TAG, "** MOVE BRIGHTNESS UP %d from %d to %d", selectid, current, number_pending[selectid]);
+				unsigned char cmd[] = { 0x17, 0x02, (unsigned char)(numberid - NUMBER_LIGHTS1_BRIGHTNESS), 0x03 };
+				sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // More brightness
+				cmdsent = 1;
+				current++;
+			}
+		}
+		if (cmdsent == 1) { next_poll = ::millis() + 100; }
+		return; // Don't do the normal retry logic.
 	}
 	}
 

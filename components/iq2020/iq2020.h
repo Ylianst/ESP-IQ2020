@@ -35,19 +35,28 @@
 #define SWITCH_JETS2 6
 #define SWITCH_JETS3 7
 #define SWITCH_SALT_BOOST 8
-#define SELECTCOUNT 1
+#define SELECTCOUNT 6
 #define SELECT_AUDIO_SOURCE 0
+#define SELECT_LIGHTS1_COLOR 1         // Underwater lights color (0 to 7 for colors, 8 for cycle)
+#define SELECT_LIGHTS2_COLOR 2         // Bartop lights color (0 to 7 for colors, 8 for cycle)
+#define SELECT_LIGHTS3_COLOR 3         // Pillow lights color (0 to 7 for colors, 8 for cycle)
+#define SELECT_LIGHTS4_COLOR 4         // Exterior lights color (0 to 7 for colors, 8 for cycle)
+#define SELECT_LIGHTS_CYCLE_SPEED 5    // Lights cycle speed (0 to 3)
 #define TEXTCOUNT 2
-#define TEXT_SONG_TITLE 0
-#define TEXT_ARTIST_NAME 1
-#define NUMBERCOUNT 7
-#define NUMBER_AUDIO_VOLUME 0
-#define NUMBER_AUDIO_TREMBLE 1
-#define NUMBER_AUDIO_BASS 2
-#define NUMBER_AUDIO_BALANCE 3
-#define NUMBER_AUDIO_SUBWOOFER 4
-#define NUMBER_SALT_POWER 5    // ACE/Freshwater Salt System Power Level
-#define NUMBER_SALT_STATUS 6   // ACE Status 0 to 15
+#define TEXT_SONG_TITLE 0              // Song title (Max 20 chars)
+#define TEXT_ARTIST_NAME 1             // Artist name (Max 20 chars)
+#define NUMBERCOUNT 11
+#define NUMBER_AUDIO_VOLUME 0          // Audio volume (0 to 100, steps of 4)
+#define NUMBER_AUDIO_TREMBLE 1         // Audio tremble (-5 to 5)
+#define NUMBER_AUDIO_BASS 2            // Audio base (-5 to 5)
+#define NUMBER_AUDIO_BALANCE 3         // Audio balance (-5 to 5)
+#define NUMBER_AUDIO_SUBWOOFER 4       // Audio subwoofer (0 to 11) - "This one goes to 11".
+#define NUMBER_SALT_POWER 5            // ACE/Freshwater Salt System Power Level (0 to 7)
+#define NUMBER_SALT_STATUS 6           // ACE Status (0 to 15)
+#define NUMBER_LIGHTS1_BRIGHTNESS 7    // Underwater lights brigthness (0 to 5)
+#define NUMBER_LIGHTS2_BRIGHTNESS 8    // Bartop lights brigthness (0 to 5)
+#define NUMBER_LIGHTS3_BRIGHTNESS 9    // Pillow lights brigthness (0 to 5)
+#define NUMBER_LIGHTS4_BRIGHTNESS 10   // Exterior lights brigthness (0 to 5)
 #define NOT_SET -127
 
 class IQ2020Component : public esphome::Component {
