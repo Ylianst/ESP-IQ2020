@@ -8,25 +8,27 @@ You can control the color, intensite and cycle speed of the lights in your hot t
 
 ![image](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/65da5635-d19f-42cb-a938-febb1737da7e)
 
+To do this, add the folling entries under the `select` and `number` sections:
+
 ```
 select:
-  - platform: iq2020-dev
+  - platform: iq2020
     name: Color Underwater
     id: lights1_color
     datapoint: 1
-  - platform: iq2020-dev
+  - platform: iq2020
     name: Color Bartop
     id: lights2_color
     datapoint: 2
-  - platform: iq2020-dev
+  - platform: iq2020
     name: Color Pillow
     id: lights3_color
     datapoint: 3
-  - platform: iq2020-dev
+  - platform: iq2020
     name: Color Exterior
     id: lights4_color
     datapoint: 4
-  - platform: iq2020-dev
+  - platform: iq2020
     name: Color Cycle Speed
     id: lights_cycle_speed
     datapoint: 5
