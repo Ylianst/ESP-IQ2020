@@ -551,11 +551,11 @@ int IQ2020Component::processIQ2020Command() {
 #ifdef USE_NUMBER
 			for (int i = 0; i < 4; i++) {
 				int val = processingBuffer[8 + i];
-				if ((number_pending[NUMBER_LIGHTS1_BRIGHTNESS + i] != NOT_SET) && (val != number_pending[NUMBER_LIGHTS1_BRIGHTNESS + i])) {
-					number_state[NUMBER_LIGHTS1_BRIGHTNESS + i] = val;
-					numberAction(NUMBER_LIGHTS1_BRIGHTNESS + i, number_pending[i]);
+				if ((number_pending[NUMBER_LIGHTS1_INTENSITY + i] != NOT_SET) && (val != number_pending[NUMBER_LIGHTS1_INTENSITY + i])) {
+					number_state[NUMBER_LIGHTS1_INTENSITY + i] = val;
+					numberAction(NUMBER_LIGHTS1_INTENSITY + i, number_pending[i]);
 				} else {
-					setNumberState(NUMBER_LIGHTS1_BRIGHTNESS + i, val);
+					setNumberState(NUMBER_LIGHTS1_INTENSITY + i, val);
 				}
 			}
 #endif
@@ -987,12 +987,12 @@ void IQ2020Component::numberAction(unsigned int numberid, int value) {
 		ace_status = value;
 		break;
 	}
-	case NUMBER_LIGHTS1_BRIGHTNESS:
-	case NUMBER_LIGHTS2_BRIGHTNESS:
-	case NUMBER_LIGHTS3_BRIGHTNESS:
-	case NUMBER_LIGHTS4_BRIGHTNESS:
+	case NUMBER_LIGHTS1_INTENSITY:
+	case NUMBER_LIGHTS2_INTENSITY:
+	case NUMBER_LIGHTS3_INTENSITY:
+	case NUMBER_LIGHTS4_INTENSITY:
 	{
-		// We have to move forward or back to get to the right brightness
+		// We have to move forward or back to get to the right intensity
 		if (number_state[numberid] == NOT_SET) return;
 		number_pending[numberid] = value;
 		int current = number_state[numberid];
@@ -1000,15 +1000,15 @@ void IQ2020Component::numberAction(unsigned int numberid, int value) {
 		while (current != value) {
 			if (current > value) {
 				//ESP_LOGD(TAG, "** MOVE BRIGHTNESS DOWN %d from %d to %d", selectid, current, number_pending[selectid]);
-				unsigned char cmd[] = { 0x17, 0x02, (unsigned char)(numberid - NUMBER_LIGHTS1_BRIGHTNESS), 0x02 };
-				sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Less brightness
+				unsigned char cmd[] = { 0x17, 0x02, (unsigned char)(numberid - NUMBER_LIGHTS1_INTENSITY), 0x02 };
+				sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Less intensity
 				cmdsent = 1;
 				current--;
 			}
 			else if (current < value) {
 				//ESP_LOGD(TAG, "** MOVE BRIGHTNESS UP %d from %d to %d", selectid, current, number_pending[selectid]);
-				unsigned char cmd[] = { 0x17, 0x02, (unsigned char)(numberid - NUMBER_LIGHTS1_BRIGHTNESS), 0x03 };
-				sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // More brightness
+				unsigned char cmd[] = { 0x17, 0x02, (unsigned char)(numberid - NUMBER_LIGHTS1_INTENSITY), 0x03 };
+				sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // More intensity
 				cmdsent = 1;
 				current++;
 			}

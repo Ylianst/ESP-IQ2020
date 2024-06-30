@@ -53,10 +53,10 @@
 #define NUMBER_AUDIO_SUBWOOFER 4       // Audio subwoofer (0 to 11) - "This one goes to 11".
 #define NUMBER_SALT_POWER 5            // ACE/Freshwater Salt System Power Level (0 to 7)
 #define NUMBER_SALT_STATUS 6           // ACE Status (0 to 15)
-#define NUMBER_LIGHTS1_BRIGHTNESS 7    // Underwater lights brigthness (0 to 5)
-#define NUMBER_LIGHTS2_BRIGHTNESS 8    // Bartop lights brigthness (0 to 5)
-#define NUMBER_LIGHTS3_BRIGHTNESS 9    // Pillow lights brigthness (0 to 5)
-#define NUMBER_LIGHTS4_BRIGHTNESS 10   // Exterior lights brigthness (0 to 5)
+#define NUMBER_LIGHTS1_INTENSITY 7     // Underwater lights intensity (0 to 5)
+#define NUMBER_LIGHTS2_INTENSITY 8     // Bartop lights intensity (0 to 5)
+#define NUMBER_LIGHTS3_INTENSITY 9     // Pillow lights intensity (0 to 5)
+#define NUMBER_LIGHTS4_INTENSITY 10    // Exterior lights intensity (0 to 5)
 #define NOT_SET -127
 
 class IQ2020Component : public esphome::Component {
