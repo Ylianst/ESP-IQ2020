@@ -29,6 +29,7 @@ namespace iq2020_select {
 			this->traits.set_options(lights_colors_values);
 			break; 
 		case SELECT_LIGHTS_CYCLE_SPEED:
+			this->publish_state("Normal");
 			this->traits.set_options(lights_cycle_speed);
 			break;
 		}
