@@ -547,12 +547,10 @@ int IQ2020Component::processIQ2020Command() {
 			if (this->lights_color_exterior_sensor_) this->lights_color_exterior_sensor_->publish_state((float)processingBuffer[23]);
 #endif
 #ifdef USE_SELECT
-			select_state[SELECT_LIGHTS1_COLOR] = processingBuffer[20];
-			select_state[SELECT_LIGHTS2_COLOR] = processingBuffer[21];
-			select_state[SELECT_LIGHTS3_COLOR] = processingBuffer[22];
-			select_state[SELECT_LIGHTS4_COLOR] = processingBuffer[23];
 			for (var i = SELECT_LIGHTS1_COLOR; i <= SELECT_LIGHTS4_COLOR; i++) {
-				if ((select_pending[i] != NOT_SET) && (select_state[i] != select_pending[i)]) {
+				int val = processingBuffer[19 + i];
+				if ((select_pending[i] != NOT_SET) && (val != select_pending[i)]) {
+					select_state[i] = val;
 					selectAction(i, select_pending[i]);
 				} else {
 					setSelectState(i, select_state[i]);
