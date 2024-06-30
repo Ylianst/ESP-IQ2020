@@ -6,7 +6,7 @@ extern IQ2020Component* g_iq2020_main;
 extern esphome::iq2020_select::IQ2020Select* g_iq2020_select[SELECTCOUNT];
 
 std::vector<std::string> audio_source_values = { "TV", "Aux", "Bluetooth" };
-std::vector<std::string> lights_colors_values = { "a", "b", "c" };
+std::vector<std::string> lights_colors_values = { "Violet", "Blue", "Cyan", "Green", "White", "Yellow", "Red", "Cycle" };
 
 namespace esphome {
 namespace iq2020_select {
