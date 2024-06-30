@@ -465,7 +465,7 @@ int IQ2020Component::processIQ2020Command() {
 
 	if ((processingBuffer[1] == 0x1F) && (processingBuffer[2] == 0x01) && (processingBuffer[4] == 0x80)) {
 		// This is response data going towards the SPA connection kit.
-		ESP_LOGD(TAG, "SCK RSP Data, len=%d, cmd=%02x%02x", cmdlen, processingBuffer[5], processingBuffer[6]);
+		//ESP_LOGD(TAG, "SCK RSP Data, len=%d, cmd=%02x%02x", cmdlen, processingBuffer[5], processingBuffer[6]);
 
 		if ((cmdlen == 9) && (processingBuffer[5] == 0xE1) && (processingBuffer[6] == 0x02) && (processingBuffer[7] == 0x06)) {
 			// Confirmation that the ACE/Freshwater salt system has changed state (not sure what state however)
@@ -532,9 +532,7 @@ int IQ2020Component::processIQ2020Command() {
 			setSwitchState(processingBuffer[6] + 3, processingBuffer[7]);
 		}
 
-		ESP_LOGD(TAG, "** x1");
 		if ((cmdlen == 28) && (processingBuffer[5] == 0x17) && (processingBuffer[6] == 0x05)) {
-			ESP_LOGD(TAG, "** x2");
 			// This is an update on the status of the spa lights (enabled, intensity, color)
 			setSwitchState(SWITCH_LIGHTS, (processingBuffer[24] & 1));
 #ifdef USE_SENSOR
@@ -549,7 +547,7 @@ int IQ2020Component::processIQ2020Command() {
 			if (this->lights_color_exterior_sensor_) this->lights_color_exterior_sensor_->publish_state((float)processingBuffer[23]);
 #endif
 #ifdef USE_SELECT
-			for (var i = SELECT_LIGHTS1_COLOR; i <= SELECT_LIGHTS4_COLOR; i++) {
+			for (int i = SELECT_LIGHTS1_COLOR; i <= SELECT_LIGHTS4_COLOR; i++) {
 				int val = processingBuffer[19 + i];
 				if ((select_pending[i] != NOT_SET) && (val != select_pending[i)]) {
 					ESP_LOGD(TAG, "** MOVE LIGHT %d to %d", i, select_pending[i]);
