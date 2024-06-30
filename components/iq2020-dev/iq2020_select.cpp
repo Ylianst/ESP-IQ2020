@@ -26,8 +26,10 @@ namespace iq2020_select {
 		case SELECT_LIGHTS2_COLOR:
 		case SELECT_LIGHTS3_COLOR:
 		case SELECT_LIGHTS4_COLOR:
-			this->traits.set_options(lights_colors_values);
-			break; 
+			if (this->traits.get_options().length != 3) {
+				this->traits.set_options(lights_colors_values);
+			}
+			break;
 		case SELECT_LIGHTS_CYCLE_SPEED:
 			this->traits.set_options(lights_cycle_speed);
 			this->publish_state("Normal");
