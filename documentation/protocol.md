@@ -224,9 +224,9 @@ AA = Action
   03 = Increase Brightness (0 to 5)
   04 = Previous color (1 to 7 and cycles back)
   05 = Next color (1 to 7 and cycles back)
-  06 = Previous Color Loop ?
-  07 = Next Color Loop ?
-  08 = Set light to 8 state ?
+  06 = Decrease cycle speed (0 to 3)
+  07 = Increase cycle speed (0 to 3)
+  08 = Set light to cycle state.
   10 = Turn off
   11 = Turn on
 ```
