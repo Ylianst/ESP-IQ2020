@@ -19,7 +19,7 @@ IQ2020Number = iq2020_number_ns.class_('IQ2020Number', number.Number, cg.Compone
 
 CONFIG_SCHEMA = number.NUMBER_SCHEMA.extend({
     cv.GenerateID(): cv.declare_id(IQ2020Number),
-    cv.Required(CONF_SELECT_DATAPOINT): cv.positive_int,
+    cv.Required(CONF_NUMBER_DATAPOINT): cv.positive_int,
     cv.Optional(CONF_MAXIMUM): cv.positive_int
 }).extend(cv.COMPONENT_SCHEMA)
 
