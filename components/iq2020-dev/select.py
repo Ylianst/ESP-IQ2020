@@ -30,7 +30,7 @@ async def to_code(config):
     await cg.register_component(server, config)
 
     options = []
-    if CONF_CELSIUS in config:
+    if CONF_OPTIONS in config:
         options = config[CONF_OPTIONS]
 
     await select.register_select(server, config, options=options)
