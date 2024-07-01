@@ -13,17 +13,18 @@ CONF_OPTIONS = "options"
 iq2020_select_ns = cg.esphome_ns.namespace('iq2020_select')
 IQ2020Select = iq2020_select_ns.class_('IQ2020Select', select.Select, cg.Component)
 
-#CONFIG_SCHEMA = select.SELECT_SCHEMA.extend({
-#    cv.GenerateID(): cv.declare_id(IQ2020Select)
-#}).extend({ cv.Required(CONF_SELECT_DATAPOINT): cv.positive_int }).extend(cv.COMPONENT_SCHEMA)
+def validate_options(value):
+    value = cv.ensure_list(cv.string)(value)
+    if len(value) != 8:
+        raise cv.Invalid("options must contain exactly 8 elements")
+    return value
 
 CONFIG_SCHEMA = select.SELECT_SCHEMA.extend({
     cv.GenerateID(): cv.declare_id(IQ2020Select),
     cv.Required(CONF_SELECT_DATAPOINT): cv.positive_int,
-    cv.Optional(CONF_OPTIONS): cv.ensure_list(cv.string)
+#    cv.Optional(CONF_OPTIONS): cv.ensure_list(cv.string)
+    cv.Optional(CONF_OPTIONS): validate_options
 }).extend(cv.COMPONENT_SCHEMA)
-
-#, length=8
 
 async def to_code(config):
     server = cg.new_Pvariable(config[CONF_ID])
