@@ -22,7 +22,6 @@ def validate_options(value):
 CONFIG_SCHEMA = select.SELECT_SCHEMA.extend({
     cv.GenerateID(): cv.declare_id(IQ2020Select),
     cv.Required(CONF_SELECT_DATAPOINT): cv.positive_int,
-#    cv.Optional(CONF_OPTIONS): cv.ensure_list(cv.string)
     cv.Optional(CONF_OPTIONS): validate_options
 }).extend(cv.COMPONENT_SCHEMA)
 

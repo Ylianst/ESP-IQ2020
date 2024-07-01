@@ -49,7 +49,7 @@ namespace iq2020_number {
 		case NUMBER_LIGHTS3_INTENSITY:
 		case NUMBER_LIGHTS4_INTENSITY:
 			this->traits.set_min_value(0);
-			this->traits.set_max_value(5);
+			this->traits.set_max_value(maximum ? maximum : 5);
 			break;
 		}
 	}
