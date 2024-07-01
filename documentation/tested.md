@@ -96,3 +96,19 @@ sensor:
 - Status: Working well but ACE boost feature does not work and details on controlling lights still being worked on.
 - Version: 2.04D 1 E002HL22.0
 - Modules: ACE
+
+On the remote colors are:
+
+```
+1 = Blue, 
+2 = Aqua, 
+3 = Green, 
+4 = White, 
+5 = Yellow, 
+6 = Red, 
+7 = Magenta, 
+8 = Color Wheel On, 
+9 = Color Wheel Off
+```
+
+Also, light intensity is 0 to 3, not 0 to 5 like other models.
