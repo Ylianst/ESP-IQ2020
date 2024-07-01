@@ -8,7 +8,7 @@ You can control the color, intensite and cycle speed of the lights in your hot t
 
 ![image](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/65da5635-d19f-42cb-a938-febb1737da7e)
 
-To do this, add the following entries under the `select` and `number` sections:
+To do this, add the following entries under the `select` and `number` sections. You may need to change the `options` and `maximum` values to match your specific hot tub. These are the values for a Hotspring Grandee.
 
 ```
 select:
