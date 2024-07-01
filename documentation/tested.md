@@ -90,3 +90,9 @@ sensor:
 
 - Status: Works great, Reports power and everything.
 - Version: EU2.039018E0020.00.0
+
+## HotSpring Limelight Pulse 2023
+
+- Status: Working well but ACE boost feature does not work and details on controlling lights still being worked on.
+- Version: 2.04D 1 E002HL22.0
+- Modules: ACE
