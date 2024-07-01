@@ -49,13 +49,14 @@ namespace iq2020_number {
 		case NUMBER_LIGHTS3_INTENSITY:
 		case NUMBER_LIGHTS4_INTENSITY:
 			this->traits.set_min_value(0);
-			this->traits.set_max_value(5);
+			this->traits.set_max_value(maximum ? maximum : 5);
 			break;
 		}
 	}
 
 	void IQ2020Number::control(float value) {
 		ESP_LOGD(TAG, "Number:%d write value: %d", number_id, value);
+		if ((maximum != 0) && (value > maximum)) { value = maximum; }
 		this->publish_state(value);
 		if (g_iq2020_main != NULL) { g_iq2020_main->numberAction(number_id, value); }
 	}

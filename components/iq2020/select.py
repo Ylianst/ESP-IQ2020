@@ -8,17 +8,30 @@ from . import ns, IQ2020Component
 CONF_IQ2020_ID = "IQ2020Component";
 CONF_IQ2020_SERVER = "iq2020_server"
 CONF_SELECT_DATAPOINT = "datapoint"
+CONF_OPTIONS = "options"
 
 iq2020_select_ns = cg.esphome_ns.namespace('iq2020_select')
 IQ2020Select = iq2020_select_ns.class_('IQ2020Select', select.Select, cg.Component)
 
+def validate_options(value):
+    value = cv.ensure_list(cv.string)(value)
+    if len(value) != 8:
+        raise cv.Invalid("options must contain exactly 8 elements")
+    return value
+
 CONFIG_SCHEMA = select.SELECT_SCHEMA.extend({
-    cv.GenerateID(): cv.declare_id(IQ2020Select)
-}).extend({ cv.Required(CONF_SELECT_DATAPOINT): cv.positive_int }).extend(cv.COMPONENT_SCHEMA)
+    cv.GenerateID(): cv.declare_id(IQ2020Select),
+    cv.Required(CONF_SELECT_DATAPOINT): cv.positive_int,
+    cv.Optional(CONF_OPTIONS): validate_options
+}).extend(cv.COMPONENT_SCHEMA)
 
 async def to_code(config):
     server = cg.new_Pvariable(config[CONF_ID])
     await cg.register_component(server, config)
+
     options = []
+    if CONF_OPTIONS in config:
+        options = config[CONF_OPTIONS]
+
     await select.register_select(server, config, options=options)
     cg.add(server.set_select_id(config[CONF_SELECT_DATAPOINT]))

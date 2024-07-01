@@ -26,8 +26,10 @@ namespace iq2020_select {
 		case SELECT_LIGHTS2_COLOR:
 		case SELECT_LIGHTS3_COLOR:
 		case SELECT_LIGHTS4_COLOR:
-			this->traits.set_options(lights_colors_values);
-			break; 
+			if (this->traits.get_options().size() != 8) {
+				this->traits.set_options(lights_colors_values);
+			}
+			break;
 		case SELECT_LIGHTS_CYCLE_SPEED:
 			this->traits.set_options(lights_cycle_speed);
 			this->publish_state("Normal");
@@ -49,14 +51,9 @@ namespace iq2020_select {
 			else if (value.compare("Normal") == 0) { g_iq2020_main->selectAction(select_id, 2); }
 			else if (value.compare("Fast") == 0) { g_iq2020_main->selectAction(select_id, 3); }
 		} else { // Lights color
-			if (value.compare("Violet") == 0) { g_iq2020_main->selectAction(select_id, 1); }
-			else if (value.compare("Blue") == 0) { g_iq2020_main->selectAction(select_id, 2); }
-			else if (value.compare("Cyan") == 0) { g_iq2020_main->selectAction(select_id, 3); }
-			else if (value.compare("Green") == 0) { g_iq2020_main->selectAction(select_id, 4); }
-			else if (value.compare("White") == 0) { g_iq2020_main->selectAction(select_id, 5); }
-			else if (value.compare("Yellow") == 0) { g_iq2020_main->selectAction(select_id, 6); }
-			else if (value.compare("Red") == 0) { g_iq2020_main->selectAction(select_id, 7); }
-			else if (value.compare("Cycle") == 0) { g_iq2020_main->selectAction(select_id, 8); }
+			for (int i = 0; i < 8; i++) {
+				if (value.compare(this->traits.get_options()[i]) == 0) { g_iq2020_main->selectAction(select_id, i + 1); }
+			}
 		}
 	}
 
@@ -72,14 +69,7 @@ namespace iq2020_select {
 			if (value == 2) { this->publish_state("Normal"); }
 			if (value == 3) { this->publish_state("Fast"); }
 		} else {
-			if (value == 1) { this->publish_state("Violet"); }
-			if (value == 2) { this->publish_state("Blue"); }
-			if (value == 3) { this->publish_state("Cyan"); }
-			if (value == 4) { this->publish_state("Green"); }
-			if (value == 5) { this->publish_state("White"); }
-			if (value == 6) { this->publish_state("Yellow"); }
-			if (value == 7) { this->publish_state("Red"); }
-			if (value == 8) { this->publish_state("Cycle"); }
+			this->publish_state(this->traits.get_options()[value - 1]);
 		}
 	}
 
