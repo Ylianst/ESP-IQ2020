@@ -12,11 +12,11 @@ namespace iq2020_number {
 		void control(float value) override;
 		void dump_config() override;
 		void set_number_id(unsigned int id) { this->number_id = id; }
-		void set_maximum(int max) { this->maximum = max; }
+		void set_maximum(float max) { this->maximum = max; }
 		//number::NumberTraits traits();
 	protected:
 		unsigned int number_id;
-		int maximum = 0;
+		float maximum = 0;
 	};
 
 } //namespace iq2020_number
