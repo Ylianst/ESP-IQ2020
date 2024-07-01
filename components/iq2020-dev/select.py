@@ -29,7 +29,7 @@ async def to_code(config):
     server = cg.new_Pvariable(config[CONF_ID])
     await cg.register_component(server, config)
 
-	options = []
+    options = []
     if CONF_CELSIUS in config:
         options = config[CONF_OPTIONS]
 
