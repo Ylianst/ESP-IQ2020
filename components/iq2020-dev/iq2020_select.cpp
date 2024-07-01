@@ -51,14 +51,14 @@ namespace iq2020_select {
 			else if (value.compare("Normal") == 0) { g_iq2020_main->selectAction(select_id, 2); }
 			else if (value.compare("Fast") == 0) { g_iq2020_main->selectAction(select_id, 3); }
 		} else { // Lights color
-			if (value.compare("Violet") == 0) { g_iq2020_main->selectAction(select_id, 1); }
-			else if (value.compare("Blue") == 0) { g_iq2020_main->selectAction(select_id, 2); }
-			else if (value.compare("Cyan") == 0) { g_iq2020_main->selectAction(select_id, 3); }
-			else if (value.compare("Green") == 0) { g_iq2020_main->selectAction(select_id, 4); }
-			else if (value.compare("White") == 0) { g_iq2020_main->selectAction(select_id, 5); }
-			else if (value.compare("Yellow") == 0) { g_iq2020_main->selectAction(select_id, 6); }
-			else if (value.compare("Red") == 0) { g_iq2020_main->selectAction(select_id, 7); }
-			else if (value.compare("Cycle") == 0) { g_iq2020_main->selectAction(select_id, 8); }
+			if (value.compare(this->traits.get_options()[0]) == 0) { g_iq2020_main->selectAction(select_id, 1); }
+			else if (value.compare(this->traits.get_options()[1]) == 0) { g_iq2020_main->selectAction(select_id, 2); }
+			else if (value.compare(this->traits.get_options()[2]) == 0) { g_iq2020_main->selectAction(select_id, 3); }
+			else if (value.compare(this->traits.get_options()[3]) == 0) { g_iq2020_main->selectAction(select_id, 4); }
+			else if (value.compare(this->traits.get_options()[4]) == 0) { g_iq2020_main->selectAction(select_id, 5); }
+			else if (value.compare(this->traits.get_options()[5]) == 0) { g_iq2020_main->selectAction(select_id, 6); }
+			else if (value.compare(this->traits.get_options()[6]) == 0) { g_iq2020_main->selectAction(select_id, 7); }
+			else if (value.compare(this->traits.get_options()[7]) == 0) { g_iq2020_main->selectAction(select_id, 8); }
 		}
 	}
 
