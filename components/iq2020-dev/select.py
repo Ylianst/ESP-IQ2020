@@ -20,7 +20,7 @@ IQ2020Select = iq2020_select_ns.class_('IQ2020Select', select.Select, cg.Compone
 CONFIG_SCHEMA = select.SELECT_SCHEMA.extend({
     cv.GenerateID(): cv.declare_id(IQ2020Select),
     cv.Required(CONF_SELECT_DATAPOINT): cv.positive_int,
-    cv.Required(CONF_OPTIONS): cv.ensure_list(cv.string)
+    cv.Optional(CONF_OPTIONS): cv.ensure_list(cv.string)
 }).extend(cv.COMPONENT_SCHEMA)
 
 #, length=8
@@ -28,6 +28,10 @@ CONFIG_SCHEMA = select.SELECT_SCHEMA.extend({
 async def to_code(config):
     server = cg.new_Pvariable(config[CONF_ID])
     await cg.register_component(server, config)
-    options = config[CONF_OPTIONS]
+
+	options = []
+    if CONF_CELSIUS in config:
+        options = config[CONF_OPTIONS]
+
     await select.register_select(server, config, options=options)
     cg.add(server.set_select_id(config[CONF_SELECT_DATAPOINT]))
