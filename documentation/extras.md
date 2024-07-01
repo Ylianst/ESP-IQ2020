@@ -16,18 +16,54 @@ select:
     name: Color Underwater
     id: lights1_color
     datapoint: 1
+    options:
+      - Violet
+      - Blue
+      - Cyan
+      - Green
+      - White
+      - Yellow
+      - Red
+      - Cycle
   - platform: iq2020
     name: Color Bartop
     id: lights2_color
     datapoint: 2
+    options:
+      - Violet
+      - Blue
+      - Cyan
+      - Green
+      - White
+      - Yellow
+      - Red
+      - Cycle
   - platform: iq2020
     name: Color Pillow
     id: lights3_color
     datapoint: 3
+    options:
+      - Violet
+      - Blue
+      - Cyan
+      - Green
+      - White
+      - Yellow
+      - Red
+      - Cycle
   - platform: iq2020
     name: Color Exterior
     id: lights4_color
     datapoint: 4
+    options:
+      - Violet
+      - Blue
+      - Cyan
+      - Green
+      - White
+      - Yellow
+      - Red
+      - Cycle
   - platform: iq2020
     name: Color Cycle Speed
     id: lights_cycle_speed
@@ -38,18 +74,22 @@ number:
     id: lights1_intensity
     name: Intensity Underwater
     datapoint: 7
+    maximum: 5
   - platform: iq2020
     id: lights2_intensity
     name: Intensity Bartop
     datapoint: 8
+    maximum: 5
   - platform: iq2020
     id: lights3_intensity
     name: Intensity Pillow
     datapoint: 9
+    maximum: 5
   - platform: iq2020
     id: lights4_intensity
     name: Intensity Exterior
     datapoint: 10
+    maximum: 5
 ```
 
 ## Lights Intensity and Color (Read only)
