@@ -118,3 +118,89 @@ Also, light intensity is 0 to 3, not 0 to 5 like other models.
 - Status: Works except that the light control colors are off by one (violet=blue, etc.) and wheel doesn't cycle, although the control panel flashes the light icon like it does when cycling normally.
 - Version: 1.14D6ce5E002
 - No audio or salt systems to test.
+
+## Hot Spring Sovereign
+
+- Status: The lights names and colors are off compared to the example given on this site. Here is the light settings that works:
+
+```
+select:
+  - platform: iq2020
+    name: Color Underwater
+    id: lights1_color
+    datapoint: 1
+    options:
+      - Blue
+      - Cyan
+      - Green
+      - White
+      - Yellow
+      - Red
+      - Magenta
+      - Cycle
+  - platform: iq2020
+    name: Color Waterfall
+    id: lights2_color
+    datapoint: 2
+    options:
+      - Blue
+      - Cyan
+      - Green
+      - White
+      - Yellow
+      - Red
+      - Magenta
+      - Cycle
+  - platform: iq2020
+    name: Color Bar Top
+    id: lights3_color
+    datapoint: 3
+    options:
+      - Blue
+      - Cyan
+      - Green
+      - White
+      - Yellow
+      - Red
+      - Magenta
+      - Cycle
+  - platform: iq2020
+    name: Color Pillow
+    id: lights4_color
+    datapoint: 4
+    options:
+      - Blue
+      - Cyan
+      - Green
+      - White
+      - Yellow
+      - Red
+      - Magenta
+      - Cycle
+  - platform: iq2020
+    name: Color Cycle Speed
+    id: lights_cycle_speed
+    datapoint: 5
+
+number:
+  - platform: iq2020
+    id: lights1_intensity
+    name: Intensity Underwater
+    datapoint: 7
+    maximum: 5
+  - platform: iq2020
+    id: lights2_intensity
+    name: Intensity Waterfall
+    datapoint: 8
+    maximum: 5
+  - platform: iq2020
+    id: lights3_intensity
+    name: Intensity Bar Top
+    datapoint: 9
+    maximum: 5
+  - platform: iq2020
+    id: lights4_intensity
+    name: Intensity Pillow
+    datapoint: 10
+    maximum: 5
+```
