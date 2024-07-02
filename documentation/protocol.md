@@ -196,14 +196,17 @@ Read light status (Polled)
 <-- 01 1F 40 1705
 <-- 1F 01 80 17050005020202000000000000000005010101010000
 <-- 1F 01 80 17050003000000010000000300000003010101010000
-                 FFAABBCCDD        LL      WWXXYYZZOO
+                 FFAABBCCDD        LLMMNNOOWWXXYYZZOO
 
 FF = Flags (0x01 = Lights Timer On)
 AA = Underwater light intensity (0x05 = High ... 0x01 = Low, 0x00 = Off)
 BB = Bartop light intensity
 CC = Pillow light intensity
 DD = Exterior light intensity
-LL = Main loop speed
+LL = Underwater light cycle speed - Main loop speed
+MM = Bartop light cycle speed
+NN = Pillow light cycle speed
+OO = Exterior light cycle speed
 WW = Underwater light color     (0x01 = Violet, 0x02 = Blue, 0x03 = Cyan, 0x04 = Green, 0x05 = White, 0x06 = Yellow, 0x07 = Red, 0x08 = Color Cycle)
 XX = Bartop light color
 YY = Pillow light color
