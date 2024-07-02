@@ -112,3 +112,9 @@ On the remote colors are:
 ```
 
 Also, light intensity is 0 to 3, not 0 to 5 like other models.
+
+## Hot Springs Limelight Flash 2018
+
+- Status: Works except that the light control colors are off by one (violet=blue, etc.) and wheel doesn't cycle, although the control panel flashes the light icon like it does when cycling normally.
+- Version: 1.14D6ce5E002
+- No audio or salt systems to test.
