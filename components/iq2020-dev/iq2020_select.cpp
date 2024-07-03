@@ -7,7 +7,7 @@ extern esphome::iq2020_select::IQ2020Select* g_iq2020_select[SELECTCOUNT];
 
 std::vector<std::string> audio_source_values = { "TV", "Aux", "Bluetooth" };
 std::vector<std::string> lights_colors_values = { "Violet", "Blue", "Cyan", "Green", "White", "Yellow", "Red", "Cycle" };
-std::vector<std::string> lights_cycle_speed = { "Pause", "Slow", "Normal", "Fast"/*, "Off"*/ };
+std::vector<std::string> lights_cycle_speed = { "Pause", "Slow", "Normal", "Fast" }; // "Off"
 
 namespace esphome {
 namespace iq2020_select {
@@ -35,7 +35,7 @@ namespace iq2020_select {
 				this->traits.set_options(lights_cycle_speed);
 			}
 			// If there is no off state for this control, set it to "normal"
-			if (this->traits.get_options().size() == 4) { this->publish_state("Normal"); }
+			if (this->traits.get_options().size() != 4) { this->publish_state("Normal"); }
 			break;
 		}
 	}
