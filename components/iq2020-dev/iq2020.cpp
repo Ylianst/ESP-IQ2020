@@ -566,7 +566,6 @@ int IQ2020Component::processIQ2020Command() {
 			}
 #endif
 
-			/*
 			// Fix the lights cycle speed if needed
 			if (select_pending[SELECT_LIGHTS_CYCLE_SPEED] != NOT_SET) {
 				int changes = 0;
@@ -610,13 +609,12 @@ int IQ2020Component::processIQ2020Command() {
 			else {
 				// Figure out the current cycling enabled or not and the speed
 				// Finish with i = 0 since that is the main control
-				int enabled = 0, speed = 0;
+				int speed = 0;
 				for (int i = 3; i >= 0; i--) {
-					if (processingBuffer[12 + i] != 0) { enabled = 1; speed = processingBuffer[16 + i]; }
+					if (processingBuffer[12 + i] != 0) { speed = processingBuffer[16 + i]; }
 				}
-				setSelectState(SELECT_LIGHTS_CYCLE_SPEED, (enabled == 0) ? 4 : speed);
+				setSelectState(SELECT_LIGHTS_CYCLE_SPEED, speed);
 			}
-			*/
 
 #ifdef USE_SELECT
 			for (int i = SELECT_LIGHTS1_COLOR; i <= SELECT_LIGHTS4_COLOR; i++) {
