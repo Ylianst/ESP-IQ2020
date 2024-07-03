@@ -619,8 +619,9 @@ int IQ2020Component::processIQ2020Command() {
 				// If no changes where made, we are done.
 				if (changes == 0) { select_pending[SELECT_LIGHTS_CYCLE_SPEED] = NOT_SET; }
 			}
-			else {
-				// Figure out the current cycling enabled or not and the speed
+
+			if (select_pending[SELECT_LIGHTS_CYCLE_SPEED] == NOT_SET) {
+				// Figure out the current cycling speed
 				// Finish with i = 0 since that is the main control
 				int speed = 0;
 				for (int i = 3; i >= 0; i--) {
@@ -957,7 +958,7 @@ void IQ2020Component::selectAction(unsigned int selectid, int state) {
 				cmdsent = 1;
 				current = state;
 				// If the cycle speed if off, change it to normal
-				if (select_state[SELECT_LIGHTS_CYCLE_SPEED] == 0) { setSelectState(SELECT_LIGHTS_CYCLE_SPEED, 2); }
+				if (select_state[SELECT_LIGHTS_CYCLE_SPEED] == 0) { select_pending[SELECT_LIGHTS_CYCLE_SPEED] = 2; }
 			} else if (current > state) {
 				ESP_LOGD(TAG, "** MOVE DOWN %d from %d to %d", selectid, current, select_pending[selectid]);
 				unsigned char cmd[] = { 0x17, 0x02, (unsigned char)(selectid - 1), 0x04 };
