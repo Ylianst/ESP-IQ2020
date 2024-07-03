@@ -45,12 +45,12 @@ namespace iq2020_select {
 		this->publish_state(value);
 		if (g_iq2020_main == NULL) return;
 		if (select_id == SELECT_AUDIO_SOURCE) {
-			// Audio Source: TV = 2, Aux = 3, Bluetooth = 4
+			// Audio source: TV = 2, Aux = 3, Bluetooth = 4
 			if (value.compare("TV") == 0) { g_iq2020_main->selectAction(select_id, 2); }
 			else if (value.compare("Aux") == 0) { g_iq2020_main->selectAction(select_id, 3); }
 			else if (value.compare("Bluetooth") == 0) { g_iq2020_main->selectAction(select_id, 4); }
 		} else if (select_id == SELECT_LIGHTS_CYCLE_SPEED) {
-			// Lights cycle Speed
+			// Lights cycle speed
 			for (int i = 0; i < this->traits.get_options().size(); i++) {
 				if (value.compare(this->traits.get_options()[i]) == 0) { g_iq2020_main->selectAction(select_id, i); }
 			}
