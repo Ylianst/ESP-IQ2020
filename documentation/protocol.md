@@ -229,7 +229,8 @@ AA = Action
   05 = Next color (1 to 7 and cycles back)
   06 = Decrease cycle speed (0 to 3)
   07 = Increase cycle speed (0 to 3)
-  08 = Set light to cycle state.
+  08 = Enable lights cycling
+  09 = Disable lights cycling
   10 = Turn off
   11 = Turn on
 ```
