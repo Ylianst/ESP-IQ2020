@@ -582,7 +582,7 @@ int IQ2020Component::processIQ2020Command() {
 							int c = processingBuffer[16 + i]; // This is the speed of the cycling, c = 0 for pause, c = 3 for fast
 							while (c != select_pending[SELECT_LIGHTS_CYCLE_SPEED]) {
 								if ((c < select_pending[SELECT_LIGHTS_CYCLE_SPEED])) {
-									/ESP_LOGD(TAG, "** MOVE CYCLE UP %d from %d to %d", i, c, select_pending[SELECT_LIGHTS_CYCLE_SPEED]);
+									ESP_LOGD(TAG, "** MOVE CYCLE UP %d from %d to %d", i, c, select_pending[SELECT_LIGHTS_CYCLE_SPEED]);
 									unsigned char cmd[] = { 0x17, 0x02, (unsigned char)i, 0x07 };
 									sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Faster cycle
 									next_poll = ::millis() + 100;
