@@ -52,7 +52,7 @@ void IQ2020Component::setup() {
 	for (int i = 0; i < NUMBERCOUNT; i++) { number_state[i] = number_pending[i] = NOT_SET; }
 #endif
 	// If the cycle selector has no "off" state, set the value to "normal"
-	if (g_iq2020_select[SELECT_LIGHTS_CYCLE_SPEED]->->traits.get_options().size() == 4) {
+	if (g_iq2020_select[SELECT_LIGHTS_CYCLE_SPEED]->traits.get_options().size() == 4) {
 		select_state[SELECT_LIGHTS_CYCLE_SPEED] = 2;
 	}
 
