@@ -76,7 +76,7 @@ namespace iq2020_select {
 			if (this->traits.get_options().size() >= value) {
 				this->publish_state(this->traits.get_options()[value - 1]);
 			}
-		} 
+		}
 	}
 
 	void IQ2020Select::dump_config() {
