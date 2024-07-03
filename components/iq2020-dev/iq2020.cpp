@@ -592,7 +592,7 @@ int IQ2020Component::processIQ2020Command() {
 					if ((processingBuffer[12 + i] != 0) || (cycleColor && (processingBuffer[20 + i] == 8)) { // If cycling is enabled for these lights, turn off or fix the speed if needed
 					*/
 
-					int cycleColor = (select_state[i + 1]->traits.get_options().size() == 8); // SELECT_LIGHTS1_COLOR
+					int cycleColor = (g_iq2020_select[i + 1]->traits.get_options().size() == 8); // SELECT_LIGHTS1_COLOR
 					if (!cycleColor || (processingBuffer[20 + i] == 8)) { // If cycling is enabled for these lights, turn off or fix the speed if needed
 						// Check if we need to fix cycling speed
 						int c = processingBuffer[16 + i]; // This is the speed of the cycling, c = 0 for pause, c = 3 for fast
