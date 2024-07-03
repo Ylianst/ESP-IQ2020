@@ -69,9 +69,13 @@ namespace iq2020_select {
 			if (value == 3) { this->publish_state("Aux"); }
 			if (value == 4) { this->publish_state("Bluetooth"); }
 		} if (select_id == SELECT_LIGHTS_CYCLE_SPEED) {
-			this->publish_state(this->traits.get_options()[value]);
+			if (this->traits.get_options().size() > value) {
+				this->publish_state(this->traits.get_options()[value]);
+			}
 		} else {
-			this->publish_state(this->traits.get_options()[value - 1]);
+			if (this->traits.get_options().size() >= value) {
+				this->publish_state(this->traits.get_options()[value - 1]);
+			}
 		}
 	}
 
