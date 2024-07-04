@@ -51,7 +51,7 @@ void IQ2020Component::setup() {
 #ifdef USE_SELECT
 	for (int i = 0; i < NUMBERCOUNT; i++) { number_state[i] = number_pending[i] = NOT_SET; }
 #endif
-	select_state[SELECT_LIGHTS_CYCLE_SPEED] = 2;
+
 	g_iq2020_main = this;
 	if (this->flow_control_pin_ != nullptr) { this->flow_control_pin_->setup(); }
 	//ESP_LOGD(TAG, "Setting up IQ2020...");
@@ -561,27 +561,45 @@ int IQ2020Component::processIQ2020Command() {
 #endif
 
 			// Fix the lights cycle speed if needed
-			if (select_state[SELECT_LIGHTS_CYCLE_SPEED] == NOT_SET) { select_state[SELECT_LIGHTS_CYCLE_SPEED] = 2; }
-			for (int i = 0; i < 4; i++) {
-				if (processingBuffer[20 + i] == 8) {
-					int c = processingBuffer[16 + i];
-					while (c != select_state[SELECT_LIGHTS_CYCLE_SPEED]) {
-						if ((c < select_state[SELECT_LIGHTS_CYCLE_SPEED])) {
-							//ESP_LOGD(TAG, "** MOVE CYCLE UP %d from %d to %d", i, c, select_state[SELECT_LIGHTS_CYCLE_SPEED]);
-							unsigned char cmd[] = { 0x17, 0x02, (unsigned char)i, 0x07 };
-							sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Faster cycle
-							next_poll = ::millis() + 100;
-							c++;
-						}
-						else if ((c > select_state[SELECT_LIGHTS_CYCLE_SPEED])) {
-							//ESP_LOGD(TAG, "** MOVE CYCLE DOWN %d from %d to %d", i, c, select_state[SELECT_LIGHTS_CYCLE_SPEED]);
-							unsigned char cmd[] = { 0x17, 0x02, (unsigned char)i, 0x06 };
-							sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Slower cycle
-							next_poll = ::millis() + 100;
-							c--;
+			if (select_pending[SELECT_LIGHTS_CYCLE_SPEED] != NOT_SET) {
+				int changes = 0;
+				for (int i = 0; i < 4; i++) {
+					int cycleColor = (g_iq2020_select[i + 1]->traits.get_options().size() == 8); // SELECT_LIGHTS1_COLOR
+					if (!cycleColor || (processingBuffer[20 + i] == 8)) { // If cycling is enabled for these lights, turn off or fix the speed if needed
+						// Check if we need to fix cycling speed
+						int c = processingBuffer[16 + i]; // This is the speed of the cycling, c = 0 for pause, c = 3 for fast
+						while (c != select_pending[SELECT_LIGHTS_CYCLE_SPEED]) {
+							if ((c < select_pending[SELECT_LIGHTS_CYCLE_SPEED])) {
+								//ESP_LOGD(TAG, "** MOVE CYCLE UP %d from %d to %d", i, c, select_pending[SELECT_LIGHTS_CYCLE_SPEED]);
+								unsigned char cmd[] = { 0x17, 0x02, (unsigned char)i, 0x07 };
+								sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Faster cycle
+								next_poll = ::millis() + 100;
+								changes++;
+								c++;
+							}
+							else if ((c > select_pending[SELECT_LIGHTS_CYCLE_SPEED])) {
+								//ESP_LOGD(TAG, "** MOVE CYCLE DOWN %d from %d to %d", i, c, select_pending[SELECT_LIGHTS_CYCLE_SPEED]);
+								unsigned char cmd[] = { 0x17, 0x02, (unsigned char)i, 0x06 };
+								sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Slower cycle
+								next_poll = ::millis() + 100;
+								changes++;
+								c--;
+							}
 						}
 					}
 				}
+				// If no changes where made, we are done.
+				if (changes == 0) { select_pending[SELECT_LIGHTS_CYCLE_SPEED] = NOT_SET; }
+			}
+
+			if (select_pending[SELECT_LIGHTS_CYCLE_SPEED] == NOT_SET) {
+				// Figure out the current cycling speed
+				// Finish with i = 0 since that is the main control
+				int speed = 0;
+				for (int i = 3; i >= 0; i--) {
+					if (processingBuffer[12 + i] != 0) { speed = processingBuffer[16 + i]; }
+				}
+				setSelectState(SELECT_LIGHTS_CYCLE_SPEED, speed);
 			}
 
 #ifdef USE_SELECT
@@ -889,8 +907,7 @@ void IQ2020Component::selectAction(unsigned int selectid, int state) {
 	}
 	case SELECT_LIGHTS_CYCLE_SPEED: // Lights cycle speed
 	{
-		g_iq2020_select[selectid]->publish_state_ex(state);
-		select_state[selectid] = state;
+		select_pending[selectid] = state;
 		next_poll = ::millis() + 100;
 		return;
 	}
@@ -911,6 +928,8 @@ void IQ2020Component::selectAction(unsigned int selectid, int state) {
 				sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Enable cycle state
 				cmdsent = 1;
 				current = state;
+				// If the cycle speed if off, change it to normal
+				if (select_state[SELECT_LIGHTS_CYCLE_SPEED] == 0) { select_pending[SELECT_LIGHTS_CYCLE_SPEED] = 2; }
 			} else if (current > state) {
 				//ESP_LOGD(TAG, "** MOVE DOWN %d from %d to %d", selectid, current, select_pending[selectid]);
 				unsigned char cmd[] = { 0x17, 0x02, (unsigned char)(selectid - 1), 0x04 };

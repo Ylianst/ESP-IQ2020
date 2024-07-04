@@ -7,7 +7,7 @@ extern esphome::iq2020_select::IQ2020Select* g_iq2020_select[SELECTCOUNT];
 
 std::vector<std::string> audio_source_values = { "TV", "Aux", "Bluetooth" };
 std::vector<std::string> lights_colors_values = { "Violet", "Blue", "Cyan", "Green", "White", "Yellow", "Red", "Cycle" };
-std::vector<std::string> lights_cycle_speed = { "Pause", "Slow", "Normal", "Fast" };
+std::vector<std::string> lights_cycle_speed = { "Off", "Slow", "Normal", "Fast" };
 
 namespace esphome {
 namespace iq2020_select {
@@ -26,13 +26,16 @@ namespace iq2020_select {
 		case SELECT_LIGHTS2_COLOR:
 		case SELECT_LIGHTS3_COLOR:
 		case SELECT_LIGHTS4_COLOR:
-			if (this->traits.get_options().size() != 8) {
+			if ((this->traits.get_options().size() < 7) || (this->traits.get_options().size() > 8)) {
 				this->traits.set_options(lights_colors_values);
 			}
 			break;
 		case SELECT_LIGHTS_CYCLE_SPEED:
-			this->traits.set_options(lights_cycle_speed);
-			this->publish_state("Normal");
+			if (this->traits.get_options().size() != 4) {
+				this->traits.set_options(lights_cycle_speed);
+			}
+			// If there is no off state for this control, set it to "normal"
+			//if (this->traits.get_options().size() != 4) { this->publish_state("Normal"); }
 			break;
 		}
 	}
@@ -41,17 +44,19 @@ namespace iq2020_select {
 		ESP_LOGD(TAG, "Select:%d control state: %s", select_id, value.c_str());
 		this->publish_state(value);
 		if (g_iq2020_main == NULL) return;
-		if (select_id == SELECT_AUDIO_SOURCE) { // Audio Source: TV = 2, Aux = 3, Bluetooth = 4
+		if (select_id == SELECT_AUDIO_SOURCE) {
+			// Audio source: TV = 2, Aux = 3, Bluetooth = 4
 			if (value.compare("TV") == 0) { g_iq2020_main->selectAction(select_id, 2); }
 			else if (value.compare("Aux") == 0) { g_iq2020_main->selectAction(select_id, 3); }
 			else if (value.compare("Bluetooth") == 0) { g_iq2020_main->selectAction(select_id, 4); }
-		} else if (select_id == SELECT_LIGHTS_CYCLE_SPEED) { // Lights cycle Speed
-			if (value.compare("Pause") == 0) { g_iq2020_main->selectAction(select_id, 0); }
-			else if (value.compare("Slow") == 0) { g_iq2020_main->selectAction(select_id, 1); }
-			else if (value.compare("Normal") == 0) { g_iq2020_main->selectAction(select_id, 2); }
-			else if (value.compare("Fast") == 0) { g_iq2020_main->selectAction(select_id, 3); }
-		} else { // Lights color
-			for (int i = 0; i < 8; i++) {
+		} else if (select_id == SELECT_LIGHTS_CYCLE_SPEED) {
+			// Lights cycle speed
+			for (int i = 0; i < this->traits.get_options().size(); i++) {
+				if (value.compare(this->traits.get_options()[i]) == 0) { g_iq2020_main->selectAction(select_id, i); }
+			}
+		} else {
+			// Lights color
+			for (int i = 0; i < this->traits.get_options().size(); i++) {
 				if (value.compare(this->traits.get_options()[i]) == 0) { g_iq2020_main->selectAction(select_id, i + 1); }
 			}
 		}
@@ -64,12 +69,13 @@ namespace iq2020_select {
 			if (value == 3) { this->publish_state("Aux"); }
 			if (value == 4) { this->publish_state("Bluetooth"); }
 		} if (select_id == SELECT_LIGHTS_CYCLE_SPEED) {
-			if (value == 0) { this->publish_state("Pause"); }
-			if (value == 1) { this->publish_state("Slow"); }
-			if (value == 2) { this->publish_state("Normal"); }
-			if (value == 3) { this->publish_state("Fast"); }
+			if (this->traits.get_options().size() > value) {
+				this->publish_state(this->traits.get_options()[value]);
+			}
 		} else {
-			this->publish_state(this->traits.get_options()[value - 1]);
+			if (this->traits.get_options().size() >= value) {
+				this->publish_state(this->traits.get_options()[value - 1]);
+			}
 		}
 	}
 
