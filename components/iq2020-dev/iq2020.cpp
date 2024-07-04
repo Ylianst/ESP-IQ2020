@@ -51,12 +51,6 @@ void IQ2020Component::setup() {
 #ifdef USE_SELECT
 	for (int i = 0; i < NUMBERCOUNT; i++) { number_state[i] = number_pending[i] = NOT_SET; }
 #endif
-	// If the cycle selector has no "off" state, set the value to "normal"
-	/*
-	if (g_iq2020_select[SELECT_LIGHTS_CYCLE_SPEED]->traits.get_options().size() != 4) {
-		select_state[SELECT_LIGHTS_CYCLE_SPEED] = 2;
-	}
-	*/
 
 	g_iq2020_main = this;
 	if (this->flow_control_pin_ != nullptr) { this->flow_control_pin_->setup(); }
@@ -570,28 +564,6 @@ int IQ2020Component::processIQ2020Command() {
 			if (select_pending[SELECT_LIGHTS_CYCLE_SPEED] != NOT_SET) {
 				int changes = 0;
 				for (int i = 0; i < 4; i++) {
-					/*
-					// Check if there is a 8th cycling color
-					if ((select_pending[SELECT_LIGHTS_CYCLE_SPEED] == 0) && (processingBuffer[12 + i] != 0)) {
-						// Turn off cycling
-						ESP_LOGD(TAG, "** DISABLE CYCLE %d", i);
-						unsigned char cmd[] = { 0x17, 0x02, (unsigned char)i, 0x09 };
-						sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Disable cycling
-						next_poll = ::millis() + 100;
-						changes++;
-					}
-
-					if ((cycleColor == 0) && (select_pending[SELECT_LIGHTS_CYCLE_SPEED] > 0) && (processingBuffer[12 + i] == 0)) {
-						// Turn on cycling
-						ESP_LOGD(TAG, "** ENABLE CYCLE %d", i);
-						unsigned char cmd[] = { 0x17, 0x02, (unsigned char)i, 0x08 };
-						sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Enable cycling
-						next_poll = ::millis() + 100;
-						changes++;
-					}
-					if ((processingBuffer[12 + i] != 0) || (cycleColor && (processingBuffer[20 + i] == 8)) { // If cycling is enabled for these lights, turn off or fix the speed if needed
-					*/
-
 					int cycleColor = (g_iq2020_select[i + 1]->traits.get_options().size() == 8); // SELECT_LIGHTS1_COLOR
 					if (!cycleColor || (processingBuffer[20 + i] == 8)) { // If cycling is enabled for these lights, turn off or fix the speed if needed
 						// Check if we need to fix cycling speed
@@ -935,7 +907,6 @@ void IQ2020Component::selectAction(unsigned int selectid, int state) {
 	}
 	case SELECT_LIGHTS_CYCLE_SPEED: // Lights cycle speed
 	{
-		//g_iq2020_select[selectid]->publish_state_ex(state);
 		select_pending[selectid] = state;
 		next_poll = ::millis() + 100;
 		return;
