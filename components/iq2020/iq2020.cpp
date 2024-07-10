@@ -564,6 +564,7 @@ int IQ2020Component::processIQ2020Command() {
 			if (select_pending[SELECT_LIGHTS_CYCLE_SPEED] != NOT_SET) {
 				int changes = 0;
 				for (int i = 0; i < 4; i++) {
+					if (g_iq2020_select[i + 1] == NULL) continue;
 					int cycleColor = (g_iq2020_select[i + 1]->traits.get_options().size() == 8); // SELECT_LIGHTS1_COLOR
 					if (!cycleColor || (processingBuffer[20 + i] == 8)) { // If cycling is enabled for these lights, turn off or fix the speed if needed
 						// Check if we need to fix cycling speed
