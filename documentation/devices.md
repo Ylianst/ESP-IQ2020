@@ -66,7 +66,7 @@ uart:
 
 # ESP32 + RS485MAX
 
-I don't suggest this setup as it's not a nice as the ones above and you will need to do extra work to power the ESP32 and RS485MAX modules using the 12v from the hot tub or have a seperate power source.
+I don't suggest this setup as it's not as nice as the ones above and you will need to do extra work to power the ESP32 and RS485MAX modules using the 12v from the hot tub or have a seperate power source.
 
 I don't have this setup and have not testing it, but using the RS485MAX module requires an extra GPIO pin to tell the module what is the current traffic direction (send or receive). In order to support this module, this integration supports an extra `flow_control_pin`. The device look like this and has the following connectors:
 
