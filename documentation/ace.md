@@ -1,6 +1,6 @@
 # ACE Module Emulation
 
-If your hot tub does not have a ACE or Freshwater salt system, you can have the ESP32 emulate a ACE module on your spa remote. It will allow you to control the salt level from 0 to 10, turn on/off the boost mode, press the text button and see a status bar from 0 to 7. When enabled, all these values will be sent to Home Assistant to be used for automations much like the [audio module emulation](https://github.com/Ylianst/ESP-IQ2020/blob/main/documentation/audio.md). To enable this feature, add the `ace_emulation: true` to the `IQ2020` section like this:
+If your hot tub does not have a ACE or Freshwater salt system, you can have the ESP32 emulate a ACE module on your spa remote. It will allow you to control the salt level from 0 to 10, turn on/off the boost mode, press the test button and see a status bar from 0 to 7. When enabled, all these values will be sent to Home Assistant to be used for automations much like the [audio module emulation](https://github.com/Ylianst/ESP-IQ2020/blob/main/documentation/audio.md). To enable this feature, add the `ace_emulation: true` to the `IQ2020` section like this:
 
 ```
 iq2020:
