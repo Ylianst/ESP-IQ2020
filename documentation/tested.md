@@ -204,3 +204,9 @@ number:
     datapoint: 10
     maximum: 5
 ```
+
+## Tiger River Spa Caspian
+
+This hot tub seems to be using a older version of the IQ2020 board, used between 2001 to mid-2009 and this integration does not seems to work. Here is an image of the board.
+
+![PXL_20240801_080032524 MP](https://github.com/user-attachments/assets/17ea8c9a-3403-4e8d-94f5-eeb5c6b922ac)
