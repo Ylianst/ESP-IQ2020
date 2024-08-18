@@ -240,7 +240,6 @@ CONFIG_SCHEMA = cv.Schema(
         ),
         cv.Optional(CONF_SENSOR_POWER_L1): sensor.sensor_schema(
             unit_of_measurement=UNIT_WATT,
-            state=power,
             state_class=STATE_CLASS_MEASUREMENT,
             accuracy_decimals=0,
             icon="mdi:turbine"
