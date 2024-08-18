@@ -210,3 +210,32 @@ number:
 Does no work. This hot tub seems to be using a older version of the IQ2020 board, used between 2001 to mid-2009 and this integration does not seems to work. Here is an image of the board.
 
 ![PXL_20240801_080032524 MP](https://github.com/user-attachments/assets/17ea8c9a-3403-4e8d-94f5-eeb5c6b922ac)
+
+## Hotsprings Limelight Flash (2021)
+
+- Status: Works
+
+Yaml Changes Made in ESPHome
+
+```
+fan:
+  - platform: iq2020
+    name: Jets 1
+    id: jets1
+    icon: "mdi:turbine"
+    datapoint: 0
+    speeds: 2 #to 2 from 1
+  - platform: iq2020
+    name: Jets 2
+    id: jets2
+    icon: "mdi:turbine"
+    datapoint: 1
+    speeds: 1 #to 1 from 2
+```
+
+Result:
+Jets 1 has off/low/high speeds
+Jets 2 has off/high speeds
+
+Controller image:
+![356781975-cb7addd6-c6bf-4cb5-93f2-518f8f7cbe94](https://github.com/user-attachments/assets/c7d7875d-1afa-4b7b-8cc7-b8bb5f2661f0)
