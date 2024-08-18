@@ -34,9 +34,9 @@ Once done, reflash the ESP32. You will need to reset the hot tub remote to see t
 The button sensor will show 0 or unknown, but will momenteraly pulse to the following values when a button is pressed:
 
 ```
-5 - Test
-6 - Boost on
-7 - Boost off
+6 - Test
+7 - Boost on
+8 - Boost off
 ```
 
 The button pressed will show rapidly and so, no need to increase the polling rate to get a quick response. The "Salt System Status" is set by Home Assistant, but read-only on the remote. Other values can be changes on both remote and Home Assistant. The new sensors will look like this.
