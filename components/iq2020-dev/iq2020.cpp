@@ -340,7 +340,7 @@ int IQ2020Component::processIQ2020Command() {
 	unsigned char checksum = 0; // Compute the checksum
 	for (int i = 1; i < (cmdlen - 1); i++) { checksum += processingBuffer[i]; }
 	if (processingBuffer[cmdlen - 1] != (checksum ^ 0xFF)) { ESP_LOGD(TAG, "Invalid checksum. Got 0x%02x, expected 0x%02x.", processingBuffer[cmdlen - 1], (checksum ^ 0xFF)); return nextPossiblePacket(); }
-	//ESP_LOGD(TAG, "IQ2020 data, dst:%02x src:%02x op:%02x datalen:%d", processingBuffer[1], processingBuffer[2], processingBuffer[4], processingBuffer[3]);
+	ESP_LOGD(TAG, "IQ2020 data, dst:%02x src:%02x op:%02x datalen:%d", processingBuffer[1], processingBuffer[2], processingBuffer[4], processingBuffer[3]);
 
 	if ((processingBuffer[1] == 0x01) && (processingBuffer[2] == 0x1F) && (processingBuffer[4] == 0x40)) {
 		// This is a request command from the SPA connection kit, take note of this.
