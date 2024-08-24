@@ -54,10 +54,12 @@ void IQ2020Component::setup() {
 
 	g_iq2020_main = this;
 	if (this->flow_control_pin_ != nullptr) { this->flow_control_pin_->setup(); }
+	/*
 	if (this->trigger_poll_pin_ != nullptr) {
 		this->trigger_poll_pin_->pin_mode(gpio::FLAG_INPUT);
 		this->trigger_poll_pin_->setup();
 	}
+	*/
 	//ESP_LOGD(TAG, "Setting up IQ2020...");
 
 	// The make_unique() wrapper doesn't like arrays, so initialize the unique_ptr directly.
@@ -140,6 +142,7 @@ void IQ2020Component::loop() {
 #endif
 		connectionKit = 1;
 	}
+	/*
 	// Check if pin goes high, if it does then lets log something... for now...
 	bool pinState = this->trigger_poll_pin_->digital_read();
 	// Grace period if the event hasnt fired in the last second
@@ -148,6 +151,7 @@ void IQ2020Component::loop() {
 		last_pin_check_time = now; // Update the last check time
 		pollState();
 	}
+	*/
 
 	if (next_poll < now) { next_poll = now + 5000; pollState(); }
 }
@@ -158,9 +162,11 @@ void IQ2020Component::dump_config() {
 	if (this->flow_control_pin_ != nullptr) {
 		ESP_LOGCONFIG(TAG, "  Flow Control Pin: ", this->flow_control_pin_);
 	}
+	/*
 	if (this->trigger_poll_pin_ != nullptr) {
 		ESP_LOGCONFIG(TAG, "  Trigger Poll Pin: ", this->trigger_poll_pin_);
 	}
+	*/
 	if (this->ace_emulation_) { ESP_LOGCONFIG(TAG, "  Ace Emulation Enabled"); }
 	if (this->freshwater_emulation_) { ESP_LOGCONFIG(TAG, "  Freshwater Emulation Enabled"); }
 	if (this->audio_emulation_) { ESP_LOGCONFIG(TAG, "  Audio Emulation Enabled"); }
