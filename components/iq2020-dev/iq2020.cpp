@@ -54,10 +54,12 @@ void IQ2020Component::setup() {
 
 	g_iq2020_main = this;
 	if (this->flow_control_pin_ != nullptr) { this->flow_control_pin_->setup(); }
+	/*
 	if (this->trigger_poll_pin_ != nullptr) {
 		this->trigger_poll_pin_->pin_mode(gpio::FLAG_INPUT);
 		this->trigger_poll_pin_->setup();
 	}
+	*/
 	//ESP_LOGD(TAG, "Setting up IQ2020...");
 
 	// The make_unique() wrapper doesn't like arrays, so initialize the unique_ptr directly.
@@ -140,6 +142,7 @@ void IQ2020Component::loop() {
 #endif
 		connectionKit = 1;
 	}
+	/*
 	if (this->trigger_poll_pin_ != nullptr) {
 		// Check if pin goes high, if it does then lets log something... for now...
 		bool pinState = this->trigger_poll_pin_->digital_read();
@@ -150,7 +153,7 @@ void IQ2020Component::loop() {
 			pollState();
 		}
 	}
-
+	*/
 	if (next_poll < now) { next_poll = now + 5000; pollState(); }
 }
 
@@ -160,9 +163,11 @@ void IQ2020Component::dump_config() {
 	if (this->flow_control_pin_ != nullptr) {
 		ESP_LOGCONFIG(TAG, "  Flow Control Pin: ", this->flow_control_pin_);
 	}
+	/*
 	if (this->trigger_poll_pin_ != nullptr) {
 		ESP_LOGCONFIG(TAG, "  Trigger Poll Pin: ", this->trigger_poll_pin_);
 	}
+	*/
 	if (this->ace_emulation_) { ESP_LOGCONFIG(TAG, "  Ace Emulation Enabled"); }
 	if (this->freshwater_emulation_) { ESP_LOGCONFIG(TAG, "  Freshwater Emulation Enabled"); }
 	if (this->audio_emulation_) { ESP_LOGCONFIG(TAG, "  Audio Emulation Enabled"); }
@@ -375,11 +380,11 @@ int IQ2020Component::processIQ2020Command() {
 			else if ((processingBuffer[6] == 0x00) && (processingBuffer[7] == 0x01) && (cmdlen == 14)) { // Audio settings
 #ifdef USE_NUMBER
 				ESP_LOGD(TAG, "AUDIO - Volume=%d, Treble=%d, Bass=%d, Balance=%d, Subwoofer=%d", processingBuffer[8], processingBuffer[9], processingBuffer[10], processingBuffer[11], processingBuffer[12]);
-				if (audio_module_address == 0x33) { // 0x33
+				//if (audio_module_address == 0x33) { // 0x33
 					setNumberState(NUMBER_AUDIO_VOLUME, (processingBuffer[8] - 15) << 2);
-				} else { // 0x1D
-					setNumberState(NUMBER_AUDIO_VOLUME, (((int)processingBuffer[8]) * 100) / 40);
-				}
+				//} else { // 0x1D
+				//	setNumberState(NUMBER_AUDIO_VOLUME, (((int)processingBuffer[8]) * 100) / 40);
+				//}
 				setNumberState(NUMBER_AUDIO_TREBLE, (signed char)(processingBuffer[9]));
 				setNumberState(NUMBER_AUDIO_BASS, (signed char)(processingBuffer[10]));
 				setNumberState(NUMBER_AUDIO_BALANCE, (signed char)(processingBuffer[11]));
@@ -512,11 +517,11 @@ int IQ2020Component::processIQ2020Command() {
 			setSelectState(SELECT_AUDIO_SOURCE, processingBuffer[14]); // Audio Source
 #endif
 #ifdef USE_NUMBER
-			if (audio_module_address == 0x33) { // 0x33
+			//if (audio_module_address == 0x33) { // 0x33
 				setNumberState(NUMBER_AUDIO_VOLUME, (processingBuffer[8] - 15) << 2);
-			} else { // 0x1D
-				setNumberState(NUMBER_AUDIO_VOLUME, (((int)processingBuffer[8]) * 100) / 40);
-			}
+			//} else { // 0x1D
+			//	setNumberState(NUMBER_AUDIO_VOLUME, (((int)processingBuffer[8]) * 100) / 40);
+			//}
 			setNumberState(NUMBER_AUDIO_TREBLE, (signed char)processingBuffer[9]);
 			setNumberState(NUMBER_AUDIO_BASS, (signed char)processingBuffer[10]);
 			setNumberState(NUMBER_AUDIO_BALANCE, (signed char)processingBuffer[11]);
@@ -992,14 +997,14 @@ void IQ2020Component::numberAction(unsigned int numberid, int value) {
 	case NUMBER_AUDIO_VOLUME:
 	{
 		number_pending[NUMBER_AUDIO_VOLUME] = value;
-		if (audio_module_address == 0x33) { // 0x33
+		//if (audio_module_address == 0x33) { // 0x33
 			unsigned char cmd[] = { 0x19, 0x00, 0x01, (unsigned char)((value >> 2) + 15) };
 			sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Change volume
-		}
-		else { // 0x1D
-			unsigned char cmd[] = { 0x19, 0x00, 0x01, (unsigned char)((value * 40) / 100) };
-			sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Change volume
-		}
+		//}
+		//else { // 0x1D
+		//	unsigned char cmd[] = { 0x19, 0x00, 0x01, (unsigned char)((value * 40) / 100) };
+		//	sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Change volume
+		//}
 		break;
 	}
 	case NUMBER_AUDIO_TREBLE:
