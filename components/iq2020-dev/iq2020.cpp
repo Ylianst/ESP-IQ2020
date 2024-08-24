@@ -54,6 +54,10 @@ void IQ2020Component::setup() {
 
 	g_iq2020_main = this;
 	if (this->flow_control_pin_ != nullptr) { this->flow_control_pin_->setup(); }
+	if (this->trigger_poll_pin_ != nullptr) {
+		this->trigger_poll_pin_->pin_mode(gpio::FLAG_INPUT);
+		this->trigger_poll_pin_->setup();
+	}
 	//ESP_LOGD(TAG, "Setting up IQ2020...");
 
 	// The make_unique() wrapper doesn't like arrays, so initialize the unique_ptr directly.
@@ -136,6 +140,15 @@ void IQ2020Component::loop() {
 #endif
 		connectionKit = 1;
 	}
+	// Check if pin goes high, if it does then lets log something... for now...
+	bool pinState = this->trigger_poll_pin_->digital_read();
+	// Grace period if the event hasnt fired in the last second
+	if (pinState && (now - last_pin_check_time >= 1000)) {
+		ESP_LOGD(TAG, "Trigger Pin High, issuing poll.");
+		last_pin_check_time = now; // Update the last check time
+		pollState();
+	}
+
 	if (next_poll < now) { next_poll = now + 5000; pollState(); }
 }
 
@@ -144,6 +157,9 @@ void IQ2020Component::dump_config() {
 	ESP_LOGCONFIG(TAG, "  Address: %s:%u", esphome::network::get_use_address().c_str(), this->port_);
 	if (this->flow_control_pin_ != nullptr) {
 		ESP_LOGCONFIG(TAG, "  Flow Control Pin: ", this->flow_control_pin_);
+	}
+	if (this->trigger_poll_pin_ != nullptr) {
+		ESP_LOGCONFIG(TAG, "  Trigger Poll Pin: ", this->trigger_poll_pin_);
 	}
 	if (this->ace_emulation_) { ESP_LOGCONFIG(TAG, "  Ace Emulation Enabled"); }
 	if (this->freshwater_emulation_) { ESP_LOGCONFIG(TAG, "  Freshwater Emulation Enabled"); }
@@ -333,9 +349,10 @@ int IQ2020Component::processIQ2020Command() {
 		//ESP_LOGD(TAG, "SCK CMD Data, len=%d, cmd=%02x%02x", cmdlen, processingBuffer[5], processingBuffer[6]);
 	}
 
-	if ((processingBuffer[1] == 0x33) && (processingBuffer[2] == 0x01) && (processingBuffer[4] == 0x40) && (cmdlen >= 8)) {
+	if (((processingBuffer[1] == 0x33) || (processingBuffer[1] == 0x1D)) && (processingBuffer[2] == 0x01) && (processingBuffer[4] == 0x40) && (cmdlen >= 8)) {
 		// This is a command from IQ2020 to the audio module
 		//ESP_LOGD(TAG, "Audio REQ Data, len=%d, cmd=%02x%02x", cmdlen, processingBuffer[5], processingBuffer[6]);
+		audio_module_address = processingBuffer[1]; // There are two audio modules at 0x33 or 0x1D.
 
 		int responded = 0;
 		if ((processingBuffer[5] == 0x19) && (cmdlen >= 9)) {
@@ -355,9 +372,13 @@ int IQ2020Component::processIQ2020Command() {
 			}
 			else if ((processingBuffer[6] == 0x00) && (processingBuffer[7] == 0x01) && (cmdlen == 14)) { // Audio settings
 #ifdef USE_NUMBER
-				ESP_LOGD(TAG, "AUDIO - Volume=%d, Tremble=%d, Bass=%d, Balance=%d, Subwoofer=%d", processingBuffer[8], processingBuffer[9], processingBuffer[10], processingBuffer[11], processingBuffer[12]);
-				setNumberState(NUMBER_AUDIO_VOLUME, (processingBuffer[8] - 15) << 2);
-				setNumberState(NUMBER_AUDIO_TREMBLE, (signed char)(processingBuffer[9]));
+				ESP_LOGD(TAG, "AUDIO - Volume=%d, Treble=%d, Bass=%d, Balance=%d, Subwoofer=%d", processingBuffer[8], processingBuffer[9], processingBuffer[10], processingBuffer[11], processingBuffer[12]);
+				if (audio_module_address == 0x33) { // 0x33
+					setNumberState(NUMBER_AUDIO_VOLUME, (processingBuffer[8] - 15) << 2);
+				} else { // 0x1D
+					setNumberState(NUMBER_AUDIO_VOLUME, (((int)processingBuffer[8]) * 100) / 40);
+				}
+				setNumberState(NUMBER_AUDIO_TREBLE, (signed char)(processingBuffer[9]));
 				setNumberState(NUMBER_AUDIO_BASS, (signed char)(processingBuffer[10]));
 				setNumberState(NUMBER_AUDIO_BALANCE, (signed char)(processingBuffer[11]));
 				setNumberState(NUMBER_AUDIO_SUBWOOFER, processingBuffer[12]);
@@ -374,7 +395,7 @@ int IQ2020Component::processIQ2020Command() {
 					memcpy(text + 2, g_iq2020_text[TEXT_SONG_TITLE]->text_value.c_str(), text_len - 2);
 				}
 #endif
-				sendIQ2020Command(0x01, 0x33, 0x80, (unsigned char*)text, text_len);
+				sendIQ2020Command(0x01, audio_module_address, 0x80, (unsigned char*)text, text_len);
 				responded = 1;
 			}
 			else if (processingBuffer[6] == 0x07) { // Artist name
@@ -388,7 +409,7 @@ int IQ2020Component::processIQ2020Command() {
 					memcpy(text + 2, g_iq2020_text[TEXT_ARTIST_NAME]->text_value.c_str(), text_len - 2);
 				}
 #endif
-				sendIQ2020Command(0x01, 0x33, 0x80, (unsigned char*)text, text_len);
+				sendIQ2020Command(0x01, audio_module_address, 0x80, (unsigned char*)text, text_len);
 				responded = 1;
 			}
 		}
@@ -396,9 +417,11 @@ int IQ2020Component::processIQ2020Command() {
 		// Audio emulation
 		if (audio_emulation_ && (responded == 0)) {
 			//ESP_LOGD(TAG, "AUDIO - Enumlate");
+			// These numbers below are a complete guess, I need real ones.
+			// They likely tell the IQ2020 controller what source inputs are available and other things.
 			unsigned char cmd[] = { 0x19, 0x01, 0x00, 0x19, 0x00, 0x00, 0x00, 0x0B, 0x00, 0x04, 0x01, 0x00, 0x00 };
 			//unsigned char cmd[] = { processingBuffer[5], processingBuffer[6] }; // Echo back the command with no data
-			sendIQ2020Command(0x01, 0x33, 0x80, cmd, sizeof(cmd));
+			sendIQ2020Command(0x01, audio_module_address, 0x80, cmd, sizeof(cmd));
 		}
 	}
 
@@ -487,8 +510,12 @@ int IQ2020Component::processIQ2020Command() {
 			setSelectState(SELECT_AUDIO_SOURCE, processingBuffer[14]); // Audio Source
 #endif
 #ifdef USE_NUMBER
-			setNumberState(NUMBER_AUDIO_VOLUME, (processingBuffer[8] - 15) << 2);
-			setNumberState(NUMBER_AUDIO_TREMBLE, (signed char)processingBuffer[9]);
+			if (audio_module_address == 0x33) { // 0x33
+				setNumberState(NUMBER_AUDIO_VOLUME, (processingBuffer[8] - 15) << 2);
+			} else { // 0x1D
+				setNumberState(NUMBER_AUDIO_VOLUME, (((int)processingBuffer[8]) * 100) / 40);
+			}
+			setNumberState(NUMBER_AUDIO_TREBLE, (signed char)processingBuffer[9]);
 			setNumberState(NUMBER_AUDIO_BASS, (signed char)processingBuffer[10]);
 			setNumberState(NUMBER_AUDIO_BALANCE, (signed char)processingBuffer[11]);
 			setNumberState(NUMBER_AUDIO_SUBWOOFER, processingBuffer[12]);
@@ -963,15 +990,21 @@ void IQ2020Component::numberAction(unsigned int numberid, int value) {
 	case NUMBER_AUDIO_VOLUME:
 	{
 		number_pending[NUMBER_AUDIO_VOLUME] = value;
-		unsigned char cmd[] = { 0x19, 0x00, 0x01, (unsigned char)((value >> 2) + 15) };
-		sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Change volume
+		if (audio_module_address == 0x33) { // 0x33
+			unsigned char cmd[] = { 0x19, 0x00, 0x01, (unsigned char)((value >> 2) + 15) };
+			sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Change volume
+		}
+		else { // 0x1D
+			unsigned char cmd[] = { 0x19, 0x00, 0x01, (unsigned char)((value * 40) / 100) };
+			sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Change volume
+		}
 		break;
 	}
-	case NUMBER_AUDIO_TREMBLE:
+	case NUMBER_AUDIO_TREBLE:
 	{
-		number_pending[NUMBER_AUDIO_TREMBLE] = value;
+		number_pending[NUMBER_AUDIO_TREBLE] = value;
 		unsigned char cmd[] = { 0x19, 0x00, 0x05, (unsigned char)value };
-		sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Change tremble
+		sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Change treble
 		break;
 	}
 	case NUMBER_AUDIO_BASS:

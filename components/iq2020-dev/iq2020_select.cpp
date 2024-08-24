@@ -5,7 +5,7 @@
 extern IQ2020Component* g_iq2020_main;
 extern esphome::iq2020_select::IQ2020Select* g_iq2020_select[SELECTCOUNT];
 
-std::vector<std::string> audio_source_values = { "TV", "Aux", "Bluetooth" };
+std::vector<std::string> audio_source_values = { "iPOD", "TV", "Aux", "Bluetooth" };
 std::vector<std::string> lights_colors_values = { "Violet", "Blue", "Cyan", "Green", "White", "Yellow", "Red", "Cycle" };
 std::vector<std::string> lights_cycle_speed = { "Off", "Slow", "Normal", "Fast" };
 
@@ -45,8 +45,9 @@ namespace iq2020_select {
 		this->publish_state(value);
 		if (g_iq2020_main == NULL) return;
 		if (select_id == SELECT_AUDIO_SOURCE) {
-			// Audio source: TV = 2, Aux = 3, Bluetooth = 4
-			if (value.compare("TV") == 0) { g_iq2020_main->selectAction(select_id, 2); }
+			// Audio source: iPOD = 1, TV = 2, Aux = 3, Bluetooth = 4
+			if (value.compare("iPOD") == 0) { g_iq2020_main->selectAction(select_id, 1); }
+			else if (value.compare("TV") == 0) { g_iq2020_main->selectAction(select_id, 2); }
 			else if (value.compare("Aux") == 0) { g_iq2020_main->selectAction(select_id, 3); }
 			else if (value.compare("Bluetooth") == 0) { g_iq2020_main->selectAction(select_id, 4); }
 		} else if (select_id == SELECT_LIGHTS_CYCLE_SPEED) {
@@ -64,7 +65,8 @@ namespace iq2020_select {
 
 	void IQ2020Select::publish_state_ex(int value) {
 		ESP_LOGD(TAG, "Select:%d publish_state_ex: %d", select_id, value);
-		if (select_id == SELECT_AUDIO_SOURCE) { // Audio Source, TV = 2, Aux = 3, Bluetooth = 4
+		if (select_id == SELECT_AUDIO_SOURCE) { // Audio Source, iPOD = 1, TV = 2, Aux = 3, Bluetooth = 4
+			if (value == 1) { this->publish_state("iPOD"); }
 			if (value == 2) { this->publish_state("TV"); }
 			if (value == 3) { this->publish_state("Aux"); }
 			if (value == 4) { this->publish_state("Bluetooth"); }
@@ -74,6 +76,7 @@ namespace iq2020_select {
 			}
 		} else {
 			if (this->traits.get_options().size() >= value) {
+				if (value == 0) { value = 8; } // Attempt to keep from going to negative index (??)
 				this->publish_state(this->traits.get_options()[value - 1]);
 			}
 		}

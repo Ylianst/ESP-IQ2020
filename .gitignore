@@ -240,3 +240,9 @@ ModelManifest.xml
 
 # FAKE - F# Make
 .fake/
+
+### VisualStudioCode ###
+.vscode/* 
+
+**/.history
+

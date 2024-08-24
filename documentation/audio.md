@@ -33,8 +33,8 @@ number:
     id: audio_volume
     datapoint: 0
   - platform: iq2020
-    name: Tremble
-    id: audio_tremble
+    name: Treble
+    id: audio_treble
     datapoint: 1
   - platform: iq2020
     name: Bass
@@ -91,4 +91,4 @@ You can show any text you like for the Song Title and Artist Name, but there is 
 
 Known Issues:
 
-- The balance, bass and tremble are values that go from -5 to +5. You can change them from the spa remote and it will show up correctly in Home Assistant. However, trying to change these values from Home Assistant will not work in the negative ranges. The root cause looks like a bug in the IQ2020 firmware. There are commands for these 3 settings, but they don't seem to work for negavive values. Not a big surprise, these commands may never have gotten any use outside of this integration.
+- The balance, bass and treble are values that go from -5 to +5. You can change them from the spa remote and it will show up correctly in Home Assistant. However, trying to change these values from Home Assistant will not work in the negative ranges. The root cause looks like a bug in the IQ2020 firmware. There are commands for these 3 settings, but they don't seem to work for negavive values. Not a big surprise, these commands may never have gotten any use outside of this integration.

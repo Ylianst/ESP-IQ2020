@@ -454,7 +454,7 @@ Audio commands from and to the internet kit
 01 1F 40 1900 01xx          - Set Volume
 01 1F 40 1900 02xx          - Set Play/Pause/Next/Back
 01 1F 40 1900 03xx          - Set Source
-01 1F 40 1900 05xx          - Set Tremble
+01 1F 40 1900 05xx          - Set Treble
 01 1F 40 1900 06xx          - Set Base
 01 1F 40 1900 07xx          - Set Balance
 01 1F 40 1900 08xx          - Set Subwoofer
@@ -468,7 +468,7 @@ Audio commands to the audio module
                VVTTCCBBSS
 
 VV = Volume (0x0F to 0x18)
-TT = Tremble (0xFB to 0x05)
+TT = Treble (0xFB to 0x05)
 CC = Bass (0xFB to 0x05)
 BB = Balance (0xFB to 0x05)
 SS = Subwoofer (0x00 to 0x0B)

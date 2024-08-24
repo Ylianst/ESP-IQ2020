@@ -47,7 +47,7 @@
 #define TEXT_ARTIST_NAME 1             // Artist name (Max 20 chars)
 #define NUMBERCOUNT 11
 #define NUMBER_AUDIO_VOLUME 0          // Audio volume (0 to 100, steps of 4)
-#define NUMBER_AUDIO_TREMBLE 1         // Audio tremble (-5 to 5)
+#define NUMBER_AUDIO_TREBLE 1          // Audio treble (-5 to 5)
 #define NUMBER_AUDIO_BASS 2            // Audio base (-5 to 5)
 #define NUMBER_AUDIO_BALANCE 3         // Audio balance (-5 to 5)
 #define NUMBER_AUDIO_SUBWOOFER 4       // Audio subwoofer (0 to 11) - "This one goes to 11".

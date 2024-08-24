@@ -217,8 +217,8 @@ number:
     id: audio_volume
     datapoint: 0
   - platform: iq2020
-    name: Tremble
-    id: audio_tremble
+    name: Treble
+    id: audio_treble
     datapoint: 1
   - platform: iq2020
     name: Bass
