@@ -136,6 +136,11 @@ Intensity values are from 0 for off to 5 for maximum brightness. For colors, her
 If you have a ACE or Freshwater module attached to your hot tub, this integration will allow you to see the salt sensor and control the power level (0 to 10) of the salt system. To do this, add the following under the `number`, `sensor` and `switch` sections:
 
 ```
+binary_sensor:    
+  - platform: iq2020-dev
+    salt_level_confirmed:
+      name: Salt Level Confirmed
+
 number:
   - platform: iq2020
     id: salt_power
