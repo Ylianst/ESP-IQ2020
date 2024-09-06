@@ -14,7 +14,7 @@ CONF_ACE_EMULATION = "ace_emulation"
 CONF_FRESHWATER_EMULATION = "freshwater_emulation"
 CONF_AUDIO_EMULATION = "audio_emulation"
 CONF_POLLING_RATE = "polling_rate"
-
+CONF_TRIGGER_POLL_PIN = "trigger_poll_pin"
 CONF_TEMP_UNIT = "temp_unit"
 MULTI_CONF = False
 
@@ -43,6 +43,8 @@ CONFIG_SCHEMA = cv.All(
             cv.Optional(CONF_ACE_EMULATION, default = 'false'): cv.boolean,
             cv.Optional(CONF_FRESHWATER_EMULATION, default = 'false'): cv.boolean,
             cv.Optional(CONF_AUDIO_EMULATION, default = 'false'): cv.boolean,
+
+            cv.Optional(CONF_TRIGGER_POLL_PIN): pins.gpio_input_pin_schema,
         }
     )
     .extend(cv.COMPONENT_SCHEMA)
@@ -61,6 +63,10 @@ async def to_code(config):
     if CONF_FLOW_CONTROL_PIN in config:
         pin = await gpio_pin_expression(config[CONF_FLOW_CONTROL_PIN])
         cg.add(var.set_flow_control_pin(pin))
+
+    if CONF_TRIGGER_POLL_PIN in config:
+        trigPin = await gpio_pin_expression(config[CONF_TRIGGER_POLL_PIN])
+        cg.add(var.set_trigger_poll_pin(trigPin))
 
     await cg.register_component(var, config)
     await uart.register_uart_device(var, config)

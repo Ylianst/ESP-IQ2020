@@ -18,7 +18,7 @@ namespace iq2020_number {
 		case NUMBER_AUDIO_VOLUME:
 			this->traits.set_min_value(0);
 			this->traits.set_max_value(100);
-			this->traits.set_step(4);
+			//this->traits.set_step(4);
 			break;
 		case NUMBER_AUDIO_TREBLE:
 			this->traits.set_min_value(-5);

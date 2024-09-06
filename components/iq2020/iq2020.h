@@ -47,7 +47,7 @@
 #define TEXT_ARTIST_NAME 1             // Artist name (Max 20 chars)
 #define NUMBERCOUNT 11
 #define NUMBER_AUDIO_VOLUME 0          // Audio volume (0 to 100, steps of 4)
-#define NUMBER_AUDIO_TREBLE 1          // Audio treble (-5 to 5)
+#define NUMBER_AUDIO_TREBLE 1         // Audio treble (-5 to 5)
 #define NUMBER_AUDIO_BASS 2            // Audio base (-5 to 5)
 #define NUMBER_AUDIO_BALANCE 3         // Audio balance (-5 to 5)
 #define NUMBER_AUDIO_SUBWOOFER 4       // Audio subwoofer (0 to 11) - "This one goes to 11".
@@ -66,6 +66,7 @@ public:
 	void set_uart_parent(esphome::uart::UARTComponent *parent) { this->stream_ = parent; }
 	void set_buffer_size(size_t size) { this->buf_size_ = size; }
 	void set_flow_control_pin(esphome::GPIOPin *flow_control_pin) { this->flow_control_pin_ = flow_control_pin; }
+	void set_trigger_poll_pin(esphome::GPIOPin *trigger_poll_pin) { this->trigger_poll_pin_ = trigger_poll_pin; }
 	void set_ace_emulation(bool ace_emulation) { this->ace_emulation_ = ace_emulation; }
 	void set_freshwater_emulation(bool freshwater_emulation) { this->freshwater_emulation_ = freshwater_emulation; }
 	void set_audio_emulation(bool audio_emulation) { this->audio_emulation_ = audio_emulation; }
@@ -74,6 +75,7 @@ public:
 	void set_connected_sensor(esphome::binary_sensor::BinarySensor *connected) { this->connected_sensor_ = connected; }
 	void set_connectionkit_sensor(esphome::binary_sensor::BinarySensor *present) { this->connectionkit_sensor_ = present; }
 	void set_salt_boost_sensor(esphome::binary_sensor::BinarySensor *present) { this->salt_boost_sensor_ = present; }
+	void set_salt_confirmed_sensor(esphome::binary_sensor::BinarySensor *present) { this->salt_confirmed_sensor_ = present; }
 #endif
 #ifdef USE_SENSOR
 	void set_current_f_temp_sensor(esphome::sensor::Sensor *temp) { this->current_f_temp_sensor_ = temp; }
@@ -166,17 +168,20 @@ protected:
 	uint16_t port_;
 	size_t buf_size_;
 	esphome::GPIOPin *flow_control_pin_{ nullptr };
+	esphome::GPIOPin *trigger_poll_pin_{ nullptr };
 	bool ace_emulation_;
 	unsigned char ace_flags = 1;     // 0x01 = Functioning, 0x04 = Boosting, 0x08 = Testing
 	unsigned char ace_status = 3;    // 0 to 7 with 3 or 4 being ideal.
 	bool freshwater_emulation_;
 	bool audio_emulation_;
+	unsigned char audio_module_address = 0x33; // There are two audio modules at 0x33 or 0x1D.
 	int polling_rate_;
 
 #ifdef USE_BINARY_SENSOR
 	esphome::binary_sensor::BinarySensor *connected_sensor_;
 	esphome::binary_sensor::BinarySensor *connectionkit_sensor_;
 	esphome::binary_sensor::BinarySensor *salt_boost_sensor_;
+	esphome::binary_sensor::BinarySensor *salt_confirmed_sensor_;
 #endif
 #ifdef USE_SENSOR
 	esphome::sensor::Sensor *current_f_temp_sensor_;
@@ -253,6 +258,7 @@ protected:
 	int pending_temp_retry = 0;
 	unsigned long next_poll = 0;
 	unsigned long next_retry = 0;
+	unsigned long last_pin_check_time = 0;
 	int next_retry_count = 0;
 	int salt_power = NOT_SET; // This is polled too frequently to send to HA each time.
 	int salt_content = NOT_SET; // This is polled too frequently to send to HA each time.
