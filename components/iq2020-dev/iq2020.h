@@ -75,6 +75,7 @@ public:
 	void set_connected_sensor(esphome::binary_sensor::BinarySensor *connected) { this->connected_sensor_ = connected; }
 	void set_connectionkit_sensor(esphome::binary_sensor::BinarySensor *present) { this->connectionkit_sensor_ = present; }
 	void set_salt_boost_sensor(esphome::binary_sensor::BinarySensor *present) { this->salt_boost_sensor_ = present; }
+	void set_salt_confirmed_sensor(esphome::binary_sensor::BinarySensor *present) { this->salt_confirmed_sensor_ = present; }
 #endif
 #ifdef USE_SENSOR
 	void set_current_f_temp_sensor(esphome::sensor::Sensor *temp) { this->current_f_temp_sensor_ = temp; }
@@ -180,6 +181,7 @@ protected:
 	esphome::binary_sensor::BinarySensor *connected_sensor_;
 	esphome::binary_sensor::BinarySensor *connectionkit_sensor_;
 	esphome::binary_sensor::BinarySensor *salt_boost_sensor_;
+	esphome::binary_sensor::BinarySensor *salt_confirmed_sensor_;
 #endif
 #ifdef USE_SENSOR
 	esphome::sensor::Sensor *current_f_temp_sensor_;

@@ -694,6 +694,12 @@ int IQ2020Component::processIQ2020Command() {
 			setSwitchState(SWITCH_CLEANCYCLE, (flags1 & 0x10) != 0);
 			setSwitchState(SWITCH_SUMMERTIMER, (flags1 & 0x20) != 0);
 
+#ifdef USE_BINARY_SENSOR
+			if (this->salt_confirmed_sensor_) {
+				this->salt_confirmed_sensor_->publish_state((flags1 & 0x40) != 0);
+			}
+#endif
+
 			// Water heater status
 			float heaterActive = (processingBuffer[110] + (processingBuffer[111] << 8));
 
