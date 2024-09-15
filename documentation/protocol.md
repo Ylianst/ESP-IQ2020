@@ -91,7 +91,7 @@ The Spa Connection Kit sends all it's commands from address 0x1F. Sending the co
 0B1E - Temperature Lock
 0B1F - Clean Cycle
 0B20 - Unknown (0B2001)
-0B27 - Unknown (0B278C)
+0B27 - Change interior light level
 1702 - Set Lights on/off
 1705 - Get Lights status
 1900 - Audio Module Command (190015)
@@ -143,6 +143,18 @@ Lights OFF
 ```
 <-- 01 1F 40 1702041000
 <-- 1F 01 80 170206
+```
+
+Decreases Interior lights Dim level
+```
+<-- 01 1F 40 0B2702
+<-- 1F 01 80 0B2700
+```
+
+Increase Interior lights Dim level
+```
+<-- 01 1F 40 0B2703
+<-- 1F 01 80 0B2700
 ```
 
 Spa Lock ON
