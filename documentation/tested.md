@@ -239,3 +239,10 @@ Jets 2 has off/high speeds
 
 Controller image:
 ![356781975-cb7addd6-c6bf-4cb5-93f2-518f8f7cbe94](https://github.com/user-attachments/assets/c7d7875d-1afa-4b7b-8cc7-b8bb5f2661f0)
+
+## HotSpring HotSpot SX 2017
+
+Status: Works, but lights can't be controlled correctly, it's a single color lights with off/dim/full setting. Pump power sensor shows always zero.
+Version: 110T 7b54A002 v2.6
+
+![369696446-a95b9ca2-f8eb-4d17-891e-87551b0073e5](https://github.com/user-attachments/assets/8045b8af-f5ee-48ee-9921-df06cd55e7de)
