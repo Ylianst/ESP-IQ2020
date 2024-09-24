@@ -72,15 +72,15 @@ The echanges between the IQ2020 and this Salt Water device on address 0x29 alway
 
 # Freshwater IQ
 
-Freshwater Salt System and Freshwater IQ modules are different. The Freshwater Salt System module will send current thru the water to create chlorine, the IQ module will monitors Ph and Chlorine levels in the hot tub. THe IQ module uses addresses `0x37` on the RS485 bus. The most common command is the IQ2020 controller polling for data like this:
+Freshwater Salt System and Freshwater IQ modules are different. The Freshwater Salt System module will send current thru the water to create chlorine, the IQ module will monitors Ph and Chlorine levels in the hot tub. The IQ module uses addresses `0x37` on the RS485 bus. The most common command is the IQ2020 controller polling for data like this:
 
 ```
 <-- 37 01 40 23D500
 <-- 01 37 80 23D5000000003234313130304E30A76EBD3915FF7E9C30303744000000040000000400000004000031500000271000002710000007E2000007E2
                                                                                                                  AAAAAAAABBBBBBBB
 
-AAAAAAAA - Carterage use in hours (Small-Endian)
-BBBBBBBB - Carterage use in hours (Small-Endian)
+AAAAAAAA - Cartridge use in hours (Small-Endian)
+BBBBBBBB - Cartridge use in hours (Small-Endian)
 ```
 
 The first command polls the data and the second is the data returned from the Freshwater IQ module.
