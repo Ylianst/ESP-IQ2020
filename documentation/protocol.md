@@ -70,6 +70,16 @@ Above, I use 0x99 as by source address and send a request to 0x29. The salt wate
 
 The echanges between the IQ2020 and this Salt Water device on address 0x29 always contain 15 bytes of data. The IQ2020 device will send requests to the module every few seconds and sometimes even faster.
 
+# Freshwater IQ
+
+This is a module that monitors Ph and Chlorine levels in the hot tub. It looks like it's using addresses `0x37` and `0x38` on the RS485 bus. The most common command is the IQ2020 controller polling for data like this:
+
+```
+<-- 37 01 40 23D500
+<-- 01 37 80 23D5000000003234313130304E30A76EBD3915FF7E9C30303744000000040000000400000004000031500000271000002710000007E2000007E2
+```
+
+The first command polls the data and the second is the data returned from the Freshwater IQ module.
 
 # Spa Connection Kit
 
