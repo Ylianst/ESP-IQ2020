@@ -48,7 +48,7 @@ The source address is 0x01 which is the address of the IQ2020 controller on the 
 0x29 - Freshwater Salt System module
 0x33 - Audio/Music module
 0x37 - Freshwater IQ data
-0x38 - Freshwater IQ unknown
+0x38 - Unknown module
 0x1D - Audio/Music module
 0x1F - Spa Connection Kit
 ```
@@ -72,7 +72,7 @@ The echanges between the IQ2020 and this Salt Water device on address 0x29 alway
 
 # Freshwater IQ
 
-This is a module that monitors Ph and Chlorine levels in the hot tub. It looks like it's using addresses `0x37` and `0x38` on the RS485 bus. The most common command is the IQ2020 controller polling for data like this:
+This is a module that monitors Ph and Chlorine levels in the hot tub. It looks like it's using addresses `0x37` on the RS485 bus. The most common command is the IQ2020 controller polling for data like this:
 
 ```
 <-- 37 01 40 23D500
