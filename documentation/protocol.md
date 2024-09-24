@@ -79,8 +79,8 @@ Freshwater Salt System and Freshwater IQ modules are different. The Freshwater S
 <-- 01 37 80 23D5000000003234313130304E30A76EBD3915FF7E9C30303744000000040000000400000004000031500000271000002710000007E2000007E2
                                                                                                                  AAAAAAAABBBBBBBB
 
-AAAAAAAA - Carterage use in hours.
-BBBBBBBB - Carterage use in hours.
+AAAAAAAA - Carterage use in hours (Small-Endian)
+BBBBBBBB - Carterage use in hours (Small-Endian)
 ```
 
 The first command polls the data and the second is the data returned from the Freshwater IQ module.
