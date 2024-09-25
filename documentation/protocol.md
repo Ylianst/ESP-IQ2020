@@ -72,8 +72,8 @@ The echanges between the IQ2020 and this Salt Water device on address 0x29 alway
 
 # Freshwater IQ
 
-Freshwater Salt System and Freshwater IQ modules are different. The Freshwater Salt System module will send current thru the water to create chlorine, the IQ module will monitors Ph and Chlorine levels in the hot tub. The IQ module uses addresses `0x37` on the RS485 bus. The most common command is the IQ2020 controller polling for data like this:
-
+Freshwater Salt System and Freshwater IQ modules are different. The Freshwater Salt System module will send current thru the water to create chlorine, the IQ module will monitors Ph and Chlorine levels in the hot tub. The IQ module uses addresses `0x37` on the RS485 bus. The most common command is the IQ2020 controller polling for data :
+using command `0x23D5` like this:
 ```
 <-- 37 01 40 23D500
 <-- 01 37 80 23D5000000003234313130304E30A76EBD3915FF7E9C30303744000000040000000400000004000031500000271000002710000007E2000007E2
@@ -83,7 +83,22 @@ AAAAAAAA - Cartridge use in hours (Small-Endian)
 BBBBBBBB - Cartridge use in hours (Small-Endian)
 ```
 
-The first command polls the data and the second is the data returned from the Freshwater IQ module.
+The first command polls the data and the second is the data returned from the Freshwater IQ module. This happens frequently, not sure what this contains. Every hour, we see this `0x23D1` command:
+
+```
+<-- 01 37 80 23D100000000000000000000087A000003090000000F0000004B00001F2C
+                 AAAAAAAABBBBBBBBCCCCCCCCDDDDDDDDEEEEEEEEFFFFFFFFGGGGGGGG
+
+AA = Unknown, always zero.
+BB = Unknown, always zero.
+CC = Unknown, 32 bit small-endian.
+DD = Unknown, 32 bit small-endian.
+EE = Chlorine in 10ths of PPM, 32 bit small-endian, Convert to decimal and divide by 10.
+FF = Ph in 10ths, 32 bit small-endian, Convert to decimal and divide by 10.
+GG = Hours remaining count-down, 32 bit small-endian.
+```
+
+This seems to contain the Chlorine, Ph and life remaining for the Freshwater IQ cartridge in hours.
 
 # Spa Connection Kit
 
