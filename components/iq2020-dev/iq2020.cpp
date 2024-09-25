@@ -42,6 +42,7 @@ using namespace esphome;
 float fahrenheit_to_celsius(float f) { return (f - 32) * 5 / 9; }
 float celsius_to_fahrenheit(float c) { return c * 9 / 5 + 32; }
 int readCounter(unsigned char* data, int offset) { return (data[offset]) + (data[offset + 1] << 8) + (data[offset + 2] << 16) + (data[offset + 3] << 24); }
+int readCounterEx(unsigned char* data, int offset) { return (data[offset] << 24) + (data[offset + 1] << 16) + (data[offset + 2] << 8) + (data[offset + 3]); }
 
 void IQ2020Component::setup() {
 	for (int i = 0; i < SWITCHCOUNT; i++) { switch_state[i] = switch_pending[i] = NOT_SET; }
@@ -425,6 +426,27 @@ int IQ2020Component::processIQ2020Command() {
 			//unsigned char cmd[] = { processingBuffer[5], processingBuffer[6] }; // Echo back the command with no data
 			sendIQ2020Command(0x01, audio_module_address, 0x80, cmd, sizeof(cmd));
 		}
+	}
+
+	if ((processingBuffer[1] == 0x01) && (processingBuffer[2] == 0x37) && (processingBuffer[4] == 0x80) && (cmdlen == 36) && (processingBuffer[5] == 0x23) && (processingBuffer[6] == 0xD1)) {
+		// This is a status command from Freshwater IQ to the IQ2020
+		int iq_va = readCounterEx(processingBuffer, 7);  // Unknown value, always zero
+		int iq_vb = readCounterEx(processingBuffer, 11); // Unknown value, always zero
+		int iq_vc = readCounterEx(processingBuffer, 15); // Unknown value
+		int iq_vd = readCounterEx(processingBuffer, 19); // Unknown value
+		int iq_ve = readCounterEx(processingBuffer, 23); // Chlorine level
+		int iq_vf = readCounterEx(processingBuffer, 27); // Ph Level
+		int iq_vg = readCounterEx(processingBuffer, 31); // Cartridge life countdown.
+
+#ifdef USE_SENSOR
+		if (this->iq_va_sensor_) this->iq_va_sensor_->publish_state((float)iq_va);
+		if (this->iq_vb_sensor_) this->iq_vb_sensor_->publish_state((float)iq_vb);
+		if (this->iq_vc_sensor_) this->iq_vc_sensor_->publish_state((float)iq_vc);
+		if (this->iq_vd_sensor_) this->iq_vd_sensor_->publish_state((float)iq_vd);
+		if (this->iq_chlorine_sensor_) this->iq_chlorine_sensor_->publish_state(((float)iq_ve) / 10);
+		if (this->iq_ph_sensor_) this->iq_ph_sensor_->publish_state(((float)iq_vf) / 10);
+		if (this->iq_hoursleft_sensor_) this->iq_hoursleft_sensor_->publish_state((float)iq_vg);
+#endif
 	}
 
 	if (((processingBuffer[1] == 0x24) || (processingBuffer[1] == 0x29)) && (processingBuffer[2] == 0x01) && (processingBuffer[4] == 0x40) && (cmdlen == 21) && (processingBuffer[5] == 0x1E) && (processingBuffer[6] == 0x01)) {

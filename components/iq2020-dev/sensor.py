@@ -67,6 +67,13 @@ CONF_SENSOR_LIGHTS_COLOR_BARTOP = "lights_bartop_color"
 CONF_SENSOR_LIGHTS_COLOR_PILLOW = "lights_pillow_color"
 CONF_SENSOR_LIGHTS_COLOR_EXTERIOR = "lights_exterior_color"
 CONF_SENSOR_LIGHTS_MAIN_LOOP_SPEED = "lights_main_loop_speed"
+CONF_SENSOR_IQ_VA = "iq_va"
+CONF_SENSOR_IQ_VB = "iq_vb"
+CONF_SENSOR_IQ_VC = "iq_vc"
+CONF_SENSOR_IQ_VD = "iq_vd"
+CONF_SENSOR_IQ_CHLORINE = "iq_chlorine"
+CONF_SENSOR_IQ_PH = "iq_ph"
+CONF_SENSOR_IQ_HOURSLEFT = "iq_hoursleft"
 
 CONF_IQ2020_SERVER = "iq2020_server"
 
@@ -316,6 +323,27 @@ CONFIG_SCHEMA = cv.Schema(
         cv.Optional(CONF_SENSOR_LIGHTS_MAIN_LOOP_SPEED): sensor.sensor_schema(
             accuracy_decimals=0,
             icon=ICON_LIGHTBULB
+        ),
+        cv.Optional(CONF_SENSOR_IQ_VA): sensor.sensor_schema(
+            accuracy_decimals=0
+        ),
+        cv.Optional(CONF_SENSOR_IQ_VB): sensor.sensor_schema(
+            accuracy_decimals=0
+        ),
+        cv.Optional(CONF_SENSOR_IQ_VC): sensor.sensor_schema(
+            accuracy_decimals=0
+        ),
+        cv.Optional(CONF_SENSOR_IQ_VD): sensor.sensor_schema(
+            accuracy_decimals=0
+        ),
+        cv.Optional(CONF_SENSOR_IQ_CHLORINE): sensor.sensor_schema(
+            accuracy_decimals=1
+        ),
+        cv.Optional(CONF_SENSOR_IQ_PH): sensor.sensor_schema(
+            accuracy_decimals=1
+        ),
+        cv.Optional(CONF_SENSOR_IQ_HOURSLEFT): sensor.sensor_schema(
+            accuracy_decimals=0
         )
     }
 )
@@ -490,3 +518,31 @@ async def to_code(config):
     if CONF_SENSOR_LIGHTS_MAIN_LOOP_SPEED in config:
         sens = await sensor.new_sensor(config[CONF_SENSOR_LIGHTS_MAIN_LOOP_SPEED])
         cg.add(server.set_lights_main_loop_speed_sensor(sens))
+
+    if CONF_SENSOR_IQ_VA in config:
+        sens = await sensor.new_sensor(config[CONF_SENSOR_IQ_VA])
+        cg.add(server.set_iq_va_sensor(sens))
+
+    if CONF_SENSOR_IQ_VB in config:
+        sens = await sensor.new_sensor(config[CONF_SENSOR_IQ_VB])
+        cg.add(server.set_iq_vb_sensor(sens))
+
+    if CONF_SENSOR_IQ_VC in config:
+        sens = await sensor.new_sensor(config[CONF_SENSOR_IQ_VC])
+        cg.add(server.set_iq_vc_sensor(sens))
+
+    if CONF_SENSOR_IQ_VD in config:
+        sens = await sensor.new_sensor(config[CONF_SENSOR_IQ_VD])
+        cg.add(server.set_iq_vd_sensor(sens))
+
+    if CONF_SENSOR_IQ_CHLORINE in config:
+        sens = await sensor.new_sensor(config[CONF_SENSOR_IQ_CHLORINE])
+        cg.add(server.set_iq_chlorine_sensor(sens))
+
+    if CONF_SENSOR_IQ_PH in config:
+        sens = await sensor.new_sensor(config[CONF_SENSOR_IQ_PH])
+        cg.add(server.set_iq_ph_sensor(sens))
+
+    if CONF_SENSOR_IQ_HOURSLEFT in config:
+        sens = await sensor.new_sensor(config[CONF_SENSOR_IQ_HOURSLEFT])
+        cg.add(server.set_iq_hoursleft_sensor(sens))
