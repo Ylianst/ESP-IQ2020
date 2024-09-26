@@ -72,7 +72,7 @@ The echanges between the IQ2020 and this Salt Water device on address 0x29 alway
 
 # Freshwater IQ
 
-Freshwater Salt System and Freshwater IQ modules are different. The Freshwater Salt System module will send current thru the water to create chlorine, the IQ module will monitors Ph and Chlorine levels in the hot tub. The IQ module uses addresses `0x37` on the RS485 bus. The list of known commands are:
+Freshwater Salt System and Freshwater IQ modules are different. The Freshwater Salt System module will send current thru the water to create chlorine, the IQ module will monitors Ph and Chlorine levels in the hot tub. The IQ module uses addresses `0x37` on the RS485 bus. The list of commands that have been seen in logs are:
 
 ```
 23A1 - Unknown
@@ -83,6 +83,7 @@ Freshwater Salt System and Freshwater IQ modules are different. The Freshwater S
 ```
 
 The most common command is the IQ2020 controller polling for data using command `0x23D5`. The first command polls the data and the second is the data returned from the Freshwater IQ module. This happens frequently, not sure what this contains.
+
 ```
 <-- 37 01 40 23D500
 <-- 01 37 80 23D5000000003234313130304E30A76EBD3915FF7E9C30303744000000040000000400000004000031500000271000002710000007E2000007E2
@@ -106,7 +107,7 @@ This next command we know nothing about.
 <-- 01 37 80 23A300
 ```
 
-Every hour, we see this `0x23D1` command. This seems to contain the Chlorine, Ph and life remaining for the Freshwater IQ cartridge in hours.
+Every hour, we see this `0x23D1` command. This seems to contain the Chlorine, Ph and life remaining for the Freshwater IQ cartridge in hours. The command seems to return 7 x 32bit integers.
 
 ```
 <-- 37 01 40 23D100
@@ -122,7 +123,7 @@ FF = Ph in 10ths, 32 bit small-endian, Convert to decimal and divide by 10.
 GG = Hours remaining count-down, 32 bit small-endian.
 ```
 
-This next command is completely unknown:
+This next command is completely unknown. It seems to contain 9 x 32 bit integers.
 
 ```
 <-- 37 01 40 23DC00
