@@ -160,6 +160,36 @@ switch:
 
 Salt content is a value from 0 to 7 where values 3 or 4 are ideal.
 
+## Freshwater IQ (Experimental)
+
+The Freshwater IQ module mesures the Chlorine and PH level of the water and reports it back. It seems to be an available option starting in 2014 and the user interface looks like this:
+
+![image](https://github.com/user-attachments/assets/7c2b4de3-5e62-49e2-8c40-40a70ab0c0ef)
+
+I don't personally have this module, so, others have to give me information on how it works so I can add support for it. I have received log files and decoded some of the [protocol here](https://github.com/Ylianst/ESP-IQ2020/blob/main/documentation/protocol.md#freshwater-iq). We have some values we know what they are and some others we do not. Currently the integration allows you to see 7 values, 3 of which we likely know the signification. In the `sensor:` section, add the following `iq_` values:
+
+```
+sensor:
+  - platform: iq2020-dev
+(...)
+    iq_va:
+      name: IQ Unknown A
+    iq_vb:
+      name: IQ Unknown B
+    iq_vc:
+      name: IQ Unknown C
+    iq_vd:
+      name: IQ Unknown D
+    iq_chlorine:
+      name: IQ Chlorine
+    iq_ph:
+      name: IQ Ph
+    iq_hoursleft:
+      name: IQ Hours Left
+```
+
+Chlorine level is in parts per million (PPM). Values A and B seem to always be 0 and so, you may want to just remove these sensors. For C and D, if you can find what they are, that would be great.
+
 ## Logo Lights
 
 The green and blue light at the front of the hot tub can also be reported by this integration. You can, for example, have a picture your your hot tub in Home Assistant and make the lights on the image match the light on the actual hot tub. In the `sensor` section of the configuration file, add the `logo_lights` sensor.
