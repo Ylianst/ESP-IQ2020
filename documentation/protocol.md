@@ -55,14 +55,16 @@ The source address is 0x01 which is the address of the IQ2020 controller on the 
 
 # Freshwater Salt System
 
-I happen to own the Salt Water device that uses address `0x29` on the RS485 bus, however I don't use the salt water system so I normally keep it disconnected. The Freshwater module seems to have a single `0x1E01` command and the IQ2020 module polls it regurarly with data. For example:
+The Freshwater system will run current thru the salt water to generate chlorene. Note that there is also a Freshwater IQ module that is completely different. This module uses address `0x29` on the RS485 bus and seems to have a single `0x1E01` command that the IQ2020 controller polls regurarly with data. The communication between the IQ2020 and Freshwater system is super weird. I can't figure it out. As a result, there is currently no emulation for the Freshwater module in this integration.
+
+Here is an example of a request from IQ2020 to the Freshwater module and the response:
 
 ```
 29 01 40 1E010000FFFFFF00FF04FFFFFFFFFF    <-- Request
 01 29 80 1E010000033500000000B310006841    <-- Response
 ```
 
-When looking at the request, this is some data I gathered.
+When looking at the request, this is some data I have observed.
 
 ```
 29 01 40 1E010000FFFFFF00FF04FFFFFFFFFF
@@ -80,7 +82,7 @@ CC = Indicates what buttons have been pressed on the user interface
        0xFF0101FF = Goto boost mode (5 minutes)
 ```
 
-Looking at the response
+Looking at the response, here is some things I have noticed:
 
 ```
 01 29 80 1E010000073500030000B310006841
@@ -91,7 +93,7 @@ CC = Boost Mode, 01 or 03 is normal, 23 is boost.
 DD = Error code
 ```
 
-If anyone has more data on the Freshwater module and it's communication with the IQ2020 controller, please let me know.
+I don't personally use the Freshwater module, but if someone uses it and can capture it's usage over time and figure out the protocol, please let me know.
 
 # Freshwater IQ
 
