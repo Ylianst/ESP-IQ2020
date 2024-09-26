@@ -126,7 +126,6 @@ public:
 	void set_iq_chlorine_sensor(esphome::sensor::Sensor *sensor) { this->iq_chlorine_sensor_ = sensor; }
 	void set_iq_ph_sensor(esphome::sensor::Sensor *sensor) { this->iq_ph_sensor_ = sensor; }
 	void set_iq_hoursleft_sensor(esphome::sensor::Sensor *sensor) { this->iq_hoursleft_sensor_ = sensor; }
-
 #endif
 #ifdef USE_TEXT_SENSOR
 	void set_version_sensor(esphome::text_sensor::TextSensor *text) { this->version_sensor_ = text; }
@@ -240,7 +239,6 @@ protected:
 	esphome::sensor::Sensor *iq_chlorine_sensor_;
 	esphome::sensor::Sensor *iq_ph_sensor_;
 	esphome::sensor::Sensor *iq_hoursleft_sensor_;
-
 #endif
 #ifdef USE_TEXT_SENSOR
 	esphome::text_sensor::TextSensor *version_sensor_;
@@ -264,6 +262,7 @@ protected:
 	int number_pending[NUMBERCOUNT]; // Desired state of all numbers
 #endif
 	unsigned long connectionKit = 0; // The time the spa connection kit was last seen
+	bool got_iq_data = false;
 	bool temp_celsius = false;
 	int temp_action = NOT_SET;
 	float target_temp = NOT_SET;

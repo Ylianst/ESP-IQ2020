@@ -428,8 +428,9 @@ int IQ2020Component::processIQ2020Command() {
 		}
 	}
 
-	if ((processingBuffer[1] == 0x01) && (processingBuffer[2] == 0x37) && (processingBuffer[4] == 0x80) && (cmdlen == 36) && (processingBuffer[5] == 0x23) && (processingBuffer[6] == 0xD1)) {
-		// This is a status command from Freshwater IQ to the IQ2020
+	if ((processingBuffer[2] == 0x37) && (processingBuffer[4] == 0x80) && (cmdlen == 36) && (processingBuffer[5] == 0x23) && (processingBuffer[6] == 0xD1)) {
+		// This is a status command from Freshwater IQ
+		got_iq_data = true;
 		int iq_va = readCounterEx(processingBuffer, 7);  // Unknown value, always zero
 		int iq_vb = readCounterEx(processingBuffer, 11); // Unknown value, always zero
 		int iq_vc = readCounterEx(processingBuffer, 15); // Unknown value
@@ -1194,10 +1195,16 @@ void IQ2020Component::pollState() {
 	if (select_state[SELECT_AUDIO_SOURCE] == NOT_SET) {
 		ESP_LOGD(TAG, "Poll Audio");
 		unsigned char cmd[] = { 0x19, 0x01 };
-		sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Get version string
+		sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Get audio status
 		return;
 	}
 #endif
+
+	if ((got_iq_data == false) && (this->iq_chlorine_sensor_)) {
+		ESP_LOGD(TAG, "Poll Freshwater IQ");
+		unsigned char cmd[] = { 0x23, 0xD1, 0x00 };
+		sendIQ2020Command(0x37, 0x1F, 0x40, cmd, sizeof(cmd)); // Get Freshwater IQ status
+	}
 
 	ESP_LOGD(TAG, "Poll");
 	unsigned char generalPollCmd[] = { 0x02, 0x56 };
