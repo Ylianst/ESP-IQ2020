@@ -72,8 +72,16 @@ The echanges between the IQ2020 and this Salt Water device on address 0x29 alway
 
 # Freshwater IQ
 
-Freshwater Salt System and Freshwater IQ modules are different. The Freshwater Salt System module will send current thru the water to create chlorine, the IQ module will monitors Ph and Chlorine levels in the hot tub. The IQ module uses addresses `0x37` on the RS485 bus. The most common command is the IQ2020 controller polling for data :
-using command `0x23D5` like this:
+Freshwater Salt System and Freshwater IQ modules are different. The Freshwater Salt System module will send current thru the water to create chlorine, the IQ module will monitors Ph and Chlorine levels in the hot tub. The IQ module uses addresses `0x37` on the RS485 bus. The list of known commands are:
+
+```
+23A1 - Unknown
+23D1 - Chlorine, Ph and more
+23D5 - Unknown
+23DC - Unknown
+```
+
+The most common command is the IQ2020 controller polling for data using command `0x23D5`. The first command polls the data and the second is the data returned from the Freshwater IQ module. This happens frequently, not sure what this contains.
 ```
 <-- 37 01 40 23D500
 <-- 01 37 80 23D5000000003234313130304E30A76EBD3915FF7E9C30303744000000040000000400000004000031500000271000002710000007E2000007E2
@@ -83,7 +91,14 @@ AAAAAAAA - Cartridge use in hours (Small-Endian)
 BBBBBBBB - Cartridge use in hours (Small-Endian)
 ```
 
-The first command polls the data and the second is the data returned from the Freshwater IQ module. This happens frequently, not sure what this contains. Every hour, we see this `0x23D1` command:
+This next command we know nothing about. It seems to set a value.
+
+```
+<-- 37 01 40 23A1016E
+<-- 01 37 80 23A100
+```
+
+Every hour, we see this `0x23D1` command. This seems to contain the Chlorine, Ph and life remaining for the Freshwater IQ cartridge in hours.
 
 ```
 <-- 37 01 40 23D100
@@ -99,7 +114,7 @@ FF = Ph in 10ths, 32 bit small-endian, Convert to decimal and divide by 10.
 GG = Hours remaining count-down, 32 bit small-endian.
 ```
 
-This seems to contain the Chlorine, Ph and life remaining for the Freshwater IQ cartridge in hours. This next command is completely unknown:
+This next command is completely unknown:
 
 ```
 <-- 37 01 40 23DC00
