@@ -76,6 +76,7 @@ Freshwater Salt System and Freshwater IQ modules are different. The Freshwater S
 
 ```
 23A1 - Unknown
+23A3 - Unknown
 23D1 - Chlorine, Ph and more
 23D5 - Unknown
 23DC - Unknown
@@ -96,6 +97,13 @@ This next command we know nothing about. It seems to set a value.
 ```
 <-- 37 01 40 23A1016E
 <-- 01 37 80 23A100
+```
+
+This next command we know nothing about.
+
+```
+<-- 37 01 40 23A300
+<-- 01 37 80 23A300
 ```
 
 Every hour, we see this `0x23D1` command. This seems to contain the Chlorine, Ph and life remaining for the Freshwater IQ cartridge in hours.
