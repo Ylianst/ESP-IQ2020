@@ -86,6 +86,7 @@ BBBBBBBB - Cartridge use in hours (Small-Endian)
 The first command polls the data and the second is the data returned from the Freshwater IQ module. This happens frequently, not sure what this contains. Every hour, we see this `0x23D1` command:
 
 ```
+<-- 37 01 40 23D100
 <-- 01 37 80 23D100000000000000000000087A000003090000000F0000004B00001F2C
                  AAAAAAAABBBBBBBBCCCCCCCCDDDDDDDDEEEEEEEEFFFFFFFFGGGGGGGG
 
@@ -99,6 +100,14 @@ GG = Hours remaining count-down, 32 bit small-endian.
 ```
 
 This seems to contain the Chlorine, Ph and life remaining for the Freshwater IQ cartridge in hours.
+
+```
+<-- 37 01 40 23DC00
+<-- 01 37 80 23DC000000000000003B0000004C0000044C0000059B0000022F000002770000022700000272
+                 AAAAAAAABBBBBBBBCCCCCCCCDDDDDDDDEEEEEEEEFFFFFFFFGGGGGGGGHHHHHHHHIIIIIIII
+
+All values are unknown.
+```
 
 # Spa Connection Kit
 
