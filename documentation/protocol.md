@@ -99,7 +99,7 @@ FF = Ph in 10ths, 32 bit small-endian, Convert to decimal and divide by 10.
 GG = Hours remaining count-down, 32 bit small-endian.
 ```
 
-This seems to contain the Chlorine, Ph and life remaining for the Freshwater IQ cartridge in hours.
+This seems to contain the Chlorine, Ph and life remaining for the Freshwater IQ cartridge in hours. This next command is completely unknown:
 
 ```
 <-- 37 01 40 23DC00
