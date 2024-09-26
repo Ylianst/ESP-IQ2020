@@ -55,20 +55,43 @@ The source address is 0x01 which is the address of the IQ2020 controller on the 
 
 # Freshwater Salt System
 
-I happen to own the Salt Water device (0x29), however I don't use the salt water system so I normally keep it disconnected. It has been useful as a way to generate added traffic on the bus. I can send data frames to the salt water module from and address and it will answer back to that address. For example:
+I happen to own the Salt Water device that uses address `0x29` on the RS485 bus, however I don't use the salt water system so I normally keep it disconnected. The Freshwater module seems to have a single `0x1E01` command and the IQ2020 module polls it regurarly with data. For example:
 
 ```
-29 99 40 1E010000FFFFFF00FF04FFFFFFFFFF    <-- Request
-99 29 80 1E010000033500000000B310006841    <-- Response
-29 99 40 00                                <-- Request
-99 29 80 1E010000033500000000B310006841    <-- Response
+29 01 40 1E010000FFFFFF00FF04FFFFFFFFFF    <-- Request
+01 29 80 1E010000033500000000B310006841    <-- Response
 ```
 
-Above, I use 0x99 as by source address and send a request to 0x29. The salt water system will respond to 0x99. It does not seem to matter what data I provide, it always responds the same. Looking at the Salt Water device, here is my first try at the protocol decoding. Here are a sample request packet and a sample response.
+When looking at the request, this is some data I gathered.
 
-![IQ2020-ESP6](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/662a59c9-f473-450a-a7df-adae60d68dd2)
+```
+29 01 40 1E010000FFFFFF00FF04FFFFFFFFFF
+             AABB        CCCCCCCC
+AA = State, FF = No Module, 00 = Active?, 01 = Active?
+BB = Power, 00 to 04 for salt power level.
+CC = Indicates what buttons have been pressed on the user interface
+       0x0101FFFF = Go to mode 1
+       0xFF01FFFF = Read State, Mode 1
+       0xFF0402FF = Go to mode 4
+       0xFF04FFFF = Read State, Mode 4
+       0x020102FF = Reset Cartridge Age
+       0xFF01FF01 = Wheel press in mode 1
+       0xFF04FF01 = Wheel press in mode 4
+       0xFF0101FF = Goto boost mode (5 minutes)
+```
 
-The echanges between the IQ2020 and this Salt Water device on address 0x29 always contain 15 bytes of data. The IQ2020 device will send requests to the module every few seconds and sometimes even faster.
+Looking at the response
+
+```
+01 29 80 1E010000073500030000B310006841
+                   AABBCCDD
+AA = Cartridge age, 00 is new.
+BB = Unknown value 0x00, 0x06, 0x07, 0x08
+CC = Boost Mode, 01 or 03 is normal, 23 is boost.
+DD = Error code
+```
+
+If anyone has more data on the Freshwater module and it's communication with the IQ2020 controller, please let me know.
 
 # Freshwater IQ
 
