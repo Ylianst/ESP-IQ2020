@@ -530,6 +530,8 @@ int IQ2020Component::processIQ2020Command() {
 		}
 
 		if ((cmdlen == 19) && (processingBuffer[5] == 0x19) && (processingBuffer[6] == 0x01)) {
+			if (got_audio_data < 5) { got_audio_data = 5; pollState(); }
+
 			// Status of audio module
 #ifdef USE_SELECT
 			setSelectState(SELECT_AUDIO_SOURCE, processingBuffer[14]); // Audio Source
@@ -1192,8 +1194,9 @@ void IQ2020Component::pollState() {
 
 #ifdef USE_SELECT
 	// If we don't have the audio status, fetch it now.
-	if (select_state[SELECT_AUDIO_SOURCE] == NOT_SET) {
+	if ((got_audio_data < 3) && (select_state[SELECT_AUDIO_SOURCE] == NOT_SET)) {
 		ESP_LOGD(TAG, "Poll Audio");
+		got_audio_data++;
 		unsigned char cmd[] = { 0x19, 0x01 };
 		sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Get audio status
 		return;
