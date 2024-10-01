@@ -262,7 +262,7 @@ protected:
 	int number_pending[NUMBERCOUNT]; // Desired state of all numbers
 #endif
 	unsigned long connectionKit = 0; // The time the spa connection kit was last seen
-	bool got_iq_data = false;
+	int got_iq_data = 0;
 	bool temp_celsius = false;
 	int temp_action = NOT_SET;
 	float target_temp = NOT_SET;

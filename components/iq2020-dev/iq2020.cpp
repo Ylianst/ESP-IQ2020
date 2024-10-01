@@ -430,7 +430,7 @@ int IQ2020Component::processIQ2020Command() {
 
 	if ((processingBuffer[2] == 0x37) && (processingBuffer[4] == 0x80) && (cmdlen == 36) && (processingBuffer[5] == 0x23) && (processingBuffer[6] == 0xD1)) {
 		// This is a status command from Freshwater IQ
-		got_iq_data = true;
+		if (got_iq_data < 5) { got_iq_data = 5; pollState(); }
 		int iq_va = readCounterEx(processingBuffer, 7);  // Unknown value, always zero
 		int iq_vb = readCounterEx(processingBuffer, 11); // Unknown value, always zero
 		int iq_vc = readCounterEx(processingBuffer, 15); // Unknown value
@@ -1200,10 +1200,14 @@ void IQ2020Component::pollState() {
 	}
 #endif
 
-	if ((got_iq_data == false) && (this->iq_chlorine_sensor_)) {
+	if ((got_iq_data < 3) && (this->iq_chlorine_sensor_)) {
 		ESP_LOGD(TAG, "Poll Freshwater IQ");
+		got_iq_data++;
+		// Get Freshwater IQ status. No command can be sent after this one since this module will
+		// respond right away even of more data is being sent.
 		unsigned char cmd[] = { 0x23, 0xD1, 0x00 };
-		sendIQ2020Command(0x37, 0x1F, 0x40, cmd, sizeof(cmd)); // Get Freshwater IQ status
+		sendIQ2020Command(0x37, 0x1F, 0x40, cmd, sizeof(cmd));
+		return;
 	}
 
 	ESP_LOGD(TAG, "Poll");
