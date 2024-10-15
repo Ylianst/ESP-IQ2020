@@ -246,3 +246,10 @@ Status: Works, but lights can't be controlled correctly, it's a single color lig
 Version: 110T 7b54A002 v2.6
 
 ![369696446-a95b9ca2-f8eb-4d17-891e-87551b0073e5](https://github.com/user-attachments/assets/8045b8af-f5ee-48ee-9921-df06cd55e7de)
+
+## 2004 Hotspring Prodigy-P
+
+Status: Does NOT work. This is a pre-2014 spa. The connector will look the same but the pins for the data and voltage are different.
+
+![image](https://github.com/user-attachments/assets/7ea47713-c6d8-47fc-a8b3-646dad773929)
+
