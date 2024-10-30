@@ -251,5 +251,9 @@ Version: 110T 7b54A002 v2.6
 
 Status: Does NOT work. This is a pre-2014 spa. The connector will look the same but the pins for the data and voltage are different.
 
+## 2017 Grandee NXT
+
+Status: Works. Initially, a faulty ATOM light was received, but once replaced everything worked ([details here](https://github.com/Ylianst/ESP-IQ2020/issues/21)).
+
 ![image](https://github.com/user-attachments/assets/7ea47713-c6d8-47fc-a8b3-646dad773929)
 
