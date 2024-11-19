@@ -160,6 +160,7 @@ switch:
 
 Salt content is a value from 0 to 7 where values 3 or 4 are ideal.
 
+
 ## Freshwater IQ (Experimental)
 
 The Freshwater IQ module mesures the Chlorine and PH level of the water and reports it back. It seems to be an available option starting in 2014 and the user interface looks like this:
@@ -190,28 +191,40 @@ sensor:
 
 Chlorine level is in parts per million (PPM). Values A and B seem to always be 0 and so, you may want to just remove these sensors. For C and D, if you can find what they are, that would be great.
 
+
 ## Logo Lights
 
-The green and blue light at the front of the hot tub can also be reported by this integration. You can, for example, have a picture your your hot tub in Home Assistant and make the lights on the image match the light on the actual hot tub. In the `sensor` section of the configuration file, add the `logo_lights` sensor.
+The green and blue light at the front of the hot tub can also be reported by this integration. You can, for example, have a picture your hot tub in Home Assistant and make the lights on the image match the light on the actual hot tub. In the `sensor` section of the configuration file, add the `logo_lights` sensor and in the `text_sensor` section add `logo_lights_text` link this:
 
 ```
 sensor:
     logo_lights:
-      name: Logo Lights
+      internal: true
+      name: Logo Lights Number
+      on_value:
+        then:
+          - text_sensor.template.publish:
+              id: logo_lights_text
+              state: !lambda 'return (to_string(int(x)).c_str());'
+
+text_sensor:
+  - platform: template
+    id: logo_lights_text
+    name: Logo Lights
+    filters:
+      - map:
+        - 0 -> Unknown
+        - 1 -> Power on
+        - 2 -> Power on & ready on
+        - 3 -> Ready flash
+        - 4 -> Power flash
+        - 5 -> Power and ready flash
+        - 6 -> Power and ready alternate
+        - 7 -> Power and ready salt error
 ```
 
-Once reflashed, this new sensor will be an integer. The values are as follows:
+You can remove the `internal: true` line if you want the numeric value to be available in Home Assistant, otherwise you will have the "Logo Lights" shown with a text value.
 
-```
-0 = Unknown
-1 = Power on
-2 = Power on & ready on
-3 = Ready flash
-4 = Power flash
-5 = Power and ready flash
-6 = Power and ready alternate
-7 = Power and ready salt error
-```
 
 ## Adding WIFI signal strength sensor
 
@@ -260,6 +273,7 @@ sensor:
 Note that you can't have two `sensor:` sections, so just add all of these lines except `sensor:` to your existing section. You can add them at the top or bottom, order is not important. Once re-flashed, you should see new values in the diagnostic section of Home Assistant.
 
 ![image](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/14deafa5-322c-42ff-8983-7fd3f1e8e878)
+
 
 ## Runtime Sensors
 
