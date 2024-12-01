@@ -178,7 +178,7 @@ sensor:
     iq_vb:
       name: IQ Unknown B
     iq_vc:
-      name: IQ Unknown C
+      name: IQ Salt
     iq_vd:
       name: IQ Unknown D
     iq_chlorine:
