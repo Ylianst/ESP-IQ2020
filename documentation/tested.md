@@ -259,3 +259,6 @@ Status: Works. Initially, a faulty ATOM light was received, but once replaced ev
 
 ![369496199-53dcbaa4-0ff2-40b5-b804-684b93b56ca4](https://github.com/user-attachments/assets/c79767f3-677e-4a3f-9009-c761b0b4175a)
 
+## Hot Spring Envoy, model KKN.
+
+Status: "Posting another success" - Reported as working.
