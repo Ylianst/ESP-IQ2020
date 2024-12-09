@@ -684,3 +684,9 @@ text_sensor:
           (String(seconds)) 
           ).c_str()};
 ```
+
+## Caldera Vanto 2023
+Status: Works great.
+Model: JJ-1U1260
+Extra Modules: Ace Salt Water Sanitizing System
+Version: 1.11.D11efE002HL1.02
