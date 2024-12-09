@@ -685,7 +685,7 @@ text_sensor:
           ).c_str()};
 ```
 
-## Caldera Vanto 2023
+## Hotspring Jetsetter 2016
 - Status: Works great.
 - Model: JJ-1U1260
 - Extra Modules: Ace Salt Water Sanitizing System
