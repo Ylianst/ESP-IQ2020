@@ -268,6 +268,9 @@ Status: Works great. Lights, temperature, Pump1 with 2 speeds, Pump2 with 1 spee
 Version: 112T b5e1A002 v2.6
 Interface: M5Stack-ATOM + Tail485
 Watkins P/N: 1303401-1 Rev K
+
+![393649169-27c5d517-d762-4576-a487-793084ab2127](https://github.com/user-attachments/assets/746e17c0-71bb-4ddf-89ab-541cf601b703)
+
 Notable Settings:
 
 ```
