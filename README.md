@@ -19,6 +19,8 @@ The IQ2020 is the control board used by a lot of hot tubs, so check if you have 
 
 Once you get the device, connect it to your computer using a USB-C table, create a new ESP home device, call it "Hot Tub" or anything you like, select `ESP32`. Once created, edit the configuration file to look like the one below. You should keep your own API encryption key and OTA password, but everything else can be copied from this example.
 
+<details>
+<summary>Sample ESP-Home configuration file</summary>
 ```
 esphome:
   name: hot-tub
@@ -136,6 +138,7 @@ text_sensor:
     versionstr:
       name: Version
 ```
+</details>
 
 You may need to make a few changes. If your hot tub is setup to display temperature in celsius, replace all `xxx_f_temperature` with `xxx_c_temperature` and set `celsius` to true in the `climate` section. Make sure you put your WIFI SSID and Password in `secrets.yaml`. Once ready, go ahead and flash your device over USB-C. At this point, the device should be visible over WIFI when powered using USB-C even if it's not connected to the computer.
 
