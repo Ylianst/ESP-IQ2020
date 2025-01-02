@@ -21,6 +21,7 @@ Once you get the device, connect it to your computer using a USB-C table, create
 
 <details>
 <summary>Sample ESP-Home configuration file</summary>
+
 ```
 esphome:
   name: hot-tub
