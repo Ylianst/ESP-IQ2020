@@ -170,5 +170,5 @@ For added features and details:
   - [Tested Hot Tubs](https://github.com/Ylianst/ESP-IQ2020/blob/main/documentation/tested.md)
 
 Known Issues:
-  - Older IQ2020 board used between 2001 to mid-2009 may not work with this integration. See [Tested Hot Tubs](https://github.com/Ylianst/ESP-IQ2020/blob/main/documentation/tested.md) for details.
+  - IQ2020 board prior to 2014 will work with this integration. See [Tested Hot Tubs](https://github.com/Ylianst/ESP-IQ2020/blob/main/documentation/tested.md) for details.
   - Jet 3 may work but will not show the running state properly, but if we have such a hot tub and can send me traffic logs, I can probably add support for it.
