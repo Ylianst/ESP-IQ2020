@@ -2,6 +2,10 @@
 
 In this document, I want to keep notes on the currently tested and confirmed to work hot tubs with notes on configuration changes, etc.
 
+## Pre-2014 IQ2020 Boards
+
+This integration uses RS485 serial protocol to talk to IQ2020, this is the same protocol used by the official "SPA Internet Connection Kit" and so, both have the same requirement that your IQ2020 board must support RS485. My theory is that prior to 2014, IQ2020 boards used a IC2 bus to communicate between modules and later added RS485. The expansion boards are designed to support both I2C and RS485 and the connector has the pins for both. However, I don't know if a hot tub has even supported both. It may be possible for someone to create a I2C integration for older pre-2014 models, but this is not something I can or will do. It may be possible to update the IQ2020 board ([video](https://www.youtube.com/watch?v=7U2TA-5Is2c)), but this is not something I am knowledgable about.
+
 ## Hotspring Grandee
 
 - Status: Works great. Lights, temperature, Pump1 with 1 speed, Pump2 with 2 speeds.
