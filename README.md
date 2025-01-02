@@ -138,6 +138,7 @@ text_sensor:
     versionstr:
       name: Version
 ```
+
 </details>
 
 You may need to make a few changes. If your hot tub is setup to display temperature in celsius, replace all `xxx_f_temperature` with `xxx_c_temperature` and set `celsius` to true in the `climate` section. Make sure you put your WIFI SSID and Password in `secrets.yaml`. Once ready, go ahead and flash your device over USB-C. At this point, the device should be visible over WIFI when powered using USB-C even if it's not connected to the computer.
