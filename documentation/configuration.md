@@ -99,10 +99,6 @@ sensor:
     #Lifetime counters
     lifetime_runtime:
       name: Lifetime Runtime
-      on_value:
-        then:
-          - lambda: |-
-              ESP_LOGD("main", "The current version is %s", x.c_str());
       id: jacuzzi_total_runtime
     heater_total_runtime:
       name: Heater Runtime
