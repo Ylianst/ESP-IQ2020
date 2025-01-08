@@ -704,7 +704,7 @@ text_sensor:
 - I suspect this will work with hot tubs as old as 2012 using the "Eagle" version of the IQ2020 controller.
 
 ## List of models compatible with ACE 77401 controller.
-There likely all use RS485 and so, would also be compatible with this integration.
+There likely all use RS485 and so, would also be compatible with this integration. Hot tubs made after 2014 should all work.
 ```
 Hot Spring	Aria (AR)	2012, 2013, 2014, 2015, 2016, 2017, 2018
 Hot Spring	Aria NXT (ARN)	2017, 2018, 2019, 2020, 2021
