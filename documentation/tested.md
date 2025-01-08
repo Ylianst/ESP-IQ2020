@@ -703,8 +703,9 @@ text_sensor:
 - Only needed to change the code for dual single speed pumps.
 - I suspect this will work with hot tubs as old as 2012 using the "Eagle" version of the IQ2020 controller.
 
+## List of models compatible with ACE 77401 controller.
+I suspect they all use RS485.
 ```
-This is a list of models compatible with ACE 77401 controller. I suspect they all use RS485.
 Hot Spring	Aria (AR)	2012, 2013, 2014, 2015, 2016, 2017, 2018
 Hot Spring	Aria NXT (ARN)	2017, 2018, 2019, 2020, 2021
 Limelight	Beam I (BMI)	2018, 2019, 2020, 2021
