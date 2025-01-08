@@ -694,3 +694,41 @@ text_sensor:
 - Model: JJ-1U1260
 - Extra Modules: Ace Salt Water Sanitizing System
 - Version: 1.11.D11efE002HL1.02
+
+## Hotspring Vanguard 2013
+- Status: Works great. Lights, temperature, Pump1 with 1 speed, Pump2 with 1 speed.
+- Version: 1.06.H03adE0020.70.f
+- Model: VV-4R1756
+- Interface: M5Stack-ATOM + Tail485
+- Only needed to change the code for dual single speed pumps.
+- I suspect this will work with hot tubs as old as 2012 using the "Eagle" version of the IQ2020 controller.
+
+```
+This is a list of models compatible with ACE 77401 controller. I suspect they all use RS485.
+Hot Spring	Aria (AR)	2012, 2013, 2014, 2015, 2016, 2017, 2018
+Hot Spring	Aria NXT (ARN)	2017, 2018, 2019, 2020, 2021
+Limelight	Beam I (BMI)	2018, 2019, 2020, 2021
+Limelight	Beam II (BMII)	2018, 2019, 2020, 2021
+Limelight	Flair (FLR)	2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021
+Limelight	Flash (FSH)	2018, 2019, 2020, 2021
+Hot Spring	Grandee (GG)	2012, 2013, 2014, 2015, 2016, 2017, 2018
+Hot Spring	Grandee NXT (GGN)	2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021
+Hot Spring	Prodigy (H)	2012, 2013, 2014, 2015, 2016, 2017, 2018
+Hot Spring	Prodigy (HN)	2019, 2020, 2021
+Hot Spring	Sovereign (II)	2012, 2013, 2014, 2015, 2016, 2017, 2018
+Hot Spring	Sovereign (IIN)	2019, 2020, 2021
+Hot Spring	Jetsetter (JJ)	2012, 2013, 2014, 2015, 2016, 2017, 2018
+Hot Spring	Jetsetter (JJN)	2019, 2020, 2021
+Hot Spring	Jetsetter LX (JTN)	2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021
+Hot Spring	Envoy (KK)	2012, 2013, 2014, 2015, 2016, 2017, 2018
+Hot Spring	Envoy NXT (KKN)	2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021
+Limelight	Pulse (PLS)	2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021
+Limelight	Prism (PSM)	2018, 2019, 2020, 2021
+Hot Spring	Vista (SS)	2012, 2013
+Hot Spring	Triumph (TRHN)	2019, 2020, 2021
+Hot Spring	Vanguard (VV)	2012, 2013, 2014, 2015, 2016, 2017, 2018
+Hot Spring	Vanguard NXT (VVN)	2017, 2018, 2019
+Limelight	Bolt (BLT)	2012, 2013, 2014, 2015, 2016, 2017
+Limelight	Gleam (GLM)	2013, 2014, 2015, 2016, 2017
+Limelight	Glow (GLW)	2012, 2013, 2014, 2015, 2016, 2017
+```
