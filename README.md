@@ -1,5 +1,5 @@
 # ESP-IQ2020
--- Only compatible with 2014 spas and newer --
+-- Only compatible with 2014 spas and newer, [look at the exact list here](https://github.com/Ylianst/ESP-IQ2020/blob/main/documentation/tested.md#list-of-models-compatible-with-ace-77401-controller) --
 
 Connect your IQ2020 powered Hot Tub to Home Assistant to make your Hot Tub a lot smarter. You will be able to remotely control temperatue, lights, jets, lock the spa remote, monitor power usage and more. You can graph temperature and power usage, control temperature for time-of-day electric rates or when on vacation, get notified when the tub is in use, lock the spa remote control when the house in away mode, blink the tub lights when someone rings the doorbell and more.
 
