@@ -1,11 +1,11 @@
 # ESP-IQ2020
 -- Only compatible with 2014 spas and newer, [look at the exact list here](https://github.com/Ylianst/ESP-IQ2020/blob/main/documentation/tested.md#list-of-models-compatible-with-ace-77401-controller) --
 
-Connect your IQ2020 powered Hot Tub to Home Assistant to make your Hot Tub a lot smarter. You will be able to remotely control temperatue, lights, jets, lock the spa remote, monitor power usage and more. You can graph temperature and power usage, control temperature for time-of-day electric rates or when on vacation, get notified when the tub is in use, lock the spa remote control when the house in away mode, blink the tub lights when someone rings the doorbell and more.
+Connect your IQ2020 powered Hot Tub to Home Assistant to make your Hot Tub a lot smarter. You will be able to remotely control temperature, lights, jets, lock the spa remote, monitor power usage and more. You can graph temperature and power usage, control temperature for time-of-day electric rates or when on vacation, get notified when the tub is in use, lock the spa remote control when the house in away mode, blink the tub lights when someone rings the doorbell and more.
 
 ![IQ2020-ESP1b](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/0ba0a473-8653-4b65-8338-052c8237fb5b)
 
-There is a video shows off the integration and how to get it installed.
+There is a video showing off the integration and how to get it installed.
 
 [![IQ2020 Hot Tub connected to Home Assistant](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/5d55095e-eba0-4b3b-8058-8033d20e062b)](https://youtu.be/egX6bspzuqo)
 
@@ -152,7 +152,7 @@ Next, power off your hot tub and connect your new device like this:
 
 ![image](https://github.com/user-attachments/assets/98956d57-a019-4aae-a9b1-cd4c24e18b67)
 
-In the picture below you will notice I have the expansion board attached with 8 expension connectors, your hot tub will generally have 1 or 2 expansion connectors. If they are all busy, you will need to get an expansion board. Double check all the wires, you should not need to force anything, the wires should fit just right.
+In the picture below you will notice I have the expansion board attached with 8 expansion connectors, your hot tub will generally have 1 or 2 expansion connectors. If they are all busy, you will need to get an expansion board. Double check all the wires, you should not need to force anything, the wires should fit just right.
 
 ![IQ2020-ESP3](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/c52b676b-e35c-474c-8919-2fc57302d0fb)
 
