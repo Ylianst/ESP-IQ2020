@@ -1,11 +1,11 @@
 # Debugging RS485 traffic
 
-This ESP-Home integration comes built it with a RS485 traffic relay on the ESP32 device along with a Windows tool called the Data Viewer to see the RS485 traffic in real time. This is very useful to debug issue or to help build new features. If you are a bit technical, I encorage you to try this and help out. Here are some tasks:
+This ESP-Home integration comes built it with a RS485 traffic relay on the ESP32 device along with a Windows tool called the Data Viewer to see the RS485 traffic in real time. This is very useful to debug issue or to help build new features. If you are a bit technical, I encourage you to try this and help out. Here are some tasks:
 
 - There is plenty of data in the protocol document that we don't know what it is yet.
 - Is there any new commands we don't know about?
 - It would be great to have traffic captures of the music device so that we can add music integration.
-- For hot tubs without a music device, we can impersonate the device with Home Assistant and make the controls avaialble.
+- For hot tubs without a music device, we can impersonate the device with Home Assistant and make the controls available.
 - I would like to control house lights from the hot tub remote? Maybe enable added Jets 3 and 4 that we don't have and connect that to automations?
 
 To enable the RS485-to-TCP relay system, just add a `port:` value under the `iq2020` section of the ESP-Home device configuration. By default this port is 0 and turn off.
@@ -17,7 +17,7 @@ iq2020:
    port: 1234
 ```
 
-Make the change and re-flash your ESP32 device over WIFI. Once you enable this, you can connect a TCP socket to your device IP address on this port and send/receive RS485 traffic. Note that the port is not secured at all and multiple TCP connections are supported at the same time. You can use my "Data Viewer" Widnows applicatins to connect to this port and see the traffic in real-time.
+Make the change and re-flash your ESP32 device over WIFI. Once you enable this, you can connect a TCP socket to your device IP address on this port and send/receive RS485 traffic. Note that the port is not secured at all and multiple TCP connections are supported at the same time. You can use my "Data Viewer" Windows applications to connect to this port and see the traffic in real-time.
 
 ![image](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/59615021-3164-4cb9-9a7c-036896141e3d)
 
@@ -28,7 +28,7 @@ Data Viewer is a C# application built with Visual Studio 2015. I provide a compi
  - [IQ2020 Data Viewer Executable](https://github.com/Ylianst/ESP-IQ2020/raw/main/DataViewer/IQ2020-DataViewer.exe)
  - [The source code is here](https://github.com/Ylianst/ESP-IQ2020/tree/main/DataViewer)
 
-Once you get the executable, run it, put the IP address and port of your ESP32 device and hit connect. To makes things easy, packets will be shown like in the [RS485 protocol page](https://github.com/Ylianst/ESP-IQ2020/blob/main/documentation/protocol.md), without the starting byte, data length and checksum.
+Once you get the executable, run it, put the IP address and port of your ESP32 device and hit connect. To make things easy, packets will be shown like in the [RS485 protocol page](https://github.com/Ylianst/ESP-IQ2020/blob/main/documentation/protocol.md), without the starting byte, data length and checksum.
 
 Another thing you may want to do is change the debug level from `ERROR` to `DEBUG` in the ESP-Home confirmation file and reflash. You will see a lot more data in the ESP-Home logs.
 
