@@ -68,8 +68,8 @@ select:
 text:
 number:
 
-# If using celsius units on the hot tub remote, replace _f_ with _c_ in the three entries below.
-# Feel free to remove any sensor that are not relevent for your hot tub.
+# If using Celsius units on the hot tub remote, replace _f_ with _c_ in the three entries below.
+# Feel free to remove any sensor that are not relevant for your hot tub.
 sensor:
   - platform: iq2020
     current_f_temperature:
