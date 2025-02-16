@@ -150,8 +150,8 @@ sensor:
     #light sensors      
     logo_lights:
       name: Logo Lights
-    audio_buttons:
-      name: Audio Buttons
+    buttons:
+      name: Buttons
     lights_intensity:
       name: Light Intensity
     lights_underwater_intensity:
