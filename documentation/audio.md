@@ -1,3 +1,70 @@
+# Audio Module Control
+
+If your spa has an audio module installed, you can control the audio settings through Home Assistant.
+
+Here are the relevant settings:
+
+Add the following sensor in the `sensor` section. If the use the ACE module emulation, you will already have this sensor.
+
+```
+sensor:
+    buttons:
+      name: Buttons
+```
+
+Then, replace the empty, or add to the existing, `switch`, `select`, `number`, and `text` sections with this:
+
+```
+switch:
+    # For Audio System
+  - platform: iq2020
+    name: Audio
+    id: audio_power
+    datapoint: 9
+
+select:
+    # For Audio System
+  - platform: iq2020
+    name: Audio Source
+    id: audio_source
+    datapoint: 0
+
+number:
+    # For Audio System
+  - platform: iq2020
+    name: Volume
+    id: audio_volume
+    datapoint: 0
+  - platform: iq2020
+    name: Treble
+    id: audio_treble
+    datapoint: 1
+  - platform: iq2020
+    name: Bass
+    id: audio_bass
+    datapoint: 2
+  - platform: iq2020
+    name: Balance
+    id: audio_balance
+    datapoint: 3
+  - platform: iq2020
+    name: Subwoofer
+    id: audio_subwoofer
+    datapoint: 4
+
+text:
+  - platform: iq2020
+    name: Song Title
+    id: song_title
+    datapoint: 0
+    mode: text
+  - platform: iq2020
+    name: Artist Name
+    id: artist_name
+    datapoint: 1
+    mode: text
+```
+
 # Audio Module Emulation
 
 This integration allows the ESP32 device to emulate the music module and so, show the extra music option on the SPA remote. Once shown, buttons and volume values will be relayed back to Home Assistant for processing. This allows you to control home lights and trigger automations based on button presses on the spa remote. This is much like the [ACE module emulation](https://github.com/Ylianst/ESP-IQ2020/blob/main/documentation/ace.md). This works really well and is fast.
@@ -18,9 +85,16 @@ sensor:
       name: Buttons
 ```
 
-Them, replace the empty `select`, `number`, and `text` sections with this:
+Then, replace the empty, or add to the existing, `switch`, `select`, `number`, and `text` sections with this:
 
 ```
+switch:
+    # For Audio System
+  - platform: iq2020
+    name: Audio
+    id: audio_power
+    datapoint: 9
+
 select:
   - platform: iq2020
     name: Audio Source
