@@ -23,7 +23,7 @@
 #define FAN_JETS2 1
 #define FAN_JETS3 2
 #define FAN_JETS4 3
-#define SWITCHCOUNT 9
+#define SWITCHCOUNT 10
 #define SWITCH_RETRY_COUNT 3
 #define SWITCH_RETRY_TIME 200
 #define SWITCH_LIGHTS 0
@@ -35,6 +35,7 @@
 #define SWITCH_JETS2 6
 #define SWITCH_JETS3 7
 #define SWITCH_SALT_BOOST 8
+#define SWITCH_AUDIO_POWER 9
 #define SELECTCOUNT 6
 #define SELECT_AUDIO_SOURCE 0
 #define SELECT_LIGHTS1_COLOR 1         // Underwater lights color (0 to 7 for colors, 8 for cycle)

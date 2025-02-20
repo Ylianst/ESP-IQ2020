@@ -108,7 +108,7 @@ void IQ2020Component::loop() {
 			}
 		}
 #ifdef USE_SELECT
-		for (int selectid = 0; selectid <= SELECT_AUDIO_SOURCE; selectid++) {
+		for (int selectid = 0; selectid < SELECTCOUNT; selectid++) {
 			if (select_pending[selectid] != NOT_SET) {
 				ESP_LOGE(TAG, "Retry select %d set to %d", selectid, select_pending[selectid]);
 				selectAction(selectid, select_pending[selectid]); // Try again
@@ -524,6 +524,7 @@ int IQ2020Component::processIQ2020Command() {
 
 		if ((cmdlen == 9) && (processingBuffer[5] == 0x19) && (processingBuffer[6] == 0x00) && (processingBuffer[7] == 0x06)) {
 			// Confirmation that the audio command was received
+			setSwitchState(SWITCH_AUDIO_POWER, NOT_SET);
 #ifdef USE_SELECT
 			setSelectState(SELECT_AUDIO_SOURCE, NOT_SET);
 #endif
@@ -533,6 +534,7 @@ int IQ2020Component::processIQ2020Command() {
 			if (got_audio_data < 5) { got_audio_data = 5; pollState(); }
 
 			// Status of audio module
+			setSwitchState(SWITCH_AUDIO_POWER, processingBuffer[7]); // Audio Power Status
 #ifdef USE_SELECT
 			setSelectState(SELECT_AUDIO_SOURCE, processingBuffer[14]); // Audio Source
 #endif
@@ -948,6 +950,14 @@ void IQ2020Component::switchAction(unsigned int switchid, int state) {
 		}
 		break;
 	}
+	case SWITCH_AUDIO_POWER: // Audio Power
+	{
+		switch_pending[switchid] = state; // 0 = OFF, 1 = ON
+		// 01 1F 40 1900040100
+		unsigned char cmd[] = { 0x19, 0x00, 0x04, (unsigned char)state, 0x00 };
+		sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd));
+		break;
+	}
 	default: { return; }
 	}
 	// If the command does not get confirmed, setup to try again
@@ -1194,7 +1204,7 @@ void IQ2020Component::pollState() {
 
 #ifdef USE_SELECT
 	// If we don't have the audio status, fetch it now.
-	if ((got_audio_data < 3) && (select_state[SELECT_AUDIO_SOURCE] == NOT_SET)) {
+	if ((got_audio_data < 3) && (select_state[SELECT_AUDIO_SOURCE] == NOT_SET || switch_state[SWITCH_AUDIO_POWER] == NOT_SET)) {
 		ESP_LOGD(TAG, "Poll Audio");
 		got_audio_data++;
 		unsigned char cmd[] = { 0x19, 0x01 };
