@@ -18,6 +18,7 @@
 #include <vector>
 
 #define IQ202BUFLEN 512
+#define IQ2020OUTBUFLEN 64
 #define FANCOUNT 4
 #define FAN_JETS1 0
 #define FAN_JETS2 1
@@ -285,7 +286,7 @@ protected:
 	// IQ2020 processing
 	int nextPossiblePacket();
 	unsigned char processingBuffer[IQ202BUFLEN];
-	unsigned char outboundBuffer[64];
+	unsigned char outboundBuffer[IQ2020OUTBUFLEN];
 	int processingBufferLen = 0;
 	void processRawIQ2020Data(unsigned char *data, int len);
 	int processIQ2020Command();
