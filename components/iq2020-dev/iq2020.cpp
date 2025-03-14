@@ -1002,6 +1002,7 @@ void IQ2020Component::switchAction(unsigned int switchid, int state) {
 	case SWITCH_ACTIVE: // Active Mode
 	{
 		active_ = state;
+		setSwitchState(SWITCH_ACTIVE, state);
 		break;
 	}
 	default: { return; }
