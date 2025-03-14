@@ -24,7 +24,7 @@
 #define FAN_JETS2 1
 #define FAN_JETS3 2
 #define FAN_JETS4 3
-#define SWITCHCOUNT 10
+#define SWITCHCOUNT 11
 #define SWITCH_RETRY_COUNT 3
 #define SWITCH_RETRY_TIME 200
 #define SWITCH_LIGHTS 0
@@ -37,6 +37,7 @@
 #define SWITCH_JETS3 7
 #define SWITCH_SALT_BOOST 8
 #define SWITCH_AUDIO_POWER 9
+#define SWITCH_ACTIVE 10               // Don't send anything on RS485 bus when disabled
 #define SELECTCOUNT 6
 #define SELECT_AUDIO_SOURCE 0
 #define SELECT_LIGHTS1_COLOR 1         // Underwater lights color (0 to 7 for colors, 8 for cycle)
@@ -49,7 +50,7 @@
 #define TEXT_ARTIST_NAME 1             // Artist name (Max 20 chars)
 #define NUMBERCOUNT 11
 #define NUMBER_AUDIO_VOLUME 0          // Audio volume (0 to 100, steps of 4)
-#define NUMBER_AUDIO_TREBLE 1         // Audio treble (-5 to 5)
+#define NUMBER_AUDIO_TREBLE 1          // Audio treble (-5 to 5)
 #define NUMBER_AUDIO_BASS 2            // Audio base (-5 to 5)
 #define NUMBER_AUDIO_BALANCE 3         // Audio balance (-5 to 5)
 #define NUMBER_AUDIO_SUBWOOFER 4       // Audio subwoofer (0 to 11) - "This one goes to 11".
@@ -72,6 +73,7 @@ public:
 	void set_ace_emulation(bool ace_emulation) { this->ace_emulation_ = ace_emulation; }
 	void set_freshwater_emulation(bool freshwater_emulation) { this->freshwater_emulation_ = freshwater_emulation; }
 	void set_audio_emulation(bool audio_emulation) { this->audio_emulation_ = audio_emulation; }
+	void set_active(bool active) { this->active_ = active; }
 	void set_polling_rate(int polling_rate) { this->polling_rate_ = polling_rate; }
 #ifdef USE_BINARY_SENSOR
 	void set_connected_sensor(esphome::binary_sensor::BinarySensor *connected) { this->connected_sensor_ = connected; }
@@ -183,6 +185,7 @@ protected:
 	unsigned char ace_status = 3;    // 0 to 7 with 3 or 4 being ideal.
 	bool freshwater_emulation_;
 	bool audio_emulation_;
+	bool active_;
 	unsigned char audio_module_address = 0x33; // There are two audio modules at 0x33 or 0x1D.
 	int polling_rate_;
 
