@@ -911,6 +911,7 @@ int IQ2020Component::processIQ2020Command() {
 }
 
 void IQ2020Component::sendIQ2020Command(unsigned char dst, unsigned char src, unsigned char op, unsigned char *data, int len) {
+	if (!active_) return; // If not active, don't send anything
 	if (len+5 > IQ2020OUTBUFLEN) {
 		ESP_LOGE(TAG, "IQ2020 Command too large: %d > %d (dst:%02x src:%02x op:%02x)", (len+5), IQ2020OUTBUFLEN, dst, src, op);
 		return;
@@ -996,6 +997,12 @@ void IQ2020Component::switchAction(unsigned int switchid, int state) {
 		switch_pending[switchid] = state; // 0 = OFF, 1 = ON
 		unsigned char cmd[] = { 0x19, 0x00, 0x04, (unsigned char)(state ? 0x01 : 0x00), 0x00 };
 		sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd));
+		break;
+	}
+	case SWITCH_ACTIVE: // Active Mode
+	{
+		active_ = state;
+		setSwitchState(SWITCH_ACTIVE, state);
 		break;
 	}
 	default: { return; }

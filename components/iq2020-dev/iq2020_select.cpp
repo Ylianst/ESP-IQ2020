@@ -26,7 +26,7 @@ namespace iq2020_select {
 		case SELECT_LIGHTS2_COLOR:
 		case SELECT_LIGHTS3_COLOR:
 		case SELECT_LIGHTS4_COLOR:
-			if ((this->traits.get_options().size() < 7) || (this->traits.get_options().size() > 8)) {
+			if ((this->traits.get_options().size() < 7) || (this->traits.get_options().size() > 9)) {
 				this->traits.set_options(lights_colors_values);
 			}
 			break;
