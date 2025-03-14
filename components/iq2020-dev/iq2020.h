@@ -73,7 +73,7 @@ public:
 	void set_ace_emulation(bool ace_emulation) { this->ace_emulation_ = ace_emulation; }
 	void set_freshwater_emulation(bool freshwater_emulation) { this->freshwater_emulation_ = freshwater_emulation; }
 	void set_audio_emulation(bool audio_emulation) { this->audio_emulation_ = audio_emulation; }
-	void set_active(bool active) { this->active_ = active; }
+	void set_active(bool active) { this->active_ = active; setSwitchState(SWITCH_ACTIVE, active_); }
 	void set_polling_rate(int polling_rate) { this->polling_rate_ = polling_rate; }
 #ifdef USE_BINARY_SENSOR
 	void set_connected_sensor(esphome::binary_sensor::BinarySensor *connected) { this->connected_sensor_ = connected; }
