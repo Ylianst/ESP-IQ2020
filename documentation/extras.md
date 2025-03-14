@@ -250,6 +250,7 @@ Note that you can't have two `sensor:` sections, so just add all of these lines 
 
 ![image](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/cff708ec-8ba3-48f8-b337-1d83b5bb00e0)
 
+You can also add [these sensors](https://esphome.io/components/text_sensor/wifi_info) if you have multiple WIFI access points and want to know which one the hot tub has selected.
 
 ## Adding Current and Voltage sensors
 
