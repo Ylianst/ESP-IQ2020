@@ -44,7 +44,7 @@ CONFIG_SCHEMA = cv.All(
             cv.Optional(CONF_ACE_EMULATION, default = 'false'): cv.boolean,
             cv.Optional(CONF_FRESHWATER_EMULATION, default = 'false'): cv.boolean,
             cv.Optional(CONF_AUDIO_EMULATION, default = 'false'): cv.boolean,
-            cv.Optional(CONF_ACTIVE, default = 'false'): cv.boolean,
+            cv.Optional(CONF_ACTIVE, default = 'true'): cv.boolean,
 
             cv.Optional(CONF_TRIGGER_POLL_PIN): pins.gpio_input_pin_schema,
         }
