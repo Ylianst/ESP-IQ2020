@@ -191,6 +191,52 @@ sensor:
 
 Chlorine level is in parts per million (PPM). Values A and B seem to always be 0 and so, you may want to just remove these sensors. For C and D, if you can find what they are, that would be great.
 
+## Delayed ESP32 start
+
+It's been reported by one user with a Freshwater IQ modules that when the ESP32 was connected at the start of the hot tub, the Freshwater IQ module would not show up on the display or not act correctly. However, if the ESP32 waits a few minutes before starting to be involved in polling the hot tub for data, things work well. So, there is a way to tell the ESP32 to not be active and be in "listen-only" mode. To start the ESP32 non-active mode, add `active: false` in the `iq2020` section like this:
+
+```
+iq2020:
+   uart_id: SpaConnection
+   active: false
+```
+
+If you don't specify `active`, it's true by default and the ESP32 will run normally, polling data right at the start. Now, if you start the ESP32 in non-active mode, you want to activate it later, you can do this by adding the following 4 lines in the `switch:` section.
+
+```
+switch:
+  - platform: iq2020
+    name: Active
+    id: active_switch
+    datapoint: 10
+```
+
+So now, you can switch the ESP32 to active mode or back anytime you like. You can then create an automation to wait 2 minutes when active is off to auto-enable it. Here is an example:
+
+```
+alias: Turn on hot tub 2 minutes after restart
+description: ""
+triggers:
+  - type: turned_off
+    device_id: fa625a7f308a1d5e37e03d2b09d95eef
+    entity_id: dda71f8af67abc4b9b70218baa24ab55
+    domain: switch
+    trigger: device
+    for:
+      hours: 0
+      minutes: 2
+      seconds: 0
+conditions: []
+actions:
+  - type: turn_on
+    device_id: fa625a7f308a1d5e37e03d2b09d95eef
+    entity_id: dda71f8af67abc4b9b70218baa24ab55
+    domain: switch
+mode: single
+```
+
+Again, this should solve cases where the ESP32 is causing issues when active during hot tub startup.
+
 
 ## Logo Lights
 
