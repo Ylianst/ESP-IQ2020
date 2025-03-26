@@ -563,6 +563,7 @@ namespace DataViewer
             connectionKitToolStripMenuItem.Checked = false;
             connectionKitX0256ToolStripMenuItem.Checked = false;
             freshWaterToolStripMenuItem.Checked = false;
+            freshwaterIQModuleToolStripMenuItem.Checked = false;
             audioToolStripMenuItem.Checked = false;
             aCEModuleToolStripMenuItem.Checked = false;
         }
@@ -576,6 +577,7 @@ namespace DataViewer
             connectionKitToolStripMenuItem.Checked = true;
             connectionKitX0256ToolStripMenuItem.Checked = false;
             freshWaterToolStripMenuItem.Checked = false;
+            freshwaterIQModuleToolStripMenuItem.Checked = false;
             audioToolStripMenuItem.Checked = false;
             aCEModuleToolStripMenuItem.Checked = false;
         }
@@ -589,6 +591,7 @@ namespace DataViewer
             connectionKitToolStripMenuItem.Checked = false;
             connectionKitX0256ToolStripMenuItem.Checked = true;
             freshWaterToolStripMenuItem.Checked = false;
+            freshwaterIQModuleToolStripMenuItem.Checked = false;
             audioToolStripMenuItem.Checked = false;
             aCEModuleToolStripMenuItem.Checked = false;
         }
@@ -602,7 +605,22 @@ namespace DataViewer
             connectionKitToolStripMenuItem.Checked = false;
             connectionKitX0256ToolStripMenuItem.Checked = false;
             freshWaterToolStripMenuItem.Checked = true;
+            freshwaterIQModuleToolStripMenuItem.Checked = false;
             audioToolStripMenuItem.Checked = false;
+            aCEModuleToolStripMenuItem.Checked = false;
+        }
+
+        private void freshwaterIQModuleToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Filter = 0x37;
+            FilterCmd1 = 0;
+            FilterCmd2 = 0;
+            noneToolStripMenuItem.Checked = false;
+            connectionKitToolStripMenuItem.Checked = false;
+            connectionKitX0256ToolStripMenuItem.Checked = false;
+            freshWaterToolStripMenuItem.Checked = false;
+            freshwaterIQModuleToolStripMenuItem.Checked = true;
+            audioToolStripMenuItem.Checked = true;
             aCEModuleToolStripMenuItem.Checked = false;
         }
 
@@ -615,6 +633,7 @@ namespace DataViewer
             connectionKitToolStripMenuItem.Checked = false;
             connectionKitX0256ToolStripMenuItem.Checked = false;
             freshWaterToolStripMenuItem.Checked = false;
+            freshwaterIQModuleToolStripMenuItem.Checked = false;
             audioToolStripMenuItem.Checked = true;
             aCEModuleToolStripMenuItem.Checked = false;
         }
@@ -628,6 +647,7 @@ namespace DataViewer
             connectionKitToolStripMenuItem.Checked = false;
             connectionKitX0256ToolStripMenuItem.Checked = false;
             freshWaterToolStripMenuItem.Checked = false;
+            freshwaterIQModuleToolStripMenuItem.Checked = false;
             audioToolStripMenuItem.Checked = false;
             aCEModuleToolStripMenuItem.Checked = true;
         }
