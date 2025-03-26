@@ -728,5 +728,24 @@ namespace DataViewer
             SendPacket("01 1F 40 0256"); // Ask status
         }
 
+        private void fIQTest1ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new FreshwaterIqForm1(this).Show(this);
+        }
+
+        public void SetSendText(string text)
+        {
+            hexComboBox.Text = text;
+        }
+
+        public void HitSend()
+        {
+            sendButton_Click(this, null);
+        }
+
+        private void fIQTest2ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new FreshwaterIqForm2(this).Show(this);
+        }
     }
 }

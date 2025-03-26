@@ -46,6 +46,7 @@
             this.connectionKitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.connectionKitX0256ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.freshWaterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.freshwaterIQModuleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aCEModuleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.audioToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.commandsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -84,7 +85,8 @@
             this.scanTimer = new System.Windows.Forms.Timer(this.components);
             this.logSaveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.pollTimer = new System.Windows.Forms.Timer(this.components);
-            this.freshwaterIQModuleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.fIQTest1ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.fIQTest2ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.topPanel.SuspendLayout();
@@ -160,7 +162,9 @@
             this.actionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.annotateLogToolStripMenuItem,
             this.scanToolStripMenuItem,
-            this.pollStateToolStripMenuItem});
+            this.pollStateToolStripMenuItem,
+            this.fIQTest1ToolStripMenuItem,
+            this.fIQTest2ToolStripMenuItem});
             this.actionsToolStripMenuItem.Name = "actionsToolStripMenuItem";
             this.actionsToolStripMenuItem.Size = new System.Drawing.Size(72, 24);
             this.actionsToolStripMenuItem.Text = "&Actions";
@@ -168,21 +172,21 @@
             // annotateLogToolStripMenuItem
             // 
             this.annotateLogToolStripMenuItem.Name = "annotateLogToolStripMenuItem";
-            this.annotateLogToolStripMenuItem.Size = new System.Drawing.Size(191, 26);
+            this.annotateLogToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.annotateLogToolStripMenuItem.Text = "&Annotate Log...";
             this.annotateLogToolStripMenuItem.Click += new System.EventHandler(this.annotateLogToolStripMenuItem_Click);
             // 
             // scanToolStripMenuItem
             // 
             this.scanToolStripMenuItem.Name = "scanToolStripMenuItem";
-            this.scanToolStripMenuItem.Size = new System.Drawing.Size(191, 26);
+            this.scanToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.scanToolStripMenuItem.Text = "&Scan";
             this.scanToolStripMenuItem.Click += new System.EventHandler(this.scanToolStripMenuItem_Click);
             // 
             // pollStateToolStripMenuItem
             // 
             this.pollStateToolStripMenuItem.Name = "pollStateToolStripMenuItem";
-            this.pollStateToolStripMenuItem.Size = new System.Drawing.Size(191, 26);
+            this.pollStateToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.pollStateToolStripMenuItem.Text = "&Poll State";
             this.pollStateToolStripMenuItem.Click += new System.EventHandler(this.pollStateToolStripMenuItem_Click);
             // 
@@ -230,6 +234,13 @@
             this.freshWaterToolStripMenuItem.Size = new System.Drawing.Size(240, 26);
             this.freshWaterToolStripMenuItem.Text = "Freshwater Module";
             this.freshWaterToolStripMenuItem.Click += new System.EventHandler(this.freshWaterToolStripMenuItem_Click);
+            // 
+            // freshwaterIQModuleToolStripMenuItem
+            // 
+            this.freshwaterIQModuleToolStripMenuItem.Name = "freshwaterIQModuleToolStripMenuItem";
+            this.freshwaterIQModuleToolStripMenuItem.Size = new System.Drawing.Size(240, 26);
+            this.freshwaterIQModuleToolStripMenuItem.Text = "Freshwater IQ Module";
+            this.freshwaterIQModuleToolStripMenuItem.Click += new System.EventHandler(this.freshwaterIQModuleToolStripMenuItem_Click);
             // 
             // aCEModuleToolStripMenuItem
             // 
@@ -438,7 +449,7 @@
             this.rawDataTabPage.Location = new System.Drawing.Point(4, 25);
             this.rawDataTabPage.Name = "rawDataTabPage";
             this.rawDataTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.rawDataTabPage.Size = new System.Drawing.Size(696, 406);
+            this.rawDataTabPage.Size = new System.Drawing.Size(696, 405);
             this.rawDataTabPage.TabIndex = 1;
             this.rawDataTabPage.Text = "Raw Data";
             this.rawDataTabPage.UseVisualStyleBackColor = true;
@@ -453,7 +464,7 @@
             this.mainRawDataTextBox.Name = "mainRawDataTextBox";
             this.mainRawDataTextBox.ReadOnly = true;
             this.mainRawDataTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.mainRawDataTextBox.Size = new System.Drawing.Size(690, 355);
+            this.mainRawDataTextBox.Size = new System.Drawing.Size(690, 354);
             this.mainRawDataTextBox.TabIndex = 6;
             this.mainRawDataTextBox.WordWrap = false;
             // 
@@ -462,7 +473,7 @@
             this.panel1.Controls.Add(this.rawSendButton);
             this.panel1.Controls.Add(this.rawSendTextBox);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel1.Location = new System.Drawing.Point(3, 358);
+            this.panel1.Location = new System.Drawing.Point(3, 357);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(690, 45);
             this.panel1.TabIndex = 5;
@@ -494,7 +505,7 @@
             this.storeTabPage.Controls.Add(this.packetsListView);
             this.storeTabPage.Location = new System.Drawing.Point(4, 25);
             this.storeTabPage.Name = "storeTabPage";
-            this.storeTabPage.Size = new System.Drawing.Size(696, 406);
+            this.storeTabPage.Size = new System.Drawing.Size(696, 405);
             this.storeTabPage.TabIndex = 2;
             this.storeTabPage.Text = "Packet Store";
             this.storeTabPage.UseVisualStyleBackColor = true;
@@ -511,7 +522,7 @@
             this.packetsListView.HideSelection = false;
             this.packetsListView.Location = new System.Drawing.Point(0, 0);
             this.packetsListView.Name = "packetsListView";
-            this.packetsListView.Size = new System.Drawing.Size(696, 406);
+            this.packetsListView.Size = new System.Drawing.Size(696, 405);
             this.packetsListView.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.packetsListView.TabIndex = 0;
             this.packetsListView.UseCompatibleStateImageBehavior = false;
@@ -527,7 +538,7 @@
             this.dataTabPage.Controls.Add(this.dataListView);
             this.dataTabPage.Location = new System.Drawing.Point(4, 25);
             this.dataTabPage.Name = "dataTabPage";
-            this.dataTabPage.Size = new System.Drawing.Size(696, 406);
+            this.dataTabPage.Size = new System.Drawing.Size(696, 405);
             this.dataTabPage.TabIndex = 3;
             this.dataTabPage.Text = "Decoded Data";
             this.dataTabPage.UseVisualStyleBackColor = true;
@@ -544,7 +555,7 @@
             this.dataListView.HideSelection = false;
             this.dataListView.Location = new System.Drawing.Point(0, 0);
             this.dataListView.Name = "dataListView";
-            this.dataListView.Size = new System.Drawing.Size(696, 406);
+            this.dataListView.Size = new System.Drawing.Size(696, 405);
             this.dataListView.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.dataListView.TabIndex = 1;
             this.dataListView.UseCompatibleStateImageBehavior = false;
@@ -565,7 +576,7 @@
             this.stateDecodeTabPage.Controls.Add(this.stateDecodeTextBox);
             this.stateDecodeTabPage.Location = new System.Drawing.Point(4, 25);
             this.stateDecodeTabPage.Name = "stateDecodeTabPage";
-            this.stateDecodeTabPage.Size = new System.Drawing.Size(696, 406);
+            this.stateDecodeTabPage.Size = new System.Drawing.Size(696, 405);
             this.stateDecodeTabPage.TabIndex = 4;
             this.stateDecodeTabPage.Text = "State";
             this.stateDecodeTabPage.UseVisualStyleBackColor = true;
@@ -580,7 +591,7 @@
             this.stateDecodeTextBox.Name = "stateDecodeTextBox";
             this.stateDecodeTextBox.ReadOnly = true;
             this.stateDecodeTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.stateDecodeTextBox.Size = new System.Drawing.Size(696, 406);
+            this.stateDecodeTextBox.Size = new System.Drawing.Size(696, 405);
             this.stateDecodeTextBox.TabIndex = 7;
             this.stateDecodeTextBox.WordWrap = false;
             // 
@@ -602,12 +613,19 @@
             this.pollTimer.Interval = 2000;
             this.pollTimer.Tick += new System.EventHandler(this.pollTimer_Tick);
             // 
-            // freshwaterIQModuleToolStripMenuItem
+            // fIQTest1ToolStripMenuItem
             // 
-            this.freshwaterIQModuleToolStripMenuItem.Name = "freshwaterIQModuleToolStripMenuItem";
-            this.freshwaterIQModuleToolStripMenuItem.Size = new System.Drawing.Size(240, 26);
-            this.freshwaterIQModuleToolStripMenuItem.Text = "Freshwater IQ Module";
-            this.freshwaterIQModuleToolStripMenuItem.Click += new System.EventHandler(this.freshwaterIQModuleToolStripMenuItem_Click);
+            this.fIQTest1ToolStripMenuItem.Name = "fIQTest1ToolStripMenuItem";
+            this.fIQTest1ToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.fIQTest1ToolStripMenuItem.Text = "FIQ Test 1";
+            this.fIQTest1ToolStripMenuItem.Click += new System.EventHandler(this.fIQTest1ToolStripMenuItem_Click);
+            // 
+            // fIQTest2ToolStripMenuItem
+            // 
+            this.fIQTest2ToolStripMenuItem.Name = "fIQTest2ToolStripMenuItem";
+            this.fIQTest2ToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.fIQTest2ToolStripMenuItem.Text = "FIQ Test 2";
+            this.fIQTest2ToolStripMenuItem.Click += new System.EventHandler(this.fIQTest2ToolStripMenuItem_Click);
             // 
             // MainForm
             // 
@@ -705,6 +723,8 @@
         private System.Windows.Forms.ToolStripMenuItem audioToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aCEModuleToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem freshwaterIQModuleToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem fIQTest1ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem fIQTest2ToolStripMenuItem;
     }
 }
 

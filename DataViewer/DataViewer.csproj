@@ -53,6 +53,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FreshwaterIqForm2.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FreshwaterIqForm2.Designer.cs">
+      <DependentUpon>FreshwaterIqForm2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FreshwaterIqForm1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FreshwaterIqForm1.Designer.cs">
+      <DependentUpon>FreshwaterIqForm1.cs</DependentUpon>
+    </Compile>
     <Compile Include="LogAnnotationForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -67,6 +79,12 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="FreshwaterIqForm2.resx">
+      <DependentUpon>FreshwaterIqForm2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FreshwaterIqForm1.resx">
+      <DependentUpon>FreshwaterIqForm1.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="LogAnnotationForm.resx">
       <DependentUpon>LogAnnotationForm.cs</DependentUpon>
     </EmbeddedResource>
