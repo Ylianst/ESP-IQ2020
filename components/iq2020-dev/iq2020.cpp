@@ -742,7 +742,7 @@ int IQ2020Component::processIQ2020Command() {
 			next_poll = ::millis() + 5000; // Perform state polling in the next 5 seconds to update heater status.
 		}
 
-		if ((cmdlen == 140) && (processingBuffer[5] == 0x02) && (processingBuffer[6] == 0x56)) {
+		if (((cmdlen == 140) && (processingBuffer[5] == 0x02) && (processingBuffer[6] == 0x56)) || ((cmdlen == 123) && (processingBuffer[5] == 0x02) && (processingBuffer[6] == 0x55))) {
 			// This is the main status data (jets, temperature)
 #ifdef USE_SELECT
 			if (!versionstr.empty() && (select_state[SELECT_AUDIO_SOURCE] != NOT_SET)) { next_poll = ::millis() + (this->polling_rate_ * 1000); } // Next poll
@@ -863,8 +863,10 @@ int IQ2020Component::processIQ2020Command() {
 			}
 
 			// Misc sensors
-			if (this->pcb_f_temperature_sensor_) this->pcb_f_temperature_sensor_->publish_state((float)processingBuffer[128]);
-			if (this->pcb_c_temperature_sensor_) this->pcb_c_temperature_sensor_->publish_state((float)esphome::fahrenheit_to_celsius((float)processingBuffer[128]));
+			if (cmdlen == 140) {
+				if (this->pcb_f_temperature_sensor_) this->pcb_f_temperature_sensor_->publish_state((float)processingBuffer[128]);
+				if (this->pcb_c_temperature_sensor_) this->pcb_c_temperature_sensor_->publish_state((float)esphome::fahrenheit_to_celsius((float)processingBuffer[128]));
+			}
 			if (this->salt_content_sensor_ && (salt_content >= 0)) this->salt_content_sensor_->publish_state((float)salt_content);
 			if (this->lights_intensity_sensor_) this->lights_intensity_sensor_->publish_state((float)(flags2 >> 4));
 
@@ -1270,9 +1272,15 @@ void IQ2020Component::pollState() {
 		return;
 	}
 
-	ESP_LOGD(TAG, "Poll");
-	unsigned char generalPollCmd[] = { 0x02, 0x56 };
-	sendIQ2020Command(0x01, 0x1F, 0x40, generalPollCmd, 2); // Poll general state
+	if (legacy_polling_) {
+		ESP_LOGD(TAG, "LegacyPoll");
+		unsigned char generalPollCmd[] = { 0x02, 0x55 };
+		sendIQ2020Command(0x01, 0x1F, 0x40, generalPollCmd, 2); // Legacy poll general state
+	} else {
+		ESP_LOGD(TAG, "Poll");
+		unsigned char generalPollCmd[] = { 0x02, 0x56 };
+		sendIQ2020Command(0x01, 0x1F, 0x40, generalPollCmd, 2); // Poll general state
+	}
 }
 
 IQ2020Component::Client::Client(std::unique_ptr<esphome::socket::Socket> socket, std::string identifier, size_t position)

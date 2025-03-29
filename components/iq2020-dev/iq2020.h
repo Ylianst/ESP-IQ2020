@@ -70,6 +70,7 @@ public:
 	void set_buffer_size(size_t size) { this->buf_size_ = size; }
 	void set_flow_control_pin(esphome::GPIOPin *flow_control_pin) { this->flow_control_pin_ = flow_control_pin; }
 	void set_trigger_poll_pin(esphome::GPIOPin *trigger_poll_pin) { this->trigger_poll_pin_ = trigger_poll_pin; }
+	void set_legacy_polling(bool legacy_polling) { this->legacy_polling_ = legacy_polling; }
 	void set_ace_emulation(bool ace_emulation) { this->ace_emulation_ = ace_emulation; }
 	void set_freshwater_emulation(bool freshwater_emulation) { this->freshwater_emulation_ = freshwater_emulation; }
 	void set_audio_emulation(bool audio_emulation) { this->audio_emulation_ = audio_emulation; }
@@ -180,6 +181,7 @@ protected:
 	size_t buf_size_;
 	esphome::GPIOPin *flow_control_pin_{ nullptr };
 	esphome::GPIOPin *trigger_poll_pin_{ nullptr };
+	bool legacy_polling_;
 	bool ace_emulation_;
 	unsigned char ace_flags = 1;     // 0x01 = Functioning, 0x04 = Boosting, 0x08 = Testing
 	unsigned char ace_status = 3;    // 0 to 7 with 3 or 4 being ideal.
