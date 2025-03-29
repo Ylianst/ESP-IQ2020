@@ -1,6 +1,6 @@
 ## Basic Configuration
 
-This is the starter configuration most people should use. It has a basic set of sensors and you can improve from here. Make sure to put your own API, OTA and WIFI passwords. Change temperature units if needed, and don't forget to [change the GPIO pins](https://github.com/Ylianst/ESP-IQ2020/blob/main/documentation/devices.md) if you are not using a M5Stack.
+This is the starter configuration most people should use. It has a basic set of sensors and you can improve from here. Make sure to put your own API, OTA and WIFI passwords. Change temperature units if needed, and don't forget to [change the GPIO pins](https://github.com/Ylianst/ESP-IQ2020/blob/main/documentation/devices.md) if you are not using a M5Stack. You also need to change the configuration if you have 1 or 2 jets and if the jets have different power levels.
 
 ```
 esphome:
