@@ -1,6 +1,127 @@
+## Basic Configuration
+
+This is the starter configuration most people should use. It has a basic set of sensors and you can improve from here. Make sure to put your own API, OTA and WIFI passwords. Change temperature units if needed, and don't forget to [change the GPIO pins](https://github.com/Ylianst/ESP-IQ2020/blob/main/documentation/devices.md) if you are not using a M5Stack.
+
+```
+esphome:
+  name: hot-tub
+  friendly_name: Hot Tub
+  comment: "Luxury Spa"
+
+esp32:
+  board: m5stack-atom
+
+logger:
+  baud_rate: 0
+  level: ERROR
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+
+ota:
+  - platform: esphome
+    password: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+external_components:
+  - source: github://ylianst/esp-iq2020
+
+# Make sure tx/rx pins are correct for your device.
+# GPIO26/32 is ok for M5Stack-ATOM + Tail485, look in GitHub devices link for your device.
+uart:
+  id: SpaConnection
+  tx_pin: GPIO26
+  rx_pin: GPIO32
+  baud_rate: 38400
+
+iq2020:
+   uart_id: SpaConnection
+   port: 1234
+
+select:
+text:
+number:
+
+# If using Celsius units on the hot tub remote, replace _f_ with _c_ in the three entries below.
+# Feel free to remove any sensor that are not relevant for your hot tub.
+sensor:
+  - platform: iq2020
+    current_f_temperature:
+      name: Current Temperature
+    target_f_temperature:
+      name: Target Temperature
+    outlet_f_temperature:
+      name: Heater Outlet
+    power_l1:
+      name: Pumps Power
+    power_heater:
+      name: Power Heater
+    power_l2:
+      name: Heater Power
+    pcb_f_temperature:
+      name: Controller Temperature
+
+switch:
+  - platform: iq2020
+    name: Lights
+    id: lights_switch
+    icon: "mdi:lightbulb"
+    datapoint: 0
+  - platform: iq2020
+    name: Spa Lock
+    id: spa_lock_switch
+    icon: "mdi:lock"
+    datapoint: 1
+  - platform: iq2020
+    name: Temperature Lock
+    id: temp_lock_switch
+    icon: "mdi:lock"
+    datapoint: 2
+  - platform: iq2020
+    name: Clean Cycle
+    id: clean_cycle_switch
+    icon: "mdi:vacuum"
+    datapoint: 3
+  - platform: iq2020
+    name: Summer Timer
+    id: summer_timer_switch
+    icon: "mdi:sun-clock"
+    datapoint: 4
+
+fan:
+  - platform: iq2020
+    name: Jets 1
+    id: jets1
+    icon: "mdi:turbine"
+    datapoint: 0
+    speeds: 1
+  - platform: iq2020
+    name: Jets 2
+    id: jets2
+    icon: "mdi:turbine"
+    datapoint: 1
+    speeds: 2
+
+# Set "celsius" to "true" if using celsius units.
+climate:
+  - platform: iq2020
+    name: Temperature
+    celsius: false
+
+text_sensor:
+  - platform: iq2020
+    versionstr:
+      name: Version
+```
+
 ## Full Configuration
 
-Below is an example of a full configuration with most sensors turned on. The example below has a lot of great ideas for enhancing sensors, using substitutions and more. As always, you are encouraged to adapt this configuration to your own needs. Images of the sensors below.
+NOT RECOMMANDED. Below is an example of a full configuration with most sensors turned on. This configuration is not recommanded for anyone, it's just an example to see what values are possible so you can use to cut & paste into you own configuration. The example below has a lot of ideas for enhancing sensors, using substitutions and more. As always, you are encouraged to adapt this configuration to your own needs. Images of the sensors below.
 
 ```
 substitutions:
@@ -60,8 +181,10 @@ iq2020:
    uart_id: SpaConnection
 #   flow_control_pin: GPIO0
    port: 1234
-   audio_emulation: true
-
+   active:true
+   legacy_polling: false
+   audio_emulation: false
+   ace_emulation: false
 
 # Example configuration entry
 web_server:
