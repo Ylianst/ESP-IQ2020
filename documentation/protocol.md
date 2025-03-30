@@ -43,6 +43,7 @@ The source address is 0x01 which is the address of the IQ2020 controller on the 
 
 ```
 0x01 - IQ2020 controller
+0x20 - External lights module
 0x21 - Coolzone
 0x24 - ACE Salt System
 0x29 - Freshwater Salt System
