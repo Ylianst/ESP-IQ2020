@@ -13,7 +13,8 @@ This integration uses RS485 serial protocol to talk to IQ2020, this is the same 
 - Modules: FreshWater® Salt System
 - Interface: M5Stack-ATOM + Tail485
 
-Notable Settings:
+<details><summary>Notable Settings</summary>
+
 ```
 uart:
   id: SpaConnection
@@ -36,6 +37,8 @@ fan:
     datapoint: 1
     speeds: 2
 ```
+                
+</details>
 
 ## HotSpring HotSpot Stride 2021
 
@@ -44,7 +47,8 @@ fan:
 - Modules: None
 - Interface: M5Stack ATOM Lite ESP32 with ATOMIC RS485
 
-Notable Settings:
+<details><summary>Notable Settings</summary>
+  
 ```
 uart:
   id: SpaConnection
@@ -61,6 +65,8 @@ fan:
     datapoint: 0
     speeds: 2
 ```
+
+</details>
 
 ## Hotspring Envoy 2017
 
@@ -127,6 +133,8 @@ Also, light intensity is 0 to 3, not 0 to 5 like other models.
 
 - Status: The lights names and colors are off compared to the example given on this site. Here is the light settings that works:
 
+<details><summary>Notable Settings</summary>
+  
 ```
 select:
   - platform: iq2020
@@ -208,6 +216,8 @@ number:
     datapoint: 10
     maximum: 5
 ```
+
+</details>
 
 ## Tiger River Spa Caspian
 
