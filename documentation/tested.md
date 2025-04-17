@@ -275,7 +275,8 @@ Watkins P/N: 1303401-1 Rev K
 
 ![393649169-27c5d517-d762-4576-a487-793084ab2127](https://github.com/user-attachments/assets/746e17c0-71bb-4ddf-89ab-541cf601b703)
 
-Notable Settings:
+<details>
+<summary>Notable Settings</summary>
 
 ```
 uart:
@@ -688,6 +689,8 @@ text_sensor:
           (String(seconds)) 
           ).c_str()};
 ```
+
+</details>
 
 ## Hotspring Jetsetter 2016
 - Status: Works great.
