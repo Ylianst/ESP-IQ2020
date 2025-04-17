@@ -703,6 +703,36 @@ text_sensor:
 - Only needed to change the code for dual single speed pumps.
 - I suspect this will work with hot tubs as old as 2012 using the "Eagle" version of the IQ2020 controller.
 
+
+## Tiger River Spa Caspian
+Tiger River Spa Caspian with a 50hz Eagle board retrofit and this is the light config that works for me. The difference from the document version is the colours were off by one, cycle didn't work until I took out the Cycle colour and 3 intensity levels instead of 5.
+
+```
+select:
+  - platform: iq2020
+    name: Color Underwater
+    id: lights1_color
+    datapoint: 1
+    options:
+      - Blue
+      - Cyan
+      - Green
+      - White
+      - Yellow
+      - Red
+      - Violet
+  - platform: iq2020
+    name: Color Cycle Speed
+    id: lights_cycle_speed
+    datapoint: 5
+number:
+  - platform: iq2020
+    id: lights1_intensity
+    name: Intensity Underwater
+    datapoint: 7
+    maximum: 3
+```
+
 ## List of models compatible with ACE 77401 controller.
 There likely all use RS485 and so, would also be compatible with this integration. Hot tubs made after 2014 should all work.
 ```
