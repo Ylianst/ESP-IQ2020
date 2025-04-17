@@ -720,6 +720,8 @@ text_sensor:
 ## Tiger River Spa Caspian
 Tiger River Spa Caspian with a 50hz Eagle board retrofit and this is the light config that works for me. The difference from the document version is the colours were off by one, cycle didn't work until I took out the Cycle colour and 3 intensity levels instead of 5.
 
+<details><summary>Notable Settings</summary>
+  
 ```
 select:
   - platform: iq2020
@@ -745,6 +747,8 @@ number:
     datapoint: 7
     maximum: 3
 ```
+  
+</details>
 
 ## List of models compatible with ACE 77401 controller.
 There likely all use RS485 and so, would also be compatible with this integration. Hot tubs made after 2014 should all work.
