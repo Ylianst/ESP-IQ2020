@@ -39,7 +39,7 @@ esphome::iq2020_climate::IQ2020Climate* g_iq2020_climate = NULL;
 
 using namespace esphome;
 
-float fahrenheit_to_celsius(float value) { return (value - 32.0f) / 1.8f; }
+float fahrenheit_to_celsius(float value) { float r = (value - 32.0f) / 1.8f; if (r < 26.66667) return 26.66667; return r; }
 float celsius_to_fahrenheit(float value) { return value * 1.8f + 32.0f; }
 //float fahrenheit_to_celsius(float f) { return (f - 32) * 5 / 9; }
 //float celsius_to_fahrenheit(float c) { return c * 9 / 5 + 32; }
