@@ -56,7 +56,7 @@ namespace iq2020_climate {
 		traits.set_supports_action(true);
 
 		if (celsius) { // Celsius setup
-			traits.set_visual_min_temperature(26.5);
+			traits.set_visual_min_temperature(26.49999);
 			traits.set_visual_max_temperature(40);
 			traits.set_visual_target_temperature_step(0.5);
 			traits.set_visual_current_temperature_step(0.5);
