@@ -101,6 +101,17 @@ sensor:
 - Status: Works great, Reports power and everything.
 - Version: EU2.039018E0020.00.0
 
+## HotSpring Limelight Pulse 2024
+
+- Status: Working
+- Version:  EG24.104bdE002LL24.1
+- Modules: FreshWater® Salt System, FreshWater® IQ
+- Interface: M5Stack ATOM Lite + ATOM Tail485
+
+Notes: Installation required an expansion board due to 2 pre-installed modules consuming both available ports.
+Hot Spring I2C Communication Board, 5-Port (74150) was installation required trimming the length of the pin
+on the existing ports (slightly) to allow the board to fully seat on the posts/stays.
+
 ## HotSpring Limelight Pulse 2023
 
 - Status: Working well but ACE boost feature does not work and details on controlling lights still being worked on.
