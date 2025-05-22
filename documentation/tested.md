@@ -413,7 +413,7 @@ sensor:
       - multiply: 0.001
     
   - platform: total_daily_energy
-    name: 'Controller Energy'
+    name: 'Circulation Energy'
     power_id: power_heater
     unit_of_measurement: 'kWh'
     state_class: total_increasing
