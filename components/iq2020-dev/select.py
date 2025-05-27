@@ -5,7 +5,7 @@ from esphome.const import CONF_ID
 
 from . import ns, IQ2020Component
 
-CONF_IQ2020_ID = "IQ2020Component";
+CONF_IQ2020_ID = "IQ2020Component"
 CONF_IQ2020_SERVER = "iq2020_server"
 CONF_SELECT_DATAPOINT = "datapoint"
 CONF_OPTIONS = "options"
