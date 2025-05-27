@@ -13,11 +13,11 @@ CONF_MAXIMUM = "maximum"
 iq2020_number_ns = cg.esphome_ns.namespace('iq2020_number')
 IQ2020Number = iq2020_number_ns.class_('IQ2020Number', number.Number, cg.Component)
 
-#CONFIG_SCHEMA = number.NUMBER_SCHEMA.extend({
+#CONFIG_SCHEMA = number.number_schema.extend({
 #    cv.GenerateID(): cv.declare_id(IQ2020Number)
 #}).extend({ cv.Required(CONF_NUMBER_DATAPOINT): cv.positive_int }).extend(cv.COMPONENT_SCHEMA)
 
-CONFIG_SCHEMA = number.NUMBER_SCHEMA.extend({
+CONFIG_SCHEMA = number.number_schema.extend({
     cv.GenerateID(): cv.declare_id(IQ2020Number),
     cv.Required(CONF_NUMBER_DATAPOINT): cv.positive_int,
     cv.Optional(CONF_MAXIMUM): cv.positive_int
