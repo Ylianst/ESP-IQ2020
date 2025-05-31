@@ -10,7 +10,7 @@ CONF_CELSIUS = "celsius"
 iq2020_climate_ns = cg.esphome_ns.namespace('iq2020_climate')
 IQ2020Climate = iq2020_climate_ns.class_('IQ2020Climate', climate.Climate, cg.Component)
 
-#CONFIG_SCHEMA = climate.climate_schema.extend({   // Hold until October 2025
+#CONFIG_SCHEMA = climate.climate_schema.extend(IQ2020Climate)({   // Hold until October 2025
 CONFIG_SCHEMA = climate.CLIMATE_SCHEMA.extend({
     cv.GenerateID(): cv.declare_id(IQ2020Climate)
 }).extend({
