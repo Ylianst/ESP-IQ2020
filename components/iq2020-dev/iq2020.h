@@ -303,3 +303,5 @@ protected:
 	void setNumberState(unsigned int numberid, int value);
 	void pollState();
 };
+
+extern IQ2020Component* g_iq2020_main;
