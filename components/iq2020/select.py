@@ -13,7 +13,8 @@ CONF_OPTIONS = "options"
 iq2020_select_ns = cg.esphome_ns.namespace('iq2020_select')
 IQ2020Select = iq2020_select_ns.class_('IQ2020Select', select.Select, cg.Component)
 
-CONFIG_SCHEMA = select.select_schema.extend({
+#CONFIG_SCHEMA = select.select_schema.extend({   // Hold until October 2025
+CONFIG_SCHEMA = select.SELECT_SCHEMA.extend({
     cv.GenerateID(): cv.declare_id(IQ2020Select),
     cv.Required(CONF_SELECT_DATAPOINT): cv.positive_int,
     cv.Optional(CONF_OPTIONS): cv.ensure_list(cv.string)
