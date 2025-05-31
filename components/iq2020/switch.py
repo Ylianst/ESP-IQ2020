@@ -5,14 +5,14 @@ from esphome.const import CONF_ID
 
 from . import ns, IQ2020Component
 
-CONF_IQ2020_ID = "IQ2020Component";
+CONF_IQ2020_ID = "IQ2020Component"
 CONF_IQ2020_SERVER = "iq2020_server"
 CONF_SWITCH_DATAPOINT = "datapoint"
 
 iq2020_switch_ns = cg.esphome_ns.namespace('iq2020_switch')
 IQ2020Switch = iq2020_switch_ns.class_('IQ2020Switch', switch.Switch, cg.Component)
 
-CONFIG_SCHEMA = switch.SWITCH_SCHEMA.extend({
+CONFIG_SCHEMA = switch.switch_schema.extend({
     cv.GenerateID(): cv.declare_id(IQ2020Switch)
 }).extend({ cv.Required(CONF_SWITCH_DATAPOINT): cv.positive_int }).extend(cv.COMPONENT_SCHEMA)
 
