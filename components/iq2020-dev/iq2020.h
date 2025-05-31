@@ -2,6 +2,7 @@
 #include "esphome/core/component.h"
 #include "esphome/components/socket/socket.h"
 #include "esphome/components/uart/uart.h"
+#include "esphome/components/api/custom_api_device.h"
 
 #ifdef USE_BINARY_SENSOR
 #include "esphome/components/binary_sensor/binary_sensor.h"
@@ -62,7 +63,7 @@
 #define NUMBER_LIGHTS4_INTENSITY 10    // Exterior lights intensity (0 to 5)
 #define NOT_SET -127
 
-class IQ2020Component : public esphome::Component {
+class IQ2020Component : public esphome::Component, public esphome::api::CustomAPIDevice {
 public:
 	IQ2020Component() = default;
 	explicit IQ2020Component(esphome::uart::UARTComponent *stream) : stream_{ stream } {}
