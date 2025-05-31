@@ -745,7 +745,7 @@ int IQ2020Component::processIQ2020Command() {
 		if (((cmdlen == 140) && (processingBuffer[5] == 0x02) && (processingBuffer[6] == 0x56)) || ((cmdlen == 123) && (processingBuffer[5] == 0x02) && (processingBuffer[6] == 0x55))) {
 			// This is the main status data (jets, temperature)
 #ifdef USE_SELECT
-			if (!versionstr.empty() && (select_state[SELECT_AUDIO_SOURCE] != NOT_SET)) { next_poll = ::millis() + (this->polling_rate_ * 1000); } // Next poll
+			if (!versionstr.empty() && ((select_state[SELECT_AUDIO_SOURCE] != NOT_SET) || (got_audio_data > 3))) { next_poll = ::millis() + (this->polling_rate_ * 1000); } // Next poll
 #else
 			if (!versionstr.empty()) { next_poll = ::millis() + (this->polling_rate_ * 1000); } // Next poll
 #endif
