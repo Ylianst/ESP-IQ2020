@@ -295,6 +295,7 @@ protected:
 	int processingBufferLen = 0;
 	void processRawIQ2020Data(unsigned char *data, int len);
 	int processIQ2020Command();
+	void setTime(int hour, int minute, int second, int year, int month, int day);
 	void sendIQ2020Command(unsigned char dst, unsigned char src, unsigned char op, unsigned char *data, int len);
 	void setSwitchState(unsigned int switchid, int state);
 	void setSelectState(unsigned int selectid, int state);
