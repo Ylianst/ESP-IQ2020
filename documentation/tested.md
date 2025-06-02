@@ -761,6 +761,211 @@ number:
   
 </details>
 
+## 2014 Hot Spring Highlife Aria
+
+Status: Works. The original software on this hot tub can be updated to add more features around the lights.
+
+- 1.06.H03adE0020.70f - Primarily works, but only allow for lights on/off, individual light control including color and intensity does not work
+- 1.10.H6388E0020.70.f - Fully working
+
+Regarding the control of the lights, I was able to update the firmware to the latest version and it solved the problem. The integration actually improves the hot tub functionality as it allows the accessory lighting (bartop, pillow, water feature) to be controlled independently. The tub control panel only allows you to turn them on/off and set a single color for all three. The integration allows each of these to be set to a different color and intensity independently. The order of the lights/assignments are different, attached my configuration for anyone that needs it.
+
+<details><summary>Settings</summary>
+
+```
+select:
+  - platform: iq2020
+    name: Color Underwater
+    id: lights1_color
+    datapoint: 1
+    options:
+      - Blue
+      - Aqua
+      - Green
+      - White
+      - Yellow
+      - Red
+      - Magenta
+      - Cycle
+  - platform: iq2020
+    name: Color Water Feature
+    id: lights2_color
+    datapoint: 2
+    options:
+      - Violet
+      - Blue
+      - Cyan
+      - Green
+      - White
+      - Yellow
+      - Red
+      - Cycle
+  - platform: iq2020
+    name: Color Bartop
+    id: lights3_color
+    datapoint: 3
+    options:
+      - Violet
+      - Blue
+      - Cyan
+      - Green
+      - White
+      - Yellow
+      - Red
+      - Cycle
+  - platform: iq2020
+    name: Color Pillow
+    id: lights4_color
+    datapoint: 4
+    options:
+      - Violet
+      - Blue
+      - Cyan
+      - Green
+      - White
+      - Yellow
+      - Red
+      - Cycle
+
+number:
+  - platform: iq2020
+    id: lights1_intensity
+    name: Intensity Underwater
+    datapoint: 7
+    maximum: 5
+  - platform: iq2020
+    id: lights2_intensity
+    name: Intensity Water Feature
+    datapoint: 8
+    maximum: 5
+  - platform: iq2020
+    id: lights3_intensity
+    name: Intensity Bartop
+    datapoint: 9
+    maximum: 5
+  - platform: iq2020
+    id: lights4_intensity
+    name: Intensity Pillow
+    datapoint: 10
+    maximum: 5
+
+text:
+
+# If using Celsius units on the hot tub remote, replace _f_ with _c_ in the three entries below.
+# Feel free to remove any sensor that are not relevant for your hot tub.
+sensor:
+  - platform: iq2020
+    current_f_temperature:
+      name: Current Temperature
+    target_f_temperature:
+      name: Target Temperature
+    outlet_f_temperature:
+      name: Heater Outlet
+    power_l1:
+      name: Pumps Power
+    power_heater:
+      name: Circ Pump Power
+    power_l2:
+      name: Heater Power
+    pcb_f_temperature:
+      name: Controller Temperature
+
+    logo_lights:
+      internal: true
+      name: Logo Lights Number
+      on_value:
+        then:
+          - text_sensor.template.publish:
+              id: logo_lights_text
+              state: !lambda 'return (to_string(int(x)).c_str());'
+
+    #light sensors
+    lights_underwater_intensity:
+      name: Underwater Light Intensity
+    lights_bartop_intensity:
+      name: Water Feature Light Intensity
+    lights_pillow_intensity:
+      name: Bartop Light Intensity
+    lights_exterior_intensity:
+      name: Pillow Light Intensity
+    lights_underwater_color:
+      name: Underwater Light Color
+    lights_bartop_color:
+      name: Water Feature Light Color
+    lights_pillow_color:
+      name: Bartop Light Color
+    lights_exterior_color:
+      name: Pillow Light Color
+
+switch:
+  - platform: iq2020
+    name: Lights
+    id: lights_switch
+    icon: "mdi:lightbulb"
+    datapoint: 0
+  - platform: iq2020
+    name: Spa Lock
+    id: spa_lock_switch
+    icon: "mdi:lock"
+    datapoint: 1
+  - platform: iq2020
+    name: Temperature Lock
+    id: temp_lock_switch
+    icon: "mdi:lock"
+    datapoint: 2
+  - platform: iq2020
+    name: Clean Cycle
+    id: clean_cycle_switch
+    icon: "mdi:vacuum"
+    datapoint: 3
+  - platform: iq2020
+    name: Summer Timer
+    id: summer_timer_switch
+    icon: "mdi:sun-clock"
+    datapoint: 4
+
+fan:
+  - platform: iq2020
+    name: Jets 1
+    id: jets1
+    icon: "mdi:turbine"
+    datapoint: 0
+    speeds: 1
+  - platform: iq2020
+    name: Jets 2
+    id: jets2
+    icon: "mdi:turbine"
+    datapoint: 1
+    speeds: 2
+
+# Set "celsius" to "true" if using celsius units.
+climate:
+  - platform: iq2020
+    name: Temperature
+    celsius: false
+
+text_sensor:
+  - platform: iq2020
+    versionstr:
+      name: Version
+  - platform: template
+    id: logo_lights_text
+    name: Logo Lights
+    filters:
+      - map:
+        - 0 -> Unknown
+        - 1 -> Power on
+        - 2 -> Power on & ready on
+        - 3 -> Ready flash
+        - 4 -> Power flash
+        - 5 -> Power and ready flash
+        - 6 -> Power and ready alternate
+        - 7 -> Power and ready salt error
+```
+
+</details>
+
+
 ## List of models compatible with ACE 77401 controller.
 There likely all use RS485 and so, would also be compatible with this integration. Hot tubs made after 2014 should all work.
 ```
