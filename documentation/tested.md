@@ -967,12 +967,12 @@ text_sensor:
 
 ## 2021 Hot Springs Sovereign
 
-Status: Works
-Firmware WR4.04de1cE002DK4.00
-Jet 1 setup with 2 speeds
-Jet 2 not enabled
-Salt system enabled
-Audio system emulated
+- Status: Works
+- Firmware WR4.04de1cE002DK4.00
+- Jet 1 setup with 2 speeds
+- Jet 2 not enabled
+- Salt system enabled
+- Audio system emulated
 
 
 ## List of models compatible with ACE 77401 controller.
