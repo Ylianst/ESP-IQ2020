@@ -1,4 +1,3 @@
-#ifdef USE_TEXT
 #pragma once
 
 #include "esphome/core/component.h"
@@ -25,26 +24,3 @@ namespace iq2020_text {
 
 } //namespace iq2020_text
 } //namespace esphome
-#else
-
-#include "esphome/core/component.h"
-
-namespace esphome {
-namespace iq2020_text {
-
-	class IQ2020Text : public Component {
-	public:
-		void setup();
-		void control(const std::string &value);
-		void dump_config();
-		void set_text_id(unsigned int id) { }
-		void set_value(const std::string &value) { }
-		std::string text_value;
-
-	protected:
-		unsigned int text_id;
-	};
-
-} //namespace iq2020_text
-} //namespace esphome
-#endif
