@@ -4,7 +4,7 @@
 #ifdef USE_SELECT
 #include "iq2020_select.h"
 #endif
-#ifdef USE_TEXT_SENSOR
+#ifdef USE_TEXT
 #include "iq2020_text.h"
 #endif
 #ifdef USE_NUMBER
@@ -28,7 +28,7 @@ esphome::iq2020_switch::IQ2020Switch* g_iq2020_switch[SWITCHCOUNT];
 #ifdef USE_SELECT
 esphome::iq2020_select::IQ2020Select* g_iq2020_select[SELECTCOUNT];
 #endif
-#ifdef USE_TEXT_SENSOR
+#ifdef USE_TEXT
 esphome::iq2020_text::IQ2020Text* g_iq2020_text[TEXTCOUNT];
 #endif
 esphome::iq2020_fan::IQ2020Fan* g_iq2020_fan[FANCOUNT];
@@ -399,7 +399,7 @@ int IQ2020Component::processIQ2020Command() {
 				char text[22];
 				text[0] = 0x19;
 				text[1] = 0x06;
-#ifdef USE_TEXT_SENSOR
+#ifdef USE_TEXT
 				if (g_iq2020_text[TEXT_SONG_TITLE] != NULL) {
 					text_len += g_iq2020_text[TEXT_SONG_TITLE]->text_value.size();
 					memcpy(text + 2, g_iq2020_text[TEXT_SONG_TITLE]->text_value.c_str(), text_len - 2);
@@ -415,7 +415,7 @@ int IQ2020Component::processIQ2020Command() {
 				char text[22];
 				text[0] = 0x19;
 				text[1] = 0x07;
-#ifdef USE_TEXT_SENSOR
+#ifdef USE_TEXT
 				if (g_iq2020_text[TEXT_ARTIST_NAME] != NULL) {
 					text_len += g_iq2020_text[TEXT_ARTIST_NAME]->text_value.size();
 					memcpy(text + 2, g_iq2020_text[TEXT_ARTIST_NAME]->text_value.c_str(), text_len - 2);

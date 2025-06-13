@@ -1,4 +1,4 @@
-#ifdef USE_TEXT_SENSOR
+#ifdef USE_TEXT
 #include "esphome/core/log.h"
 #include "iq2020_text.h"
 #include "iq2020.h"
