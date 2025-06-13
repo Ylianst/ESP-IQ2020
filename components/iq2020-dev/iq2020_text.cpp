@@ -1,9 +1,9 @@
+#ifdef USE_TEXT
 #include "esphome/core/log.h"
 #include "iq2020_text.h"
 #include "iq2020.h"
 
 extern IQ2020Component* g_iq2020_main;
-#ifdef USE_TEXT
 extern esphome::iq2020_text::IQ2020Text* g_iq2020_text[TEXTCOUNT];
 
 namespace esphome {
@@ -17,11 +17,9 @@ namespace iq2020_text {
 	}
 
 	void IQ2020Text::control(const std::string &value) {
-		//#ifdef USE_TEXT
 		ESP_LOGD(TAG, "Text:%d write state: %d", text_id, value.c_str());
 		text_value = value;
 		this->publish_state(value);
-		//#endif
 	}
 
 	void IQ2020Text::dump_config() {
