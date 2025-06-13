@@ -1,3 +1,4 @@
+#ifdef USE_TEXT_SENSOR
 #pragma once
 
 #include "esphome/core/component.h"
@@ -24,3 +25,4 @@ namespace iq2020_text {
 
 } //namespace iq2020_text
 } //namespace esphome
+#endif
