@@ -48,5 +48,3 @@ namespace iq2020_text {
 } //namespace iq2020_text
 } //namespace esphome
 #endif
-
-undefined reference to `vtable for esphome::iq2020_text::IQ2020Text'
