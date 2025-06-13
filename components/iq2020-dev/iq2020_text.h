@@ -32,7 +32,7 @@ namespace iq2020_text {
 namespace esphome {
 namespace iq2020_text {
 
-	class IQ2020Text : public text::Text, public Component {
+	class IQ2020Text : public Component {
 	public:
 		void setup();
 		void control(const std::string &value);
@@ -48,3 +48,5 @@ namespace iq2020_text {
 } //namespace iq2020_text
 } //namespace esphome
 #endif
+
+undefined reference to `vtable for esphome::iq2020_text::IQ2020Text'

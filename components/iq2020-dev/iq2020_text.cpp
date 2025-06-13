@@ -1,4 +1,3 @@
-#ifdef USE_TEXT
 #include "esphome/core/log.h"
 #include "iq2020_text.h"
 #include "iq2020.h"
@@ -12,14 +11,18 @@ namespace iq2020_text {
 	static const char *TAG = "iq2020.text";
 
 	void IQ2020Text::setup() {
+		#ifdef USE_TEXT
 		if (text_id < TEXTCOUNT) { g_iq2020_text[text_id] = this; }
 		//ESP_LOGD(TAG, "Text:%d Setup", text_id);
+		#endif
 	}
 
 	void IQ2020Text::control(const std::string &value) {
+		#ifdef USE_TEXT
 		ESP_LOGD(TAG, "Text:%d write state: %d", text_id, value.c_str());
 		text_value = value;
 		this->publish_state(value);
+		#endif
 	}
 
 	void IQ2020Text::dump_config() {
@@ -28,4 +31,3 @@ namespace iq2020_text {
 
 } //namespace iq2020_text
 } //namespace esphome
-#endif
