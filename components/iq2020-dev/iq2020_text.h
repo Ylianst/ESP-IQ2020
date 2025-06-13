@@ -25,4 +25,12 @@ namespace iq2020_text {
 
 } //namespace iq2020_text
 } //namespace esphome
+#else
+namespace esphome {
+namespace iq2020_text {
+
+	class IQ2020Text { };
+
+} //namespace iq2020_text
+} //namespace esphome
 #endif
