@@ -3,7 +3,9 @@
 #include "iq2020.h"
 
 extern IQ2020Component* g_iq2020_main;
+#ifdef USE_TEXT
 extern esphome::iq2020_text::IQ2020Text* g_iq2020_text[TEXTCOUNT];
+#endif
 
 namespace esphome {
 namespace iq2020_text {
