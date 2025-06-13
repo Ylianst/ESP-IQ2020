@@ -2,7 +2,7 @@
 #pragma once
 
 #include "esphome/core/component.h"
-#include "esphome/components/text/text.h"
+//#include "esphome/components/text/text.h"
 
 namespace esphome {
 namespace iq2020_text {
