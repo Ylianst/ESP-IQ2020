@@ -1,7 +1,9 @@
 #pragma once
 
 #include "esphome/core/component.h"
+#ifdef USE_TEXT_SENSOR
 #include "esphome/components/text/text.h"
+#endif
 
 namespace esphome {
 namespace iq2020_text {
