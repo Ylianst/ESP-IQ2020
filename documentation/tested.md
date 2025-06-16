@@ -974,6 +974,10 @@ text_sensor:
 - Salt system enabled
 - Audio system emulated
 
+## 2013 Hotspot E Stride
+
+- Status: Works
+
 
 ## List of models compatible with ACE 77401 controller.
 There likely all use RS485 and so, would also be compatible with this integration. Hot tubs made after 2014 should all work.
