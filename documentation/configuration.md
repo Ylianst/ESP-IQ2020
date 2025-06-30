@@ -43,6 +43,7 @@ iq2020:
    uart_id: SpaConnection
    port: 1234
 
+# These empty sections are required to compile correctly.
 select:
 text:
 number:
