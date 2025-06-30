@@ -64,6 +64,7 @@ iq2020:
    polling_rate: 65
    port: 1234
 
+# These empty sections are required to compile correctly.
 select:
 text:
 number:
