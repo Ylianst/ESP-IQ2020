@@ -324,7 +324,11 @@ int IQ2020Component::nextPossiblePacket() {
 void IQ2020Component::setAudioButton(int button) {
 #ifdef USE_SENSOR
 	if (this->buttons_sensor_) this->buttons_sensor_->publish_state(button);
-	if (this->buttons_sensor_) this->buttons_sensor_->publish_state(0);
+	if (this->buttons_sensor_) {
+		this->set_timeout(150, [this]() {
+			this->buttons_sensor_->publish_state(0);
+		});
+	}
 #endif
 }
 
