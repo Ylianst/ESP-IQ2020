@@ -366,7 +366,7 @@ Main status decoding
 0000              - ?
 06                - Model type.
 0400              - ?
-0A                - Logo status right. 0x0A both blue & green on, 0x02 only blue is on... see below for all states.
+0A                - Logo status light. 0x0A both blue & green on, 0x02 only blue is on... see below for all states.
 0622F2            - ?
 11                - Flags: 0x40 is Celsius
 00                - ?
