@@ -13,7 +13,8 @@ CONF_TEXT_VALUE = "value"
 iq2020_text_ns = cg.esphome_ns.namespace('iq2020_text')
 IQ2020Text = iq2020_text_ns.class_('IQ2020Text', text.Text, cg.Component)
 
-CONFIG_SCHEMA = text.text_schema(IQ2020Text).extend({
+#CONFIG_SCHEMA = text.text_schema.extend(IQ2020Text)({   // Hold until October 2025
+CONFIG_SCHEMA = text.TEXT_SCHEMA.extend({
     cv.GenerateID(): cv.declare_id(IQ2020Text)
 }).extend({
 	cv.Required(CONF_TEXT_DATAPOINT): cv.positive_int,
