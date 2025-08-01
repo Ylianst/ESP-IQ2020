@@ -10,6 +10,7 @@ from . import ns, IQ2020Component
 CONF_SENSOR_CONNECTED = "connected"
 CONF_SENSOR_CONNECTIONKIT = "connectionkit"
 CONF_SENSOR_SALT_BOOST = "salt_boost"
+CONF_SENSOR_SALT_CONFIRMED = "salt_level_confirmed"
 CONF_SENSOR_STATUS_STATE1 = "status_state1"
 CONF_SENSOR_STATUS_STATE2 = "status_state2"
 CONF_IQ2020_SERVER = "iq2020_server"
