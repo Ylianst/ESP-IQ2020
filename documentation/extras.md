@@ -133,13 +133,17 @@ Intensity values are from 0 for off to 5 for maximum brightness. For colors, her
 
 ## ACE / Freshwater salt systems
 
-If you have a ACE or Freshwater module attached to your hot tub, this integration will allow you to see the salt sensor and control the power level (0 to 10) of the salt system. To do this, add the following under the `number`, `sensor` and `switch` sections:
+If you have a ACE or Freshwater module attached to your hot tub, this integration will allow you to see the salt sensor and control the power level (0 to 10) of the salt system. To do this, add the following under the `binary_sensor`, `number`, `sensor` and `switch` sections:
 
 ```
 binary_sensor:    
-  - platform: iq2020-dev
+  - platform: iq2020
     salt_level_confirmed:
       name: Salt Level Confirmed
+    status_state1:
+      name: Status State 1
+    status_state2:
+      name: Status State 2
 
 number:
   - platform: iq2020
@@ -158,7 +162,7 @@ switch:
     datapoint: 8
 ```
 
-Salt content is a value from 0 to 7 where values 3 or 4 are ideal.
+Salt content is a value from 0 to 7 where values 3 or 4 are ideal. I am not sure what `status_state1` and `status_state2` indicate. If someone has a good idea what they are and a good name for them, that would be great. You can see the [discussion on these here](https://github.com/Ylianst/ESP-IQ2020/issues/42#issuecomment-3141760070).
 
 
 ## Freshwater IQ (Experimental)
