@@ -755,16 +755,23 @@ int IQ2020Component::processIQ2020Command() {
 #endif
 
 			// Read state flags
-			unsigned char flags1 = processingBuffer[9];
-			unsigned char flags2 = processingBuffer[10];
-			setSwitchState(SWITCH_TEMPLOCK, flags1 & 0x01);
-			setSwitchState(SWITCH_SPALOCK, (flags1 & 0x02) != 0);
-			setSwitchState(SWITCH_CLEANCYCLE, (flags1 & 0x10) != 0);
-			setSwitchState(SWITCH_SUMMERTIMER, (flags1 & 0x20) != 0);
+			unsigned char flags1 = processingBuffer[8];
+			unsigned char flags2 = processingBuffer[9];
+			unsigned char flags3 = processingBuffer[10];
+			setSwitchState(SWITCH_TEMPLOCK, flags2 & 0x01);
+			setSwitchState(SWITCH_SPALOCK, (flags2 & 0x02) != 0);
+			setSwitchState(SWITCH_CLEANCYCLE, (flags2 & 0x10) != 0);
+			setSwitchState(SWITCH_SUMMERTIMER, (flags2 & 0x20) != 0);
 
 #ifdef USE_BINARY_SENSOR
+			if (this->status_state1_) {
+				this->status_state1_->publish_state((flags1 & 0x08) != 0);
+			}
 			if (this->salt_confirmed_sensor_) {
-				this->salt_confirmed_sensor_->publish_state((flags1 & 0x40) != 0);
+				this->salt_confirmed_sensor_->publish_state((flags2 & 0x40) != 0);
+			}
+			if (this->status_state2_) {
+				this->status_state2_->publish_state((flags3 & 0x04) != 0);
 			}
 #endif
 
@@ -773,13 +780,13 @@ int IQ2020Component::processIQ2020Command() {
 
 			// Update JETS status. I don't currently know all of the JET status flags.
 			int jetState = 0; // JETS1 OFF
-			if (flags2 & 0x01) { jetState = 1; } // JETS1 MEDIUM
-			if (flags1 & 0x04) { jetState = 2; } // JETS1 FULL
+			if (flags3 & 0x01) { jetState = 1; } // JETS1 MEDIUM
+			if (flags2 & 0x04) { jetState = 2; } // JETS1 FULL
 			setSwitchState(SWITCH_JETS1, jetState);
 			
 			jetState = 0; // JETS2 OFF
-			if (flags2 & 0x02) { jetState = 1; } // JETS2 MEDIUM
-			if (flags1 & 0x08) { jetState = 2; } // JETS2 FULL
+			if (flags3 & 0x02) { jetState = 1; } // JETS2 MEDIUM
+			if (flags2 & 0x08) { jetState = 2; } // JETS2 FULL
 			setSwitchState(SWITCH_JETS2, jetState);
 
 			// Read temperatures
@@ -872,7 +879,7 @@ int IQ2020Component::processIQ2020Command() {
 				if (this->pcb_c_temperature_sensor_) this->pcb_c_temperature_sensor_->publish_state((float)esphome::fahrenheit_to_celsius((float)processingBuffer[128]));
 			}
 			if (this->salt_content_sensor_ && (salt_content >= 0)) this->salt_content_sensor_->publish_state((float)salt_content);
-			if (this->lights_intensity_sensor_) this->lights_intensity_sensor_->publish_state((float)(flags2 >> 4));
+			if (this->lights_intensity_sensor_) this->lights_intensity_sensor_->publish_state((float)(flags3 >> 4));
 
 			int logo_lights = 0;
 			if (processingBuffer[16] == 0x02) logo_lights = 1; // Power on
