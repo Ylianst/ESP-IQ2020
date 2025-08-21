@@ -30,6 +30,8 @@ esphome:
 
 esp32:
   board: m5stack-atom
+  framework:
+    type: arduino
 
 logger:
   baud_rate: 0
