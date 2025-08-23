@@ -8,7 +8,7 @@
 #include "iq2020_text.h"
 #endif
 #ifdef USE_NUMBER
-#include "iq2020_number.h"
+#include "number/iq2020_number.h"
 #endif
 #include "iq2020_climate.h"
 
