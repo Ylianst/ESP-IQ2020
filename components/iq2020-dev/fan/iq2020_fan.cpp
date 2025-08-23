@@ -1,6 +1,6 @@
 #include "esphome/core/log.h"
 #include "iq2020_fan.h"
-#include "iq2020.h"
+#include "../iq2020.h"
 
 extern IQ2020Component* g_iq2020_main;
 extern esphome::iq2020_fan::IQ2020Fan* g_iq2020_fan[FANCOUNT];

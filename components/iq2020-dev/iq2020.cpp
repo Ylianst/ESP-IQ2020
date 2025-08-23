@@ -1,8 +1,8 @@
 #include "iq2020.h"
-#include "iq2020_fan.h"
-#include "iq2020_switch.h"
+#include "fan/iq2020_fan.h"
+#include "switch/iq2020_switch.h"
 #ifdef USE_SELECT
-#include "iq2020_select.h"
+#include "select/iq2020_select.h"
 #endif
 #ifdef USE_TEXT
 #include "text/iq2020_text.h"
@@ -10,7 +10,7 @@
 #ifdef USE_NUMBER
 #include "number/iq2020_number.h"
 #endif
-#include "iq2020_climate.h"
+#include "climant/iq2020_climate.h"
 
 #include "esphome/core/helpers.h"
 #include "esphome/core/log.h"
