@@ -5,7 +5,7 @@
 #include "iq2020_select.h"
 #endif
 #ifdef USE_TEXT
-#include "iq2020_text.h"
+#include "text/iq2020_text.h"
 #endif
 #ifdef USE_NUMBER
 #include "number/iq2020_number.h"
