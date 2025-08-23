@@ -58,9 +58,7 @@ namespace iq2020_number {
 		ESP_LOGD(TAG, "Number:%d write value: %d", number_id, value);
 		if ((maximum != 0) && (value > maximum)) { value = maximum; }
 		this->publish_state(value);
-		#ifdef USE_NUMBER
 		if (g_iq2020_main != NULL) { g_iq2020_main->numberAction(number_id, value); }
-		#endif
 	}
 
 	void IQ2020Number::dump_config() {
