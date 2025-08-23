@@ -1,5 +1,6 @@
 #pragma once
 #include "esphome/core/component.h"
+
 #ifdef USE_NUMBER
 #include "esphome/components/number/number.h"
 #endif
