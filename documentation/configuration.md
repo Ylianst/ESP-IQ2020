@@ -45,11 +45,6 @@ iq2020:
    uart_id: SpaConnection
    port: 1234
 
-# These empty sections are required to compile correctly.
-select:
-text:
-number:
-
 # If using Celsius units on the hot tub remote, replace _f_ with _c_ in the three entries below.
 # Feel free to remove any sensor that are not relevant for your hot tub.
 sensor:
