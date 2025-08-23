@@ -1,6 +1,6 @@
 #include "esphome/core/log.h"
 #include "iq2020_number.h"
-#include "iq2020.h"
+#include "../iq2020.h"
 
 extern IQ2020Component* g_iq2020_main;
 extern esphome::iq2020_number::IQ2020Number* g_iq2020_number[NUMBERCOUNT];

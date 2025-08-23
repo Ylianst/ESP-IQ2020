@@ -1,6 +1,6 @@
 #include "esphome/core/log.h"
 #include "iq2020_text.h"
-#include "iq2020.h"
+#include "../iq2020.h"
 
 extern IQ2020Component* g_iq2020_main;
 extern esphome::iq2020_text::IQ2020Text* g_iq2020_text[TEXTCOUNT];

@@ -1,6 +1,6 @@
 #include "esphome/core/log.h"
 #include "iq2020_switch.h"
-#include "iq2020.h"
+#include "../iq2020.h"
 
 extern IQ2020Component* g_iq2020_main;
 extern esphome::iq2020_switch::IQ2020Switch* g_iq2020_switch[SWITCHCOUNT];
