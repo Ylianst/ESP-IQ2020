@@ -10,7 +10,7 @@
 #ifdef USE_NUMBER
 #include "number/iq2020_number.h"
 #endif
-#include "climant/iq2020_climate.h"
+#include "climate/iq2020_climate.h"
 
 #include "esphome/core/helpers.h"
 #include "esphome/core/log.h"
