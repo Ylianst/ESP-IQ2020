@@ -1,5 +1,3 @@
-#ifdef USE_NUMBER
-
 #include "esphome/core/log.h"
 #include "iq2020_number.h"
 #include "iq2020.h"
@@ -69,5 +67,3 @@ namespace iq2020_number {
 
 } //namespace iq2020_number
 } //namespace esphome
-
-#endif // USE_NUMBER

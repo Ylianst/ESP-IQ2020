@@ -1,6 +1,4 @@
 #pragma once
-#ifdef USE_SELECT
-
 #include "esphome/core/component.h"
 #include "esphome/components/select/select.h"
 
@@ -21,5 +19,3 @@ namespace iq2020_select {
 
 } //namespace iq2020_select
 } //namespace esphome
-
-#endif // USE_SELECT
