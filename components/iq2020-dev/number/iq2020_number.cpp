@@ -1,5 +1,5 @@
 #include "esphome/core/log.h"
-#include "iq2020_number.h"
+#include "number/iq2020_number.h"
 #include "iq2020.h"
 
 extern IQ2020Component* g_iq2020_main;
