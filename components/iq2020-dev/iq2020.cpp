@@ -503,12 +503,13 @@ int IQ2020Component::processIQ2020Command() {
 		}
 #endif
 
-#ifdef USE_NUMBER
 		// ACE emulation
 		if (ace_emulation_ && (processingBuffer[1] == 0x24)) {
 			if (processingBuffer[7] <= 10) {
 				salt_power = processingBuffer[7];
+#ifdef USE_NUMBER
 				setNumberState(NUMBER_SALT_POWER, salt_power);
+#endif
 			}
 			ESP_LOGD(TAG, "ACE Emulation, power = %d", processingBuffer[7]);
 			if (processingBuffer[16] == 1) { /*if ((ace_flags & 8) == 0) { ace_flags += 8; } else { ace_flags -= 8; }*/ setAudioButton(6); } // Salt Test
@@ -530,13 +531,14 @@ int IQ2020Component::processIQ2020Command() {
 		else if (freshwater_emulation_ && (processingBuffer[1] == 0x29)) {
 			if (processingBuffer[7] <= 10) {
 				salt_power = processingBuffer[7];
+#ifdef USE_NUMBER
 				setNumberState(NUMBER_SALT_POWER, salt_power);
+#endif
 			}
 			ESP_LOGD(TAG, "Freshwater Emulation, power = %d", processingBuffer[7]);
 			unsigned char cmd[] = { 0x1E, 0x01, processingBuffer[7], 0x00, 0x30, 0x00, 0x00, 0x05, 0x00, 0x00, 0x8C, 0x1B, 0x00, 0x00, 0x50 };
 			sendIQ2020Command(0x01, 0x29, 0x80, cmd, sizeof(cmd));
 		}
-#endif
 	}
 
 	// Salt System -> IQ2020 Response
