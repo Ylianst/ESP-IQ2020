@@ -492,7 +492,9 @@ int IQ2020Component::processIQ2020Command() {
 	if (((processingBuffer[1] == 0x24) || (processingBuffer[1] == 0x29)) && (processingBuffer[2] == 0x01) && (processingBuffer[4] == 0x40) && (cmdlen == 21) && (processingBuffer[5] == 0x1E) && (processingBuffer[6] == 0x01)) {
 		// This is a command from IQ2020 to the Salt System
 		//ESP_LOGD(TAG, "Salt REQ Data, len=%d, cmd=%02x%02x", cmdlen, processingBuffer[5], processingBuffer[6]);
+#ifdef USE_NUMBER
 		if (processingBuffer[7] <= 10) { setNumberState(NUMBER_SALT_POWER, processingBuffer[7]); }
+#endif
 
 #ifdef USE_BINARY_SENSOR
 		if (this->salt_boost_sensor_) {
@@ -501,6 +503,7 @@ int IQ2020Component::processIQ2020Command() {
 		}
 #endif
 
+#ifdef USE_NUMBER
 		// ACE emulation
 		if (ace_emulation_ && (processingBuffer[1] == 0x24)) {
 			if (processingBuffer[7] <= 10) {
@@ -533,6 +536,7 @@ int IQ2020Component::processIQ2020Command() {
 			unsigned char cmd[] = { 0x1E, 0x01, processingBuffer[7], 0x00, 0x30, 0x00, 0x00, 0x05, 0x00, 0x00, 0x8C, 0x1B, 0x00, 0x00, 0x50 };
 			sendIQ2020Command(0x01, 0x29, 0x80, cmd, sizeof(cmd));
 		}
+#endif
 	}
 
 	// Salt System -> IQ2020 Response
@@ -541,7 +545,9 @@ int IQ2020Component::processIQ2020Command() {
 		//ESP_LOGD(TAG, "Salt RSP Data, len=%d, cmd=%02x%02x, power=%d", cmdlen, processingBuffer[5], processingBuffer[6], processingBuffer[7]);
 		if ((processingBuffer[7] <= 10) && (salt_power != processingBuffer[7])) {
 			salt_power = processingBuffer[7];
+#ifdef USE_NUMBER
 			setNumberState(NUMBER_SALT_POWER, salt_power);
+#endif
 		}
 		if (salt_content != processingBuffer[9]) {
 			salt_content = processingBuffer[9] >> 4;
@@ -559,7 +565,9 @@ int IQ2020Component::processIQ2020Command() {
 
 		if ((cmdlen == 9) && (processingBuffer[5] == 0xE1) && (processingBuffer[6] == 0x02) && (processingBuffer[7] == 0x06)) {
 			// Confirmation that the ACE/Freshwater salt system has changed state (not sure what state however)
+#ifdef USE_NUMBER
 			setNumberState(NUMBER_SALT_POWER, NOT_SET);
+#endif
 			setSwitchState(SWITCH_SALT_BOOST, NOT_SET);
 		}
 
@@ -596,7 +604,9 @@ int IQ2020Component::processIQ2020Command() {
 			// Status of the Freshwater Salt System
 			if (salt_power != processingBuffer[7]) {
 				salt_power = processingBuffer[7];
+#ifdef USE_NUMBER
 				setNumberState(NUMBER_SALT_POWER, salt_power);
+#endif
 			}
 		}
 
