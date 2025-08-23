@@ -978,6 +978,213 @@ text_sensor:
 
 - Status: Works
 
+## 2025 Hot Springs Rhythm
+
+Worked using the m5stack-atom. Some changes for 2025 Rhythm -
+- Jet 1 is two speed, Jet 2 is single speed
+- Light sections not individually controllable - all share the same light1
+- Still working on the salt system
+- Added in a dummy sensor to indicate if the tub should preheat before peak hours or just turn down
+- I also got the lights working under a light template entity for better control/color selection if anyone is interested!
+
+<img width="1764" height="1328" alt="479529927-7731ecf7-e1ed-4368-9144-c090cf303a80" src="https://github.com/user-attachments/assets/9acfc27d-6f44-4f75-a86f-3cb3686fd888" />
+
+<details><summary>Full YAML</summary>
+
+```
+esphome:
+  name: hot-tub
+  friendly_name: Hot Tub
+  comment: "Luxury Spa"
+
+esp32:
+  board: m5stack-atom
+
+logger:
+  baud_rate: 0
+  level: ERROR
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: ""
+
+ota:
+  - platform: esphome
+    password: ""
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Hot-Tub Fallback Hotspot"
+    password: "hottubbin"
+
+external_components:
+  - source: github://ylianst/esp-iq2020
+
+# Make sure tx/rx pins are correct for your device.
+# GPIO26/32 is ok for M5Stack-ATOM + Tail485, look in GitHub devices link for your device.
+uart:
+  id: SpaConnection
+  tx_pin: GPIO26
+  rx_pin: GPIO32
+  baud_rate: 38400
+
+iq2020:
+   uart_id: SpaConnection
+   polling_rate: 65
+   port: 1234
+
+select: #all for light color selection
+  - platform: iq2020
+    name: Light Color
+    id: lights1_color
+    datapoint: 1
+    options:
+      - Violet
+      - Blue
+      - Cyan
+      - Green
+      - White
+      - Yellow
+      - Red
+      - Cycle
+  - platform: iq2020
+    name: Color Cycle Speed
+    id: lights_cycle_speed
+    datapoint: 5
+
+text: # empty sections like this are required to compile correctly.
+
+binary_sensor:    
+  - platform: iq2020
+    salt_level_confirmed:
+      name: Salt Level Confirmed
+    status_state1:
+      name: Status State 1
+    status_state2:
+      name: Status State 2
+
+number: #all for light brightness selection
+  - platform: iq2020
+    id: lights1_intensity
+    name: Light Brightness
+    datapoint: 7
+    maximum: 5
+
+sensor:
+  - platform: iq2020
+    current_f_temperature:
+      name: Current Temperature
+    target_f_temperature:
+      name: Target Temperature
+    outlet_f_temperature:
+      name: Heater Outlet
+    power_l1:
+      name: Pumps Power
+    power_heater:
+      name: Power Heater
+    power_l2:
+      name: Heater Power
+    pcb_f_temperature:
+      name: Controller Temperature
+    salt_content:
+      name: Salt Content
+    heater_total_runtime:
+      name: Heater Runtime
+    jets1_total_runtime:
+      name: Jets 1 Runtime
+    lifetime_runtime:
+      name: Lifetime Runtime
+    jets2_total_runtime:
+      name: Jets 2 Runtime
+    lights_total_runtime:
+      name: Lights Runtime
+    circulation_pump_total_runtime:
+      name: Circulation Pump Runtime
+    jet1_low_total_runtime:
+      name: Jets 1 Low Runtime
+    power_on_counter:
+      name: Power On Counter
+  - platform: wifi_signal # Reports the WiFi signal strength/RSSI in dB
+    name: "WiFi Signal dB"
+    id: wifi_signal_db
+    update_interval: 60s
+    entity_category: "diagnostic"
+  - platform: copy # Reports the WiFi signal strength in %
+    source_id: wifi_signal_db
+    name: "WiFi Signal Percent"
+    filters:
+      - lambda: return min(max(2 * (x + 100.0), 0.0), 100.0);
+    unit_of_measurement: "%"
+    entity_category: "diagnostic"
+    device_class: ""
+
+switch:
+  - platform: iq2020
+    name: Lights
+    id: lights_switch
+    icon: "mdi:lightbulb"
+    datapoint: 0
+  - platform: iq2020
+    name: Spa Lock
+    id: spa_lock_switch
+    icon: "mdi:lock"
+    datapoint: 1
+  - platform: iq2020
+    name: Temperature Lock
+    id: temp_lock_switch
+    icon: "mdi:lock"
+    datapoint: 2
+  - platform: iq2020
+    name: Clean Cycle
+    id: clean_cycle_switch
+    icon: "mdi:vacuum"
+    datapoint: 3
+  - platform: iq2020
+    name: Summer Timer
+    id: summer_timer_switch
+    icon: "mdi:sun-clock"
+    datapoint: 4
+  - platform: iq2020
+    name: Salt Boost
+    id: salt_system_boost
+    datapoint: 8
+  - platform: template #dummy switch to indicate if pre-peak preheat should be ON
+    name: "Pre-Peak Heat Boost"
+    id: prepeak_heatboost
+    optimistic: True
+
+fan:
+  - platform: iq2020
+    name: Jets 1
+    id: jets1
+    icon: "mdi:turbine"
+    datapoint: 0
+    speeds: 2
+  - platform: iq2020
+    name: Jets 2
+    id: jets2
+    icon: "mdi:turbine"
+    datapoint: 1
+    speeds: 1
+
+climate:
+  - platform: iq2020
+    name: Temperature
+    celsius: false
+
+text_sensor:
+  - platform: iq2020
+    versionstr:
+      name: Version
+```
+
+</details>
+
 
 ## List of models compatible with ACE 77401 controller.
 There likely all use RS485 and so, would also be compatible with this integration. Hot tubs made after 2014 should all work.
