@@ -1,4 +1,5 @@
 #pragma once
+#ifdef USE_NUMBER
 
 #include "esphome/core/component.h"
 #include "esphome/components/number/number.h"
@@ -21,3 +22,5 @@ namespace iq2020_number {
 
 } //namespace iq2020_number
 } //namespace esphome
+
+#endif // USE_NUMBER
