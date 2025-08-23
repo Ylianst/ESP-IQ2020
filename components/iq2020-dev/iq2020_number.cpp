@@ -70,4 +70,4 @@ namespace iq2020_number {
 } //namespace iq2020_number
 } //namespace esphome
 
-#endif
+#endif // USE_NUMBER

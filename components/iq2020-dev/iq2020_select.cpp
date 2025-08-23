@@ -1,3 +1,4 @@
+#ifdef USE_SELECT
 #include "esphome/core/log.h"
 #include "iq2020_select.h"
 #include "iq2020.h"
@@ -88,3 +89,5 @@ namespace iq2020_select {
 
 } //namespace iq2020_select
 } //namespace esphome
+
+#endif // USE_SELECT
