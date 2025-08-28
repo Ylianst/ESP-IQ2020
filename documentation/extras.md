@@ -1,4 +1,4 @@
-## Extras
+# Extras
 
 In this file, I keep extra sensors, tips and tricks for the Home Assistant pro's.
 
@@ -441,7 +441,7 @@ Once added, you can restart Home Assistant and you will have new sensors you can
 ![image](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/ffa2b8ac-4193-411d-b864-b04e8ea1b068)
 
 
-### Power Usage Sensors
+## Power Usage Sensors
 
 Some IQ2020 boards will have electricity power usage sensors. In my case, I have 3 of them but not sure what to name them. I think there is one of the heater, one of the jets and one for the circulation pump but not sure. You can access them with the YAML below added to the `sensor:` section. Once done, you can add these new sensors to the Home Assistant energy dashboard.
 
