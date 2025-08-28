@@ -439,3 +439,42 @@ sensor:
 Once added, you can restart Home Assistant and you will have new sensors you can then display on the dashboard. If you run into any issues or want to make changes, go to the Home Assistant "Developer Tools", select the "Template" tab and paste the `value_template` above. You can see the result on the right and make changes as you wish.
 
 ![image](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/ffa2b8ac-4193-411d-b864-b04e8ea1b068)
+
+
+### Power Usage Sensors
+
+Some IQ2020 boards will have electricity power usage sensors. In my case, I have 3 of them but not sure what to name them. I think there is one of the heater, one of the jets and one for the circulation pump but not sure. You can access them with the YAML below added to the `sensor:` section. Once done, you can add these new sensors to the Home Assistant energy dashboard.
+
+```
+sensor:
+  - platform: total_daily_energy
+    name: 'Pump Energy'
+    power_id: power_l1
+    unit_of_measurement: 'kWh'
+    state_class: total_increasing
+    device_class: energy
+    accuracy_decimals: 3
+    filters:
+      # Multiplication factor from W to kW is 0.001
+      - multiply: 0.001
+  - platform: total_daily_energy
+    name: 'Controller Energy'
+    power_id: power_heater
+    unit_of_measurement: 'kWh'
+    state_class: total_increasing
+    device_class: energy
+    accuracy_decimals: 3
+    filters:
+      # Multiplication factor from W to kW is 0.001
+      - multiply: 0.001
+  - platform: total_daily_energy
+    name: 'Heater Energy'
+    power_id: power_l2
+    unit_of_measurement: 'kWh'
+    state_class: total_increasing
+    device_class: energy
+    accuracy_decimals: 3
+    filters:
+      # Multiplication factor from W to kW is 0.001
+      - multiply: 0.001
+```
