@@ -445,6 +445,10 @@ Once added, you can restart Home Assistant and you will have new sensors you can
 
 Some IQ2020 boards will have electricity power usage sensors. In my case, I have 3 of them but not sure what to name them. I think there is one of the heater, one of the jets and one for the circulation pump but not sure. You can access them with the YAML below added to the `sensor:` section. Once done, you can add these new sensors to the Home Assistant energy dashboard.
 
+<img width="2356" height="937" alt="482692679-de07c188-5e93-44ea-b19f-ac1e9d4396d2" src="https://github.com/user-attachments/assets/88109fb7-5da3-44b9-b6fc-6ace97968e76" />
+
+Here is the YAML:
+
 ```
 sensor:
   - platform: total_daily_energy
