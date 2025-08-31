@@ -6,6 +6,37 @@ In this document, I want to keep notes on the currently tested and confirmed to 
 
 This integration uses RS485 serial protocol to talk to IQ2020, this is the same protocol used by the official "SPA Internet Connection Kit" and so, both have the same requirement that your IQ2020 board must support RS485. My theory is that prior to 2014, IQ2020 boards used a I2C bus to communicate between modules and later added or replaced it with RS485. The expansion boards connector is designed to support both I2C and RS485 so there are pins for both. However, I don't know if a hot tub has ever supported both. It may be possible for someone to create a I2C integration for older pre-2014 models, but this is not something I can or will do. It may be possible to update the IQ2020 board ([video](https://www.youtube.com/watch?v=7U2TA-5Is2c)), but this is not something I am knowledgable about.
 
+## List of models compatible with ACE 77401 controller.
+There likely all use RS485 and so, would also be compatible with this integration. Hot tubs made after 2014 should all work.
+```
+Hot Spring	Aria (AR)	2012, 2013, 2014, 2015, 2016, 2017, 2018
+Hot Spring	Aria NXT (ARN)	2017, 2018, 2019, 2020, 2021
+Limelight	Beam I (BMI)	2018, 2019, 2020, 2021
+Limelight	Beam II (BMII)	2018, 2019, 2020, 2021
+Limelight	Flair (FLR)	2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021
+Limelight	Flash (FSH)	2018, 2019, 2020, 2021
+Hot Spring	Grandee (GG)	2012, 2013, 2014, 2015, 2016, 2017, 2018
+Hot Spring	Grandee NXT (GGN)	2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021
+Hot Spring	Prodigy (H)	2012, 2013, 2014, 2015, 2016, 2017, 2018
+Hot Spring	Prodigy (HN)	2019, 2020, 2021
+Hot Spring	Sovereign (II)	2012, 2013, 2014, 2015, 2016, 2017, 2018
+Hot Spring	Sovereign (IIN)	2019, 2020, 2021
+Hot Spring	Jetsetter (JJ)	2012, 2013, 2014, 2015, 2016, 2017, 2018
+Hot Spring	Jetsetter (JJN)	2019, 2020, 2021
+Hot Spring	Jetsetter LX (JTN)	2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021
+Hot Spring	Envoy (KK)	2012, 2013, 2014, 2015, 2016, 2017, 2018
+Hot Spring	Envoy NXT (KKN)	2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021
+Limelight	Pulse (PLS)	2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021
+Limelight	Prism (PSM)	2018, 2019, 2020, 2021
+Hot Spring	Vista (SS)	2012, 2013
+Hot Spring	Triumph (TRHN)	2019, 2020, 2021
+Hot Spring	Vanguard (VV)	2012, 2013, 2014, 2015, 2016, 2017, 2018
+Hot Spring	Vanguard NXT (VVN)	2017, 2018, 2019
+Limelight	Bolt (BLT)	2012, 2013, 2014, 2015, 2016, 2017
+Limelight	Gleam (GLM)	2013, 2014, 2015, 2016, 2017
+Limelight	Glow (GLW)	2012, 2013, 2014, 2015, 2016, 2017
+```
+
 ## Hotspring Grandee
 
 - Status: Works great. Lights, temperature, Pump1 with 1 speed, Pump2 with 2 speeds.
@@ -1223,35 +1254,3 @@ number:
 ```
 
 </details>
-
-
-## List of models compatible with ACE 77401 controller.
-There likely all use RS485 and so, would also be compatible with this integration. Hot tubs made after 2014 should all work.
-```
-Hot Spring	Aria (AR)	2012, 2013, 2014, 2015, 2016, 2017, 2018
-Hot Spring	Aria NXT (ARN)	2017, 2018, 2019, 2020, 2021
-Limelight	Beam I (BMI)	2018, 2019, 2020, 2021
-Limelight	Beam II (BMII)	2018, 2019, 2020, 2021
-Limelight	Flair (FLR)	2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021
-Limelight	Flash (FSH)	2018, 2019, 2020, 2021
-Hot Spring	Grandee (GG)	2012, 2013, 2014, 2015, 2016, 2017, 2018
-Hot Spring	Grandee NXT (GGN)	2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021
-Hot Spring	Prodigy (H)	2012, 2013, 2014, 2015, 2016, 2017, 2018
-Hot Spring	Prodigy (HN)	2019, 2020, 2021
-Hot Spring	Sovereign (II)	2012, 2013, 2014, 2015, 2016, 2017, 2018
-Hot Spring	Sovereign (IIN)	2019, 2020, 2021
-Hot Spring	Jetsetter (JJ)	2012, 2013, 2014, 2015, 2016, 2017, 2018
-Hot Spring	Jetsetter (JJN)	2019, 2020, 2021
-Hot Spring	Jetsetter LX (JTN)	2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021
-Hot Spring	Envoy (KK)	2012, 2013, 2014, 2015, 2016, 2017, 2018
-Hot Spring	Envoy NXT (KKN)	2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021
-Limelight	Pulse (PLS)	2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021
-Limelight	Prism (PSM)	2018, 2019, 2020, 2021
-Hot Spring	Vista (SS)	2012, 2013
-Hot Spring	Triumph (TRHN)	2019, 2020, 2021
-Hot Spring	Vanguard (VV)	2012, 2013, 2014, 2015, 2016, 2017, 2018
-Hot Spring	Vanguard NXT (VVN)	2017, 2018, 2019
-Limelight	Bolt (BLT)	2012, 2013, 2014, 2015, 2016, 2017
-Limelight	Gleam (GLM)	2013, 2014, 2015, 2016, 2017
-Limelight	Glow (GLW)	2012, 2013, 2014, 2015, 2016, 2017
-```
