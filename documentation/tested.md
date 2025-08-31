@@ -1186,6 +1186,45 @@ text_sensor:
 </details>
 
 
+## 2025 Hot Springs Hot Spot Pace
+
+Info: This hot tub is called Propel in NZ. Have the salt system installed.
+Status: Works. I have the temp dropping to 36 degrees C at 8pm, then back up to 40 degrees C at 11am. It then uses my solar PV to heat for about 3 hours during the midday.
+
+A few configuration changes: Jet 1 is two speed, Jet 2 is not used. Salt system working by adding:
+
+<details><summary>YAML Changes</summary>
+
+```
+sensor:
+    salt_content:
+    name: Salt Content
+
+switch:
+    platform: iq2020
+    name: Salt Boost
+    id: salt_system_boost
+    datapoint: 8
+
+binary_sensor:
+    platform: iq2020
+    salt_level_confirmed:
+    name: Salt Level Confirmed
+    status_state1:
+    name: Status State 1
+    status_state2:
+    name: Status State 2
+
+number:
+    platform: iq2020
+    id: salt_power
+    name: Salt Power
+    datapoint: 5
+```
+
+</details>
+
+
 ## List of models compatible with ACE 77401 controller.
 There likely all use RS485 and so, would also be compatible with this integration. Hot tubs made after 2014 should all work.
 ```
