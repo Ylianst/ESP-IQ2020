@@ -19,8 +19,25 @@ The IQ2020 is the control board used by a lot of hot tubs, so check if you have 
 
 Once you get the device, connect it to your computer using a USB-C table, create a new ESP home device, call it "Hot Tub" or anything you like, select `ESP32`. Once created, edit the configuration file to look like the one below. You should keep your own API encryption key and OTA password, but everything else can be copied from this example.
 
+## Framework Support
+
+ESP-IQ2020 supports both **Arduino** and **ESP-IDF** frameworks in ESPHome:
+
+- **Arduino Framework** (default): Traditional Arduino development framework with larger binaries
+- **ESP-IDF Framework**: Native Espressif development framework with smaller binaries and better performance
+
+ESPHome will default to ESP-IDF starting with version 2026.1.0. To use ESP-IDF now, change the framework configuration as shown in the ESP-IDF example below.
+
+**Benefits of ESP-IDF Framework:**
+- **Smaller binary size**: Typically 15-20% smaller binaries
+- **Better performance**: More efficient memory usage and faster execution
+- **Active upstream testing**: Better maintained and tested by Espressif
+- **Future-proof**: Will become the ESPHome default for ESP32 boards
+
+**Note**: ESP-IDF framework builds may require slightly different logger configuration (remove `baud_rate` setting) as shown in the ESP-IDF example.
+
 <details>
-<summary>Sample ESP-Home configuration file</summary>
+<summary>Sample ESP-Home configuration file (Arduino Framework)</summary>
 
 ```
 esphome:
@@ -32,9 +49,131 @@ esp32:
   board: m5stack-atom
   framework:
     type: arduino
+    # Note: ESP-IDF framework is also supported. To use ESP-IDF instead:
+    # type: esp-idf
 
 logger:
   baud_rate: 0
+  level: ERROR
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+
+ota:
+  - platform: esphome
+    password: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+external_components:
+  - source: github://ylianst/esp-iq2020
+
+# Make sure tx/rx pins are correct for your device.
+# GPIO26/32 is ok for M5Stack-ATOM + Tail485, look in GitHub devices link for your device.
+uart:
+  id: SpaConnection
+  tx_pin: GPIO26
+  rx_pin: GPIO32
+  baud_rate: 38400
+
+iq2020:
+   uart_id: SpaConnection
+   polling_rate: 65
+   port: 1234
+
+# If using Celsius units on the hot tub remote, replace _f_ with _c_ in the three entries below.
+# Feel free to remove any sensor that are not relevant for your hot tub.
+sensor:
+  - platform: iq2020
+    current_f_temperature:
+      name: Current Temperature
+    target_f_temperature:
+      name: Target Temperature
+    outlet_f_temperature:
+      name: Heater Outlet
+    power_l1:
+      name: Pumps Power
+    power_heater:
+      name: Power Heater
+    power_l2:
+      name: Heater Power
+    pcb_f_temperature:
+      name: Controller Temperature
+
+switch:
+  - platform: iq2020
+    name: Lights
+    id: lights_switch
+    icon: "mdi:lightbulb"
+    datapoint: 0
+  - platform: iq2020
+    name: Spa Lock
+    id: spa_lock_switch
+    icon: "mdi:lock"
+    datapoint: 1
+  - platform: iq2020
+    name: Temperature Lock
+    id: temp_lock_switch
+    icon: "mdi:lock"
+    datapoint: 2
+  - platform: iq2020
+    name: Clean Cycle
+    id: clean_cycle_switch
+    icon: "mdi:vacuum"
+    datapoint: 3
+  - platform: iq2020
+    name: Summer Timer
+    id: summer_timer_switch
+    icon: "mdi:sun-clock"
+    datapoint: 4
+
+fan:
+  - platform: iq2020
+    name: Jets 1
+    id: jets1
+    icon: "mdi:turbine"
+    datapoint: 0
+    speeds: 1
+  - platform: iq2020
+    name: Jets 2
+    id: jets2
+    icon: "mdi:turbine"
+    datapoint: 1
+    speeds: 2
+
+# Set "celsius" to "true" if using celsius units.
+climate:
+  - platform: iq2020
+    name: Temperature
+    celsius: false
+
+text_sensor:
+  - platform: iq2020
+    versionstr:
+      name: Version
+```
+
+</details>
+
+<details>
+<summary>Sample ESP-Home configuration file (ESP-IDF Framework)</summary>
+
+```
+esphome:
+  name: hot-tub
+  friendly_name: Hot Tub
+  comment: "Luxury Spa"
+
+esp32:
+  board: m5stack-atom
+  framework:
+    type: esp-idf
+
+logger:
   level: ERROR
 
 # Enable Home Assistant API
@@ -157,6 +296,7 @@ In the picture below you will notice I have the expansion board attached with 8 
 Once done, power your hot tub back on and you should see data flowing into Home Assistant. You can see the current temperature, set the target temperature, lock the remote control, turn on lights & jets and graph the temperature and power usage. The spa data is polled by the device every minute, so, if you change a setting using the tub's remote, it may take up to a minute to update on Home Assistant. If something does not work right, [please open an issue in GitHub](https://github.com/Ylianst/ESP-IQ2020/issues). As with all Home Assistant integrations, you can use automations. For example, I am on a electric time-of-day plan and so, I lower the temperature automatically a few minutes before 5pm and turn it back up at 9pm. There are also sensors provided so you can create tracking graphs.
 
 For added features and details:
+  - [ESP-IDF Framework Support](https://github.com/Ylianst/ESP-IQ2020/blob/main/documentation/esp-idf.md)
   - [More Sensors, Templates and Extras](https://github.com/Ylianst/ESP-IQ2020/blob/main/documentation/extras.md)
   - [Audio Module Emulation](https://github.com/Ylianst/ESP-IQ2020/blob/main/documentation/audio.md)
   - [ACE Module Emulation](https://github.com/Ylianst/ESP-IQ2020/blob/main/documentation/ace.md)

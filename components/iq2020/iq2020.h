@@ -1,4 +1,5 @@
 #pragma once
+#include "framework_compat.h"
 #include "esphome/core/component.h"
 #include "esphome/components/socket/socket.h"
 #include "esphome/components/uart/uart.h"

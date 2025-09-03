@@ -22,6 +22,19 @@
 
 static const char *TAG = "iq2020";
 
+// ESP-IQ2020 Component Implementation
+// 
+// This component supports both Arduino and ESP-IDF frameworks seamlessly
+// by using ESPHome abstractions rather than framework-specific APIs.
+// 
+// Framework compatibility is achieved through:
+// - ESPHome UART component for serial communication (not Arduino Serial2)
+// - ESPHome GPIO abstractions for pin control (not Arduino pinMode/digitalWrite)  
+// - Standard C++ timing functions (::millis() works with both frameworks)
+// - ESPHome logging and component lifecycle management
+//
+// No framework-specific code is needed thanks to ESPHome's abstraction layer.
+
 // These globals are ugly, but I can't figure out the correct system yet.
 IQ2020Component* g_iq2020_main = NULL;
 esphome::iq2020_switch::IQ2020Switch* g_iq2020_switch[SWITCHCOUNT];
@@ -59,7 +72,15 @@ void IQ2020Component::setup() {
 		this->trigger_poll_pin_->pin_mode(gpio::FLAG_INPUT);
 		this->trigger_poll_pin_->setup();
 	}
-	//ESP_LOGD(TAG, "Setting up IQ2020...");
+	
+	// Log framework compatibility information
+#if IQ2020_USING_ARDUINO
+	ESP_LOGD(TAG, "Running on Arduino framework");
+#elif IQ2020_USING_ESP_IDF
+	ESP_LOGD(TAG, "Running on ESP-IDF framework");
+#else
+	ESP_LOGD(TAG, "Framework detection: unknown (using ESPHome abstractions)");
+#endif
 
 	// The make_unique() wrapper doesn't like arrays, so initialize the unique_ptr directly.
 	this->buf_ = std::unique_ptr<uint8_t[]>{ new uint8_t[this->buf_size_] };
