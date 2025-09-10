@@ -94,3 +94,12 @@ iq2020:
 ```
 
 This said, if you have a setup like this that works. Please let me know so I can update this section. This integration should lower the `flow_control_pin` when receiving and raise it when transmitting.
+
+
+# Creating a Correct Cable
+
+The current recommandation for most people is to just use 4 breadboard cables to connect the ESP32 to the Hottub. It's easy and works perfectly well and you get more breadboard cables for other projects. I have not done this myself, but it's possible to create your own "correct" cable. The connector you need is part number 3-644540-8, you can find it on [DigiKey here](https://www.digikey.com/en/products/detail/te-connectivity-amp-connectors/3-644540-8/698326).
+
+Alternatively, somone suggested using TE Connectivity part number 1375820-8 with terminals 1375819-3. These are available from most electronics retailers such as Mouser, Farnell, Digikey, RS. These can be crimped with an inexpensive crimper designed for small terminals (e.g. Engineer PA-09).
+
+If you try this, please let us know your experience and send pictures!
