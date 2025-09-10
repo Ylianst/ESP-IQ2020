@@ -17,7 +17,7 @@ The IQ2020 is the control board used by a lot of hot tubs, so check if you have 
 - [ATOM Tail485 - RS485 Converter for ATOM](https://shop.m5stack.com/products/atom-tail485)
 - [5 Colors 1Pin 2.54mm Female to Male Breadboard Jumper Wire](https://www.amazon.com/XLX-Breadboard-Soldering-Brushless-Double-end/dp/B07S839W8V/ref=sr_1_3)
 
-Once you get the device, connect it to your computer using a USB-C table, create a new ESP home device, call it "Hot Tub" or anything you like, select `ESP32`. Once created, edit the configuration file to look like the one below. You should keep your own API encryption key and OTA password, but everything else can be copied from this example.
+You could try to [create a better cable](https://github.com/Ylianst/ESP-IQ2020/blob/main/documentation/devices.md#creating-a-correct-cable), but it's not really needed. Once you get the device, connect it to your computer using a USB-C table, create a new ESP home device, call it "Hot Tub" or anything you like, select `ESP32`. Once created, edit the configuration file to look like the one below. You should keep your own API encryption key and OTA password, but everything else can be copied from this example.
 
 <details>
 <summary>Sample ESP-Home configuration file</summary>
@@ -150,7 +150,7 @@ Next, power off your hot tub and connect your new device like this:
 
 ![image](https://github.com/user-attachments/assets/98956d57-a019-4aae-a9b1-cd4c24e18b67)
 
-In the picture below you will notice I have the expansion board attached with 8 expansion connectors, your hot tub will generally have 1 or 2 expansion connectors. If they are all busy, you will need to get an expansion board. Double check all the wires, you should not need to force anything, the wires should fit just right. Alternatively, the TE Connectivity part number for the mating connector is 1375820-8, terminals 1375819-3, available from most electronics retailers such as Mouser, Farnell, Digikey, RS. These can be crimped with an inexpensive crimper designed for small terminals (e.g. Engineer PA-09). 
+In the picture below you will notice I have the expansion board attached with 8 expansion connectors, your hot tub will generally have 1 or 2 expansion connectors. If they are all busy, you will need to get an expansion board. Double check all the wires, you should not need to force anything, the wires should fit just right.
 
 ![IQ2020-ESP3](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/c52b676b-e35c-474c-8919-2fc57302d0fb)
 
