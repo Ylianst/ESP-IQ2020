@@ -451,20 +451,18 @@ text_sensor:
     icon: "mdi:timer-sand"
     lambda: |-
       int seconds = round(id(${device}_total_runtime).state);
-      int years = seconds / (24 * 3600);
-      int months = seconds / (24 * 3600);
       int days = seconds / (24 * 3600);
       seconds = seconds % (24 * 3600);
       int hours = seconds / 3600;
       seconds = seconds % 3600;
-      int minutes = seconds /  60;
+      int minutes = seconds / 60;
       seconds = seconds % 60;
-        return {
-          ((days ? String(days) + " days, ": "") +
-          (hours ? String(hours) + ":": "") +
-          (minutes ? String(minutes) + ":": "") +
-          (String(seconds)) 
-          ).c_str()};
+      std::string result;
+      if (days) result += std::to_string(days) + " days, ";
+      if (hours) result += std::to_string(hours) + ":";
+      if (minutes) result += std::to_string(minutes) + ":";
+      result += std::to_string(seconds);
+      return result;
   - platform: template
     id: total_runtime_$device_1
     name: "Total Runtime_$device_1"
@@ -472,20 +470,18 @@ text_sensor:
     icon: "mdi:timer-sand"
     lambda: |-
       int seconds = round(id(${device_1}_total_runtime).state);
-      int years = seconds / (24 * 3600);
-      int months = seconds / (24 * 3600);
       int days = seconds / (24 * 3600);
       seconds = seconds % (24 * 3600);
       int hours = seconds / 3600;
       seconds = seconds % 3600;
-      int minutes = seconds /  60;
+      int minutes = seconds / 60;
       seconds = seconds % 60;
-        return {
-          ((days ? String(days) + " days, ": "") +
-          (hours ? String(hours) + ":": "") +
-          (minutes ? String(minutes) + ":": "") +
-          (String(seconds)) 
-          ).c_str()};
+      std::string result;
+      if (days) result += std::to_string(days) + " days, ";
+      if (hours) result += std::to_string(hours) + ":";
+      if (minutes) result += std::to_string(minutes) + ":";
+      result += std::to_string(seconds);
+      return result;
   - platform: template
     id: total_runtime_$device_2
     name: "Total Runtime_$device_2"
@@ -493,20 +489,18 @@ text_sensor:
     icon: "mdi:timer-sand"
     lambda: |-
       int seconds = round(id(${device_2}_total_runtime).state);
-      int years = seconds / (24 * 3600);
-      int months = seconds / (24 * 3600);
       int days = seconds / (24 * 3600);
       seconds = seconds % (24 * 3600);
       int hours = seconds / 3600;
       seconds = seconds % 3600;
-      int minutes = seconds /  60;
+      int minutes = seconds / 60;
       seconds = seconds % 60;
-        return {
-          ((days ? String(days) + " days, ": "") +
-          (hours ? String(hours) + ":": "") +
-          (minutes ? String(minutes) + ":": "") +
-          (String(seconds)) 
-          ).c_str()};
+      std::string result;
+      if (days) result += std::to_string(days) + " days, ";
+      if (hours) result += std::to_string(hours) + ":";
+      if (minutes) result += std::to_string(minutes) + ":";
+      result += std::to_string(seconds);
+      return result;
   - platform: template
     id: total_runtime_$device_3
     name: "Total Runtime_$device_3"
@@ -514,20 +508,18 @@ text_sensor:
     icon: "mdi:timer-sand"
     lambda: |-
       int seconds = round(id(${device_3}_total_runtime).state);
-      int years = seconds / (24 * 3600);
-      int months = seconds / (24 * 3600);
       int days = seconds / (24 * 3600);
       seconds = seconds % (24 * 3600);
       int hours = seconds / 3600;
       seconds = seconds % 3600;
-      int minutes = seconds /  60;
+      int minutes = seconds / 60;
       seconds = seconds % 60;
-        return {
-          ((days ? String(days) + " days, ": "") +
-          (hours ? String(hours) + ":": "") +
-          (minutes ? String(minutes) + ":": "") +
-          (String(seconds)) 
-          ).c_str()};
+      std::string result;
+      if (days) result += std::to_string(days) + " days, ";
+      if (hours) result += std::to_string(hours) + ":";
+      if (minutes) result += std::to_string(minutes) + ":";
+      result += std::to_string(seconds);
+      return result;
   - platform: template
     id: total_runtime_$device_4
     name: "Total Runtime_$device_4"
@@ -535,20 +527,18 @@ text_sensor:
     icon: "mdi:timer-sand"
     lambda: |-
       int seconds = round(id(${device_4}_total_runtime).state);
-      int years = seconds / (24 * 3600);
-      int months = seconds / (24 * 3600);
       int days = seconds / (24 * 3600);
       seconds = seconds % (24 * 3600);
       int hours = seconds / 3600;
       seconds = seconds % 3600;
-      int minutes = seconds /  60;
+      int minutes = seconds / 60;
       seconds = seconds % 60;
-        return {
-          ((days ? String(days) + " days, ": "") +
-          (hours ? String(hours) + ":": "") +
-          (minutes ? String(minutes) + ":": "") +
-          (String(seconds)) 
-          ).c_str()};
+      std::string result;
+      if (days) result += std::to_string(days) + " days, ";
+      if (hours) result += std::to_string(hours) + ":";
+      if (minutes) result += std::to_string(minutes) + ":";
+      result += std::to_string(seconds);
+      return result;
   - platform: template
     id: total_runtime_$device_5
     name: "Total Runtime_$device_5"
@@ -556,20 +546,18 @@ text_sensor:
     icon: "mdi:timer-sand"
     lambda: |-
       int seconds = round(id(${device_5}_total_runtime).state);
-      int years = seconds / (24 * 3600);
-      int months = seconds / (24 * 3600);
       int days = seconds / (24 * 3600);
       seconds = seconds % (24 * 3600);
       int hours = seconds / 3600;
       seconds = seconds % 3600;
-      int minutes = seconds /  60;
+      int minutes = seconds / 60;
       seconds = seconds % 60;
-        return {
-          ((days ? String(days) + " days, ": "") +
-          (hours ? String(hours) + ":": "") +
-          (minutes ? String(minutes) + ":": "") +
-          (String(seconds)) 
-          ).c_str()};
+      std::string result;
+      if (days) result += std::to_string(days) + " days, ";
+      if (hours) result += std::to_string(hours) + ":";
+      if (minutes) result += std::to_string(minutes) + ":";
+      result += std::to_string(seconds);
+      return result;
   - platform: template
     id: total_runtime_$device_6
     name: "Total Runtime_$device_6"
@@ -577,20 +565,18 @@ text_sensor:
     icon: "mdi:timer-sand"
     lambda: |-
       int seconds = round(id(${device_6}_total_runtime).state);
-      int years = seconds / (24 * 3600);
-      int months = seconds / (24 * 3600);
       int days = seconds / (24 * 3600);
       seconds = seconds % (24 * 3600);
       int hours = seconds / 3600;
       seconds = seconds % 3600;
-      int minutes = seconds /  60;
+      int minutes = seconds / 60;
       seconds = seconds % 60;
-        return {
-          ((days ? String(days) + " days, ": "") +
-          (hours ? String(hours) + ":": "") +
-          (minutes ? String(minutes) + ":": "") +
-          (String(seconds)) 
-          ).c_str()};
+      std::string result;
+      if (days) result += std::to_string(days) + " days, ";
+      if (hours) result += std::to_string(hours) + ":";
+      if (minutes) result += std::to_string(minutes) + ":";
+      result += std::to_string(seconds);
+      return result;
 ```
 
 ![image](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/a9e5ae66-2a6f-4c07-8f1f-cb7c52e3e7d9)
