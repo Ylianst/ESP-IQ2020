@@ -275,6 +275,15 @@ text_sensor:
 
 You can remove the `internal: true` line if you want the numeric value to be available in Home Assistant, otherwise you will have the "Logo Lights" shown with a text value.
 
+## Logo Lights Raw Value
+
+In addition to the logo light status sensor, there is another "raw" sensor that will get the value directly from the IQ2020. This is useful if you get unknown values from the normal logo light sensor and need get access to the internal value.
+
+```
+sensor:
+    logo_lights_raw:
+      name: Logo Lights Raw
+```
 
 ## Adding WIFI signal strength sensor
 
