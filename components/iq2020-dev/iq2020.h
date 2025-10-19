@@ -117,6 +117,7 @@ public:
 	void set_pcb_c_temperature_sensor(esphome::sensor::Sensor *sensor) { this->pcb_c_temperature_sensor_ = sensor; }
 	void set_buttons_sensor(esphome::sensor::Sensor *sensor) { this->buttons_sensor_ = sensor; }
 	void set_logo_lights_sensor(esphome::sensor::Sensor *sensor) { this->logo_lights_sensor_ = sensor; }
+	void set_logo_lights_raw_sensor(esphome::sensor::Sensor *sensor) { this->logo_lights_raw_sensor_ = sensor; }
 	void set_lights_intensity_sensor(esphome::sensor::Sensor *sensor) { this->lights_intensity_sensor_ = sensor; }
 	void set_lights_intensity_underwater_sensor(esphome::sensor::Sensor *sensor) { this->lights_intensity_underwater_sensor_ = sensor; }
 	void set_lights_intensity_bartop_sensor(esphome::sensor::Sensor *sensor) { this->lights_intensity_bartop_sensor_ = sensor; }
@@ -235,6 +236,7 @@ protected:
 	esphome::sensor::Sensor *pcb_c_temperature_sensor_;
 	esphome::sensor::Sensor *buttons_sensor_;
 	esphome::sensor::Sensor *logo_lights_sensor_;
+	esphome::sensor::Sensor *logo_lights_raw_sensor_;
 	esphome::sensor::Sensor *lights_intensity_sensor_;
 	esphome::sensor::Sensor *lights_intensity_underwater_sensor_;
 	esphome::sensor::Sensor *lights_intensity_bartop_sensor_;
