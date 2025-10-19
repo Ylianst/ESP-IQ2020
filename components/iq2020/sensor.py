@@ -57,6 +57,7 @@ CONF_SENSOR_PCB_F_TEMPERATURE = "pcb_f_temperature"
 CONF_SENSOR_PCB_C_TEMPERATURE = "pcb_c_temperature"
 CONF_SENSOR_BUTTONS = "buttons"
 CONF_SENSOR_LOGO_LIGHTS = "logo_lights"
+CONF_SENSOR_LOGO_LIGHTS_RAW = "logo_lights_raw"
 CONF_SENSOR_LIGHTS_INTENSITY = "lights_intensity"
 CONF_SENSOR_LIGHTS_INTENSITY_UNDERWATER = "lights_underwater_intensity"
 CONF_SENSOR_LIGHTS_INTENSITY_BARTOP = "lights_bartop_intensity"
@@ -284,6 +285,10 @@ CONFIG_SCHEMA = cv.Schema(
             accuracy_decimals=0,
             icon=ICON_LIGHTBULB
         ),
+        cv.Optional(CONF_SENSOR_LOGO_LIGHTS_RAW): sensor.sensor_schema(
+            accuracy_decimals=0,
+            icon=ICON_LIGHTBULB
+        ),
         cv.Optional(CONF_SENSOR_LIGHTS_INTENSITY): sensor.sensor_schema(
             accuracy_decimals=0,
             icon=ICON_LIGHTBULB
@@ -478,6 +483,10 @@ async def to_code(config):
     if CONF_SENSOR_LOGO_LIGHTS in config:
         sens = await sensor.new_sensor(config[CONF_SENSOR_LOGO_LIGHTS])
         cg.add(server.set_logo_lights_sensor(sens))
+
+    if CONF_SENSOR_LOGO_LIGHTS_RAW in config:
+        sens = await sensor.new_sensor(config[CONF_SENSOR_LOGO_LIGHTS_RAW])
+        cg.add(server.set_logo_lights_raw_sensor(sens))
 
     if CONF_SENSOR_LIGHTS_INTENSITY in config:
         sens = await sensor.new_sensor(config[CONF_SENSOR_LIGHTS_INTENSITY])
