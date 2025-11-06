@@ -21,7 +21,7 @@ Here are some example frames send over RS485:
 
 If you look at the last two frames in the previous example, the source and destination numbers are switched. This is because one is a request to 0x29 from 0x01 and the last frame is the response from 0x29 to 0x01.
 
-When decoding these frames, we can simplify them and show only the important information. Here, I show only the destination, source, operation flags and data for the same packets as above. This is how the IQ2020 DataViewer tool will show the packets.
+When decoding these frames, we can simplify and show only the important information. Here, I show only the destination, source, operation flags and data for the same packets as above. This is how the IQ2020 DataViewer tool will show the packets.
 
 ```
 33 01 40 190100
