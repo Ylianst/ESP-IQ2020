@@ -47,7 +47,9 @@ namespace iq2020_climate {
 
 	climate::ClimateTraits IQ2020Climate::traits() {
 		auto traits = climate::ClimateTraits();
-		traits.set_supports_current_temperature(true);
+		if (!current_temperature_id_.empty()) {
+			traits.add_feature_flags(climate::CLIMATE_SUPPORTS_CURRENT_TEMPERATURE);
+		}
 
 		std::set<esphome::climate::ClimateMode> heatingModes;
 		//heatingModes.insert(esphome::climate::ClimateMode::CLIMATE_MODE_OFF);
