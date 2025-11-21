@@ -48,8 +48,10 @@ namespace iq2020_climate {
 climate::ClimateTraits IQ2020Climate::traits() {
 	auto traits = climate::ClimateTraits();
 	traits.add_supported_mode(climate::CLIMATE_MODE_HEAT);
-	traits.set_supports_current_temperature(true);
-	traits.set_supports_action(true);
+	//traits.set_supports_current_temperature(true);
+	//traits.set_supports_action(true);
+	traits.add_feature_flags(climate::CLIMATE_FEATURE_CURRENT_TEMPERATURE);
+	traits.add_feature_flags(climate::CLIMATE_FEATURE_ACTION);
 
 		if (celsius) { // Celsius setup
 			traits.set_visual_min_temperature(26.5);
