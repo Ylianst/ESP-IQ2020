@@ -56,8 +56,8 @@ namespace iq2020_climate {
 		traits.set_supported_modes(heatingModes);
 		*/
 		climate::ClimateModeMask heatingModes;
-		//heatingModes.set(climate::ClimateMode::CLIMATE_MODE_OFF);
-		heatingModes.set(climate::ClimateMode::CLIMATE_MODE_HEAT);
+		//heatingModes.insert(climate::ClimateMode::CLIMATE_MODE_OFF);
+		heatingModes.insert(climate::ClimateMode::CLIMATE_MODE_HEAT);
 		traits.set_supported_modes(heatingModes);
 		traits.set_supports_action(true);
 
