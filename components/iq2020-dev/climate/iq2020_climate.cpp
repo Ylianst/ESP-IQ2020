@@ -45,13 +45,15 @@ namespace iq2020_climate {
 		publish_state();
 	}
 
-climate::ClimateTraits IQ2020Climate::traits() {
-	auto traits = climate::ClimateTraits();
-	traits.add_supported_mode(climate::CLIMATE_MODE_HEAT);
-	//traits.set_supports_current_temperature(true);
-	//traits.set_supports_action(true);
-	traits.add_feature_flags(climate::CLIMATE_FEATURE_CURRENT_TEMPERATURE);
-	traits.add_feature_flags(climate::CLIMATE_FEATURE_ACTION);
+	climate::ClimateTraits IQ2020Climate::traits() {
+		auto traits = climate::ClimateTraits();
+		traits.set_supports_current_temperature(true);
+
+		std::set<esphome::climate::ClimateMode> heatingModes;
+		//heatingModes.insert(esphome::climate::ClimateMode::CLIMATE_MODE_OFF);
+		heatingModes.insert(esphome::climate::ClimateMode::CLIMATE_MODE_HEAT);
+		traits.set_supported_modes(heatingModes);
+		traits.set_supports_action(true);
 
 		if (celsius) { // Celsius setup
 			traits.set_visual_min_temperature(26.5);
