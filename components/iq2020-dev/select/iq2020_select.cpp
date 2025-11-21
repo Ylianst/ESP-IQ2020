@@ -5,9 +5,9 @@
 extern IQ2020Component* g_iq2020_main;
 extern esphome::iq2020_select::IQ2020Select* g_iq2020_select[SELECTCOUNT];
 
-const char* audio_source_values[] = { "iPOD", "TV", "Aux", "Bluetooth" };
-const char* lights_colors_values[] = { "Violet", "Blue", "Cyan", "Green", "White", "Yellow", "Red", "Cycle" };
-const char* lights_cycle_speed[] = { "Off", "Slow", "Normal", "Fast" };
+std::vector<std::string> audio_source_values = { "iPOD", "TV", "Aux", "Bluetooth" };
+std::vector<std::string> lights_colors_values = { "Violet", "Blue", "Cyan", "Green", "White", "Yellow", "Red", "Cycle" };
+std::vector<std::string> lights_cycle_speed = { "Off", "Slow", "Normal", "Fast" };
 
 namespace esphome {
 namespace iq2020_select {
@@ -18,25 +18,25 @@ namespace iq2020_select {
 		if (select_id < SELECTCOUNT) { g_iq2020_select[select_id] = this; }
 		ESP_LOGD(TAG, "Select:%d Setup", select_id);
 
-switch (select_id) {
-case SELECT_AUDIO_SOURCE:
-this->traits.set_options(audio_source_values);
-break;
-case SELECT_LIGHTS1_COLOR:
-case SELECT_LIGHTS2_COLOR:
-case SELECT_LIGHTS3_COLOR:
-case SELECT_LIGHTS4_COLOR:
-if ((this->traits.get_options().size() < 7) || (this->traits.get_options().size() > 9)) {
-this->traits.set_options(lights_colors_values);
-}
-break;
-case SELECT_LIGHTS_CYCLE_SPEED:
-if (this->traits.get_options().size() != 4) {
-this->traits.set_options(lights_cycle_speed);
-}
-// If there is no off state for this control, set it to "normal"
-//if (this->traits.get_options().size() != 4) { this->publish_state("Normal"); }
-break;
+		switch (select_id) {
+		case SELECT_AUDIO_SOURCE:
+			this->traits.set_options(audio_source_values);
+			break;
+		case SELECT_LIGHTS1_COLOR:
+		case SELECT_LIGHTS2_COLOR:
+		case SELECT_LIGHTS3_COLOR:
+		case SELECT_LIGHTS4_COLOR:
+			if ((this->traits.get_options().size() < 7) || (this->traits.get_options().size() > 9)) {
+				this->traits.set_options(lights_colors_values);
+			}
+			break;
+		case SELECT_LIGHTS_CYCLE_SPEED:
+			if (this->traits.get_options().size() != 4) {
+				this->traits.set_options(lights_cycle_speed);
+			}
+			// If there is no off state for this control, set it to "normal"
+			//if (this->traits.get_options().size() != 4) { this->publish_state("Normal"); }
+			break;
 		}
 	}
 
