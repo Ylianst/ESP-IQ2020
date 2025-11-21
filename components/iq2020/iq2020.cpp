@@ -157,7 +157,7 @@ void IQ2020Component::loop() {
 
 void IQ2020Component::dump_config() {
 	ESP_LOGCONFIG(TAG, "IQ2020:");
-	ESP_LOGCONFIG(TAG, "  Address: %s:%u", esphome::network::get_use_address().c_str(), this->port_);
+	ESP_LOGCONFIG(TAG, "  Address: %s:%u", esphome::network::get_use_address(), this->port_);
 	if (this->flow_control_pin_ != nullptr) {
 		ESP_LOGCONFIG(TAG, "  Flow Control Pin: ", this->flow_control_pin_);
 	}
