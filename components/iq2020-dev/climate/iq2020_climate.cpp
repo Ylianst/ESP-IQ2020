@@ -49,9 +49,15 @@ namespace iq2020_climate {
 		auto traits = climate::ClimateTraits();
 		traits.add_feature_flags(climate::CLIMATE_SUPPORTS_CURRENT_TEMPERATURE);
 
+		/*
 		std::set<esphome::climate::ClimateMode> heatingModes;
 		//heatingModes.insert(esphome::climate::ClimateMode::CLIMATE_MODE_OFF);
 		heatingModes.insert(esphome::climate::ClimateMode::CLIMATE_MODE_HEAT);
+		traits.set_supported_modes(heatingModes);
+		*/
+		climate::ClimateModeMask heatingModes;
+		//heatingModes.set(climate::ClimateMode::CLIMATE_MODE_OFF);
+		heatingModes.set(climate::ClimateMode::CLIMATE_MODE_HEAT);
 		traits.set_supported_modes(heatingModes);
 		traits.set_supports_action(true);
 
