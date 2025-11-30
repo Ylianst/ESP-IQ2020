@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <RootNamespace>DataViewer</RootNamespace>
+    <AssemblyName>DataViewerGtk</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="GtkSharp" Version="3.24.24.95" />
+  </ItemGroup>
+
+</Project>
