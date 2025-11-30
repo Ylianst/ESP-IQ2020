@@ -11,21 +11,19 @@ echo "=========================================="
 echo ""
 
 # Clean previous builds
-#echo "Cleaning previous builds..."
+echo "Cleaning previous builds..."
 #rm -rf bin/Release
-#rm -rf releases
-#mkdir -p releases
+rm -rf releases
+mkdir -p releases
 
-# Build for both architectures
+# Build for both architectures (framework-dependent with trimming optimizations)
 #echo ""
 #echo "Building for macOS (ARM64)..."
-#dotnet publish -c Release -r osx-arm64 --self-contained true -p:PublishSingleFile=false -p:PublishTrimmed=true
-#dotnet publish -c Release -r osx-arm64 --self-contained true -p:PublishSingleFile=true -p:PublishTrimmed=false
+dotnet publish -c Release -r osx-arm64 --self-contained false -p:PublishSingleFile=false
 
 #echo ""
 #echo "Building for macOS (x64)..."
-#dotnet publish -c Release -r osx-x64 --self-contained true -p:PublishSingleFile=false -p:PublishTrimmed=true
-#dotnet publish -c Release -r osx-x64 --self-contained true -p:PublishSingleFile=true -p:PublishTrimmed=false
+dotnet publish -c Release -r osx-x64 --self-contained false -p:PublishSingleFile=false
 
 # Copy the built .app bundles
 echo ""
@@ -68,17 +66,38 @@ cat > releases/README.md << 'EOF'
 
 Native macOS application for viewing and interacting with IQ2020 spa controller data.
 
+## System Requirements
+
+- **macOS 12.0 (Monterey) or later**
+- **Either Apple Silicon or Intel processor**
+- **.NET 10 Runtime** (required)
+
+### Installing .NET Runtime
+
+If you don't have .NET 10 runtime installed, download and install it first:
+
+1. Visit: https://dotnet.microsoft.com/download/dotnet/10.0
+2. Download the **.NET Runtime** installer (NOT SDK) for macOS
+3. Choose the appropriate version:
+   - **Apple Silicon (M1/M2/M3)**: ARM64 installer
+   - **Intel Mac**: x64 installer
+4. Run the installer and follow the prompts
+
+**Note:** The app will not launch without the .NET runtime installed.
+
 ## Installation
 
-1. Download the appropriate version for your Mac:
+1. Install .NET 10 Runtime (see above) if not already installed
+
+2. Download the appropriate version for your Mac:
    - **Apple Silicon (M1, M2, M3, etc.)**: Download `IQ2020 Data Viewer-arm64.zip`
    - **Intel Mac**: Download `IQ2020 Data Viewer-x64.zip`
 
-2. Unzip the downloaded file
+3. Unzip the downloaded file
 
-3. Drag `IQ2020 Data Viewer.app` to your Applications folder
+4. Drag `IQ2020 Data Viewer.app` to your Applications folder
 
-4. **First Launch**: Right-click the app and select "Open" (required for first launch due to Gatekeeper)
+5. **First Launch**: Right-click the app and select "Open" (required for first launch due to Gatekeeper)
 
 ## Features
 
@@ -89,10 +108,6 @@ Native macOS application for viewing and interacting with IQ2020 spa controller 
 - **File Logging** - Save captured data with annotations
 - **Comprehensive Menus** - File, Actions, Filter, and Commands
 
-## System Requirements
-
-- macOS 12.0 (Monterey) or later
-- Either Apple Silicon or Intel processor
 
 ## Usage
 
