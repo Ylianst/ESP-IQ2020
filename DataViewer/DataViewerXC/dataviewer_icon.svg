@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1024" height="1024" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#007AFF;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#5856D6;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background rounded square -->
+  <rect width="1024" height="1024" rx="226" fill="url(#bgGradient)"/>
+  
+  <!-- Subtle inner border -->
+  <rect x="40" y="40" width="944" height="944" rx="206" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="2"/>
+  
+  <!-- Data chart area -->
+  <g transform="translate(150, 400)">
+    <!-- Grid lines -->
+    <line x1="50" y1="80" x2="724" y2="80" stroke="rgba(255,255,255,0.15)" stroke-width="2"/>
+    <line x1="50" y1="160" x2="724" y2="160" stroke="rgba(255,255,255,0.15)" stroke-width="2"/>
+    <line x1="50" y1="240" x2="724" y2="240" stroke="rgba(255,255,255,0.15)" stroke-width="2"/>
+    
+    <!-- Main waveform line -->
+    <path d="M 50 220 L 150 100 L 250 180 L 350 80 L 450 140 L 550 60 L 650 160 L 724 120" 
+          stroke="white" stroke-width="50" fill="none" 
+          stroke-linecap="round" stroke-linejoin="round"/>
+    
+    <!-- Glow effect under line -->
+    <path d="M 50 220 L 150 100 L 250 180 L 350 80 L 450 140 L 550 60 L 650 160 L 724 120" 
+          stroke="rgba(255,255,255,0.3)" stroke-width="70" fill="none" 
+          stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/>
+    
+    <!-- Data points -->
+    <circle cx="50" cy="220" r="28" fill="white"/>
+    <circle cx="150" cy="100" r="28" fill="white"/>
+    <circle cx="250" cy="180" r="28" fill="white"/>
+    <circle cx="350" cy="80" r="28" fill="white"/>
+    <circle cx="450" cy="140" r="28" fill="white"/>
+    <circle cx="550" cy="60" r="28" fill="white"/>
+    <circle cx="650" cy="160" r="28" fill="white"/>
+    <circle cx="724" cy="120" r="28" fill="white"/>
+  </g>
+  
+  <!-- Connection indicator (top right) -->
+  <g transform="translate(800, 140)">
+    <circle cx="0" cy="0" r="50" fill="rgba(255,255,255,0.25)"/>
+    <circle cx="0" cy="0" r="38" fill="#34C759"/>
+    <!-- WiFi symbol -->
+    <path d="M -15 5 Q 0 -5 15 5" stroke="white" stroke-width="6" fill="none" stroke-linecap="round"/>
+    <path d="M -10 0 Q 0 -5 10 0" stroke="white" stroke-width="6" fill="none" stroke-linecap="round"/>
+  </g>
+</svg>
