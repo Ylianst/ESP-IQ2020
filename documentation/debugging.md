@@ -25,7 +25,8 @@ You could use a USB-to-RS485 dongle to get at the same traffic, but that require
 
 Data Viewer is a C# application built with Visual Studio 2015. I provide a compiled executable here, but it's not code signed.
 
- - [IQ2020 Data Viewer Executable](https://github.com/Ylianst/ESP-IQ2020/raw/main/DataViewer/IQ2020-DataViewer.exe)
+ - [IQ2020 Data Viewer Executable (Windows)](https://github.com/Ylianst/ESP-IQ2020/raw/main/DataViewer/IQ2020-DataViewer.exe)
+ - [IQ2020 Data Viewer Executable (MacOS)](https://github.com/Ylianst/ESP-IQ2020/raw/main/DataViewer/DataViewerXC/distrib/DataViewer-v1.0.zip)
  - [The source code is here](https://github.com/Ylianst/ESP-IQ2020/tree/main/DataViewer)
 
 Once you get the executable, run it, put the IP address and port of your ESP32 device and hit connect. To make things easy, packets will be shown like in the [RS485 protocol page](https://github.com/Ylianst/ESP-IQ2020/blob/main/documentation/protocol.md), without the starting byte, data length and checksum.
