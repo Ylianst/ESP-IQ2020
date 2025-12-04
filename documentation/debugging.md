@@ -23,7 +23,7 @@ Make the change and re-flash your ESP32 device over WIFI. Once you enable this, 
 
 You could use a USB-to-RS485 dongle to get at the same traffic, but that requires you run wires to the hot tub and generally the wife will not approve of this. This RS485 relay feature can be enabled and the Home Assistant integration will keep working fully. So, you can debug and capture traffic while using the hot tub integration normally. Note that any RS485 traffic sent from the ESP32 device will not be relayed and so, will not show up in the Data Viewer application.
 
-Data Viewer is a C# application built with Visual Studio 2015. I provide a compiled executable here, but it's not code signed.
+I provide a compiled executable here, but it's not code signed.
 
  - [IQ2020 Data Viewer Executable (Windows)](https://github.com/Ylianst/ESP-IQ2020/raw/main/DataViewer/IQ2020-DataViewer.exe)
  - [IQ2020 Data Viewer Executable (MacOS)](https://github.com/Ylianst/ESP-IQ2020/raw/main/DataViewer/DataViewerXC/distrib/DataViewer-v1.0.zip)
