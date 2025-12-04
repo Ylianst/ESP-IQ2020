@@ -70,6 +70,27 @@ echo "📦 Creating distribution packages..."
 # Copy app to output directory
 cp -R "$ARM64_APP_FOUND" "$OUTPUT_DIR/$PROJECT_NAME.app"
 
+# Sign the application properly
+echo ""
+echo "🔐 Signing application..."
+# Remove any existing signature
+codesign --remove-signature "$OUTPUT_DIR/$PROJECT_NAME.app" 2>/dev/null || true
+
+# Sign with proper flags for macOS compatibility
+# --deep signs all nested components
+# --force replaces existing signatures
+# --options runtime enables hardened runtime
+codesign --deep --force --sign - --options runtime "$OUTPUT_DIR/$PROJECT_NAME.app"
+
+# Verify the signature
+echo "✅ Verifying signature..."
+codesign --verify --verbose "$OUTPUT_DIR/$PROJECT_NAME.app"
+if [ $? -eq 0 ]; then
+    echo "✅ Signature valid"
+else
+    echo "⚠️  Warning: Signature verification failed"
+fi
+
 # Create DMG-style folder structure
 DMG_DIR="$OUTPUT_DIR/dmg-temp"
 mkdir -p "$DMG_DIR"
@@ -145,7 +166,7 @@ echo "  • $OUTPUT_DIR/$PROJECT_NAME.app (standalone)"
 echo "  • $OUTPUT_DIR/$PROJECT_NAME-v$VERSION.zip (compact)"
 echo "  • $OUTPUT_DIR/install.sh (installation helper)"
 echo ""
-echo "🚀 To install:"
+echo "� To install:"
 echo "  1. Unzip: unzip $PROJECT_NAME-v$VERSION.zip"
 echo "  2. Run: ./install.sh"
 echo "  Or drag $PROJECT_NAME.app to Applications folder"

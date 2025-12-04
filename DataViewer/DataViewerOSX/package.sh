@@ -46,11 +46,11 @@ echo "Removing quarantine attributes..."
 xattr -cr "${ARM64_APP}"
 xattr -cr "${X64_APP}"
 
-# Ad-hoc code sign the bundles so they can run on other machines
+# Note: We do NOT code sign the bundles here because ad-hoc signatures can become
+# invalid after system restarts. Instead, we rely on removing quarantine attributes
+# and provide clear instructions for users on first launch.
 echo ""
-echo "Code signing bundles..."
-codesign --force --deep --sign - "${ARM64_APP}"
-codesign --force --deep --sign - "${X64_APP}"
+echo "Skipping code signing (ad-hoc signatures can cause crashes after restart)"
 
 # Create ZIP archives for distribution
 echo ""
@@ -95,9 +95,25 @@ If you don't have .NET 10 runtime installed, download and install it first:
 
 3. Unzip the downloaded file
 
-4. Drag `IQ2020 Data Viewer.app` to your Applications folder
+4. **Important**: Remove the quarantine attribute to prevent security issues:
+   ```bash
+   xattr -cr "/path/to/IQ2020 Data Viewer.app"
+   ```
+   Replace `/path/to/` with the actual location (e.g., if in Downloads, use `~/Downloads/`)
 
-5. **First Launch**: Right-click the app and select "Open" (required for first launch due to Gatekeeper)
+5. Drag `IQ2020 Data Viewer.app` to your Applications folder
+
+6. **First Launch**: Right-click the app and select "Open" (required for first launch due to Gatekeeper)
+
+### If the App Crashes After System Restart
+
+If you experience crashes after logging off or restarting your Mac, run this command:
+
+```bash
+xattr -cr "/Applications/IQ2020 Data Viewer.app"
+```
+
+This removes any quarantine attributes that may interfere with the app's operation.
 
 ## Features
 
