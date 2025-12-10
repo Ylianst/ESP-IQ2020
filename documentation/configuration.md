@@ -202,6 +202,9 @@ button:
 binary_sensor:    
   - platform: status
     name: ESP Status
+  - platform: iq2020
+    salt_level_confirmed:
+      name: Salt Level Confirmed
 
 # If using celsius units on the hot tub remote, replace _f_ with _c_ in the three entries below.
 # Feel free to remove any sensor that are not relevent for your hot tub.
