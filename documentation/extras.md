@@ -496,3 +496,38 @@ sensor:
       # Multiplication factor from W to kW is 0.001
       - multiply: 0.001
 ```
+
+## ESP32 Changing Temperature
+
+In this section, we look at having the ESP32 computer change the temperature of the hottub at various times on it's own, without help from Home Assistant. This is interesting since your tub tub would be truly intependent. It does required the ESP32 to have access to the internet to get the correct time. Also, in the code below, the `target_temperature` is always in celsius, no matter what your hot tub or Home Assistant settings are. Thanks to user [mmcshea for this](https://github.com/Ylianst/ESP-IQ2020/issues/75#issuecomment-3667937767).
+
+```
+time:
+  - platform: sntp
+    id: sntp_time
+    timezone: America/Los_Angeles
+    on_time: 
+      - seconds: 0
+        minutes: 00
+        hours: 16
+        then:
+          - climate.control:
+              id: hottub_climate
+              target_temperature: 27
+          - logger.log: 
+              level: INFO
+              format: "4:00 PM, set temp to 27C or 80F"
+              tag: heartbeat
+      - seconds: 0
+        minutes: 0
+        hours: 21
+        then:
+          - climate.control:
+              id: hottub_climate
+              mode: HEAT
+              target_temperature: 39
+          - logger.log:
+              level: INFO
+              format: "9:00 PM, set temp t0 39C or 103F"
+              tag: heartbeat
+```
