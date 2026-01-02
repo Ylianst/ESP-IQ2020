@@ -557,3 +557,23 @@ sensor:
 ```
 
 <img width="386" height="49" alt="image" src="https://github.com/user-attachments/assets/70f23bd4-df5d-4429-8d64-060d886422c7" />
+
+To set the IQ2020 clock from Home Assistant, you need to call the "set_hot_tub_time" method. There is a automation that when activated, will set the hottub to a specific date and time.
+
+```
+alias: Hot Tub Time Test
+description: ""
+triggers: []
+conditions: []
+actions:
+  - action: esphome.hot_tub_set_hot_tub_time
+    metadata: {}
+    data:
+      hour: 1
+      minute: 2
+      second: 3
+      year: 2025
+      month: 5
+      day: 31
+mode: single
+```
