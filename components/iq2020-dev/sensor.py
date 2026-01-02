@@ -75,6 +75,7 @@ CONF_SENSOR_IQ_VD = "iq_vd"
 CONF_SENSOR_IQ_CHLORINE = "iq_chlorine"
 CONF_SENSOR_IQ_PH = "iq_ph"
 CONF_SENSOR_IQ_HOURSLEFT = "iq_hoursleft"
+CONF_SENSOR_RTC_TIMESTAMP = "rtc_timestamp"
 
 CONF_IQ2020_SERVER = "iq2020_server"
 
@@ -349,6 +350,13 @@ CONFIG_SCHEMA = cv.Schema(
         ),
         cv.Optional(CONF_SENSOR_IQ_HOURSLEFT): sensor.sensor_schema(
             accuracy_decimals=0
+        ),
+        cv.Optional(CONF_SENSOR_RTC_TIMESTAMP): sensor.sensor_schema(
+            unit_of_measurement="s",
+            accuracy_decimals=0,
+            state_class=STATE_CLASS_MEASUREMENT,
+            icon="mdi:clock-digital",
+            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
         )
     }
 )
@@ -555,3 +563,7 @@ async def to_code(config):
     if CONF_SENSOR_IQ_HOURSLEFT in config:
         sens = await sensor.new_sensor(config[CONF_SENSOR_IQ_HOURSLEFT])
         cg.add(server.set_iq_hoursleft_sensor(sens))
+
+    if CONF_SENSOR_RTC_TIMESTAMP in config:
+        sens = await sensor.new_sensor(config[CONF_SENSOR_RTC_TIMESTAMP])
+        cg.add(server.set_rtc_timestamp_sensor(sens))

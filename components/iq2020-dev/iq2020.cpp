@@ -907,8 +907,26 @@ int IQ2020Component::processIQ2020Command() {
 				snprintf(datetime_str, sizeof(datetime_str), "%04d-%02d-%02d %02d:%02d:%02d", 
 						year, month, day, hours, minutes, seconds);
 				this->rtc_datetime_sensor_->publish_state(datetime_str);
-			}
-			#endif
+				}
+				#endif
+
+				// Calculate and publish Unix timestamp
+				#ifdef USE_SENSOR
+				if (this->rtc_timestamp_sensor_) {
+				// Simple Unix timestamp calculation
+				// Note: This doesn't account for leap seconds, but is accurate enough for most purposes
+				struct tm timeinfo = {};
+				timeinfo.tm_year = year - 1900;  // tm_year is years since 1900
+				timeinfo.tm_mon = month - 1;     // tm_mon is 0-11
+				timeinfo.tm_mday = day;
+				timeinfo.tm_hour = hours;
+				timeinfo.tm_min = minutes;
+				timeinfo.tm_sec = seconds;
+				timeinfo.tm_isdst = -1;          // Let mktime determine DST
+				time_t timestamp = mktime(&timeinfo);
+				this->rtc_timestamp_sensor_->publish_state((float)timestamp);
+				}
+				#endif
 			}
 			if (this->salt_content_sensor_ && (salt_content >= 0)) this->salt_content_sensor_->publish_state((float)salt_content);
 			if (this->lights_intensity_sensor_) this->lights_intensity_sensor_->publish_state((float)(flags3 >> 4));
