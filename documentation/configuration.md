@@ -49,20 +49,22 @@ iq2020:
 # Feel free to remove any sensor that are not relevant for your hot tub.
 sensor:
   - platform: iq2020
+  # Temperature
     current_f_temperature:
       name: Current Temperature
     target_f_temperature:
       name: Target Temperature
     outlet_f_temperature:
       name: Heater Outlet
+    pcb_f_temperature:
+      name: Controller Temperature
+    # Power
     power_l1:
       name: Pumps Power
     power_heater:
-      name: Power Heater
+      name: Controller Power
     power_l2:
       name: Heater Power
-    pcb_f_temperature:
-      name: Controller Temperature
 
 switch:
   - platform: iq2020
@@ -253,23 +255,26 @@ sensor:
     power_on_counter:
       name: Power On Counter
 
-    #Energy sensors
+    #Power sensors
     power_l1:
-      name: Pump Power
+      name: Pumps Power
+      id: power_l1
     power_heater:
-      name: Small Heater Power
+      name: Controller Power
+      id: power_heater
     power_l2:
       name: Heater Power
+      id: power_l2
     voltage_l1:
       name: Voltage L1
     voltage_heater:
-      name: Voltage Heater
+      name: Voltage Controller
     voltage_l2:
       name: Voltage L2
     current_l1:
       name: Current L1
     current_heater:
-      name: Current Heater
+      name: Current Controller
     current_l2:
       name: Current L2
 

@@ -450,13 +450,30 @@ Once added, you can restart Home Assistant and you will have new sensors you can
 ![image](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/ffa2b8ac-4193-411d-b864-b04e8ea1b068)
 
 
-## Power Usage Sensors
+## Energy Consumption Sensors
 
-Some IQ2020 boards will have electricity power usage sensors. In my case, I have 3 of them but not sure what to name them. I think there is one of the heater, one of the jets and one for the circulation pump but not sure. You can access them with the YAML below by adding to the `sensor:` section and adding a new `time:` section. Once done, you can add these new sensors to the Home Assistant energy dashboard.
+Some IQ2020 boards will have electricity power usage sensors. In my case, I have 3 of them but not sure what to name them. I think there is one of the heater, one of the jets and one for the circulation pump but not sure. You can create energy consumption sensors using them with the YAML below by adding power ids to the existing power sensors, adding the "total_daily_energy" platforms to the `sensor:` section and adding a new `time:` section. Once done, you can add these new sensors to the Home Assistant energy dashboard.
 
 <img width="2356" height="937" alt="482692679-de07c188-5e93-44ea-b19f-ac1e9d4396d2" src="https://github.com/user-attachments/assets/88109fb7-5da3-44b9-b6fc-6ace97968e76" />
 
-Here is the YAML:
+Here is the YAML to replace the existing sensors in the basic configuration to add power ids for the total daily energy platform:
+
+```
+sensor:
+  - platform: iq2020
+    # Power
+    power_l1:
+      name: Pumps Power
+      id: power_l1
+    power_heater:
+      name: Controller Power
+      id: power_heater
+    power_l2:
+      name: Heater Power
+      id: power_l2
+```
+
+Here is the YAML to add:
 
 ```
 # Enable time component to reset energy at midnight
