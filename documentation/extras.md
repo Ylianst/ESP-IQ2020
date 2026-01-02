@@ -531,3 +531,25 @@ time:
               format: "9:00 PM, set temp t0 39C or 103F"
               tag: heartbeat
 ```
+
+## Real Time Clock
+
+Except for the very early IQ2020 boards, most of them have a battery backed real-time clock. So, you can set and read the time on these boards. Except for more recent models, the IQ2020 clock is not used much and so, never set to the right time. The ESP32 can set and read the IQ2020 clock and this can be useful is you want to perform time-based operations without the need for internet or Home Assistant to be a time source.
+
+There are two sensors to read the time value in the IQ2020 board. One is text and the other is numeric. You probably want to add internal: true at some point since you don't really need to have Home Assistant track these values. First is a text sensor:
+
+```
+text_sensor:
+  - platform: iq2020
+    rtc_datetime:
+      name: "Real Time Clock"
+```
+
+The second sensor is UNIX time:
+
+```
+sensor:
+  - platform: iq2020
+    rtc_timestamp:
+      name: "RTC Unix Timestamp"
+```
