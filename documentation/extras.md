@@ -545,6 +545,8 @@ text_sensor:
       name: "Real Time Clock"
 ```
 
+<img width="378" height="49" alt="image" src="https://github.com/user-attachments/assets/6d180a33-bb1b-4abd-85ad-ff6cdd8b514e" />
+
 The second sensor is UNIX time:
 
 ```
@@ -553,3 +555,5 @@ sensor:
     rtc_timestamp:
       name: "RTC Unix Timestamp"
 ```
+
+<img width="386" height="49" alt="image" src="https://github.com/user-attachments/assets/70f23bd4-df5d-4429-8d64-060d886422c7" />
