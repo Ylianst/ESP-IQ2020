@@ -138,6 +138,7 @@ public:
 #endif
 #ifdef USE_TEXT_SENSOR
 	void set_version_sensor(esphome::text_sensor::TextSensor *text) { this->version_sensor_ = text; }
+	void set_rtc_datetime_sensor(esphome::text_sensor::TextSensor *text) { this->rtc_datetime_sensor_ = text; }
 #endif
 
 	void setup() override;
@@ -256,7 +257,8 @@ protected:
 	esphome::sensor::Sensor *iq_hoursleft_sensor_;
 #endif
 #ifdef USE_TEXT_SENSOR
-	esphome::text_sensor::TextSensor *version_sensor_;
+esphome::text_sensor::TextSensor *version_sensor_;
+esphome::text_sensor::TextSensor *rtc_datetime_sensor_;
 #endif
 
 	std::unique_ptr<uint8_t[]> buf_{};

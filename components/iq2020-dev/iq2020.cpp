@@ -889,6 +889,26 @@ int IQ2020Component::processIQ2020Command() {
 			if (cmdlen == 140) {
 				if (this->pcb_f_temperature_sensor_) this->pcb_f_temperature_sensor_->publish_state((float)processingBuffer[128]);
 				if (this->pcb_c_temperature_sensor_) this->pcb_c_temperature_sensor_->publish_state((float)esphome::fahrenheit_to_celsius((float)processingBuffer[128]));
+
+				// Read the real time clock, for example:
+				//   00312111 - Time hh:mm:ss, 17:33:49
+				//   0100EA07 - Date, 1-1-2026
+				int seconds = processingBuffer[131];
+				int minutes = processingBuffer[132];
+				int hours = processingBuffer[133];
+				int day = processingBuffer[134];
+				int month = processingBuffer[135] + 1;
+				int year = processingBuffer[136] + (processingBuffer[137] << 8);
+
+				// Format and publish RTC datetime in ISO 8601 format
+				#ifdef USE_TEXT_SENSOR
+				if (this->rtc_datetime_sensor_) {
+				char datetime_str[20];
+				snprintf(datetime_str, sizeof(datetime_str), "%04d-%02d-%02d %02d:%02d:%02d", 
+						year, month, day, hours, minutes, seconds);
+				this->rtc_datetime_sensor_->publish_state(datetime_str);
+			}
+			#endif
 			}
 			if (this->salt_content_sensor_ && (salt_content >= 0)) this->salt_content_sensor_->publish_state((float)salt_content);
 			if (this->lights_intensity_sensor_) this->lights_intensity_sensor_->publish_state((float)(flags3 >> 4));
