@@ -617,22 +617,23 @@ actions:
 mode: single
 ```
 
-The "metadata" probably does nothing and can likely be removed. To set the current time, you can do this:
+The "metadata" does nothing and can be removed. To set the current time, you can do this:
 
 ```
 alias: Hot Tub Time Test
-description: "Syncs the hot tub clock to the current system time"
+description: Syncs the hot tub clock
 triggers: []
 conditions: []
 actions:
+  - variables:
+      t: "{{ now().isoformat() }}"
   - action: esphome.hot_tub_set_hot_tub_time
-    metadata: {}
     data:
-      hour: "{{ now().hour }}"
-      minute: "{{ now().minute }}"
-      second: "{{ now().second }}"
-      year: "{{ now().year }}"
-      month: "{{ now().month }}"
-      day: "{{ now().day }}"
+      hour: "{{ (t | as_datetime).hour | int }}"
+      minute: "{{ (t | as_datetime).minute | int }}"
+      second: "{{ (t | as_datetime).second | int }}"
+      year: "{{ (t | as_datetime).year | int }}"
+      month: "{{ (t | as_datetime).month | int }}"
+      day: "{{ (t | as_datetime).day | int }}"
 mode: single
 ```
