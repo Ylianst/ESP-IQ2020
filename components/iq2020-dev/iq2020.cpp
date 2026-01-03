@@ -977,7 +977,7 @@ int IQ2020Component::processIQ2020Command() {
 
 void IQ2020Component::setTime(int hour, int minute, int second, int year, int month, int day) {
 	ESP_LOGD(TAG, "setTime, time(h:m:s) = %d:%d:%d, date(y:m:d) = %d:%d:%d", hour, minute, second, year, month, day);
-	unsigned char setTimeCmd[] = { 0x02, 0x4C, (unsigned char)second, (unsigned char)minute, (unsigned char)hour, (unsigned char)day, (unsigned char)(month - 1), (unsigned char)(year & 0xFF), (unsigned char)(year >> 8) };
+	unsigned char setTimeCmd[] = { 0x02, 0x4C, (unsigned char)second, (unsigned char)minute, (unsigned char)hour, (unsigned char)day, (unsigned char)month, (unsigned char)(year & 0xFF), (unsigned char)(year >> 8) };
 	sendIQ2020Command(0x01, 0x1F, 0x40, setTimeCmd, 9);
 }
 

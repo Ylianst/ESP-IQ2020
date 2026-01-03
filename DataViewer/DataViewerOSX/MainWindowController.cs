@@ -674,7 +674,7 @@ namespace DataViewerOSX
                             int minutes = data[132];
                             int hours = data[133];
                             int day = data[134];
-                            int month = data[135] + 1;
+                            int month = data[135];
                             int year = data[136] + (data[137] << 8);
                             try
                             {
@@ -1051,7 +1051,7 @@ namespace DataViewerOSX
             b[1] = (byte)n.Minute;
             b[2] = (byte)n.Hour;
             b[3] = (byte)n.Day;
-            b[4] = (byte)(n.Month - 1);
+            b[4] = (byte)(n.Month);
             b[5] = (byte)(n.Year & 0xFF);
             b[6] = (byte)(n.Year >> 8);
             SendPacket("01 1F 40 024C " + ConvertByteArrayToHexString(b, 0, 7));

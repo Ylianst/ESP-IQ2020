@@ -118,7 +118,7 @@ class PacketProcessor: ObservableObject {
             let minutes = Int(bytes[132])
             let hours = Int(bytes[133])
             let day = Int(bytes[134])
-            let month = Int(bytes[135]) + 1
+            let month = Int(bytes[135])
             let year = Int(bytes[136]) + (Int(bytes[137]) << 8)
             
             if let date = createDate(year: year, month: month, day: day, hour: hours, minute: minutes, second: seconds) {
@@ -280,7 +280,7 @@ class PacketProcessor: ObservableObject {
             let minutes = Int(bytes[132])
             let hours = Int(bytes[133])
             let day = Int(bytes[134])
-            let month = Int(bytes[135]) + 1
+            let month = Int(bytes[135])
             let year = Int(bytes[136]) + (Int(bytes[137]) << 8)
             decode += String(format: "Time: %02d:%02d:%02d\n", hours, minutes, seconds)
             decode += String(format: "Date: %d-%d-%d\n", day, month, year)

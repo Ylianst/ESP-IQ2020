@@ -355,7 +355,7 @@ struct ContentView: View {
             UInt8(minute),
             UInt8(hour),
             UInt8(day),
-            UInt8(month - 1),  // Month is 0-based in the protocol
+            UInt8(month),
             UInt8(year & 0xFF),
             UInt8(year >> 8)
         ]
