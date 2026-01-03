@@ -409,7 +409,7 @@ F30E              - Power L2 wattage - Water heater wattage (Big-Endian)
 6A                - PCB temperature
 6F                - Peripheral Current
 00080800          - Real-Time-Clock SS:MM:HH Seconds (0 to 59), Minutes (0 to 59), Hours (0 to 24).
-1300D407          - Real-Time-Clock DD:MM:YYYY Days (1 to 31), Month (0 to 11), Year (2 byte Big-Endian).
+1300D407          - Real-Time-Clock DD:MM:YYYY Days (1 to 31), Month (1 to 12), Year (2 byte Big-Endian).
 01                - Real-Time-Clock Status
 ```
 
@@ -505,7 +505,7 @@ Get Current Time
                  SSMMHHDDMMYYYY
 Encoded as:
 SS:MM:HH Seconds (0 to 59), Minutes (0 to 59), Hours (0 to 24).
-DD:MM:YYYY Days (1 to 31), Month (0 to 11), Year (2 byte Big-Endian).
+DD:MM:YYYY Days (1 to 31), Month (1 to 12), Year (2 byte Big-Endian).
 ```
 
 Set Current Time
