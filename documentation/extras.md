@@ -553,7 +553,7 @@ time:
 
 Except for the very early IQ2020 boards, most of them have a battery backed real-time clock. So, you can set and read the time on these boards. Except for more recent models, the IQ2020 clock is not used much and so, never set to the right time. The ESP32 can set and read the IQ2020 clock and this can be useful is you want to perform time-based operations without the need for internet or Home Assistant to be a time source.
 
-There are two sensors to read the time value in the IQ2020 board. One is text and the other is numeric. You probably want to add internal: true at some point since you don't really need to have Home Assistant track these values. First is a text sensor:
+To read the clock from the IQ2020 board, there are two sensors. One is text and the other is numeric. You probably want to add `internal: true` at some point since you don't really need to have Home Assistant track these values, it would just waste space in the Home Assistant database. First is a text sensor:
 
 ```
 text_sensor:
@@ -575,7 +575,29 @@ sensor:
 
 <img width="386" height="49" alt="image" src="https://github.com/user-attachments/assets/70f23bd4-df5d-4429-8d64-060d886422c7" />
 
-To set the IQ2020 clock from Home Assistant, you need to call the "set_hot_tub_time" method. There is a automation that when activated, will set the hottub to a specific date and time.
+To set the IQ2020 clock from Home Assistant you first need to add the following "service" in the "api:" section of the ESPHome configuration. This is what is looks like:
+
+```
+api:
+  encryption:
+    key: "xxxxxxxxxxxxxxxxxxxx"
+  services:
+    - service: set_hot_tub_time
+      variables:
+        hour: int
+        minute: int
+        second: int
+        year: int
+        month: int
+        day: int
+      then:
+        - lambda: |-
+            if (g_iq2020_main != nullptr) {
+              g_iq2020_main->setTime(hour, minute, second, year, month, day);
+            }
+```
+
+This will expose a new "set_hot_tub_time" method to Home Assistant. When called, the ESP32 will call the integration to send the clock set command to the IQ2020 board. Once your ESP32 is flashed, you can call the "set_hot_tub_time" method in Hoem Assistant. Here is a sample automation that when activated, will set the hottub to a specific date and time.
 
 ```
 alias: Hot Tub Time Test
@@ -592,5 +614,25 @@ actions:
       year: 2025
       month: 5
       day: 31
+mode: single
+```
+
+The "metadata" probably does nothing and can likely be removed. To set the current time, you can do this:
+
+```
+alias: Hot Tub Time Test
+description: "Syncs the hot tub clock to the current system time"
+triggers: []
+conditions: []
+actions:
+  - action: esphome.hot_tub_set_hot_tub_time
+    metadata: {}
+    data:
+      hour: "{{ now().hour }}"
+      minute: "{{ now().minute }}"
+      second: "{{ now().second }}"
+      year: "{{ now().year }}"
+      month: "{{ now().month }}"
+      day: "{{ now().day }}"
 mode: single
 ```
