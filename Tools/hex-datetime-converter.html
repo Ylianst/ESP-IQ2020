@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HEX DateTime Converter</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 0.95em;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section:last-child {
+            margin-bottom: 0;
+        }
+
+        .section-title {
+            font-size: 1.5em;
+            color: #667eea;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="datetime-local"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        input[type="datetime-local"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .datetime-inputs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        .result-box {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+
+        .result-label {
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .result-value {
+            font-size: 1.3em;
+            color: #333;
+            font-family: 'Courier New', monospace;
+            word-break: break-all;
+        }
+
+        .example {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-size: 0.9em;
+        }
+
+        .example-title {
+            font-weight: 600;
+            color: #856404;
+            margin-bottom: 8px;
+        }
+
+        .example code {
+            background: rgba(0, 0, 0, 0.1);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .error {
+            background: #f8d7da;
+            border-left: 4px solid #dc3545;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            color: #721c24;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-weight: 600;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔄 HEX DateTime Converter</h1>
+            <p>Decode and encode datetime values in HEX format (ssmmhhddmmyyyy)</p>
+        </div>
+
+        <div class="content">
+            <!-- Decoder Section -->
+            <div class="section">
+                <h2 class="section-title">📥 HEX Decoder</h2>
+                
+                <div class="input-group">
+                    <label for="hexInput">Enter HEX Value:</label>
+                    <input type="text" id="hexInput" placeholder="e.g., 003B171F0B1A00" maxlength="14">
+                </div>
+
+                <div id="decodeResult"></div>
+
+                <div class="example">
+                    <div class="example-title">Format: ssmmhhddmmyyyy (14 hex digits)</div>
+                    <div>
+                        <strong>Example:</strong> <code>003B171F0B1A00</code><br>
+                        ss=00 (seconds), mm=3B (59 min), hh=17 (23 hour), dd=1F (31 day), mm=0B (11 month), yyyy=1A00 → 0x001A (26 year)
+                    </div>
+                </div>
+            </div>
+
+            <!-- Encoder Section -->
+            <div class="section">
+                <h2 class="section-title">📤 HEX Encoder</h2>
+                
+                <div class="datetime-inputs">
+                    <div class="input-group">
+                        <label for="yearInput">Year:</label>
+                        <input type="number" id="yearInput" placeholder="2026" min="0" max="65535">
+                    </div>
+                    <div class="input-group">
+                        <label for="monthInput">Month:</label>
+                        <input type="number" id="monthInput" placeholder="0-12" min="0" max="255">
+                    </div>
+                    <div class="input-group">
+                        <label for="dayInput">Day:</label>
+                        <input type="number" id="dayInput" placeholder="1-31" min="1" max="31">
+                    </div>
+                    <div class="input-group">
+                        <label for="hourInput">Hour:</label>
+                        <input type="number" id="hourInput" placeholder="0-23" min="0" max="23">
+                    </div>
+                    <div class="input-group">
+                        <label for="minuteInput">Minute:</label>
+                        <input type="number" id="minuteInput" placeholder="0-59" min="0" max="59">
+                    </div>
+                    <div class="input-group">
+                        <label for="secondInput">Second:</label>
+                        <input type="number" id="secondInput" placeholder="0-59" min="0" max="59">
+                    </div>
+                </div>
+
+                <div id="encodeResult"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Decoder function
+        function decodeHex(hexString) {
+            // Remove spaces and convert to uppercase
+            hexString = hexString.replace(/\s/g, '').toUpperCase();
+            
+            // Validate hex string
+            if (!/^[0-9A-F]{14}$/.test(hexString)) {
+                return { error: 'Invalid HEX format. Expected 14 hex digits (ssmmhhddmmyyyy).' };
+            }
+
+            // Parse the hex string
+            const ss = parseInt(hexString.substr(0, 2), 16);  // seconds
+            const mm = parseInt(hexString.substr(2, 2), 16);  // minutes
+            const hh = parseInt(hexString.substr(4, 2), 16);  // hours
+            const dd = parseInt(hexString.substr(6, 2), 16);  // day
+            const MM = parseInt(hexString.substr(8, 2), 16);  // month
+            
+            // Year is little-endian (2 bytes reversed)
+            const yearLow = hexString.substr(10, 2);
+            const yearHigh = hexString.substr(12, 2);
+            const yyyy = parseInt(yearHigh + yearLow, 16);    // year (reversed)
+
+            // No validation - allow any values for debugging purposes
+
+            return {
+                seconds: ss,
+                minutes: mm,
+                hours: hh,
+                day: dd,
+                month: MM,
+                year: yyyy,
+                formatted: `${String(dd).padStart(2, '0')}-${String(MM).padStart(2, '0')}-${String(yyyy).padStart(4, '0')} ${String(hh).padStart(2, '0')}:${String(mm).padStart(2, '0')}:${String(ss).padStart(2, '0')}`
+            };
+        }
+
+        // Encoder function
+        function encodeToHex(year, month, day, hour, minute, second) {
+            // Validate inputs
+            if (!year || !month || !day || hour === '' || minute === '' || second === '') {
+                return { error: 'All fields are required.' };
+            }
+
+            const y = parseInt(year);
+            const M = parseInt(month);
+            const d = parseInt(day);
+            const h = parseInt(hour);
+            const m = parseInt(minute);
+            const s = parseInt(second);
+
+            // Relaxed validation for debugging - allow wider ranges
+            if (s < 0 || s > 255 || m < 0 || m > 255 || h < 0 || h > 255 || 
+                d < 0 || d > 255 || M < 0 || M > 255 || y < 0 || y > 65535) {
+                return { error: 'Values must be within valid byte ranges (0-255 for most fields, 0-65535 for year).' };
+            }
+
+            // Convert to hex (2 digits each)
+            const ssHex = s.toString(16).padStart(2, '0').toUpperCase();
+            const mmHex = m.toString(16).padStart(2, '0').toUpperCase();
+            const hhHex = h.toString(16).padStart(2, '0').toUpperCase();
+            const ddHex = d.toString(16).padStart(2, '0').toUpperCase();
+            const MMHex = M.toString(16).padStart(2, '0').toUpperCase();
+            
+            // Year is little-endian (4 digits, reversed)
+            const yearHex = y.toString(16).padStart(4, '0').toUpperCase();
+            const yyyyHex = yearHex.substr(2, 2) + yearHex.substr(0, 2); // Reverse bytes
+
+            return {
+                hex: ssHex + mmHex + hhHex + ddHex + MMHex + yyyyHex,
+                formatted: `${String(d).padStart(2, '0')}-${String(M).padStart(2, '0')}-${String(y).padStart(4, '0')} ${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`
+            };
+        }
+
+        // Display decode result
+        function displayDecodeResult(result) {
+            const resultDiv = document.getElementById('decodeResult');
+            
+            if (result.error) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        <strong>Error:</strong> ${result.error}
+                        ${result.values ? `<br><small>Parsed values: ss=${result.values.ss}, mm=${result.values.mm}, hh=${result.values.hh}, dd=${result.values.dd}, MM=${result.values.MM}, yyyy=${result.values.yyyy}</small>` : ''}
+                    </div>
+                `;
+            } else {
+                resultDiv.innerHTML = `
+                    <div class="result-box">
+                        <div class="result-label">Decoded DateTime:</div>
+                        <div class="result-value">${result.formatted}</div>
+                        <div style="margin-top: 15px; font-size: 0.9em; color: #666;">
+                            <strong>Breakdown:</strong><br>
+                            Seconds: ${result.seconds} | Minutes: ${result.minutes} | Hours: ${result.hours}<br>
+                            Day: ${result.day} | Month: ${result.month} | Year: ${result.year}
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        // Display encode result
+        function displayEncodeResult(result) {
+            const resultDiv = document.getElementById('encodeResult');
+            
+            if (result.error) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        <strong>Error:</strong> ${result.error}
+                    </div>
+                `;
+            } else {
+                resultDiv.innerHTML = `
+                    <div class="result-box">
+                        <div class="result-label">Encoded HEX:</div>
+                        <div class="result-value">${result.hex}</div>
+                        <div style="margin-top: 15px; font-size: 0.9em; color: #666;">
+                            <strong>DateTime:</strong> ${result.formatted}
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        // Event listeners
+        document.getElementById('hexInput').addEventListener('input', function(e) {
+            const hexValue = e.target.value;
+            if (hexValue.length === 14) {
+                const result = decodeHex(hexValue);
+                displayDecodeResult(result);
+            } else if (hexValue.length === 0) {
+                document.getElementById('decodeResult').innerHTML = '';
+            }
+        });
+
+        // Encode on any input change
+        const encodeInputs = ['yearInput', 'monthInput', 'dayInput', 'hourInput', 'minuteInput', 'secondInput'];
+        encodeInputs.forEach(id => {
+            document.getElementById(id).addEventListener('input', function() {
+                const year = document.getElementById('yearInput').value;
+                const month = document.getElementById('monthInput').value;
+                const day = document.getElementById('dayInput').value;
+                const hour = document.getElementById('hourInput').value;
+                const minute = document.getElementById('minuteInput').value;
+                const second = document.getElementById('secondInput').value;
+
+                if (year && month && day && hour !== '' && minute !== '' && second !== '') {
+                    const result = encodeToHex(year, month, day, hour, minute, second);
+                    displayEncodeResult(result);
+                } else {
+                    document.getElementById('encodeResult').innerHTML = '';
+                }
+            });
+        });
+
+        // Set current date/time as default
+        window.addEventListener('load', function() {
+            const now = new Date();
+            document.getElementById('yearInput').value = now.getFullYear();
+            document.getElementById('monthInput').value = now.getMonth() + 1;
+            document.getElementById('dayInput').value = now.getDate();
+            document.getElementById('hourInput').value = now.getHours();
+            document.getElementById('minuteInput').value = now.getMinutes();
+            document.getElementById('secondInput').value = now.getSeconds();
+            
+            // Trigger encode
+            document.getElementById('yearInput').dispatchEvent(new Event('input'));
+        });
+    </script>
+</body>
+</html>
