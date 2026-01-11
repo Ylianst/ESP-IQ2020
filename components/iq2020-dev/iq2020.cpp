@@ -20,7 +20,7 @@
 #include "esphome/components/network/util.h"
 #include "esphome/components/socket/socket.h"
 
-static const char *TAG = "iq2020";
+static const char* TAG = "iq2020";
 
 // These globals are ugly, but I can't figure out the correct system yet.
 IQ2020Component* g_iq2020_main = NULL;
@@ -67,13 +67,13 @@ void IQ2020Component::setup() {
 	if (this->port_ != 0) {
 		struct sockaddr_storage bind_addr;
 #if ESPHOME_VERSION_CODE >= VERSION_CODE(2023, 4, 0)
-		socklen_t bind_addrlen = socket::set_sockaddr_any(reinterpret_cast<struct sockaddr *>(&bind_addr), sizeof(bind_addr), this->port_);
+		socklen_t bind_addrlen = socket::set_sockaddr_any(reinterpret_cast<struct sockaddr*>(&bind_addr), sizeof(bind_addr), this->port_);
 #else
-		socklen_t bind_addrlen = socket::set_sockaddr_any(reinterpret_cast<struct sockaddr *>(&bind_addr), sizeof(bind_addr), htons(this->port_));
+		socklen_t bind_addrlen = socket::set_sockaddr_any(reinterpret_cast<struct sockaddr*>(&bind_addr), sizeof(bind_addr), htons(this->port_));
 #endif
 		this->socket_ = socket::socket_ip(SOCK_STREAM, PF_INET);
 		this->socket_->setblocking(false);
-		this->socket_->bind(reinterpret_cast<struct sockaddr *>(&bind_addr), bind_addrlen);
+		this->socket_->bind(reinterpret_cast<struct sockaddr*>(&bind_addr), bind_addrlen);
 		this->socket_->listen(8);
 	}
 
@@ -82,7 +82,7 @@ void IQ2020Component::setup() {
 #ifdef USE_NUMBER
 	setNumberState(NUMBER_SALT_STATUS, ace_status);
 #endif
-	
+
 	// Send initial polling commands
 	next_poll = ::millis() + 5000;
 	pollState();
@@ -167,6 +167,7 @@ void IQ2020Component::dump_config() {
 	if (this->ace_emulation_) { ESP_LOGCONFIG(TAG, "  Ace Emulation Enabled"); }
 	if (this->freshwater_emulation_) { ESP_LOGCONFIG(TAG, "  Freshwater Emulation Enabled"); }
 	if (this->audio_emulation_) { ESP_LOGCONFIG(TAG, "  Audio Emulation Enabled"); }
+	if (this->old_clock_) { ESP_LOGCONFIG(TAG, "  Old Clock Mode Enabled (month 0-11)"); }
 	ESP_LOGCONFIG(TAG, "  Polling Rate: %d", this->polling_rate_);
 #ifdef USE_BINARY_SENSOR
 	LOG_BINARY_SENSOR("  ", "Connected:", this->connected_sensor_);
@@ -177,7 +178,7 @@ void IQ2020Component::dump_config() {
 }
 
 void IQ2020Component::on_shutdown() {
-	for (const Client &client : this->clients_)
+	for (const Client& client : this->clients_)
 		client.socket->shutdown(SHUT_RDWR);
 }
 
@@ -195,7 +196,7 @@ void IQ2020Component::publish_sensor() {
 void IQ2020Component::accept() {
 	struct sockaddr_storage client_addr;
 	socklen_t client_addrlen = sizeof(client_addr);
-	std::unique_ptr<socket::Socket> socket = this->socket_->accept(reinterpret_cast<struct sockaddr *>(&client_addr), &client_addrlen);
+	std::unique_ptr<socket::Socket> socket = this->socket_->accept(reinterpret_cast<struct sockaddr*>(&client_addr), &client_addrlen);
 	if (!socket) return;
 
 	socket->setblocking(false);
@@ -206,7 +207,7 @@ void IQ2020Component::accept() {
 }
 
 void IQ2020Component::cleanup() {
-	auto discriminator = [](const Client &client) { return !client.disconnected; };
+	auto discriminator = [](const Client& client) { return !client.disconnected; };
 	auto last_client = std::partition(this->clients_.begin(), this->clients_.end(), discriminator);
 	if (last_client != this->clients_.end()) {
 		this->clients_.erase(last_client, this->clients_.end());
@@ -227,7 +228,7 @@ void IQ2020Component::read() {
 			ESP_LOGE(TAG, "Incoming bytes available, but outgoing buffer is full: stream will be corrupted!");
 			free = std::min<size_t>(available, this->buf_size_);
 			this->buf_tail_ += free;
-			for (Client &client : this->clients_) {
+			for (Client& client : this->clients_) {
 				if (client.position < this->buf_tail_) {
 					ESP_LOGD(TAG, "Dropped %u pending bytes for client %s", this->buf_tail_ - client.position, client.identifier.c_str());
 					client.position = this->buf_tail_;
@@ -246,7 +247,7 @@ void IQ2020Component::read() {
 void IQ2020Component::flush() {
 	ssize_t written;
 	this->buf_tail_ = this->buf_head_;
-	for (Client &client : this->clients_) {
+	for (Client& client : this->clients_) {
 		if (client.disconnected || client.position == this->buf_head_)
 			continue;
 
@@ -279,7 +280,7 @@ void IQ2020Component::flush() {
 void IQ2020Component::write() {
 	uint8_t buf[128];
 	ssize_t read;
-	for (Client &client : this->clients_) {
+	for (Client& client : this->clients_) {
 		if (client.disconnected)
 			continue;
 
@@ -303,7 +304,7 @@ void IQ2020Component::write() {
 	}
 }
 
-void IQ2020Component::processRawIQ2020Data(unsigned char *data, int len) {
+void IQ2020Component::processRawIQ2020Data(unsigned char* data, int len) {
 	if ((len > IQ202BUFLEN) || ((processingBufferLen + len) > IQ202BUFLEN)) { ESP_LOGD(TAG, "Receive buffer is overflowing!"); processingBufferLen = 0; return; }
 	if (processingBufferLen == 0) { memset(processingBuffer, 0, IQ202BUFLEN); }
 	memcpy(processingBuffer + processingBufferLen, data, len);
@@ -327,7 +328,7 @@ void IQ2020Component::setAudioButton(int button) {
 	if (this->buttons_sensor_) {
 		this->set_timeout(150, [this]() {
 			this->buttons_sensor_->publish_state(0);
-		});
+			});
 	}
 #endif
 }
@@ -389,7 +390,8 @@ int IQ2020Component::processIQ2020Command() {
 				ESP_LOGD(TAG, "AUDIO - Power=%d, Volume=%d, Treble=%d, Bass=%d, Balance=%d, Subwoofer=%d", processingBuffer[7], processingBuffer[8], processingBuffer[9], processingBuffer[10], processingBuffer[11], processingBuffer[12]);
 				if (audio_module_address == 0x33) { // 0x33
 					setNumberState(NUMBER_AUDIO_VOLUME, (processingBuffer[8] - 15) << 2);
-				} else { // 0x1D
+				}
+				else { // 0x1D
 					setNumberState(NUMBER_AUDIO_VOLUME, (((int)processingBuffer[8]) * 100) / 40);
 				}
 				setNumberState(NUMBER_AUDIO_TREBLE, (signed char)(processingBuffer[9]));
@@ -457,7 +459,7 @@ int IQ2020Component::processIQ2020Command() {
 				//          050607
 				// 01 33 80 190102 -- 07: 0x1 == on, 0x2 == off
 				setSwitchState(SWITCH_AUDIO_POWER, (int)(processingBuffer[7] == 0x1));
-			} 
+			}
 			else if ((processingBuffer[6] == 0x00) && (cmdlen == 14)) { // Audio settings
 				// These are currently processed as part of the REQ from IQ to Audio Module
 				// TODO: Should they be processed here instead? That will likely effect the AM emulation
@@ -592,7 +594,8 @@ int IQ2020Component::processIQ2020Command() {
 #ifdef USE_NUMBER
 			if (audio_module_address == 0x33) { // 0x33
 				setNumberState(NUMBER_AUDIO_VOLUME, (processingBuffer[8] - 15) << 2);
-			} else { // 0x1D
+			}
+			else { // 0x1D
 				setNumberState(NUMBER_AUDIO_VOLUME, (((int)processingBuffer[8]) * 100) / 40);
 			}
 			setNumberState(NUMBER_AUDIO_TREBLE, (signed char)processingBuffer[9]);
@@ -663,7 +666,8 @@ int IQ2020Component::processIQ2020Command() {
 				if ((number_pending[NUMBER_LIGHTS1_INTENSITY + i] != NOT_SET) && (val != number_pending[NUMBER_LIGHTS1_INTENSITY + i])) {
 					number_state[NUMBER_LIGHTS1_INTENSITY + i] = val;
 					numberAction(NUMBER_LIGHTS1_INTENSITY + i, number_pending[i]);
-				} else {
+				}
+				else {
 					setNumberState(NUMBER_LIGHTS1_INTENSITY + i, val);
 				}
 			}
@@ -718,7 +722,8 @@ int IQ2020Component::processIQ2020Command() {
 				if ((select_pending[i] != NOT_SET) && (val != select_pending[i])) {
 					select_state[i] = val;
 					selectAction(i, select_pending[i]);
-				} else {
+				}
+				else {
 					setSelectState(i, val);
 				}
 			}
@@ -747,7 +752,8 @@ int IQ2020Component::processIQ2020Command() {
 #ifdef USE_SENSOR
 			if (temp_celsius) {
 				if (this->target_c_temp_sensor_) this->target_c_temp_sensor_->publish_state(target_temp);
-			} else {
+			}
+			else {
 				if (this->target_f_temp_sensor_) this->target_f_temp_sensor_->publish_state(target_temp);
 			}
 #endif
@@ -795,7 +801,7 @@ int IQ2020Component::processIQ2020Command() {
 			if (flags3 & 0x01) { jetState = 1; } // JETS1 MEDIUM
 			if (flags2 & 0x04) { jetState = 2; } // JETS1 FULL
 			setSwitchState(SWITCH_JETS1, jetState);
-			
+
 			jetState = 0; // JETS2 OFF
 			if (flags3 & 0x02) { jetState = 1; } // JETS2 MEDIUM
 			if (flags2 & 0x08) { jetState = 2; } // JETS2 FULL
@@ -808,7 +814,8 @@ int IQ2020Component::processIQ2020Command() {
 				_target_temp = ((processingBuffer[91] - '0') * 10) + (processingBuffer[92] - '0') + ((processingBuffer[90] == '1') ? 100 : 0);
 				_current_temp = ((processingBuffer[95] - '0') * 10) + (processingBuffer[96] - '0') + ((processingBuffer[94] == '1') ? 100 : 0);
 				outlet_temp = ((processingBuffer[37] - '0') * 10) + (processingBuffer[38] - '0') + ((processingBuffer[36] == '1') ? 100 : 0);
-			} else if (processingBuffer[92] == '.') { // Celcius
+			}
+			else if (processingBuffer[92] == '.') { // Celcius
 				temp_celsius = true;
 				_target_temp = ((processingBuffer[90] - '0') * 10) + (processingBuffer[91] - '0') + ((processingBuffer[93] - '0') * 0.1);
 				_current_temp = ((processingBuffer[94] - '0') * 10) + (processingBuffer[95] - '0') + ((processingBuffer[97] - '0') * 0.1);
@@ -834,7 +841,8 @@ int IQ2020Component::processIQ2020Command() {
 				if (this->target_c_temp_sensor_) this->target_c_temp_sensor_->publish_state(target_temp);
 				if (this->current_c_temp_sensor_) this->current_c_temp_sensor_->publish_state(current_temp);
 				if (this->outlet_c_temp_sensor_) this->outlet_c_temp_sensor_->publish_state(outlet_temp);
-			} else {
+			}
+			else {
 				if (this->target_f_temp_sensor_) this->target_f_temp_sensor_->publish_state(target_temp);
 				if (this->current_f_temp_sensor_) this->current_f_temp_sensor_->publish_state(current_temp);
 				if (this->outlet_f_temp_sensor_) this->outlet_f_temp_sensor_->publish_state(outlet_temp);
@@ -897,27 +905,29 @@ int IQ2020Component::processIQ2020Command() {
 				int minutes = processingBuffer[132];
 				int hours = processingBuffer[133];
 				int day = processingBuffer[134];
-				int month = processingBuffer[135] + 1;
+				// old_clock_ = true: month is 0-11, need to add 1 for display
+				// old_clock_ = false (default): month is already 1-12, use as-is
+				int month = old_clock_ ? (processingBuffer[135] + 1) : processingBuffer[135];
 				int year = processingBuffer[136] + (processingBuffer[137] << 8);
 
 				// Format and publish RTC datetime in ISO 8601 format
-				#ifdef USE_TEXT_SENSOR
+#ifdef USE_TEXT_SENSOR
 				if (this->rtc_datetime_sensor_) {
 					char datetime_str[20];
-					snprintf(datetime_str, sizeof(datetime_str), "%04d-%02d-%02d %02d:%02d:%02d", 
-							year, month, day, hours, minutes, seconds);
+					snprintf(datetime_str, sizeof(datetime_str), "%04d-%02d-%02d %02d:%02d:%02d",
+						year, month, day, hours, minutes, seconds);
 					this->rtc_datetime_sensor_->publish_state(datetime_str);
 				}
-				#endif
+#endif
 
 				// Calculate and publish Unix timestamp (64-bit)
-				#ifdef USE_SENSOR
+#ifdef USE_SENSOR
 				if (this->rtc_timestamp_sensor_) {
 					// Unix timestamp calculation using 64-bit time_t
 					// Note: This doesn't account for leap seconds, but is accurate enough for most purposes
 					struct tm timeinfo = {};
 					timeinfo.tm_year = year - 1900;  // tm_year is years since 1900
-					timeinfo.tm_mon = month - 1;     // tm_mon is 0-11
+					timeinfo.tm_mon = month - 1;     // tm_mon is 0-11 (month is already converted to 1-12 above)
 					timeinfo.tm_mday = day;
 					timeinfo.tm_hour = hours;
 					timeinfo.tm_min = minutes;
@@ -927,7 +937,7 @@ int IQ2020Component::processIQ2020Command() {
 					// Cast to double to preserve full 64-bit precision
 					this->rtc_timestamp_sensor_->publish_state((double)timestamp);
 				}
-				#endif
+#endif
 			}
 			if (this->salt_content_sensor_ && (salt_content >= 0)) this->salt_content_sensor_->publish_state((float)salt_content);
 			if (this->lights_intensity_sensor_) this->lights_intensity_sensor_->publish_state((float)(flags3 >> 4));
@@ -947,7 +957,8 @@ int IQ2020Component::processIQ2020Command() {
 			if (pending_temp != NOT_SET) {
 				if (pending_temp == target_temp) {
 					pending_temp = NOT_SET;
-				} else {
+				}
+				else {
 					if (pending_temp_retry > 0) { // Try to adjust the temperature again
 						unsigned char deltaSteps = ((temp_celsius ? 2 : 1) * (pending_temp - target_temp));
 						ESP_LOGD(TAG, "Retry setTempAction: new=%f, target=%f, deltasteps=%d", pending_temp, target_temp, deltaSteps);
@@ -955,10 +966,12 @@ int IQ2020Component::processIQ2020Command() {
 							unsigned char changeTempCmd[] = { 0x01, 0x09, 0xFF, deltaSteps };
 							sendIQ2020Command(0x01, 0x1F, 0x40, changeTempCmd, 4); // Adjust temp
 							pending_temp_retry--;
-						} else {
+						}
+						else {
 							pending_temp = NOT_SET;
 						}
-					} else {
+					}
+					else {
 						pending_temp = NOT_SET; // Give up
 					}
 				}
@@ -977,14 +990,17 @@ int IQ2020Component::processIQ2020Command() {
 
 void IQ2020Component::setTime(int hour, int minute, int second, int year, int month, int day) {
 	ESP_LOGD(TAG, "setTime, time(h:m:s) = %d:%d:%d, date(y:m:d) = %d:%d:%d", hour, minute, second, year, month, day);
-	unsigned char setTimeCmd[] = { 0x02, 0x4C, (unsigned char)second, (unsigned char)minute, (unsigned char)hour, (unsigned char)day, (unsigned char)(month - 1), (unsigned char)(year & 0xFF), (unsigned char)(year >> 8) };
+	// old_clock_ = true: hot tub expects month 0-11, subtract 1 from the provided 1-12 month
+	// old_clock_ = false (default): hot tub expects month 1-12, use as-is
+	unsigned char monthValue = old_clock_ ? (unsigned char)(month - 1) : (unsigned char)month;
+	unsigned char setTimeCmd[] = { 0x02, 0x4C, (unsigned char)second, (unsigned char)minute, (unsigned char)hour, (unsigned char)day, monthValue, (unsigned char)(year & 0xFF), (unsigned char)(year >> 8) };
 	sendIQ2020Command(0x01, 0x1F, 0x40, setTimeCmd, 9);
 }
 
-void IQ2020Component::sendIQ2020Command(unsigned char dst, unsigned char src, unsigned char op, unsigned char *data, int len) {
+void IQ2020Component::sendIQ2020Command(unsigned char dst, unsigned char src, unsigned char op, unsigned char* data, int len) {
 	if (!active_) return; // If not active, don't send anything
-	if (len+5 > IQ2020OUTBUFLEN) {
-		ESP_LOGE(TAG, "IQ2020 Command too large: %d > %d (dst:%02x src:%02x op:%02x)", (len+5), IQ2020OUTBUFLEN, dst, src, op);
+	if (len + 5 > IQ2020OUTBUFLEN) {
+		ESP_LOGE(TAG, "IQ2020 Command too large: %d > %d (dst:%02x src:%02x op:%02x)", (len + 5), IQ2020OUTBUFLEN, dst, src, op);
 		return;
 	}
 	outboundBuffer[0] = 0x1C;
@@ -1119,13 +1135,15 @@ void IQ2020Component::selectAction(unsigned int selectid, int state) {
 				current = state;
 				// If the cycle speed if off, change it to normal
 				if (select_state[SELECT_LIGHTS_CYCLE_SPEED] == 0) { select_pending[SELECT_LIGHTS_CYCLE_SPEED] = 2; }
-			} else if (current > state) {
+			}
+			else if (current > state) {
 				//ESP_LOGD(TAG, "** MOVE DOWN %d from %d to %d", selectid, current, select_pending[selectid]);
 				unsigned char cmd[] = { 0x17, 0x02, (unsigned char)(selectid - 1), 0x04 };
 				sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Previous color
 				cmdsent = 1;
 				current--;
-			} else if (current < state) {
+			}
+			else if (current < state) {
 				//ESP_LOGD(TAG, "** MOVE UP %d from %d to %d", selectid, current, select_pending[selectid]);
 				unsigned char cmd[] = { 0x17, 0x02, (unsigned char)(selectid - 1), 0x05 };
 				sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Next color
@@ -1243,11 +1261,12 @@ void IQ2020Component::setTempAction(float newtemp) {
 
 	if (temp_celsius) {
 		pending_temp = (std::round(newtemp * 2) / 2); // Round to the nearest .5
-	} else {
+	}
+	else {
 		pending_temp = std::round(esphome::celsius_to_fahrenheit(newtemp)); // Convert and round to the nearest integer
 	}
 	pending_temp_retry = 2;
-	
+
 	if (pending_temp_cmd == NOT_SET) { // If there are no outstanding temp commands in-flight, send one now.
 		unsigned char deltaSteps = ((temp_celsius ? 2 : 1) * (pending_temp - target_temp));
 		ESP_LOGD(TAG, "setTempAction: new=%f, target=%f, deltasteps=%d", pending_temp, target_temp, deltaSteps);
@@ -1345,7 +1364,8 @@ void IQ2020Component::pollState() {
 		ESP_LOGD(TAG, "LegacyPoll");
 		unsigned char generalPollCmd[] = { 0x02, 0x55 };
 		sendIQ2020Command(0x01, 0x1F, 0x40, generalPollCmd, 2); // Legacy poll general state
-	} else {
+	}
+	else {
 		ESP_LOGD(TAG, "Poll");
 		unsigned char generalPollCmd[] = { 0x02, 0x56 };
 		sendIQ2020Command(0x01, 0x1F, 0x40, generalPollCmd, 2); // Poll general state
@@ -1353,4 +1373,5 @@ void IQ2020Component::pollState() {
 }
 
 IQ2020Component::Client::Client(std::unique_ptr<esphome::socket::Socket> socket, std::string identifier, size_t position)
-	: socket(std::move(socket)), identifier{ identifier }, position{ position } {}
+	: socket(std::move(socket)), identifier{ identifier }, position{ position } {
+}
