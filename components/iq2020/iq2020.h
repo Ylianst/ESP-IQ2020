@@ -76,6 +76,7 @@ public:
 	void set_freshwater_emulation(bool freshwater_emulation) { this->freshwater_emulation_ = freshwater_emulation; }
 	void set_audio_emulation(bool audio_emulation) { this->audio_emulation_ = audio_emulation; }
 	void set_active(bool active) { this->active_ = active; setSwitchState(SWITCH_ACTIVE, active_); }
+	void set_old_clock(bool old_clock) { this->old_clock_ = old_clock; }
 	void set_polling_rate(int polling_rate) { this->polling_rate_ = polling_rate; }
 #ifdef USE_BINARY_SENSOR
 	void set_connected_sensor(esphome::binary_sensor::BinarySensor *connected) { this->connected_sensor_ = connected; }
@@ -195,6 +196,7 @@ protected:
 	bool freshwater_emulation_;
 	bool audio_emulation_;
 	bool active_;
+	bool old_clock_;
 	unsigned char audio_module_address = 0x33; // There are two audio modules at 0x33 or 0x1D.
 	int polling_rate_;
 
@@ -253,14 +255,14 @@ protected:
 	esphome::sensor::Sensor *iq_vb_sensor_;
 	esphome::sensor::Sensor *iq_vc_sensor_;
 	esphome::sensor::Sensor *iq_vd_sensor_;
-esphome::sensor::Sensor *iq_chlorine_sensor_;
-esphome::sensor::Sensor *iq_ph_sensor_;
-esphome::sensor::Sensor *iq_hoursleft_sensor_;
-esphome::sensor::Sensor *rtc_timestamp_sensor_;
+	esphome::sensor::Sensor *iq_chlorine_sensor_;
+	esphome::sensor::Sensor *iq_ph_sensor_;
+	esphome::sensor::Sensor *iq_hoursleft_sensor_;
+	esphome::sensor::Sensor *rtc_timestamp_sensor_;
 #endif
 #ifdef USE_TEXT_SENSOR
-esphome::text_sensor::TextSensor *version_sensor_;
-esphome::text_sensor::TextSensor *rtc_datetime_sensor_;
+	esphome::text_sensor::TextSensor *version_sensor_;
+	esphome::text_sensor::TextSensor *rtc_datetime_sensor_;
 #endif
 
 	std::unique_ptr<uint8_t[]> buf_{};
