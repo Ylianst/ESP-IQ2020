@@ -77,7 +77,7 @@ It's not as compact as the devices above, but may be more easily available. The 
 
 <img width="1202" height="374" alt="image" src="https://github.com/user-attachments/assets/088514e9-91a9-43c4-a3ba-167db5b9f02e" />
 
-In the ESP-Home configuration, you will need to use the following settings. Note the GPIO pin numbers and the 'flow_control_pin'l.
+In the ESP-Home configuration, you will need to use the following settings. Note the GPIO pin numbers and the `flow_control_pin`.
 
 ```
 uart:
