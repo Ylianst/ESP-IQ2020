@@ -64,6 +64,37 @@ uart:
   baud_rate: 38400
 ```
 
+# Industrial ESP32-S3 Control Board
+
+<img width="800" height="544" alt="image" src="https://github.com/user-attachments/assets/b47dbfeb-c8c4-4d53-8268-9baee3f004d3" />
+
+If you are in Europe, one option is to use the following device:
+
+- [Amazon UK Link](https://www.amazon.co.uk/dp/B0FN4LWLH9)
+- [Device Wiki](https://www.waveshare.com/wiki/ESP32-S3-RS485-CAN)
+
+It's not as compact as the devices above, but may be more easily available. The wireing looks like this:
+
+<img width="1202" height="374" alt="image" src="https://github.com/user-attachments/assets/088514e9-91a9-43c4-a3ba-167db5b9f02e" />
+
+In the ESP-Home configuration, you will need to use the following settings. Note the GPIO pin numbers and the 'flow_control_pin'l.
+
+```
+uart:
+  id: SpaConnection
+  tx_pin: GPIO17
+  rx_pin: GPIO18
+  baud_rate: 38400
+  parity: NONE
+  stop_bits: 1
+  rx_buffer_size: 1024
+
+iq2020:
+  uart_id: SpaConnection
+  flow_control_pin: GPIO21
+  port: 1234
+```
+
 # ESP32 + RS485MAX
 
 I don't suggest this setup as it's not as nice as the ones above and you will need to do extra work to power the ESP32 and RS485MAX modules using the 12v from the hot tub or have a separate power source.
