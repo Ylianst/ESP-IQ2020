@@ -1254,3 +1254,10 @@ number:
 ```
 
 </details>
+
+## ??
+
+Status: Works. Used a DIN trail ESP32 device that was added to the [devices page](https://github.com/Ylianst/ESP-IQ2020/blob/main/documentation/devices.md).
+
+<img width="1000" height="750" alt="image" src="https://github.com/user-attachments/assets/31ebe8ed-5a21-449b-b38a-b00688f36f26" />
+
