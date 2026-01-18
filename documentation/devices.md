@@ -74,7 +74,7 @@ Another option is to use the following device:
 - [Amazon UK Link](https://www.amazon.co.uk/dp/B0FN4LWLH9)
 - [Device Wiki](https://www.waveshare.com/wiki/ESP32-S3-RS485-CAN)
 
-It's not as compact as the devices above, but may be more easily available with fast overnight delivery. The wireing looks like this:
+It's not as compact as the devices above, but may be more easily available with fast overnight delivery. The wiring looks like this:
 
 <img width="1202" height="374" alt="image" src="https://github.com/user-attachments/assets/088514e9-91a9-43c4-a3ba-167db5b9f02e" />
 
