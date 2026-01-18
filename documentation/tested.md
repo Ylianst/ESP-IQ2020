@@ -1255,9 +1255,588 @@ number:
 
 </details>
 
-## ??
+## Brand/Model Unknown
 
 Status: Works. Used a DIN trail ESP32 device that was added to the [devices page](https://github.com/Ylianst/ESP-IQ2020/blob/main/documentation/devices.md).
 
 <img width="1000" height="750" alt="image" src="https://github.com/user-attachments/assets/31ebe8ed-5a21-449b-b38a-b00688f36f26" />
 
+<details>
+<summary>Configuration file</summary>
+
+```
+substitutions:
+  celcius_farenheit: c
+  device: jacuzzi
+  device_1: circulation_pump
+  device_2: heater
+  device_3: lights
+  device_4: jets1
+  device_5: jets2
+  device_6: jets2_low
+  sensor_update_frequency: 1s
+  htFallback: "HotTub_Fallback"
+
+esphome:
+  name: hot-tub
+  friendly_name: hot tub
+  comment: "Luxury Spa"
+
+esp32:
+  board: esp32-s3-devkitc-1
+  framework:
+    type: esp-idf
+
+logger:
+  baud_rate: 0
+  level: ERROR
+
+api:
+  encryption:
+   
+
+ota:
+  - platform: esphome
+  
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  ap:
+    ssid: "$htFallback"
+    password: ""
+
+captive_portal:
+
+external_components:
+  - source: github://ylianst/esp-iq2020
+    refresh: 30s
+
+uart:
+  id: SpaConnection
+  tx_pin: GPIO17
+  rx_pin: GPIO18
+  baud_rate: 38400
+  parity: NONE
+  stop_bits: 1
+  rx_buffer_size: 1024
+
+iq2020:
+  uart_id: SpaConnection
+  flow_control_pin: GPIO21
+  port: 1234
+  active: true
+  legacy_polling: false
+  ace_emulation: true
+  audio_emulation: true
+
+web_server:
+  port: 80
+
+# Sync time with Home Assistant.
+time:
+  - platform: homeassistant
+    id: homeassistant_time
+
+button:
+  - platform: restart
+    name: "ESP Restart"
+
+binary_sensor:
+  - platform: status
+    name: ESP Status
+
+  - platform: iq2020
+    salt_level_confirmed:
+      name: Salt Level Confirmed
+
+# If using celsius units on the hot tub remote, replace _f_ with _c_ in the three entries below.
+# Feel free to remove any sensor that are not relevent for your hot tub.
+sensor:
+  # measurement counters
+  - platform: iq2020
+    current_${celcius_farenheit}_temperature:
+      name: Current Temperature
+    target_${celcius_farenheit}_temperature:
+      name: Target Temperature
+    outlet_${celcius_farenheit}_temperature:
+      name: Heater Outlet
+    pcb_${celcius_farenheit}_temperature:
+      name: Controller Temperature
+    salt_content:
+      name: Salt Content
+
+  - platform: iq2020
+    buttons:
+      name: Buttons
+
+    # Lifetime counters
+    lifetime_runtime:
+      name: Lifetime Runtime
+      id: jacuzzi_total_runtime
+    heater_total_runtime:
+      name: Heater Runtime
+      id: heater_total_runtime
+    circulation_pump_total_runtime:
+      name: Circulation Pump Runtime
+      id: circulation_pump_total_runtime
+    lights_total_runtime:
+      name: Lights Runtime
+      id: lights_total_runtime
+    jets1_total_runtime:
+      name: Jets 1 Runtime
+      id: jets1_total_runtime
+    jet1_low_total_runtime:
+      name: Jets 1 Low Runtime
+      id: jets1_low_total_runtime
+#    jets2_total_runtime:
+#      name: Jets 2 Runtime
+#      id: jets2_total_runtime
+#    jet2_low_total_runtime:
+#      name: Jets 2 Low Runtime
+#      id: jets2_low_total_runtime
+#    jets3_total_runtime:
+#      name: Jets 3 Runtime
+#      id: jets3_total_runtime
+    power_on_counter:
+      name: Power On Counter
+
+    # Power sensors
+    power_l1:
+      name: Pumps Power
+      id: power_l1
+    power_heater:
+      name: Controller Power
+      id: power_heater
+    power_l2:
+      name: Heater Power
+      id: power_l2
+    voltage_l1:
+      name: Voltage L1
+    voltage_heater:
+      name: Voltage Controller
+    voltage_l2:
+      name: Voltage L2
+    current_l1:
+      name: Current L1
+    current_heater:
+      name: Current Controller
+    current_l2:
+      name: Current L2
+
+    # light sensors
+    lights_intensity:
+      name: Light Intensity
+    lights_underwater_intensity:
+      name: Underwater Light Intensity
+    lights_bartop_intensity:
+      name: Bartop Light Intensity
+    lights_pillow_intensity:
+      name: Pillow Light Intensity
+    lights_exterior_intensity:
+      name: Waterfall Light Intensity
+    lights_underwater_color:
+      name: Underwater Light Color
+    lights_bartop_color:
+      name: Bartop Light Color
+    lights_pillow_color:
+      name: Pillow Light Color
+    lights_exterior_color:
+      name: Waterfall Light Color
+
+  # âœ… FIXED: logo_lights is its own iq2020 sensor entry (NOT inside template sensor)
+  - platform: iq2020
+    logo_lights:
+      internal: true
+      name: Logo Lights Number
+      on_value:
+        then:
+          - text_sensor.template.publish:
+              id: logo_lights_text
+              state: !lambda |-
+                return std::to_string((int)x);
+
+  # network sensors
+  - platform: wifi_signal
+    name: "ESP WiFi Signal dB"
+    id: wifi_signal_db
+    update_interval: 60s
+    entity_category: "diagnostic"
+
+  - platform: copy
+    source_id: wifi_signal_db
+    name: "ESP WiFi Signal Percent"
+    filters:
+      - lambda: return min(max(2 * (x + 100.0), 0.0), 100.0);
+    unit_of_measurement: "Signal %"
+    entity_category: "diagnostic"
+    device_class: ""
+
+  # esp sensors
+  - platform: uptime
+    name: ESP Uptime Sensor
+
+  - platform: internal_temperature
+    name: "ESP Internal Temperature"
+
+  - platform: template
+    id: esp_memory
+    icon: mdi:memory
+    name: ESP Free Memory
+    lambda: return heap_caps_get_free_size(MALLOC_CAP_INTERNAL) / 1024;
+    unit_of_measurement: "kB"
+    state_class: measurement
+    entity_category: "diagnostic"
+
+select:
+  - platform: iq2020
+    name: Audio Source
+    id: audio_source
+    datapoint: 0
+
+  - platform: iq2020
+    name: Color Underwater
+    id: lights1_color
+    datapoint: 1
+    options:
+      - Blue
+      - Cyan
+      - Green
+      - White
+      - Yellow
+      - Red
+      - Magenta
+      - Cycle
+
+  - platform: iq2020
+    name: Color Waterfall
+    id: lights2_color
+    datapoint: 2
+    options:
+      - Blue
+      - Cyan
+      - Green
+      - White
+      - Yellow
+      - Red
+      - Magenta
+      - Cycle
+
+  - platform: iq2020
+    name: Color Bar Top
+    id: lights3_color
+    datapoint: 3
+    options:
+      - Blue
+      - Cyan
+      - Green
+      - White
+      - Yellow
+      - Red
+      - Magenta
+      - Cycle
+
+  - platform: iq2020
+    name: Color Pillow
+    id: lights4_color
+    datapoint: 4
+    options:
+      - Blue
+      - Cyan
+      - Green
+      - White
+      - Yellow
+      - Red
+      - Magenta
+      - Cycle
+
+  - platform: iq2020
+    name: Color Cycle Speed
+    id: lights_cycle_speed
+    datapoint: 5
+
+number:
+  # jacuzzi audio control
+  - platform: iq2020
+    name: Volume
+    id: audio_volume
+    datapoint: 0
+
+  - platform: iq2020
+    name: Treble
+    id: audio_treble
+    datapoint: 1
+
+  - platform: iq2020
+    name: Bass
+    id: audio_bass
+    datapoint: 2
+
+  - platform: iq2020
+    name: Balance
+    id: audio_balance
+    datapoint: 3
+
+  - platform: iq2020
+    name: Subwoofer
+    id: audio_subwoofer
+    datapoint: 4
+
+  # jacuzzi salt control
+  - platform: iq2020
+    id: salt_power
+    name: Salt System Power
+    datapoint: 5
+
+  - platform: iq2020
+    id: salt_status
+    name: Salt System Status
+    datapoint: 6
+
+  # sov lights
+  - platform: iq2020
+    id: lights1_intensity
+    name: Intensity Underwater
+    datapoint: 7
+    maximum: 5
+
+  - platform: iq2020
+    id: lights2_intensity
+    name: Intensity Waterfall
+    datapoint: 8
+    maximum: 5
+
+  - platform: iq2020
+    id: lights3_intensity
+    name: Intensity Bar Top
+    datapoint: 9
+    maximum: 5
+
+  - platform: iq2020
+    id: lights4_intensity
+    name: Intensity Pillow
+    datapoint: 10
+    maximum: 5
+
+text:
+  # audio sensors
+  - platform: iq2020
+    name: Song Title
+    id: song_title
+    datapoint: 0
+    mode: text
+    value: "Home Assistant"
+
+  - platform: iq2020
+    name: Artist Name
+    id: artist_name
+    datapoint: 1
+    mode: text
+    value: "Remote Control"
+
+switch:
+  # jacuzzi control
+  - platform: iq2020
+    name: Lights
+    id: lights_switch
+    icon: "mdi:lightbulb"
+    datapoint: 0
+
+  - platform: iq2020
+    name: Spa Lock
+    id: spa_lock_switch
+    icon: "mdi:lock"
+    datapoint: 1
+
+  - platform: iq2020
+    name: Temperature Lock
+    id: temp_lock_switch
+    icon: "mdi:lock"
+    datapoint: 2
+
+  - platform: iq2020
+    name: Clean Cycle
+    id: clean_cycle_switch
+    icon: "mdi:vacuum"
+    datapoint: 3
+
+  - platform: iq2020
+    name: Summer Timer
+    id: summer_timer_switch
+    icon: "mdi:sun-clock"
+    datapoint: 4
+
+  # Audio System
+  - platform: iq2020
+    name: Audio
+    id: audio_power
+    datapoint: 9
+
+  # salt boost
+  - platform: iq2020
+    name: Salt System Boost
+    id: salt_system_boost
+    datapoint: 8
+
+fan:
+  # jacuzzi jet control
+  - platform: iq2020
+    name: Jets 1
+    id: jets1
+    icon: "mdi:turbine"
+    datapoint: 0
+    speeds: 2
+#  - platform: iq2020
+#    name: Jets 2
+#    id: jets2
+#    icon: "mdi:turbine"
+#    datapoint: 1
+#    speeds: 2
+
+# Set "celsius" to "true" if using celsius units.
+climate:
+  - platform: iq2020
+    name: Temperature
+  #  celsius: true
+
+text_sensor:
+  - platform: template
+    id: logo_lights_text
+    name: Logo Lights
+    filters:
+      - map:
+        - 0 -> Unknown
+        - 1 -> Power on
+        - 2 -> Power on & ready on
+        - 3 -> Ready flash
+        - 4 -> Power flash
+        - 5 -> Power and ready flash
+        - 6 -> Power and ready alternate
+        - 7 -> Power and ready salt error
+
+  # esp sensors
+  - platform: version
+    name: "ESP Device Version"
+    id: device_esphome_version
+    internal: true
+    icon: "mdi:chevron-right"
+
+  - platform: wifi_info
+    ip_address:
+      name: ESP IP Address
+    ssid:
+      name: ESP Connected SSID
+    mac_address:
+      name: ESP Mac Wifi Address
+    scan_results:
+      name: ESP Latest Scan Results
+    dns_address:
+      name: ESP DNS Address
+
+  # jacuzzi sensors
+  - platform: iq2020
+    versionstr:
+      name: Version
+
+  - platform: template
+    id: total_runtime_$device
+    name: "Total Runtime_$device"
+    update_interval: $sensor_update_frequency
+    icon: "mdi:timer-sand"
+    lambda: |-
+      int seconds = round(id(${device}_total_runtime).state);
+      int days = seconds / (24 * 3600);
+      seconds = seconds % (24 * 3600);
+      int hours = seconds / 3600;
+      seconds = seconds % 3600;
+      int minutes = seconds / 60;
+      seconds = seconds % 60;
+      std::string result;
+      if (days) result += std::to_string(days) + " days, ";
+      if (hours) result += std::to_string(hours) + ":";
+      if (minutes) result += std::to_string(minutes) + ":";
+      result += std::to_string(seconds);
+      return result;
+
+  - platform: template
+    id: total_runtime_$device_1
+    name: "Total Runtime_$device_1"
+    update_interval: $sensor_update_frequency
+    icon: "mdi:timer-sand"
+    lambda: |-
+      int seconds = round(id(${device_1}_total_runtime).state);
+      int days = seconds / (24 * 3600);
+      seconds = seconds % (24 * 3600);
+      int hours = seconds / 3600;
+      seconds = seconds % 3600;
+      int minutes = seconds / 60;
+      seconds = seconds % 60;
+      std::string result;
+      if (days) result += std::to_string(days) + " days, ";
+      if (hours) result += std::to_string(hours) + ":";
+      if (minutes) result += std::to_string(minutes) + ":";
+      result += std::to_string(seconds);
+      return result;
+
+  - platform: template
+    id: total_runtime_$device_2
+    name: "Total Runtime_$device_2"
+    update_interval: $sensor_update_frequency
+    icon: "mdi:timer-sand"
+    lambda: |-
+      int seconds = round(id(${device_2}_total_runtime).state);
+      int days = seconds / (24 * 3600);
+      seconds = seconds % (24 * 3600);
+      int hours = seconds / 3600;
+      seconds = seconds % 3600;
+      int minutes = seconds / 60;
+      seconds = seconds % 60;
+      std::string result;
+      if (days) result += std::to_string(days) + " days, ";
+      if (hours) result += std::to_string(hours) + ":";
+      if (minutes) result += std::to_string(minutes) + ":";
+      result += std::to_string(seconds);
+      return result;
+
+  - platform: template
+    id: total_runtime_$device_3
+    name: "Total Runtime_$device_3"
+    update_interval: $sensor_update_frequency
+    icon: "mdi:timer-sand"
+    lambda: |-
+      int seconds = round(id(${device_3}_total_runtime).state);
+      int days = seconds / (24 * 3600);
+      seconds = seconds % (24 * 3600);
+      int hours = seconds / 3600;
+      seconds = seconds % 3600;
+      int minutes = seconds / 60;
+      seconds = seconds % 60;
+      std::string result;
+      if (days) result += std::to_string(days) + " days, ";
+      if (hours) result += std::to_string(hours) + ":";
+      if (minutes) result += std::to_string(minutes) + ":";
+      result += std::to_string(seconds);
+      return result;
+
+  - platform: template
+    id: total_runtime_$device_4
+    name: "Total Runtime_$device_4"
+    update_interval: $sensor_update_frequency
+    icon: "mdi:timer-sand"
+    lambda: |-
+      int seconds = round(id(${device_4}_total_runtime).state);
+      int days = seconds / (24 * 3600);
+      seconds = seconds % (24 * 3600);
+      int hours = seconds / 3600;
+      seconds = seconds % 3600;
+      int minutes = seconds / 60;
+      seconds = seconds % 60;
+      std::string result;
+      if (days) result += std::to_string(days) + " days, ";
+      if (hours) result += std::to_string(hours) + ":";
+      if (minutes) result += std::to_string(minutes) + ":";
+      result += std::to_string(seconds);
+      return result;
+``` 
+
+</details>
