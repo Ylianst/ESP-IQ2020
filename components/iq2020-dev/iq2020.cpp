@@ -200,7 +200,8 @@ void IQ2020Component::accept() {
 	if (!socket) return;
 
 	socket->setblocking(false);
-	std::string identifier = socket->getpeername();
+	//std::string identifier = socket->getpeername();
+	std::string identifier = inet_ntoa(client_addr.sin_addr);
 	this->clients_.emplace_back(std::move(socket), identifier, this->buf_head_);
 	ESP_LOGD(TAG, "New client connected from %s", identifier.c_str());
 	this->publish_sensor();
