@@ -1839,3 +1839,8 @@ text_sensor:
 ``` 
 
 </details>
+
+
+## 2013 Hot Springs Vanguard
+
+Status: Works.
