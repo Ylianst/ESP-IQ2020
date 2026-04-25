@@ -1849,11 +1849,10 @@ Status: Works.
 
 This tub has the Watkins IQ2020 P/N 1303401-2 REV.A board. I'm using the recommended hardware (ATOM Lite ESP32 + Tail485 module)
 
-<br>
 <img width="5712" height="4284" alt="Image" src="https://github.com/user-attachments/assets/705e5278-d884-44a7-bc67-c358d7b9f37c" />
 <br>
 
-<img width="3024" height="4032" alt="Image" src="https://github.com/user-attachments/assets/1d9c890d-0629-4f0a-9f71-56c0cef976b0" />
+<img width="2147" height="1212" alt="hot_tub_serial" src="https://github.com/user-attachments/assets/819e7d2b-7392-4fae-83a5-615d7e9ee9da" />
 <br>
 
 With the stock firmware (V1.01S), I got some things kind of working. I could control the 2 speeds of pump 1, could read back temperatures and power usage of the heater but no lighting, no feedback of pumps, no control of pump 2, the thermostat feedback worked but I couldn't set the temperature. 
