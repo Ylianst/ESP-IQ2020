@@ -811,15 +811,51 @@ int IQ2020Component::processIQ2020Command() {
 			float _target_temp = 0, _current_temp = 0;
 			if (processingBuffer[93] == 'F') { // Fahrenheit
 				temp_celsius = false;
-				_target_temp = ((processingBuffer[91] - '0') * 10) + (processingBuffer[92] - '0') + ((processingBuffer[90] == '1') ? 100 : 0);
-				_current_temp = ((processingBuffer[95] - '0') * 10) + (processingBuffer[96] - '0') + ((processingBuffer[94] == '1') ? 100 : 0);
-				outlet_temp = ((processingBuffer[37] - '0') * 10) + (processingBuffer[38] - '0') + ((processingBuffer[36] == '1') ? 100 : 0);
+				
+				// Parse target temperature from fixed position (handles leading space for <100°F)
+				char target_temp_str[8];
+				memcpy(target_temp_str, &processingBuffer[90], 6);
+				target_temp_str[6] = '\0';
+				_target_temp = strtof(target_temp_str, nullptr);
+				if (std::isnan(_target_temp)) _target_temp = 0.0f;
+				
+				// Parse current temperature from fixed position (handles leading space for <100°F)
+				char current_temp_str[8];
+				memcpy(current_temp_str, &processingBuffer[94], 6);
+				current_temp_str[6] = '\0';
+				_current_temp = strtof(current_temp_str, nullptr);
+				if (std::isnan(_current_temp)) _current_temp = 0.0f;
+				
+				// Parse outlet temperature from fixed position
+				char outlet_temp_str[8];
+				memcpy(outlet_temp_str, &processingBuffer[36], 6);
+				outlet_temp_str[6] = '\0';
+				outlet_temp = strtof(outlet_temp_str, nullptr);
+				if (std::isnan(outlet_temp)) outlet_temp = 0.0f;
 			}
 			else if (processingBuffer[92] == '.') { // Celcius
 				temp_celsius = true;
-				_target_temp = ((processingBuffer[90] - '0') * 10) + (processingBuffer[91] - '0') + ((processingBuffer[93] - '0') * 0.1);
-				_current_temp = ((processingBuffer[94] - '0') * 10) + (processingBuffer[95] - '0') + ((processingBuffer[97] - '0') * 0.1);
-				outlet_temp = ((processingBuffer[36] - '0') * 10) + (processingBuffer[37] - '0') + ((processingBuffer[39] - '0') * 0.1);
+				
+				// Parse target temperature from fixed position (handles leading space for <10°C)
+				char target_temp_str[8];
+				memcpy(target_temp_str, &processingBuffer[90], 5);
+				target_temp_str[5] = '\0';
+				_target_temp = strtof(target_temp_str, nullptr);
+				if (std::isnan(_target_temp)) _target_temp = 0.0f;
+				
+				// Parse current temperature from fixed position (handles leading space for <10°C)
+				char current_temp_str[8];
+				memcpy(current_temp_str, &processingBuffer[94], 5);
+				current_temp_str[5] = '\0';
+				_current_temp = strtof(current_temp_str, nullptr);
+				if (std::isnan(_current_temp)) _current_temp = 0.0f;
+				
+				// Parse outlet temperature from fixed position
+				char outlet_temp_str[8];
+				memcpy(outlet_temp_str, &processingBuffer[36], 5);
+				outlet_temp_str[5] = '\0';
+				outlet_temp = strtof(outlet_temp_str, nullptr);
+				if (std::isnan(outlet_temp)) outlet_temp = 0.0f;
 			}
 			ESP_LOGD(TAG, "Reported Current Temp: %.1f, Target Temp: %.1f, Outlet Temp: %.1f", _current_temp, _target_temp, outlet_temp);
 
