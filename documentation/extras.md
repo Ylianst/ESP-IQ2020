@@ -10,7 +10,7 @@ You can control the color, intensite and cycle speed of the lights in your hot t
 
 To do this, add the following entries under the `select` and `number` sections. You may need to change the `options` and `maximum` values to match your specific hot tub. These are the values for a Hotspring Grandee.
 
-```
+```yaml
 select:
   - platform: iq2020
     name: Color Underwater
@@ -96,7 +96,7 @@ number:
 
 These sensors may be removed in the future as new sensors that can monitor and change the lights have been added. You can add sensors to look at the current light color and intensity of each color zones. Add the following in the `sensor` section if needed:
 
-```
+```yaml
 sensor:
     lights_intensity:
       name: Light Intensity
@@ -135,7 +135,7 @@ Intensity values are from 0 for off to 5 for maximum brightness. For colors, her
 
 If you have a ACE or Freshwater module attached to your hot tub, this integration will allow you to see the salt sensor and control the power level (0 to 10) of the salt system. To do this, add the following under the `binary_sensor`, `number`, `sensor` and `switch` sections:
 
-```
+```yaml
 binary_sensor:    
   - platform: iq2020
     salt_level_confirmed:
@@ -173,7 +173,7 @@ The Freshwater IQ module mesures the Chlorine and PH level of the water and repo
 
 I don't personally have this module, so, others have to give me information on how it works so I can add support for it. I have received log files and decoded some of the [protocol here](https://github.com/Ylianst/ESP-IQ2020/blob/main/documentation/protocol.md#freshwater-iq). We have some values we know what they are and some others we do not. Currently the integration allows you to see 7 values, 3 of which we likely know the signification. In the `sensor:` section, add the following `iq_` values:
 
-```
+```yaml
 sensor:
   - platform: iq2020-dev
 (...)
@@ -199,7 +199,7 @@ Chlorine level is in parts per million (PPM). Values A and B seem to always be 0
 
 It's been reported by one user with a Freshwater IQ modules that when the ESP32 was connected at the start of the hot tub, the Freshwater IQ module would not show up on the display or not act correctly. However, if the ESP32 waits a few minutes before starting to be involved in polling the hot tub for data, things work well. So, there is a way to tell the ESP32 to not be active and be in "listen-only" mode. To start the ESP32 non-active mode, add `active: false` in the `iq2020` section like this:
 
-```
+```yaml
 iq2020:
    uart_id: SpaConnection
    active: false
@@ -207,7 +207,7 @@ iq2020:
 
 If you don't specify `active`, it's true by default and the ESP32 will run normally, polling data right at the start. Now, if you start the ESP32 in non-active mode, you want to activate it later, you can do this by adding the following 4 lines in the `switch:` section.
 
-```
+```yaml
 switch:
   - platform: iq2020
     name: Active
@@ -217,7 +217,7 @@ switch:
 
 So now, you can switch the ESP32 to active mode or back anytime you like. You can then create an automation to wait 2 minutes when active is off to auto-enable it. Here is an example:
 
-```
+```yaml
 alias: Turn on hot tub 2 minutes after restart
 description: ""
 triggers:
@@ -246,7 +246,7 @@ Again, this should solve cases where the ESP32 is causing issues when active dur
 
 The green and blue light at the front of the hot tub can also be reported by this integration. You can, for example, have a picture your hot tub in Home Assistant and make the lights on the image match the light on the actual hot tub. In the `sensor` section of the configuration file, add the `logo_lights` sensor and in the `text_sensor` section add `logo_lights_text` link this:
 
-```
+```yaml
 sensor:
     logo_lights:
       internal: true
@@ -279,7 +279,7 @@ You can remove the `internal: true` line if you want the numeric value to be ava
 
 In addition to the logo light status sensor, there is another "raw" sensor that will get the value directly from the IQ2020. This is useful if you get unknown values from the normal logo light sensor and need get access to the internal value.
 
-```
+```yaml
 sensor:
     logo_lights_raw:
       name: Logo Lights Raw
@@ -289,7 +289,7 @@ sensor:
 
 You can setup two additional sensors in the ESP Home integration to get a report of the WIFI signal strength of the ESP32 device to your WIFI access point. It's easy, just add the follow lines in the `sensor:` section of the ESP home configuration:
 
-```
+```yaml
 sensor:
   - platform: wifi_signal # Reports the WiFi signal strength/RSSI in dB
     name: "WiFi Signal dB"
@@ -315,7 +315,7 @@ You can also add [these sensors](https://esphome.io/components/text_sensor/wifi_
 
 You can add additional voltage and current sensors. In general you don't need them since the power sensor in watts are a more accurate value of (voltage * current).
 
-```
+```yaml
 sensor:
     voltage_l1:
       name: Voltage L1
@@ -339,7 +339,7 @@ Note that you can't have two `sensor:` sections, so just add all of these lines 
 
 The IQ2020 controller keeps a running count of the usage of the jets, heater, lights and more. You can add the following sensors if you would like to see these values:
 
-```
+```yaml
 sensors:
     heater_total_runtime:
       name: Heater Runtime
@@ -369,7 +369,7 @@ A lot of the sensor values returned by this integration are large numbers of sec
 
 To do this, edit your Home Assistant configuration.yaml file and add the following `sensor:` template. Note that you may need to change `hot_tub_` to the name of your own device.
 
-```
+```yaml
 sensor:
   - platform: template
     sensors:
@@ -458,7 +458,7 @@ Some IQ2020 boards will have electricity power usage sensors. In my case, I have
 
 Here is the YAML to replace the existing sensors in the basic configuration to add power ids for the total daily energy platform:
 
-```
+```yaml
 sensor:
   - platform: iq2020
     # Power
@@ -475,7 +475,7 @@ sensor:
 
 Here is the YAML to add:
 
-```
+```yaml
 # Enable time component to reset energy at midnight
 time:
   - platform: homeassistant
@@ -518,7 +518,7 @@ sensor:
 
 In this section, we look at having the ESP32 computer change the temperature of the hottub at various times on it's own, without help from Home Assistant. This is interesting since your tub tub would be truly intependent. It does required the ESP32 to have access to the internet to get the correct time. Also, in the code below, the `target_temperature` is always in celsius, no matter what your hot tub or Home Assistant settings are. Thanks to user [mmcshea for this](https://github.com/Ylianst/ESP-IQ2020/issues/75#issuecomment-3667937767). One future alternative to this would be to use the clock in the IQ2020.
 
-```
+```yaml
 time:
   - platform: sntp
     id: sntp_time
@@ -555,7 +555,7 @@ Except for the very early IQ2020 boards, most of them have a battery backed real
 
 To read the clock from the IQ2020 board, there are two sensors. One is text and the other is numeric. You probably want to add `internal: true` at some point since you don't really need to have Home Assistant track these values, it would just waste space in the Home Assistant database. First is a text sensor:
 
-```
+```yaml
 text_sensor:
   - platform: iq2020
     rtc_datetime:
@@ -566,7 +566,7 @@ text_sensor:
 
 The second sensor is UNIX time:
 
-```
+```yaml
 sensor:
   - platform: iq2020
     rtc_timestamp:
@@ -577,7 +577,7 @@ sensor:
 
 To set the IQ2020 clock from Home Assistant you first need to add the following "service" in the "api:" section of the ESPHome configuration. This is what is looks like:
 
-```
+```yaml
 api:
   encryption:
     key: "xxxxxxxxxxxxxxxxxxxx"
@@ -599,7 +599,7 @@ api:
 
 This will expose a new "set_hot_tub_time" method to Home Assistant. When called, the ESP32 will call the integration to send the clock set command to the IQ2020 board. Once your ESP32 is flashed, you can call the "set_hot_tub_time" method in Hoem Assistant. Here is a sample automation that when activated, will set the hottub to a specific date and time.
 
-```
+```yaml
 alias: Hot Tub Time Test
 description: ""
 triggers: []
@@ -619,7 +619,7 @@ mode: single
 
 The "metadata" does nothing and can be removed. To set the current time, you can do this:
 
-```
+```yaml
 alias: Hot Tub Time Test
 description: Syncs the hot tub clock
 triggers: []
