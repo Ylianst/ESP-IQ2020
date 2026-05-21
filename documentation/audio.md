@@ -6,7 +6,7 @@ Here are the relevant settings:
 
 Add the following sensor in the `sensor` section. If the use the ACE module emulation, you will already have this sensor.
 
-```
+```yaml
 sensor:
     buttons:
       name: Buttons
@@ -14,7 +14,7 @@ sensor:
 
 Then, replace the empty, or add to the existing, `switch`, `select`, `number`, and `text` sections with this:
 
-```
+```yaml
 switch:
     # For Audio System
   - platform: iq2020
@@ -71,7 +71,7 @@ This integration allows the ESP32 device to emulate the music module and so, sho
 
 To get this working, add the line `audio_emulation: true` in the `iq2020` section like this:
 
-```
+```yaml
 iq2020:
    uart_id: SpaConnection
    audio_emulation: true
@@ -79,7 +79,7 @@ iq2020:
 
 Also, add the following sensor in the `sensor` section. If the use the ACE module emulation, you will already have this sensor.
 
-```
+```yaml
 sensor:
     buttons:
       name: Buttons
@@ -87,7 +87,7 @@ sensor:
 
 Then, replace the empty, or add to the existing, `switch`, `select`, `number`, and `text` sections with this:
 
-```
+```yaml
 switch:
     # For Audio System
   - platform: iq2020
