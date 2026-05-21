@@ -33,7 +33,7 @@ Once you get the executable, run it, put the IP address and port of your ESP32 d
 
 Another thing you may want to do is change the debug level from `ERROR` to `DEBUG` in the ESP-Home confirmation file and reflash. You will see a lot more data in the ESP-Home logs.
 
-```
+```yaml
 logger:
   baud_rate: 0
   level: DEBUG
