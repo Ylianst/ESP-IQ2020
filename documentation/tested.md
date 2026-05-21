@@ -46,7 +46,7 @@ Limelight	Glow (GLW)	2012, 2013, 2014, 2015, 2016, 2017
 
 <details><summary>Notable Settings</summary>
 
-```
+```yaml
 uart:
   id: SpaConnection
   tx_pin: GPIO26
@@ -80,7 +80,7 @@ fan:
 
 <details><summary>Notable Settings</summary>
   
-```
+```yaml
 uart:
   id: SpaConnection
   tx_pin: GPIO19
@@ -122,7 +122,7 @@ fan:
 - Version: 112T b5e1A002 v3.0
 - M5stack atom lite + Atomic RS485 base
 
-```
+```yaml
 sensor:
   lights_main_loop_speed:
     name: Lights Main Loop Speed
@@ -177,7 +177,7 @@ Also, light intensity is 0 to 3, not 0 to 5 like other models.
 
 <details><summary>Notable Settings</summary>
   
-```
+```yaml
 select:
   - platform: iq2020
     name: Color Underwater
@@ -273,7 +273,7 @@ Does no work. This hot tub seems to be using a older version of the IQ2020 board
 
 Yaml Changes Made in ESPHome
 
-```
+```yaml
 fan:
   - platform: iq2020
     name: Jets 1
@@ -330,7 +330,7 @@ Watkins P/N: 1303401-1 Rev K
 <details>
 <summary>Notable Settings</summary>
 
-```
+```yaml
 uart:
   id: SpaConnection
   tx_pin: GPIO26
@@ -764,7 +764,7 @@ Tiger River Spa Caspian with a 50hz Eagle board retrofit and this is the light c
 
 <details><summary>Notable Settings</summary>
   
-```
+```yaml
 select:
   - platform: iq2020
     name: Color Underwater
@@ -803,7 +803,7 @@ Regarding the control of the lights, I was able to update the firmware to the la
 
 <details><summary>Settings</summary>
 
-```
+```yaml
 select:
   - platform: iq2020
     name: Color Underwater
@@ -1022,7 +1022,7 @@ Worked using the m5stack-atom. Some changes for 2025 Rhythm -
 
 <details><summary>Full YAML</summary>
 
-```
+```yaml
 esphome:
   name: hot-tub
   friendly_name: Hot Tub
@@ -1226,7 +1226,7 @@ A few configuration changes: Jet 1 is two speed, Jet 2 is not used. Salt system 
 
 <details><summary>YAML Changes</summary>
 
-```
+```yaml
 sensor:
     salt_content:
     name: Salt Content
@@ -1265,7 +1265,7 @@ Status: Works. Used a DIN trail ESP32 device that was added to the [devices page
 <details>
 <summary>Configuration file</summary>
 
-```
+```yaml
 substitutions:
   celcius_farenheit: c
   device: jacuzzi
@@ -1880,7 +1880,7 @@ After this update, I got everything working!
 <details>
 <summary>ESP Home full YAML code</summary>
 
-```
+```yaml
 esphome:
   name: jacuzzi
   friendly_name: Jacuzzi
