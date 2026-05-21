@@ -22,7 +22,7 @@ You could try to [create a better cable](https://github.com/Ylianst/ESP-IQ2020/b
 <details>
 <summary>Sample ESP-Home configuration file</summary>
 
-```
+```yaml
 esphome:
   name: hot-tub
   friendly_name: Hot Tub
