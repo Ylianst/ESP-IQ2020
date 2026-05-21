@@ -4,7 +4,7 @@ I wanted to build a ESP-Home integration into Home Assistant that accomplishes t
 
 This ESP-Home IQ2020 integration started using code from [esphome-stream-server](https://github.com/oxan/esphome-stream-server) by Oxan van Leeuwen. When looking at the ESP-Home configuration yaml file, you see an optional "port" setting:
 
-```
+```yaml
 external_components:
   - source: github://ylianst/esp-iq2020
 
