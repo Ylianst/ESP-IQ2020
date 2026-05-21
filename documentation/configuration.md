@@ -2,7 +2,7 @@
 
 This is the starter configuration most people should use. It has a basic set of sensors and you can improve from here. Make sure to put your own API, OTA and WIFI passwords. Change temperature units if needed, and don't forget to [change the GPIO pins](https://github.com/Ylianst/ESP-IQ2020/blob/main/documentation/devices.md) if you are not using a M5Stack. You also need to change the configuration if you have 1 or 2 jets and if the jets have different power levels.
 
-```
+```yaml
 esphome:
   name: hot-tub
   friendly_name: Hot Tub
@@ -123,7 +123,7 @@ text_sensor:
 
 NOT RECOMMANDED. Below is an example of a full configuration with most sensors turned on. This configuration is not recommanded for anyone, it's just an example to see what values are possible so you can use to cut & paste into you own configuration. The example below has a lot of ideas for enhancing sensors, using substitutions and more. As always, you are encouraged to adapt this configuration to your own needs. Images of the sensors below.
 
-```
+```yaml
 substitutions:
   celcius_farenheit: c
   device: jacuzzi
