@@ -11,7 +11,7 @@ Once assembled with the wires, the device looks like this:
 
 In the ESP-Home configuration, you will need to use the following settings. Note the GPIO pin numbers.
 
-```
+```yaml
 # M5Stack ATOM Lite
 uart:
   id: SpaConnection
@@ -33,7 +33,7 @@ Once assembled with the wires, the device looks like this:
 
 In the ESP-Home configuration, you will need to use the following settings. Note the GPIO pin numbers. The TX Pin is on GPIO 0.
 
-```
+```yaml
 # M5StickC PLUS ESP32-PICO Mini
 uart:
   id: SpaConnection
@@ -55,7 +55,7 @@ I use this device and interface for a different project and it works great. Once
 
 In the ESP-Home configuration, you will need to use the following settings. Note the GPIO pin numbers.
 
-```
+```yaml
 # M5Stack ATOM Lite
 uart:
   id: SpaConnection
@@ -80,7 +80,7 @@ It's not as compact as the devices above, but may be more easily available with 
 
 In the ESP-Home configuration, you will need to use the following settings. Note the GPIO pin numbers and the `flow_control_pin`.
 
-```
+```yaml
 uart:
   id: SpaConnection
   tx_pin: GPIO17
@@ -112,7 +112,7 @@ Here is a suggested wiring I found. Some of these modules are 3v instead of 5v a
 
 In this case, the configuration should look like:
 
-```
+```yaml
 uart:
   id: SpaConnection
   tx_pin: GPIO19
