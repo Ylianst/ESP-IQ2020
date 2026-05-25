@@ -838,7 +838,7 @@ int IQ2020Component::processIQ2020Command() {
 				
 				// Parse target temperature from fixed position (handles leading space for <10°C)
 				char target_temp_str[8];
-				memcpy(target_temp_str, &processingBuffer[90], 4;
+				memcpy(target_temp_str, &processingBuffer[90], 4);
 				target_temp_str[5] = '\0';
 				_target_temp = strtof(target_temp_str, nullptr);
 				if (std::isnan(_target_temp)) _target_temp = 0.0f;
