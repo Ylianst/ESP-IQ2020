@@ -111,6 +111,7 @@ public:
 	void set_current_l1_sensor(esphome::sensor::Sensor *sensor) { this->current_l1_sensor_ = sensor; }
 	void set_current_heater_sensor(esphome::sensor::Sensor *sensor) { this->current_heater_sensor_ = sensor; }
 	void set_current_l2_sensor(esphome::sensor::Sensor *sensor) { this->current_l2_sensor_ = sensor; }
+	void set_current_l2x_sensor(esphome::sensor::Sensor *sensor) { this->current_l2x_sensor_ = sensor; }
 	void set_power_l1_sensor(esphome::sensor::Sensor *sensor) { this->power_l1_sensor_ = sensor; }
 	void set_power_heater_sensor(esphome::sensor::Sensor *sensor) { this->power_heater_sensor_ = sensor; }
 	void set_power_l2_sensor(esphome::sensor::Sensor *sensor) { this->power_l2_sensor_ = sensor; }
@@ -233,6 +234,7 @@ protected:
 	esphome::sensor::Sensor *current_l1_sensor_;
 	esphome::sensor::Sensor *current_heater_sensor_;
 	esphome::sensor::Sensor *current_l2_sensor_;
+	esphome::sensor::Sensor *current_l2x_sensor_;
 	esphome::sensor::Sensor *power_l1_sensor_;
 	esphome::sensor::Sensor *power_heater_sensor_;
 	esphome::sensor::Sensor *power_l2_sensor_;

@@ -50,6 +50,7 @@ CONF_SENSOR_VOLTAGE_L2 = "voltage_l2"
 CONF_SENSOR_CURRENT_L1 = "current_l1"
 CONF_SENSOR_CURRENT_HEATER = "current_heater"
 CONF_SENSOR_CURRENT_L2 = "current_l2"
+CONF_SENSOR_CURRENT_L2X = "current_l2x"
 CONF_SENSOR_POWER_L1 = "power_l1"
 CONF_SENSOR_POWER_HEATER = "power_heater"
 CONF_SENSOR_POWER_L2 = "power_l2"
@@ -241,6 +242,13 @@ CONFIG_SCHEMA = cv.Schema(
             icon=ICON_CURRENT_AC
         ),
         cv.Optional(CONF_SENSOR_CURRENT_L2): sensor.sensor_schema(
+            unit_of_measurement=UNIT_AMPERE,
+            state_class=STATE_CLASS_MEASUREMENT,
+            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
+            accuracy_decimals=0,
+            icon=ICON_CURRENT_AC
+        ),
+        cv.Optional(CONF_SENSOR_CURRENT_L2X): sensor.sensor_schema(
             unit_of_measurement=UNIT_AMPERE,
             state_class=STATE_CLASS_MEASUREMENT,
             entity_category=ENTITY_CATEGORY_DIAGNOSTIC,

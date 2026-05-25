@@ -908,9 +908,11 @@ int IQ2020Component::processIQ2020Command() {
 			int current_l1 = (processingBuffer[106] + (processingBuffer[107] << 8));
 			int current_heater = (processingBuffer[108] + (processingBuffer[109] << 8));
 			int current_l2 = (processingBuffer[110] + (processingBuffer[111] << 8));
+			int current_l2x = (processingBuffer[111] + (processingBuffer[110] << 8));
 			if (this->current_l1_sensor_) this->current_l1_sensor_->publish_state((float)current_l1);
 			if (this->current_heater_sensor_) this->current_heater_sensor_->publish_state((float)current_heater);
 			if (this->current_l2_sensor_) this->current_l2_sensor_->publish_state((float)current_l2);
+			if (this->current_l2x_sensor_) this->current_l2x_sensor_->publish_state((float)current_l2x);
 
 			// Power sensors
 			if (this->power_l1_sensor_) {
