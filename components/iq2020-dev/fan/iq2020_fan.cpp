@@ -42,7 +42,7 @@ namespace iq2020_fan {
 	void IQ2020Fan::updateState(int s) {
 		ESP_LOGCONFIG(TAG, "IQ2020 fan %d update. State: %d", fan_id, s);
 		switch (s) {
-			case 0: { state = false; break; } // OFF
+			case 0: { state = false; speed = 0; break; } // OFF
 			case 1: { state = true; speed = 1; break; } // MEDIUM
 			case 2: { state = true; speed = (fan_speeds == 2) ? 2 : 1; break; } // FULL
 		}
