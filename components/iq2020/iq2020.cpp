@@ -570,8 +570,13 @@ int IQ2020Component::processIQ2020Command() {
 			setNumberState(NUMBER_SALT_POWER, salt_power);
 #endif
 		}
-		if (salt_content != processingBuffer[9]) {
-			salt_content = processingBuffer[9];
+		int decoded_salt_content = processingBuffer[9];
+		// Preserve legacy ACE behavior (0x24) while using freshwater salt decoding for 0x29.
+		if (salt_module_address == 0x24) {
+			decoded_salt_content = processingBuffer[9] >> 4;
+		}
+		if (salt_content != decoded_salt_content) {
+			salt_content = decoded_salt_content;
 #ifdef USE_SENSOR
 			if (this->salt_content_sensor_) this->salt_content_sensor_->publish_state((float)salt_content);
 #endif
