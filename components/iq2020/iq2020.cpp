@@ -592,8 +592,13 @@ int IQ2020Component::processIQ2020Command() {
 			this->salt_error_code_sensor_->publish_state((float) salt_error_code);
 		}
 #endif
-		// Salt module panel mode is encoded by MF (byte 8), with 0x07 indicating boost mode.
-		setSwitchState(SWITCH_SALT_BOOST, processingBuffer[12] == 0x07);
+		// Preserve legacy ACE boost bit behavior (0x24) and freshwater MF-based behavior (0x29).
+		if (salt_module_address == 0x24) {
+			setSwitchState(SWITCH_SALT_BOOST, (processingBuffer[12] & 0x04) != 0);
+		}
+		else {
+			setSwitchState(SWITCH_SALT_BOOST, processingBuffer[12] == 0x07);
+		}
 #ifdef USE_TEXT_SENSOR
 		if (this->salt_module_status_sensor_) {
 			if ((processingBuffer[19] & 0x40) != 0) {
