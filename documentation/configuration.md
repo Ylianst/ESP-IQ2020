@@ -200,6 +200,12 @@ time:
 button:
   - platform: restart
     name: "ESP Restart"
+  - platform: iq2020
+    name: Salt Test
+    datapoint: 0
+  - platform: iq2020
+    name: Reset Salt Cartridge
+    datapoint: 1
     
 binary_sensor:    
   - platform: status
@@ -222,7 +228,13 @@ sensor:
     pcb_${celcius_farenheit}_temperature:
       name: Controller Temperature
     salt_content:
-      name: Salt Content
+      name: Salt Level
+    salt_cartridge_age_days:
+      name: Salt Cartridge Age (Days)
+    salt_generation_hours:
+      name: Salt Generation Hours
+    salt_error_code:
+      name: Salt Error Code
 
     #Lifetime counters
     lifetime_runtime:
@@ -452,6 +464,10 @@ text_sensor:
   - platform: iq2020
     versionstr:
       name: Version
+    salt_module_status:
+      name: Salt Module Status
+    salt_level_friendly:
+      name: Salt Level Friendly
   - platform: template
     id: total_runtime_$device
     name: "Total Runtime_$device"
@@ -594,7 +610,4 @@ text_sensor:
 ![image](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/c5b25972-1409-4477-964a-1dc21645407e)
 
 ![image](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/1561b409-8329-48f7-a581-f6841265b1d5)
-
-
-
 
