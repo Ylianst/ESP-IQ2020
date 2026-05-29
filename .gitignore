@@ -10,6 +10,9 @@
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
+__pycache__/
+*.pyc
+
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/

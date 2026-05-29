@@ -13,6 +13,9 @@
 #ifdef USE_TEXT_SENSOR
 #include "esphome/components/text_sensor/text_sensor.h"
 #endif
+#ifdef USE_BUTTON
+#include "esphome/components/button/button.h"
+#endif
 
 #include <memory>
 #include <string>
@@ -61,6 +64,9 @@
 #define NUMBER_LIGHTS2_INTENSITY 8     // Bartop lights intensity (0 to 5)
 #define NUMBER_LIGHTS3_INTENSITY 9     // Pillow lights intensity (0 to 5)
 #define NUMBER_LIGHTS4_INTENSITY 10    // Exterior lights intensity (0 to 5)
+#define BUTTONCOUNT 2
+#define BUTTON_SALT_TEST 0
+#define BUTTON_RESET_CARTRIDGE 1
 #define NOT_SET -127
 
 class IQ2020Component : public esphome::Component, public esphome::api::CustomAPIDevice {
@@ -137,10 +143,18 @@ public:
 	void set_iq_ph_sensor(esphome::sensor::Sensor *sensor) { this->iq_ph_sensor_ = sensor; }
 	void set_iq_hoursleft_sensor(esphome::sensor::Sensor *sensor) { this->iq_hoursleft_sensor_ = sensor; }
 	void set_rtc_timestamp_sensor(esphome::sensor::Sensor *sensor) { this->rtc_timestamp_sensor_ = sensor; }
+	void set_salt_cartridge_age_days_sensor(esphome::sensor::Sensor *sensor) { this->salt_cartridge_age_days_sensor_ = sensor; }
+	void set_salt_generation_hours_sensor(esphome::sensor::Sensor *sensor) { this->salt_generation_hours_sensor_ = sensor; }
+	void set_salt_error_code_sensor(esphome::sensor::Sensor *sensor) { this->salt_error_code_sensor_ = sensor; }
 #endif
 #ifdef USE_TEXT_SENSOR
 	void set_version_sensor(esphome::text_sensor::TextSensor *text) { this->version_sensor_ = text; }
 	void set_rtc_datetime_sensor(esphome::text_sensor::TextSensor *text) { this->rtc_datetime_sensor_ = text; }
+	void set_salt_module_status_sensor(esphome::text_sensor::TextSensor *text) { this->salt_module_status_sensor_ = text; }
+	void set_salt_level_friendly_sensor(esphome::text_sensor::TextSensor *text) { this->salt_level_friendly_sensor_ = text; }
+#endif
+#ifdef USE_BUTTON
+	void buttonAction(unsigned int buttonid);
 #endif
 
 	void setup() override;
@@ -259,10 +273,15 @@ protected:
 	esphome::sensor::Sensor *iq_ph_sensor_;
 	esphome::sensor::Sensor *iq_hoursleft_sensor_;
 	esphome::sensor::Sensor *rtc_timestamp_sensor_;
+	esphome::sensor::Sensor *salt_cartridge_age_days_sensor_;
+	esphome::sensor::Sensor *salt_generation_hours_sensor_;
+	esphome::sensor::Sensor *salt_error_code_sensor_;
 #endif
 #ifdef USE_TEXT_SENSOR
 	esphome::text_sensor::TextSensor *version_sensor_;
 	esphome::text_sensor::TextSensor *rtc_datetime_sensor_;
+	esphome::text_sensor::TextSensor *salt_module_status_sensor_;
+	esphome::text_sensor::TextSensor *salt_level_friendly_sensor_;
 #endif
 
 	std::unique_ptr<uint8_t[]> buf_{};
@@ -299,6 +318,7 @@ protected:
 	int next_retry_count = 0;
 	int salt_power = NOT_SET; // This is polled too frequently to send to HA each time.
 	int salt_content = NOT_SET; // This is polled too frequently to send to HA each time.
+	unsigned char salt_module_address = 0x29; // Last seen salt module address (0x24 legacy ACE, 0x29 freshwater salt).
 	std::string audio_song_title;
 	std::string audio_artist_name;
 
