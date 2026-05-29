@@ -43,6 +43,9 @@ CONF_SENSOR_JETS2_LOW_RUNTIME = "jet2_low_total_runtime"
 CONF_SENSOR_POWER_ON_COUNTER = "power_on_counter"
 CONF_SENSOR_SALT_POWER = "salt_power"
 CONF_SENSOR_SALT_CONTENT = "salt_content"
+CONF_SENSOR_SALT_CARTRIDGE_AGE_DAYS = "salt_cartridge_age_days"
+CONF_SENSOR_SALT_GENERATION_HOURS = "salt_generation_hours"
+CONF_SENSOR_SALT_ERROR_CODE = "salt_error_code"
 CONF_SENSOR_CONNECTION_COUNT = "connection_count"
 CONF_SENSOR_VOLTAGE_L1 = "voltage_l1"
 CONF_SENSOR_VOLTAGE_HEATER = "voltage_heater"
@@ -50,7 +53,6 @@ CONF_SENSOR_VOLTAGE_L2 = "voltage_l2"
 CONF_SENSOR_CURRENT_L1 = "current_l1"
 CONF_SENSOR_CURRENT_HEATER = "current_heater"
 CONF_SENSOR_CURRENT_L2 = "current_l2"
-CONF_SENSOR_CURRENT_L2X = "current_l2x"
 CONF_SENSOR_POWER_L1 = "power_l1"
 CONF_SENSOR_POWER_HEATER = "power_heater"
 CONF_SENSOR_POWER_L2 = "power_l2"
@@ -206,6 +208,21 @@ CONFIG_SCHEMA = cv.Schema(
             state_class=STATE_CLASS_MEASUREMENT,
             icon=ICON_GAUGE
         ),
+        cv.Optional(CONF_SENSOR_SALT_CARTRIDGE_AGE_DAYS): sensor.sensor_schema(
+            accuracy_decimals=0,
+            state_class=STATE_CLASS_MEASUREMENT,
+            icon=ICON_TIMER
+        ),
+        cv.Optional(CONF_SENSOR_SALT_GENERATION_HOURS): sensor.sensor_schema(
+            accuracy_decimals=0,
+            state_class=STATE_CLASS_TOTAL_INCREASING,
+            icon=ICON_TIMER
+        ),
+        cv.Optional(CONF_SENSOR_SALT_ERROR_CODE): sensor.sensor_schema(
+            accuracy_decimals=0,
+            state_class=STATE_CLASS_MEASUREMENT,
+            icon="mdi:alert-circle-outline"
+        ),
         cv.Optional(CONF_SENSOR_VOLTAGE_L1): sensor.sensor_schema(
             unit_of_measurement=UNIT_VOLT,
             state_class=STATE_CLASS_MEASUREMENT,
@@ -242,13 +259,6 @@ CONFIG_SCHEMA = cv.Schema(
             icon=ICON_CURRENT_AC
         ),
         cv.Optional(CONF_SENSOR_CURRENT_L2): sensor.sensor_schema(
-            unit_of_measurement=UNIT_AMPERE,
-            state_class=STATE_CLASS_MEASUREMENT,
-            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
-            accuracy_decimals=0,
-            icon=ICON_CURRENT_AC
-        ),
-        cv.Optional(CONF_SENSOR_CURRENT_L2X): sensor.sensor_schema(
             unit_of_measurement=UNIT_AMPERE,
             state_class=STATE_CLASS_MEASUREMENT,
             entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
@@ -447,6 +457,15 @@ async def to_code(config):
     if CONF_SENSOR_SALT_CONTENT in config:
         sens = await sensor.new_sensor(config[CONF_SENSOR_SALT_CONTENT])
         cg.add(server.set_salt_content_sensor(sens))
+    if CONF_SENSOR_SALT_CARTRIDGE_AGE_DAYS in config:
+        sens = await sensor.new_sensor(config[CONF_SENSOR_SALT_CARTRIDGE_AGE_DAYS])
+        cg.add(server.set_salt_cartridge_age_days_sensor(sens))
+    if CONF_SENSOR_SALT_GENERATION_HOURS in config:
+        sens = await sensor.new_sensor(config[CONF_SENSOR_SALT_GENERATION_HOURS])
+        cg.add(server.set_salt_generation_hours_sensor(sens))
+    if CONF_SENSOR_SALT_ERROR_CODE in config:
+        sens = await sensor.new_sensor(config[CONF_SENSOR_SALT_ERROR_CODE])
+        cg.add(server.set_salt_error_code_sensor(sens))
 
     if CONF_SENSOR_VOLTAGE_L1 in config:
         sens = await sensor.new_sensor(config[CONF_SENSOR_VOLTAGE_L1])

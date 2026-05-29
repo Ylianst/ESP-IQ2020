@@ -1,6 +1,9 @@
 #include "iq2020.h"
 #include "fan/iq2020_fan.h"
 #include "switch/iq2020_switch.h"
+#ifdef USE_BUTTON
+#include "button/iq2020_button.h"
+#endif
 #ifdef USE_SELECT
 #include "select/iq2020_select.h"
 #endif
@@ -35,6 +38,9 @@ esphome::iq2020_fan::IQ2020Fan* g_iq2020_fan[FANCOUNT];
 #ifdef USE_NUMBER
 esphome::iq2020_number::IQ2020Number* g_iq2020_number[NUMBERCOUNT];
 #endif
+#ifdef USE_BUTTON
+esphome::iq2020_button::IQ2020Button* g_iq2020_button[BUTTONCOUNT];
+#endif
 esphome::iq2020_climate::IQ2020Climate* g_iq2020_climate = NULL;
 
 using namespace esphome;
@@ -43,6 +49,13 @@ float fahrenheit_to_celsius(float f) { return (f - 32) * 5 / 9; }
 float celsius_to_fahrenheit(float c) { return c * 9 / 5 + 32; }
 int readCounter(unsigned char* data, int offset) { return (data[offset]) + (data[offset + 1] << 8) + (data[offset + 2] << 16) + (data[offset + 3] << 24); }
 int readCounterEx(unsigned char* data, int offset) { return (data[offset] << 24) + (data[offset + 1] << 16) + (data[offset + 2] << 8) + (data[offset + 3]); }
+static const char *salt_level_friendly_text(int salt_level) {
+	if (salt_level <= 24) return "red-low";
+	if (salt_level <= 36) return "yellow-low";
+	if (salt_level <= 84) return "green";
+	if (salt_level <= 96) return "yellow-high";
+	return "red-high";
+}
 
 void IQ2020Component::setup() {
 	for (int i = 0; i < SWITCHCOUNT; i++) { switch_state[i] = switch_pending[i] = NOT_SET; }
@@ -494,8 +507,9 @@ int IQ2020Component::processIQ2020Command() {
 	if (((processingBuffer[1] == 0x24) || (processingBuffer[1] == 0x29)) && (processingBuffer[2] == 0x01) && (processingBuffer[4] == 0x40) && (cmdlen == 21) && (processingBuffer[5] == 0x1E) && (processingBuffer[6] == 0x01)) {
 		// This is a command from IQ2020 to the Salt System
 		//ESP_LOGD(TAG, "Salt REQ Data, len=%d, cmd=%02x%02x", cmdlen, processingBuffer[5], processingBuffer[6]);
+		salt_module_address = processingBuffer[1];
 #ifdef USE_NUMBER
-		if (processingBuffer[7] <= 10) { setNumberState(NUMBER_SALT_POWER, processingBuffer[7]); }
+		if (processingBuffer[7] >= 1 && processingBuffer[7] <= 10) { setNumberState(NUMBER_SALT_POWER, processingBuffer[7]); }
 #endif
 
 #ifdef USE_BINARY_SENSOR
@@ -507,7 +521,7 @@ int IQ2020Component::processIQ2020Command() {
 
 		// ACE emulation
 		if (ace_emulation_ && (processingBuffer[1] == 0x24)) {
-			if (processingBuffer[7] <= 10) {
+			if (processingBuffer[7] >= 1 && processingBuffer[7] <= 10) {
 				salt_power = processingBuffer[7];
 #ifdef USE_NUMBER
 				setNumberState(NUMBER_SALT_POWER, salt_power);
@@ -531,7 +545,7 @@ int IQ2020Component::processIQ2020Command() {
 			sendIQ2020Command(0x01, 0x24, 0x80, cmd, sizeof(cmd));
 		}
 		else if (freshwater_emulation_ && (processingBuffer[1] == 0x29)) {
-			if (processingBuffer[7] <= 10) {
+			if (processingBuffer[7] >= 1 && processingBuffer[7] <= 10) {
 				salt_power = processingBuffer[7];
 #ifdef USE_NUMBER
 				setNumberState(NUMBER_SALT_POWER, salt_power);
@@ -547,19 +561,57 @@ int IQ2020Component::processIQ2020Command() {
 	if ((processingBuffer[1] == 0x01) && ((processingBuffer[2] == 0x24) || (processingBuffer[2] == 0x29)) && (processingBuffer[4] == 0x80) && (cmdlen == 21) && (processingBuffer[5] == 0x1E) && (processingBuffer[6] == 0x01)) {
 		// This is a reply command from the Salt System to the IQ2020
 		//ESP_LOGD(TAG, "Salt RSP Data, len=%d, cmd=%02x%02x, power=%d", cmdlen, processingBuffer[5], processingBuffer[6], processingBuffer[7]);
-		if ((processingBuffer[7] <= 10) && (salt_power != processingBuffer[7])) {
+		if ((processingBuffer[2] == 0x24) || (processingBuffer[2] == 0x29)) {
+			salt_module_address = processingBuffer[2];
+		}
+		if ((processingBuffer[7] >= 1 && processingBuffer[7] <= 10) && (salt_power != processingBuffer[7])) {
 			salt_power = processingBuffer[7];
 #ifdef USE_NUMBER
 			setNumberState(NUMBER_SALT_POWER, salt_power);
 #endif
 		}
-		if (salt_content != processingBuffer[9]) {
-			salt_content = processingBuffer[9] >> 4;
+		int decoded_salt_content = processingBuffer[9];
+		// Preserve legacy ACE behavior (0x24) while using freshwater salt decoding for 0x29.
+		if (salt_module_address == 0x24) {
+			decoded_salt_content = processingBuffer[9] >> 4;
+		}
+		if (salt_content != decoded_salt_content) {
+			salt_content = decoded_salt_content;
 #ifdef USE_SENSOR
 			if (this->salt_content_sensor_) this->salt_content_sensor_->publish_state((float)salt_content);
 #endif
+#ifdef USE_TEXT_SENSOR
+			if (this->salt_level_friendly_sensor_) this->salt_level_friendly_sensor_->publish_state(salt_level_friendly_text(salt_content));
+#endif
 		}
-		setSwitchState(SWITCH_SALT_BOOST, (processingBuffer[12] & 0x04) != 0);
+#ifdef USE_SENSOR
+		if (this->salt_cartridge_age_days_sensor_) this->salt_cartridge_age_days_sensor_->publish_state((float) processingBuffer[8]);
+		if (this->salt_generation_hours_sensor_) this->salt_generation_hours_sensor_->publish_state((float) processingBuffer[15]);
+		if (this->salt_error_code_sensor_) {
+			const uint16_t salt_error_code = ((uint16_t) processingBuffer[13] << 8) | processingBuffer[14];
+			this->salt_error_code_sensor_->publish_state((float) salt_error_code);
+		}
+#endif
+		// Preserve legacy ACE boost bit behavior (0x24) and freshwater MF-based behavior (0x29).
+		if (salt_module_address == 0x24) {
+			setSwitchState(SWITCH_SALT_BOOST, (processingBuffer[12] & 0x04) != 0);
+		}
+		else {
+			setSwitchState(SWITCH_SALT_BOOST, processingBuffer[12] == 0x07);
+		}
+#ifdef USE_TEXT_SENSOR
+		if (this->salt_module_status_sensor_) {
+			if ((processingBuffer[19] & 0x40) != 0) {
+				this->salt_module_status_sensor_->publish_state("idle");
+			}
+			else if ((processingBuffer[19] & 0x80) != 0) {
+				this->salt_module_status_sensor_->publish_state("generating_chlorine");
+			}
+			else {
+				this->salt_module_status_sensor_->publish_state("cleaning_cartridge");
+			}
+		}
+#endif
 	}
 
 	// IQ2020 -> SPA connection kit Response
@@ -908,11 +960,9 @@ int IQ2020Component::processIQ2020Command() {
 			int current_l1 = (processingBuffer[106] + (processingBuffer[107] << 8));
 			int current_heater = (processingBuffer[108] + (processingBuffer[109] << 8));
 			int current_l2 = (processingBuffer[110] + (processingBuffer[111] << 8));
-			int current_l2x = (processingBuffer[111] + (processingBuffer[110] << 8));
 			if (this->current_l1_sensor_) this->current_l1_sensor_->publish_state((float)current_l1);
 			if (this->current_heater_sensor_) this->current_heater_sensor_->publish_state((float)current_heater);
 			if (this->current_l2_sensor_) this->current_l2_sensor_->publish_state((float)current_l2);
-			if (this->current_l2x_sensor_) this->current_l2x_sensor_->publish_state((float)current_l2x);
 
 			// Power sensors
 			if (this->power_l1_sensor_) {
@@ -1110,10 +1160,17 @@ void IQ2020Component::switchAction(unsigned int switchid, int state) {
 			switch_state[switchid] = switch_pending[switchid] = state;
 		}
 		else
-		{   // Control a real ACE module
+		{   // Control a real salt module (legacy ACE or freshwater salt)
 			switch_pending[switchid] = state; // 0 = OFF, 1 = ON
-			unsigned char cmd[] = { 0x1E, 0x02, 0x03, (unsigned char)(state ? 0x08 : 0x00), 0x00 };
-			sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd));
+			if (salt_module_address == 0x29) {
+				unsigned char cmd[] = { 0x1E, 0x01, 0xFF, 0x02, 0xFF, 0xFF, (unsigned char)(state ? 0x01 : 0x02), 0x00, 0xFF, 0x01, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
+				sendIQ2020Command(0x29, 0x01, 0x40, cmd, sizeof(cmd));
+				next_poll = ::millis() + 100;
+			}
+			else {
+				unsigned char cmd[] = { 0x1E, 0x02, 0x03, (unsigned char)(state ? 0x08 : 0x00), 0x00 };
+				sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd));
+			}
 		}
 		break;
 	}
@@ -1247,9 +1304,16 @@ void IQ2020Component::numberAction(unsigned int numberid, int value) {
 	}
 	case NUMBER_SALT_POWER:
 	{
+		if (value < 1 || value > 10) return;
 		number_pending[NUMBER_SALT_POWER] = value;
-		unsigned char cmd[] = { 0x1E, 0x02, 0x01, (unsigned char)value, 0x00 };
-		sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Change salt power
+		if (salt_module_address == 0x29) {
+			unsigned char cmd[] = { 0x1E, 0x01, (unsigned char)value, 0x02, 0xFF, 0xFF, 0xFF, 0x00, 0xFF, 0x01, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
+			sendIQ2020Command(0x29, 0x01, 0x40, cmd, sizeof(cmd)); // Freshwater salt command
+		}
+		else {
+			unsigned char cmd[] = { 0x1E, 0x02, 0x01, (unsigned char)value, 0x00 };
+			sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Legacy ACE-style command
+		}
 		break;
 	}
 	case NUMBER_SALT_STATUS:
@@ -1291,6 +1355,27 @@ void IQ2020Component::numberAction(unsigned int numberid, int value) {
 	// If the command does not get confirmed, setup to try again
 	next_retry_count += SWITCH_RETRY_COUNT;
 	next_retry = ::millis() + SWITCH_RETRY_TIME;
+}
+#endif
+
+#ifdef USE_BUTTON
+void IQ2020Component::buttonAction(unsigned int buttonid) {
+	unsigned char cmd[] = { 0x1E, 0x01, 0xFF, 0x02, 0xFF, 0xFF, 0xFF, 0x00, 0xFF, 0x01, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
+	switch (buttonid) {
+	case BUTTON_SALT_TEST:
+		cmd[11] = 0x01; // FF 01 FF 01
+		sendIQ2020Command(0x29, 0x01, 0x40, cmd, sizeof(cmd));
+		break;
+	case BUTTON_RESET_CARTRIDGE:
+		cmd[8] = 0x02;  // 02 01 02 FF
+		cmd[10] = 0x02;
+		cmd[11] = 0xFF;
+		sendIQ2020Command(0x29, 0x01, 0x40, cmd, sizeof(cmd));
+		break;
+	default:
+		return;
+	}
+	next_poll = ::millis() + 100;
 }
 #endif
 
