@@ -2343,3 +2343,12 @@ binary_sensor:
 ```
 
 </details>
+
+## 2019 Caldera Makena (Paradise series)
+
+Status: Works as expected.
+
+<img width="1216" height="513" alt="image" src="https://github.com/user-attachments/assets/a8c8e1e2-0498-480f-a413-77ac34b184c4" />
+
+<img width="1920" height="1440" alt="image" src="https://github.com/user-attachments/assets/520bd991-5625-4020-80a6-7896c164fb57" />
+
