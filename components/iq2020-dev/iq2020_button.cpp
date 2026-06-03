@@ -1,6 +1,6 @@
 #include "esphome/core/log.h"
 #include "iq2020_button.h"
-#include "../iq2020.h"
+#include "iq2020.h"
 
 extern IQ2020Component *g_iq2020_main;
 extern esphome::iq2020_button::IQ2020Button *g_iq2020_button[BUTTONCOUNT];

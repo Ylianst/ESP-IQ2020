@@ -2,7 +2,7 @@
 #include "fan/iq2020_fan.h"
 #include "switch/iq2020_switch.h"
 #ifdef USE_BUTTON
-#include "button/iq2020_button.h"
+#include "iq2020_button.h"
 #endif
 #ifdef USE_SELECT
 #include "select/iq2020_select.h"
