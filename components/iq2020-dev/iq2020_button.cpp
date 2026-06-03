@@ -1,3 +1,5 @@
+#ifdef USE_BUTTON
+
 #include "esphome/core/log.h"
 #include "iq2020_button.h"
 #include "iq2020.h"
@@ -28,3 +30,5 @@ void IQ2020Button::dump_config() {
 
 }  // namespace iq2020_button
 }  // namespace esphome
+
+#endif  // USE_BUTTON
