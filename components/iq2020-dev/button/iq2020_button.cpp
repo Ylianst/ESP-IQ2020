@@ -1,8 +1,6 @@
-#ifdef USE_BUTTON
-
 #include "esphome/core/log.h"
 #include "iq2020_button.h"
-#include "iq2020.h"
+#include "../iq2020.h"
 
 extern IQ2020Component *g_iq2020_main;
 extern esphome::iq2020_button::IQ2020Button *g_iq2020_button[BUTTONCOUNT];
@@ -30,5 +28,3 @@ void IQ2020Button::dump_config() {
 
 }  // namespace iq2020_button
 }  // namespace esphome
-
-#endif  // USE_BUTTON

@@ -1,7 +1,5 @@
 #pragma once
 
-#ifdef USE_BUTTON
-
 #include "esphome/core/component.h"
 #include "esphome/components/button/button.h"
 
@@ -21,5 +19,3 @@ protected:
 
 }  // namespace iq2020_button
 }  // namespace esphome
-
-#endif  // USE_BUTTON

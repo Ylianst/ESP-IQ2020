@@ -3,7 +3,7 @@ import esphome.config_validation as cv
 from esphome.components import button
 from esphome.const import CONF_ID
 
-from . import ns
+from .. import ns
 
 CONF_BUTTON_DATAPOINT = "datapoint"
 
