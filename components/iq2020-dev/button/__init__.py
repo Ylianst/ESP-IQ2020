@@ -16,6 +16,7 @@ CONFIG_SCHEMA = button.button_schema(IQ2020Button).extend({
 }).extend(cv.COMPONENT_SCHEMA)
 
 async def to_code(config):
+    cg.add_define("USE_IQ2020_BUTTON")
     var = cg.new_Pvariable(config[CONF_ID])
     await cg.register_component(var, config)
     await button.register_button(var, config)

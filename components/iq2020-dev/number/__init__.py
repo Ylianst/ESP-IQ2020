@@ -24,6 +24,7 @@ CONFIG_SCHEMA = number.number_schema(IQ2020Number).extend({
 }).extend(cv.COMPONENT_SCHEMA)
 
 async def to_code(config):
+    cg.add_define("USE_IQ2020_NUMBER")
     server = cg.new_Pvariable(config[CONF_ID])
     await cg.register_component(server, config)
     await number.register_number(server, config, min_value=0, max_value=3, step=1)
