@@ -15,7 +15,7 @@ This document is the implementation guide for the **Freshwater salt module** on 
 ### Notification Payload (`01 29 80`)
 
 ```text
-1E 01 [PP] [CA] [SS] [CB] [MM] [MF] [EH] [EL] [GC] 00 00 69 [ST]
+1E 01 [PP] [CA] [SS] [CB] [MM] [MF] [EH] [EL] [GL] [GH] 00 69 [ST]
 ```
 
 #### Notification Byte Definitions
@@ -25,15 +25,15 @@ This document is the implementation guide for the **Freshwater salt module** on 
 | 1 | `HDR` | `0x1E` | Fixed payload header |
 | 2 | `CMD` | `0x01` | Fixed command type |
 | 3 | `PP` | `0x03..0x05` | Production level (system-config dependent) |
-| 4 | `CA` | `0x00..0xFF` | Cartridge age counter (days) |
+| 4 | `CA` | `0x00..0xFF` | Cartridge age related counter; no longer matches byte 6 after observations |
 | 5 | `SS` | `0x00..0x78` | Salt level value (0..120 display scale) |
-| 6 | `CB` | `0x00..0xFF` | Cartridge age mirror (same as `CA`) |
+| 6 | `CB` | `0x00..0xFF` | Cartridge age day counter candidate; tracks elapsed days more consistently than byte 4 in current captures |
 | 7 | `MM` | varies | Mode/state byte |
 | 8 | `MF` | `0x03,0x07,0x0A,0x0B,...` | Mode flag / panel state context |
 | 9 | `EH` | `0x00..0xFF` | Error code high byte |
 | 10 | `EL` | `0x00..0xFF` | Error code low byte |
-| 11 | `GC` | `0x00..0xFF` | Generation-hours counter |
-| 12 | — | `0x00` | Reserved |
+| 11 | `GL` | `0x00..0xFF` | Generation-hours low byte |
+| 12 | `GH` | `0x00..0xFF` | Generation-hours high byte |
 | 13 | — | `0x00` | Reserved |
 | 14 | — | `0x69` | Fixed marker byte |
 | 15 | `ST` | `0x41,0x81,0x01,...` | Status flags |
@@ -89,8 +89,13 @@ This section maps protocol fields to entities in `components/iq2020`.
 - `salt_content` sensor: from notification byte 5 (`SS`)
   - Freshwater (`0x29`): raw byte value
   - ACE legacy compatibility (`0x24`): value is decoded differently in component logic
-- `salt_cartridge_age_days`: notification byte 4 (`CA`)
-- `salt_generation_hours`: notification byte 11 (`GC`)
+- `salt_cartridge_age_days`:
+  - Freshwater (`0x29`): notification byte 6 (`CB`) because byte 4 reset on `2026-06-01` while byte 6 kept incrementing in observed payloads
+  - ACE legacy compatibility (`0x24`): existing byte 4 based behavior
+- `salt_generation_hours`:
+  - Freshwater (`0x29`): little-endian 16-bit value `(GH << 8) | GL` from bytes 12 and 11
+  - Example: `... 00 00 0F 01 00 69 01` => `0x010F` = `271` hours
+  - ACE legacy compatibility (`0x24`): existing single-byte behavior
 - `salt_error_code`: `(EH << 8) | EL` from bytes 9 and 10
 - `salt_module_status` text sensor:
   - `idle` when `ST bit6` is set
@@ -127,6 +132,13 @@ Approximate ppm conversion used for interpretation (**just a guess**):
   - bit 6 (`0x40`): idle indicator
   - bit 7 (`0x80`): active polarity/status bit used in active states
 - `MM`/`MF` encode operation phases; for control logic, use the documented command triggers and stable outputs above.
+
+## Field Notes
+
+- Observed payload on `2026-06-11 10:36:50 PM`: `1E 01 07 09 50 15 07 03 00 00 0F 01 00 69 01`
+- In that sample, generation hours rolled past `255` and now use bytes 11-12 as `0x010F` (`271`).
+- Byte 4 reset to `0x00` on `2026-06-01` and reached `0x09` by `2026-06-11`, so it does not currently look like a monotonically increasing cartridge age day counter.
+- Byte 6 was previously equal to byte 4 but continued rising to `0x15` in the same `2026-06-11` sample, making it the better current candidate for cartridge-age-in-days.
 
 ## Compatibility Note (ACE vs Freshwater)
 
