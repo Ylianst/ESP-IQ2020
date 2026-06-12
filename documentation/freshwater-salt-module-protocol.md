@@ -90,7 +90,7 @@ This section maps protocol fields to entities in `components/iq2020`.
   - Freshwater (`0x29`): raw byte value
   - ACE legacy compatibility (`0x24`): value is decoded differently in component logic
 - `salt_cartridge_age_days`:
-  - Freshwater (`0x29`): notification byte 6 (`CB`) because byte 4 reset on `2026-06-01` while byte 6 kept incrementing in observed payloads
+  - Freshwater (`0x29`): notification byte 6 (`CB`) because byte 4 reset while byte 6 kept incrementing in observed payloads
   - ACE legacy compatibility (`0x24`): existing byte 4 based behavior
 - `salt_generation_hours`:
   - Freshwater (`0x29`): little-endian 16-bit value `(GH << 8) | GL` from bytes 12 and 11
@@ -132,13 +132,6 @@ Approximate ppm conversion used for interpretation (**just a guess**):
   - bit 6 (`0x40`): idle indicator
   - bit 7 (`0x80`): active polarity/status bit used in active states
 - `MM`/`MF` encode operation phases; for control logic, use the documented command triggers and stable outputs above.
-
-## Field Notes
-
-- Observed payload on `2026-06-11 10:36:50 PM`: `1E 01 07 09 50 15 07 03 00 00 0F 01 00 69 01`
-- In that sample, generation hours rolled past `255` and now use bytes 11-12 as `0x010F` (`271`).
-- Byte 4 reset to `0x00` on `2026-06-01` and reached `0x09` by `2026-06-11`, so it does not currently look like a monotonically increasing cartridge age day counter.
-- Byte 6 was previously equal to byte 4 but continued rising to `0x15` in the same `2026-06-11` sample, making it the better current candidate for cartridge-age-in-days.
 
 ## Compatibility Note (ACE vs Freshwater)
 
