@@ -1,16 +1,16 @@
 #include "iq2020.h"
 #include "fan/iq2020_fan.h"
 #include "switch/iq2020_switch.h"
-#ifdef USE_BUTTON
+#ifdef USE_IQ2020_BUTTON
 #include "button/iq2020_button.h"
 #endif
-#ifdef USE_SELECT
+#ifdef USE_IQ2020_SELECT
 #include "select/iq2020_select.h"
 #endif
-#ifdef USE_TEXT
+#ifdef USE_IQ2020_TEXT
 #include "text/iq2020_text.h"
 #endif
-#ifdef USE_NUMBER
+#ifdef USE_IQ2020_NUMBER
 #include "number/iq2020_number.h"
 #endif
 #include "climate/iq2020_climate.h"
@@ -28,17 +28,17 @@ static const char* TAG = "iq2020";
 // These globals are ugly, but I can't figure out the correct system yet.
 IQ2020Component* g_iq2020_main = NULL;
 esphome::iq2020_switch::IQ2020Switch* g_iq2020_switch[SWITCHCOUNT];
-#ifdef USE_SELECT
+#ifdef USE_IQ2020_SELECT
 esphome::iq2020_select::IQ2020Select* g_iq2020_select[SELECTCOUNT];
 #endif
-#ifdef USE_TEXT
+#ifdef USE_IQ2020_TEXT
 esphome::iq2020_text::IQ2020Text* g_iq2020_text[TEXTCOUNT];
 #endif
 esphome::iq2020_fan::IQ2020Fan* g_iq2020_fan[FANCOUNT];
-#ifdef USE_NUMBER
+#ifdef USE_IQ2020_NUMBER
 esphome::iq2020_number::IQ2020Number* g_iq2020_number[NUMBERCOUNT];
 #endif
-#ifdef USE_BUTTON
+#ifdef USE_IQ2020_BUTTON
 esphome::iq2020_button::IQ2020Button* g_iq2020_button[BUTTONCOUNT];
 #endif
 esphome::iq2020_climate::IQ2020Climate* g_iq2020_climate = NULL;
@@ -59,10 +59,10 @@ static const char *salt_level_friendly_text(int salt_level) {
 
 void IQ2020Component::setup() {
 	for (int i = 0; i < SWITCHCOUNT; i++) { switch_state[i] = switch_pending[i] = NOT_SET; }
-#ifdef USE_SELECT
+#ifdef USE_IQ2020_SELECT
 	for (int i = 0; i < SELECTCOUNT; i++) { select_state[i] = select_pending[i] = NOT_SET; }
 #endif
-#ifdef USE_SELECT
+#ifdef USE_IQ2020_SELECT
 	for (int i = 0; i < NUMBERCOUNT; i++) { number_state[i] = number_pending[i] = NOT_SET; }
 #endif
 
@@ -92,7 +92,7 @@ void IQ2020Component::setup() {
 
 	this->publish_sensor();
 
-#ifdef USE_NUMBER
+#ifdef USE_IQ2020_NUMBER
 	setNumberState(NUMBER_SALT_STATUS, ace_status);
 #endif
 
@@ -120,7 +120,7 @@ void IQ2020Component::loop() {
 				break; // Only retry one command
 			}
 		}
-#ifdef USE_SELECT
+#ifdef USE_IQ2020_SELECT
 		for (int selectid = 0; selectid < SELECTCOUNT; selectid++) {
 			if (select_pending[selectid] != NOT_SET) {
 				ESP_LOGE(TAG, "Retry select %d set to %d", selectid, select_pending[selectid]);
@@ -131,7 +131,7 @@ void IQ2020Component::loop() {
 			}
 		}
 #endif
-#ifdef USE_NUMBER
+#ifdef USE_IQ2020_NUMBER
 		for (int numberid = 0; numberid < NUMBERCOUNT; numberid++) {
 			if (number_pending[numberid] != NOT_SET) {
 				ESP_LOGE(TAG, "Retry number %d set to %d", numberid, number_pending[numberid]);
@@ -390,7 +390,7 @@ int IQ2020Component::processIQ2020Command() {
 				}
 			}
 			else if ((processingBuffer[6] == 0x03) && (cmdlen == 9)) { // Audio source
-#ifdef USE_SELECT
+#ifdef USE_IQ2020_SELECT
 				setSelectState(SELECT_AUDIO_SOURCE, processingBuffer[7]);
 #endif
 			}
@@ -399,7 +399,7 @@ int IQ2020Component::processIQ2020Command() {
 				// processingBuffer[7] == 0x01 -- On
 				// processingBuffer[7] == 0x02 -- Off
 				//setSwitchState(SWITCH_AUDIO_POWER, (int)(processingBuffer[7] == 0x1));
-#ifdef USE_NUMBER
+#ifdef USE_IQ2020_NUMBER
 				ESP_LOGD(TAG, "AUDIO - Power=%d, Volume=%d, Treble=%d, Bass=%d, Balance=%d, Subwoofer=%d", processingBuffer[7], processingBuffer[8], processingBuffer[9], processingBuffer[10], processingBuffer[11], processingBuffer[12]);
 				if (audio_module_address == 0x33) { // 0x33
 					setNumberState(NUMBER_AUDIO_VOLUME, (processingBuffer[8] - 15) << 2);
@@ -418,7 +418,7 @@ int IQ2020Component::processIQ2020Command() {
 				char text[22];
 				text[0] = 0x19;
 				text[1] = 0x06;
-#ifdef USE_TEXT
+#ifdef USE_IQ2020_TEXT
 				if (g_iq2020_text[TEXT_SONG_TITLE] != NULL) {
 					text_len += g_iq2020_text[TEXT_SONG_TITLE]->text_value.size();
 					memcpy(text + 2, g_iq2020_text[TEXT_SONG_TITLE]->text_value.c_str(), text_len - 2);
@@ -434,7 +434,7 @@ int IQ2020Component::processIQ2020Command() {
 				char text[22];
 				text[0] = 0x19;
 				text[1] = 0x07;
-#ifdef USE_TEXT
+#ifdef USE_IQ2020_TEXT
 				if (g_iq2020_text[TEXT_ARTIST_NAME] != NULL) {
 					text_len += g_iq2020_text[TEXT_ARTIST_NAME]->text_value.size();
 					memcpy(text + 2, g_iq2020_text[TEXT_ARTIST_NAME]->text_value.c_str(), text_len - 2);
@@ -508,7 +508,7 @@ int IQ2020Component::processIQ2020Command() {
 		// This is a command from IQ2020 to the Salt System
 		//ESP_LOGD(TAG, "Salt REQ Data, len=%d, cmd=%02x%02x", cmdlen, processingBuffer[5], processingBuffer[6]);
 		salt_module_address = processingBuffer[1];
-#ifdef USE_NUMBER
+#ifdef USE_IQ2020_NUMBER
 		if (processingBuffer[7] >= 1 && processingBuffer[7] <= 10) { setNumberState(NUMBER_SALT_POWER, processingBuffer[7]); }
 #endif
 
@@ -523,7 +523,7 @@ int IQ2020Component::processIQ2020Command() {
 		if (ace_emulation_ && (processingBuffer[1] == 0x24)) {
 			if (processingBuffer[7] >= 1 && processingBuffer[7] <= 10) {
 				salt_power = processingBuffer[7];
-#ifdef USE_NUMBER
+#ifdef USE_IQ2020_NUMBER
 				setNumberState(NUMBER_SALT_POWER, salt_power);
 #endif
 			}
@@ -547,7 +547,7 @@ int IQ2020Component::processIQ2020Command() {
 		else if (freshwater_emulation_ && (processingBuffer[1] == 0x29)) {
 			if (processingBuffer[7] >= 1 && processingBuffer[7] <= 10) {
 				salt_power = processingBuffer[7];
-#ifdef USE_NUMBER
+#ifdef USE_IQ2020_NUMBER
 				setNumberState(NUMBER_SALT_POWER, salt_power);
 #endif
 			}
@@ -566,7 +566,7 @@ int IQ2020Component::processIQ2020Command() {
 		}
 		if ((processingBuffer[7] >= 1 && processingBuffer[7] <= 10) && (salt_power != processingBuffer[7])) {
 			salt_power = processingBuffer[7];
-#ifdef USE_NUMBER
+#ifdef USE_IQ2020_NUMBER
 			setNumberState(NUMBER_SALT_POWER, salt_power);
 #endif
 		}
@@ -629,7 +629,7 @@ int IQ2020Component::processIQ2020Command() {
 
 		if ((cmdlen == 9) && (processingBuffer[5] == 0xE1) && (processingBuffer[6] == 0x02) && (processingBuffer[7] == 0x06)) {
 			// Confirmation that the ACE/Freshwater salt system has changed state (not sure what state however)
-#ifdef USE_NUMBER
+#ifdef USE_IQ2020_NUMBER
 			setNumberState(NUMBER_SALT_POWER, NOT_SET);
 #endif
 			setSwitchState(SWITCH_SALT_BOOST, NOT_SET);
@@ -638,7 +638,7 @@ int IQ2020Component::processIQ2020Command() {
 		if ((cmdlen == 9) && (processingBuffer[5] == 0x19) && (processingBuffer[6] == 0x00) && (processingBuffer[7] == 0x06)) {
 			// Confirmation that the audio command was received
 			setSwitchState(SWITCH_AUDIO_POWER, NOT_SET);
-#ifdef USE_SELECT
+#ifdef USE_IQ2020_SELECT
 			setSelectState(SELECT_AUDIO_SOURCE, NOT_SET);
 #endif
 		}
@@ -648,10 +648,10 @@ int IQ2020Component::processIQ2020Command() {
 
 			// Status of audio module
 			setSwitchState(SWITCH_AUDIO_POWER, processingBuffer[7]); // Audio Power Status
-#ifdef USE_SELECT
+#ifdef USE_IQ2020_SELECT
 			setSelectState(SELECT_AUDIO_SOURCE, processingBuffer[14]); // Audio Source
 #endif
-#ifdef USE_NUMBER
+#ifdef USE_IQ2020_NUMBER
 			if (audio_module_address == 0x33) { // 0x33
 				setNumberState(NUMBER_AUDIO_VOLUME, (processingBuffer[8] - 15) << 2);
 			}
@@ -669,7 +669,7 @@ int IQ2020Component::processIQ2020Command() {
 			// Status of the Freshwater Salt System
 			if (salt_power != processingBuffer[7]) {
 				salt_power = processingBuffer[7];
-#ifdef USE_NUMBER
+#ifdef USE_IQ2020_NUMBER
 				setNumberState(NUMBER_SALT_POWER, salt_power);
 #endif
 			}
@@ -720,7 +720,7 @@ int IQ2020Component::processIQ2020Command() {
 			if (this->lights_color_exterior_sensor_) this->lights_color_exterior_sensor_->publish_state((float)processingBuffer[23]);
 #endif
 
-#ifdef USE_NUMBER
+#ifdef USE_IQ2020_NUMBER
 			for (int i = 0; i < 4; i++) {
 				int val = processingBuffer[8 + i];
 				if ((number_pending[NUMBER_LIGHTS1_INTENSITY + i] != NOT_SET) && (val != number_pending[NUMBER_LIGHTS1_INTENSITY + i])) {
@@ -733,7 +733,7 @@ int IQ2020Component::processIQ2020Command() {
 			}
 #endif
 
-#ifdef USE_SELECT
+#ifdef USE_IQ2020_SELECT
 			// Fix the lights cycle speed if needed
 			if (select_pending[SELECT_LIGHTS_CYCLE_SPEED] != NOT_SET) {
 				int changes = 0;
@@ -826,7 +826,7 @@ int IQ2020Component::processIQ2020Command() {
 
 		if (((cmdlen == 140) && (processingBuffer[5] == 0x02) && (processingBuffer[6] == 0x56)) || ((cmdlen == 123) && (processingBuffer[5] == 0x02) && (processingBuffer[6] == 0x55))) {
 			// This is the main status data (jets, temperature)
-#ifdef USE_SELECT
+#ifdef USE_IQ2020_SELECT
 			if (!versionstr.empty() && ((select_state[SELECT_AUDIO_SOURCE] != NOT_SET) || (got_audio_data > 3))) { next_poll = ::millis() + (this->polling_rate_ * 1000); } // Next poll
 #else
 			if (!versionstr.empty()) { next_poll = ::millis() + (this->polling_rate_ * 1000); } // Next poll
@@ -1202,7 +1202,7 @@ void IQ2020Component::switchAction(unsigned int switchid, int state) {
 	next_retry = ::millis() + SWITCH_RETRY_TIME;
 }
 
-#ifdef USE_SELECT
+#ifdef USE_IQ2020_SELECT
 void IQ2020Component::selectAction(unsigned int selectid, int state) {
 	ESP_LOGD(TAG, "selectAction, selectid = %d, state = %d", selectid, state);
 	switch (selectid) {
@@ -1264,7 +1264,7 @@ void IQ2020Component::selectAction(unsigned int selectid, int state) {
 }
 #endif
 
-#ifdef USE_NUMBER
+#ifdef USE_IQ2020_NUMBER
 void IQ2020Component::numberAction(unsigned int numberid, int value) {
 	ESP_LOGD(TAG, "numberAction, numberid = %d, value = %d", numberid, value);
 	number_pending[numberid] = value;
@@ -1366,7 +1366,7 @@ void IQ2020Component::numberAction(unsigned int numberid, int value) {
 }
 #endif
 
-#ifdef USE_BUTTON
+#ifdef USE_IQ2020_BUTTON
 void IQ2020Component::buttonAction(unsigned int buttonid) {
 	unsigned char cmd[] = { 0x1E, 0x01, 0xFF, 0x02, 0xFF, 0xFF, 0xFF, 0x00, 0xFF, 0x01, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
 	switch (buttonid) {
@@ -1427,7 +1427,7 @@ void IQ2020Component::setSwitchState(unsigned int switchid, int state) {
 
 // Update the state of a selector
 // If you set state to NOT_SET, that indicates that whatever state we wanted to go to, we got a confirmation.
-#ifdef USE_SELECT
+#ifdef USE_IQ2020_SELECT
 void IQ2020Component::setSelectState(unsigned int selectid, int state) {
 	ESP_LOGD(TAG, "setSelectState, selectid = %d, status = %d", selectid, state);
 	if (state == NOT_SET) {
@@ -1445,7 +1445,7 @@ void IQ2020Component::setSelectState(unsigned int selectid, int state) {
 
 // Update the state of a number
 // If you set state to NOT_SET, that indicates that whatever state we wanted to go to, we got a confirmation.
-#ifdef USE_NUMBER
+#ifdef USE_IQ2020_NUMBER
 void IQ2020Component::setNumberState(unsigned int numberid, int value) {
 	ESP_LOGD(TAG, "setNumberState, numberid = %d, value = %d", numberid, value);
 	if (value == NOT_SET) {
@@ -1470,7 +1470,7 @@ void IQ2020Component::pollState() {
 		return;
 	}
 
-#ifdef USE_SELECT
+#ifdef USE_IQ2020_SELECT
 	// If we don't have the audio status, fetch it now.
 	if ((got_audio_data < 3) && (select_state[SELECT_AUDIO_SOURCE] == NOT_SET || switch_state[SWITCH_AUDIO_POWER] == NOT_SET)) {
 		ESP_LOGD(TAG, "Poll Audio");

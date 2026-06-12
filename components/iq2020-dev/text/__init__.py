@@ -21,6 +21,7 @@ CONFIG_SCHEMA = text.text_schema(IQ2020Text).extend({
 }).extend(cv.COMPONENT_SCHEMA)
 
 async def to_code(config):
+    cg.add_define("USE_IQ2020_TEXT")
     server = cg.new_Pvariable(config[CONF_ID])
     await cg.register_component(server, config)
     await text.register_text(server, config)

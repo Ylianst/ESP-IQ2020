@@ -20,6 +20,7 @@ CONFIG_SCHEMA = select.select_schema(IQ2020Select).extend({
 }).extend(cv.COMPONENT_SCHEMA)
 
 async def to_code(config):
+    cg.add_define("USE_IQ2020_SELECT")
     server = cg.new_Pvariable(config[CONF_ID])
     await cg.register_component(server, config)
 

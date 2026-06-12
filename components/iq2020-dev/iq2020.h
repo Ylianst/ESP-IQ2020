@@ -13,7 +13,7 @@
 #ifdef USE_TEXT_SENSOR
 #include "esphome/components/text_sensor/text_sensor.h"
 #endif
-#ifdef USE_BUTTON
+#ifdef USE_IQ2020_BUTTON
 #include "esphome/components/button/button.h"
 #endif
 
@@ -153,7 +153,7 @@ public:
 	void set_salt_module_status_sensor(esphome::text_sensor::TextSensor *text) { this->salt_module_status_sensor_ = text; }
 	void set_salt_level_friendly_sensor(esphome::text_sensor::TextSensor *text) { this->salt_level_friendly_sensor_ = text; }
 #endif
-#ifdef USE_BUTTON
+#ifdef USE_IQ2020_BUTTON
 	void buttonAction(unsigned int buttonid);
 #endif
 
@@ -166,10 +166,10 @@ public:
 
 	void set_port(uint16_t port) { this->port_ = port; }
 	void switchAction(unsigned int switchid, int state);
-#ifdef USE_SELECT
+#ifdef USE_IQ2020_SELECT
 	void selectAction(unsigned int selectid, int state);
 #endif
-#ifdef USE_NUMBER
+#ifdef USE_IQ2020_NUMBER
 	void numberAction(unsigned int numberid, int state);
 #endif
 	void setTempAction(float newtemp);
@@ -293,11 +293,11 @@ protected:
 	std::string versionstr;
 	int switch_state[SWITCHCOUNT];   // Current state of all switches
 	int switch_pending[SWITCHCOUNT]; // Desired state of all switches
-#ifdef USE_SELECT
+#ifdef USE_IQ2020_SELECT
 	int select_state[SELECTCOUNT];   // Current state of all selects
 	int select_pending[SELECTCOUNT]; // Desired state of all selects
 #endif
-#ifdef USE_NUMBER
+#ifdef USE_IQ2020_NUMBER
 	int number_state[NUMBERCOUNT];   // Current state of all numbers
 	int number_pending[NUMBERCOUNT]; // Desired state of all numbers
 #endif
