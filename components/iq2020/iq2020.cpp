@@ -585,8 +585,16 @@ int IQ2020Component::processIQ2020Command() {
 #endif
 		}
 #ifdef USE_SENSOR
-		if (this->salt_cartridge_age_days_sensor_) this->salt_cartridge_age_days_sensor_->publish_state((float) processingBuffer[8]);
-		if (this->salt_generation_hours_sensor_) this->salt_generation_hours_sensor_->publish_state((float) processingBuffer[15]);
+		if (this->salt_cartridge_age_days_sensor_) {
+			const uint8_t cartridge_age_days = (salt_module_address == 0x29) ? processingBuffer[10] : processingBuffer[8];
+			this->salt_cartridge_age_days_sensor_->publish_state((float) cartridge_age_days);
+		}
+		if (this->salt_generation_hours_sensor_) {
+			const uint16_t salt_generation_hours = (salt_module_address == 0x29)
+				? (((uint16_t) processingBuffer[16] << 8) | processingBuffer[15])
+				: processingBuffer[15];
+			this->salt_generation_hours_sensor_->publish_state((float) salt_generation_hours);
+		}
 		if (this->salt_error_code_sensor_) {
 			const uint16_t salt_error_code = ((uint16_t) processingBuffer[13] << 8) | processingBuffer[14];
 			this->salt_error_code_sensor_->publish_state((float) salt_error_code);
