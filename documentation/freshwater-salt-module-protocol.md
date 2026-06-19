@@ -71,7 +71,7 @@ Use these request payloads with header `29 01 40`.
 | Action | Request payload |
 |---|---|
 | Standard poll | `1E 01 FF 02 FF FF FF 00 FF 01 FF FF FF FF FF` |
-| Set production level (`PL=1..10` in component) | `1E 01 [PL] 02 FF FF FF 00 FF 01 FF FF FF FF FF` |
+| Set production level (`PL=0..10` in component) | `1E 01 [PL] 02 FF FF FF 00 FF 01 FF FF FF FF FF` |
 | Boost ON | `1E 01 FF 02 FF FF 01 00 FF 01 FF FF FF FF FF` |
 | Boost OFF | `1E 01 FF 02 FF FF 02 00 FF 01 FF FF FF FF FF` |
 | Salt test | `1E 01 FF 02 FF FF FF 00 FF 01 FF 01 FF FF FF` |

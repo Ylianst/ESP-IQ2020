@@ -509,7 +509,7 @@ int IQ2020Component::processIQ2020Command() {
 		//ESP_LOGD(TAG, "Salt REQ Data, len=%d, cmd=%02x%02x", cmdlen, processingBuffer[5], processingBuffer[6]);
 		salt_module_address = processingBuffer[1];
 #ifdef USE_IQ2020_NUMBER
-		if (processingBuffer[7] >= 1 && processingBuffer[7] <= 10) { setNumberState(NUMBER_SALT_POWER, processingBuffer[7]); }
+		if (processingBuffer[7] <= 10) { setNumberState(NUMBER_SALT_POWER, processingBuffer[7]); }
 #endif
 
 #ifdef USE_BINARY_SENSOR
@@ -521,7 +521,7 @@ int IQ2020Component::processIQ2020Command() {
 
 		// ACE emulation
 		if (ace_emulation_ && (processingBuffer[1] == 0x24)) {
-			if (processingBuffer[7] >= 1 && processingBuffer[7] <= 10) {
+			if (processingBuffer[7] <= 10) {
 				salt_power = processingBuffer[7];
 #ifdef USE_IQ2020_NUMBER
 				setNumberState(NUMBER_SALT_POWER, salt_power);
@@ -545,7 +545,7 @@ int IQ2020Component::processIQ2020Command() {
 			sendIQ2020Command(0x01, 0x24, 0x80, cmd, sizeof(cmd));
 		}
 		else if (freshwater_emulation_ && (processingBuffer[1] == 0x29)) {
-			if (processingBuffer[7] >= 1 && processingBuffer[7] <= 10) {
+			if (processingBuffer[7] <= 10) {
 				salt_power = processingBuffer[7];
 #ifdef USE_IQ2020_NUMBER
 				setNumberState(NUMBER_SALT_POWER, salt_power);
@@ -564,7 +564,7 @@ int IQ2020Component::processIQ2020Command() {
 		if ((processingBuffer[2] == 0x24) || (processingBuffer[2] == 0x29)) {
 			salt_module_address = processingBuffer[2];
 		}
-		if ((processingBuffer[7] >= 1 && processingBuffer[7] <= 10) && (salt_power != processingBuffer[7])) {
+		if ((processingBuffer[7] <= 10) && (salt_power != processingBuffer[7])) {
 			salt_power = processingBuffer[7];
 #ifdef USE_IQ2020_NUMBER
 			setNumberState(NUMBER_SALT_POWER, salt_power);
