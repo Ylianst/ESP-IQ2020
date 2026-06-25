@@ -64,9 +64,10 @@
 #define NUMBER_LIGHTS2_INTENSITY 8     // Bartop lights intensity (0 to 5)
 #define NUMBER_LIGHTS3_INTENSITY 9     // Pillow lights intensity (0 to 5)
 #define NUMBER_LIGHTS4_INTENSITY 10    // Exterior lights intensity (0 to 5)
-#define BUTTONCOUNT 2
+#define BUTTONCOUNT 3
 #define BUTTON_SALT_TEST 0
 #define BUTTON_RESET_CARTRIDGE 1
+#define BUTTON_CONFIRM_MANUAL_TEST 2
 #define NOT_SET -127
 
 class IQ2020Component : public esphome::Component, public esphome::api::CustomAPIDevice {
@@ -144,6 +145,7 @@ public:
 	void set_iq_hoursleft_sensor(esphome::sensor::Sensor *sensor) { this->iq_hoursleft_sensor_ = sensor; }
 	void set_rtc_timestamp_sensor(esphome::sensor::Sensor *sensor) { this->rtc_timestamp_sensor_ = sensor; }
 	void set_salt_cartridge_age_days_sensor(esphome::sensor::Sensor *sensor) { this->salt_cartridge_age_days_sensor_ = sensor; }
+	void set_salt_days_since_manual_test_sensor(esphome::sensor::Sensor *sensor) { this->salt_days_since_manual_test_sensor_ = sensor; }
 	void set_salt_generation_hours_sensor(esphome::sensor::Sensor *sensor) { this->salt_generation_hours_sensor_ = sensor; }
 	void set_salt_error_code_sensor(esphome::sensor::Sensor *sensor) { this->salt_error_code_sensor_ = sensor; }
 #endif
@@ -274,6 +276,7 @@ protected:
 	esphome::sensor::Sensor *iq_hoursleft_sensor_;
 	esphome::sensor::Sensor *rtc_timestamp_sensor_;
 	esphome::sensor::Sensor *salt_cartridge_age_days_sensor_;
+	esphome::sensor::Sensor *salt_days_since_manual_test_sensor_;
 	esphome::sensor::Sensor *salt_generation_hours_sensor_;
 	esphome::sensor::Sensor *salt_error_code_sensor_;
 #endif

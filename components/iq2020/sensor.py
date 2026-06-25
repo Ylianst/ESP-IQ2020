@@ -44,6 +44,7 @@ CONF_SENSOR_POWER_ON_COUNTER = "power_on_counter"
 CONF_SENSOR_SALT_POWER = "salt_power"
 CONF_SENSOR_SALT_CONTENT = "salt_content"
 CONF_SENSOR_SALT_CARTRIDGE_AGE_DAYS = "salt_cartridge_age_days"
+CONF_SENSOR_SALT_DAYS_SINCE_MANUAL_TEST = "salt_days_since_manual_test"
 CONF_SENSOR_SALT_GENERATION_HOURS = "salt_generation_hours"
 CONF_SENSOR_SALT_ERROR_CODE = "salt_error_code"
 CONF_SENSOR_CONNECTION_COUNT = "connection_count"
@@ -209,6 +210,11 @@ CONFIG_SCHEMA = cv.Schema(
             icon=ICON_GAUGE
         ),
         cv.Optional(CONF_SENSOR_SALT_CARTRIDGE_AGE_DAYS): sensor.sensor_schema(
+            accuracy_decimals=0,
+            state_class=STATE_CLASS_MEASUREMENT,
+            icon=ICON_TIMER
+        ),
+        cv.Optional(CONF_SENSOR_SALT_DAYS_SINCE_MANUAL_TEST): sensor.sensor_schema(
             accuracy_decimals=0,
             state_class=STATE_CLASS_MEASUREMENT,
             icon=ICON_TIMER
@@ -460,6 +466,9 @@ async def to_code(config):
     if CONF_SENSOR_SALT_CARTRIDGE_AGE_DAYS in config:
         sens = await sensor.new_sensor(config[CONF_SENSOR_SALT_CARTRIDGE_AGE_DAYS])
         cg.add(server.set_salt_cartridge_age_days_sensor(sens))
+    if CONF_SENSOR_SALT_DAYS_SINCE_MANUAL_TEST in config:
+        sens = await sensor.new_sensor(config[CONF_SENSOR_SALT_DAYS_SINCE_MANUAL_TEST])
+        cg.add(server.set_salt_days_since_manual_test_sensor(sens))
     if CONF_SENSOR_SALT_GENERATION_HOURS in config:
         sens = await sensor.new_sensor(config[CONF_SENSOR_SALT_GENERATION_HOURS])
         cg.add(server.set_salt_generation_hours_sensor(sens))

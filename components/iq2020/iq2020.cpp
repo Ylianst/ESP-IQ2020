@@ -589,6 +589,9 @@ int IQ2020Component::processIQ2020Command() {
 			const uint8_t cartridge_age_days = (salt_module_address == 0x29) ? processingBuffer[10] : processingBuffer[8];
 			this->salt_cartridge_age_days_sensor_->publish_state((float) cartridge_age_days);
 		}
+		if (this->salt_days_since_manual_test_sensor_) {
+			this->salt_days_since_manual_test_sensor_->publish_state((float) processingBuffer[8]);
+		}
 		if (this->salt_generation_hours_sensor_) {
 			const uint16_t salt_generation_hours = (salt_module_address == 0x29)
 				? (((uint16_t) processingBuffer[16] << 8) | processingBuffer[15])
@@ -1378,6 +1381,10 @@ void IQ2020Component::buttonAction(unsigned int buttonid) {
 		cmd[8] = 0x02;  // 02 01 02 FF
 		cmd[10] = 0x02;
 		cmd[11] = 0xFF;
+		sendIQ2020Command(0x29, 0x01, 0x40, cmd, sizeof(cmd));
+		break;
+	case BUTTON_CONFIRM_MANUAL_TEST:
+		cmd[8] = 0x01; // 01 01 FF FF
 		sendIQ2020Command(0x29, 0x01, 0x40, cmd, sizeof(cmd));
 		break;
 	default:
