@@ -25,7 +25,7 @@ This document is the implementation guide for the **Freshwater salt module** on 
 | 1 | `HDR` | `0x1E` | Fixed payload header |
 | 2 | `CMD` | `0x01` | Fixed command type |
 | 3 | `PP` | `0x03..0x05` | Production level (system-config dependent) |
-| 4 | `CA` | `0x00..0xFF` | Cartridge age related counter; no longer matches byte 6 after observations |
+| 4 | `CA` | `0x00..0xFF` | Days since last manual water test confirmation; resets when confirm is sent |
 | 5 | `SS` | `0x00..0x78` | Salt level value (0..120 display scale) |
 | 6 | `CB` | `0x00..0xFF` | Cartridge age day counter candidate; tracks elapsed days more consistently than byte 4 in current captures |
 | 7 | `MM` | varies | Mode/state byte |
@@ -74,6 +74,7 @@ Use these request payloads with header `29 01 40`.
 | Set production level (`PL=0..10` in component) | `1E 01 [PL] 02 FF FF FF 00 FF 01 FF FF FF FF FF` |
 | Boost ON | `1E 01 FF 02 FF FF 01 00 FF 01 FF FF FF FF FF` |
 | Boost OFF | `1E 01 FF 02 FF FF 02 00 FF 01 FF FF FF FF FF` |
+| Confirm manual water test | `1E 01 FF 02 FF FF FF 00 01 01 FF FF FF FF FF` |
 | Salt test | `1E 01 FF 02 FF FF FF 00 FF 01 FF 01 FF FF FF` |
 | Reset cartridge age | `1E 01 FF 02 FF FF FF 00 02 01 02 FF FF FF FF` |
 
@@ -92,6 +93,9 @@ This section maps protocol fields to entities in `components/iq2020`.
 - `salt_cartridge_age_days`:
   - Freshwater (`0x29`): notification byte 6 (`CB`) because byte 4 reset while byte 6 kept incrementing in observed payloads
   - ACE legacy compatibility (`0x24`): existing byte 4 based behavior
+- `salt_days_since_manual_test` sensor: notification byte 4 (`CA`)
+  - Freshwater (`0x29`): days since last manual water-test confirmation
+  - Counter resets when the confirm command is sent
 - `salt_generation_hours`:
   - Freshwater (`0x29`): little-endian 16-bit value `(GH << 8) | GL` from bytes 12 and 11
   - Example: `... 00 00 0F 01 00 69 01` => `0x010F` = `271` hours

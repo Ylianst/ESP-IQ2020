@@ -208,6 +208,9 @@ button:
     # Freshwater Salt only
     name: Reset Salt Cartridge
     datapoint: 1
+  - platform: iq2020
+    name: Confirm Salt Level
+    datapoint: 2
     
 binary_sensor:    
   - platform: status
@@ -233,6 +236,9 @@ sensor:
     # ACE/Freshwater Salt
     salt_content:
       name: Salt Level
+    # Freshwater Salt only
+    salt_days_since_manual_test:
+      name: Salt Last Manual Test (Days)
     # Freshwater Salt only
     salt_cartridge_age_days:
       name: Salt Cartridge Age (Days)
