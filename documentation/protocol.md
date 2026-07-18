@@ -650,6 +650,12 @@ The `aa` mode byte can be one of the following five values:
 0x04 - Auto Saver
 ```
 
+The `/Boost` modes (Heat w/Boost and Auto w/Boost) are modes where the
+controller is allowed to use the hot tub's induction heating in addition to the
+heat pump. This heats the water faster at the cost of using more power. The
+non-boost modes (Heat Saver, Chill and Auto Saver) rely on the heat pump alone.
+
+
 The `bb` compressor state byte indicates what the compressor is currently doing.
 The compressor can be idle, or run in either direction to heat or cool the
 water:
