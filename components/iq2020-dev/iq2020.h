@@ -196,6 +196,7 @@ public:
 	void numberAction(unsigned int numberid, int state);
 #endif
 	void setTempAction(float newtemp);
+	void setCoolzoneMode(int mode);
 	void setTime(int hour, int minute, int second, int year, int month, int day);
 
 protected:
@@ -364,7 +365,6 @@ protected:
 	void setSelectState(unsigned int selectid, int state);
 	void setNumberState(unsigned int numberid, int value);
 	void pollState();
-	void setCoolzoneMode(int mode);
 	int climateActionCode();
 };
 
