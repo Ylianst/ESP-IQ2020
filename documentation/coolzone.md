@@ -4,10 +4,10 @@ The Coolzone is an optional heat pump that can be attached to the hot tub. In ad
 
 ## Enabling Coolzone
 
-Coolzone support is off by default. To turn it on, add `coolzone: true` in the `iq2020-dev` section of your configuration like this:
+Coolzone support is off by default. To turn it on, add `coolzone: true` in the `iq2020` section of your configuration like this:
 
 ```yaml
-iq2020-dev:
+iq2020:
    uart_id: SpaConnection
    coolzone: true
 ```
@@ -44,7 +44,7 @@ The Coolzone reports two values: the current mode and the current compressor sta
 
 ```yaml
 sensor:
-  - platform: iq2020-dev
+  - platform: iq2020
     coolzone_mode_raw:
       name: Coolzone Mode Raw
     coolzone_state_raw:
