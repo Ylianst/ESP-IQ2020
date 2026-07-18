@@ -631,8 +631,6 @@ All Coolzone commands and responses use the `0x1D07` command. Requests are sent
 from the Spa Connection Kit (`0x1F`) to the IQ2020 controller (`0x01`) and the
 controller replies back to `0x1F`.
 
-## Response Format
-
 Every response is two data bytes following the command:
 
 ```
@@ -665,16 +663,12 @@ water:
 If the response is `1F 01 80 1D07 FFFF` (both bytes `0xFF`), the Coolzone heat
 pump is not installed.
 
-## Polling the State
-
 To poll the current mode and compressor state, send the mode byte `0xFF`:
 
 ```
 01 1F 40 1D07 FF      <-- Request current state
 1F 01 80 1D07 0101    <-- Response: mode 0x01 (Heat Saver), compressor 0x01 (Standby)
 ```
-
-## Setting the Mode
 
 To set a mode, send the desired mode byte followed by `0x00`. The controller
 responds with the new mode and the current compressor state.
