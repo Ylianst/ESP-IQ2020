@@ -509,7 +509,7 @@ int IQ2020Component::processIQ2020Command() {
 		//ESP_LOGD(TAG, "Salt REQ Data, len=%d, cmd=%02x%02x", cmdlen, processingBuffer[5], processingBuffer[6]);
 		salt_module_address = processingBuffer[1];
 #ifdef USE_IQ2020_NUMBER
-		if (processingBuffer[7] >= 1 && processingBuffer[7] <= 10) { setNumberState(NUMBER_SALT_POWER, processingBuffer[7]); }
+		if (processingBuffer[7] <= 10) { setNumberState(NUMBER_SALT_POWER, processingBuffer[7]); }
 #endif
 
 #ifdef USE_BINARY_SENSOR
@@ -521,7 +521,7 @@ int IQ2020Component::processIQ2020Command() {
 
 		// ACE emulation
 		if (ace_emulation_ && (processingBuffer[1] == 0x24)) {
-			if (processingBuffer[7] >= 1 && processingBuffer[7] <= 10) {
+			if (processingBuffer[7] <= 10) {
 				salt_power = processingBuffer[7];
 #ifdef USE_IQ2020_NUMBER
 				setNumberState(NUMBER_SALT_POWER, salt_power);
@@ -545,7 +545,7 @@ int IQ2020Component::processIQ2020Command() {
 			sendIQ2020Command(0x01, 0x24, 0x80, cmd, sizeof(cmd));
 		}
 		else if (freshwater_emulation_ && (processingBuffer[1] == 0x29)) {
-			if (processingBuffer[7] >= 1 && processingBuffer[7] <= 10) {
+			if (processingBuffer[7] <= 10) {
 				salt_power = processingBuffer[7];
 #ifdef USE_IQ2020_NUMBER
 				setNumberState(NUMBER_SALT_POWER, salt_power);
@@ -564,7 +564,7 @@ int IQ2020Component::processIQ2020Command() {
 		if ((processingBuffer[2] == 0x24) || (processingBuffer[2] == 0x29)) {
 			salt_module_address = processingBuffer[2];
 		}
-		if ((processingBuffer[7] >= 1 && processingBuffer[7] <= 10) && (salt_power != processingBuffer[7])) {
+		if ((processingBuffer[7] <= 10) && (salt_power != processingBuffer[7])) {
 			salt_power = processingBuffer[7];
 #ifdef USE_IQ2020_NUMBER
 			setNumberState(NUMBER_SALT_POWER, salt_power);
@@ -585,8 +585,19 @@ int IQ2020Component::processIQ2020Command() {
 #endif
 		}
 #ifdef USE_SENSOR
-		if (this->salt_cartridge_age_days_sensor_) this->salt_cartridge_age_days_sensor_->publish_state((float) processingBuffer[8]);
-		if (this->salt_generation_hours_sensor_) this->salt_generation_hours_sensor_->publish_state((float) processingBuffer[15]);
+		if (this->salt_cartridge_age_days_sensor_) {
+			const uint8_t cartridge_age_days = (salt_module_address == 0x29) ? processingBuffer[10] : processingBuffer[8];
+			this->salt_cartridge_age_days_sensor_->publish_state((float) cartridge_age_days);
+		}
+		if (this->salt_days_since_manual_test_sensor_) {
+			this->salt_days_since_manual_test_sensor_->publish_state((float) processingBuffer[8]);
+		}
+		if (this->salt_generation_hours_sensor_) {
+			const uint16_t salt_generation_hours = (salt_module_address == 0x29)
+				? (((uint16_t) processingBuffer[16] << 8) | processingBuffer[15])
+				: processingBuffer[15];
+			this->salt_generation_hours_sensor_->publish_state((float) salt_generation_hours);
+		}
 		if (this->salt_error_code_sensor_) {
 			const uint16_t salt_error_code = ((uint16_t) processingBuffer[13] << 8) | processingBuffer[14];
 			this->salt_error_code_sensor_->publish_state((float) salt_error_code);
@@ -1370,6 +1381,10 @@ void IQ2020Component::buttonAction(unsigned int buttonid) {
 		cmd[8] = 0x02;  // 02 01 02 FF
 		cmd[10] = 0x02;
 		cmd[11] = 0xFF;
+		sendIQ2020Command(0x29, 0x01, 0x40, cmd, sizeof(cmd));
+		break;
+	case BUTTON_CONFIRM_MANUAL_TEST:
+		cmd[8] = 0x01; // 01 01 FF FF
 		sendIQ2020Command(0x29, 0x01, 0x40, cmd, sizeof(cmd));
 		break;
 	default:
