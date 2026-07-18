@@ -96,6 +96,10 @@ void IQ2020Component::setup() {
 	setNumberState(NUMBER_SALT_STATUS, ace_status);
 #endif
 
+	// Enable coolzone modes on the climate control if configured. This runs after the climate
+	// component's own setup(), so g_iq2020_climate is available here.
+	if (coolzone_enabled_ && (g_iq2020_climate != NULL)) { g_iq2020_climate->enableCoolzone(); }
+
 	// Send initial polling commands
 	next_poll = ::millis() + 5000;
 	pollState();
@@ -678,6 +682,34 @@ int IQ2020Component::processIQ2020Command() {
 			}
 		}
 
+		if ((cmdlen == 10) && (processingBuffer[5] == 0x1D) && (processingBuffer[6] == 0x07)) {
+			// Coolzone heat pump status: 1F 01 80 1D07 aabb (aa = mode, bb = compressor state).
+			// This is processed whether the poll came from us or the official Spa Connection Kit.
+			unsigned char cz_mode = processingBuffer[7];
+			unsigned char cz_state = processingBuffer[8];
+
+			if ((cz_mode == 0xFF) && (cz_state == 0xFF)) {
+				// Coolzone heat pump is not installed.
+				if (coolzone_present != 0) {
+					coolzone_present = 0;
+					ESP_LOGD(TAG, "Coolzone not installed");
+				}
+			}
+			else {
+				coolzone_present = 1;
+				coolzone_mode = cz_mode;
+				coolzone_state = cz_state;
+				ESP_LOGD(TAG, "Coolzone mode=%d, state=%d", coolzone_mode, coolzone_state);
+#ifdef USE_SENSOR
+				if (this->coolzone_mode_raw_sensor_) this->coolzone_mode_raw_sensor_->publish_state((float)coolzone_mode);
+				if (this->coolzone_state_raw_sensor_) this->coolzone_state_raw_sensor_->publish_state((float)coolzone_state);
+#endif
+				if (coolzone_enabled_ && (g_iq2020_climate != NULL)) {
+					g_iq2020_climate->updateCoolzone(coolzone_mode, climateActionCode());
+				}
+			}
+		}
+
 		if ((cmdlen == 9) && (processingBuffer[5] == 0x17) && (processingBuffer[6] == 0x02) && (processingBuffer[7] == 0x06)) {
 			// Confirmation that the pending light command was received
 			setSwitchState(SWITCH_LIGHTS, NOT_SET);
@@ -821,8 +853,8 @@ int IQ2020Component::processIQ2020Command() {
 			}
 #endif
 			if (g_iq2020_climate != NULL) {
-				if (temp_celsius) { g_iq2020_climate->updateTempsC(target_temp, current_temp, temp_action); }
-				else { g_iq2020_climate->updateTempsF(target_temp, current_temp, temp_action); }
+				if (temp_celsius) { g_iq2020_climate->updateTempsC(target_temp, current_temp, climateActionCode()); }
+				else { g_iq2020_climate->updateTempsF(target_temp, current_temp, climateActionCode()); }
 			}
 			next_poll = ::millis() + 5000; // Perform state polling in the next 5 seconds to update heater status.
 		}
@@ -834,6 +866,14 @@ int IQ2020Component::processIQ2020Command() {
 #else
 			if (!versionstr.empty()) { next_poll = ::millis() + (this->polling_rate_ * 1000); } // Next poll
 #endif
+
+			// Poll the coolzone heat pump right after our own status poll. When the official Spa Connection
+			// Kit is present (connectionKit > 1) it already polls the coolzone, so we stay silent and just
+			// listen to the responses to avoid adding needless RS485 bus traffic.
+			if (coolzone_enabled_ && (connectionKit <= 1) && (coolzone_present != 0)) {
+				unsigned char coolzonePollCmd[] = { 0x1D, 0x07, 0xFF };
+				sendIQ2020Command(0x01, 0x1F, 0x40, coolzonePollCmd, sizeof(coolzonePollCmd)); // Poll coolzone state
+			}
 
 			// Read state flags
 			unsigned char flags1 = processingBuffer[8];
@@ -928,8 +968,8 @@ int IQ2020Component::processIQ2020Command() {
 				current_temp = _current_temp;
 				temp_action = (heaterActive != 0);
 				if (g_iq2020_climate != NULL) {
-					if (temp_celsius) { g_iq2020_climate->updateTempsC(target_temp, current_temp, temp_action); }
-					else { g_iq2020_climate->updateTempsF(target_temp, current_temp, temp_action); }
+					if (temp_celsius) { g_iq2020_climate->updateTempsC(target_temp, current_temp, climateActionCode()); }
+					else { g_iq2020_climate->updateTempsF(target_temp, current_temp, climateActionCode()); }
 				}
 				ESP_LOGD(TAG, "Changed Current Temp: %.1f, Target Temp: %.1f, Action: %d", current_temp, target_temp, temp_action);
 			}
@@ -1467,6 +1507,28 @@ void IQ2020Component::setNumberState(unsigned int numberid, int value) {
 	}
 }
 #endif
+
+// Compute the current climate action code by combining the induction heater state (temp_action)
+// with the coolzone compressor state, when coolzone is enabled.
+int IQ2020Component::climateActionCode() {
+	bool induction = (temp_action != NOT_SET) && (temp_action != 0);
+	if (coolzone_enabled_) {
+		if (coolzone_state == COOLZONE_STATE_COOLING) { return CLIMATE_ACT_COOLING; }
+		if (induction || (coolzone_state == COOLZONE_STATE_HEATING)) { return CLIMATE_ACT_HEATING; }
+		if (coolzone_state == COOLZONE_STATE_STANDBY) { return CLIMATE_ACT_IDLE; }
+		if (coolzone_state == COOLZONE_STATE_OFF) { return CLIMATE_ACT_OFF; }
+	}
+	return induction ? CLIMATE_ACT_HEATING : CLIMATE_ACT_OFF;
+}
+
+// Set the coolzone heat pump mode (0x00 to 0x04) by sending command 0x1D07.
+void IQ2020Component::setCoolzoneMode(int mode) {
+	if ((mode < 0) || (mode > 0x04)) { return; }
+	ESP_LOGD(TAG, "setCoolzoneMode, mode = %d", mode);
+	unsigned char cmd[] = { 0x1D, 0x07, (unsigned char)mode, 0x00 };
+	sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Set coolzone mode
+	next_poll = ::millis() + 100; // Poll soon to confirm the new state
+}
 
 void IQ2020Component::pollState() {
 	// If we don't have the version string, fetch it now.

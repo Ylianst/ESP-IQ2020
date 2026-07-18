@@ -11,13 +11,17 @@ namespace iq2020_climate {
 	public:
 		void setup() override;
 		void control(const climate::ClimateCall &call) override;
-		void updateTempsF(float target, float current, bool heating);
-		void updateTempsC(float target, float current, bool heating);
+		void updateTempsF(float target, float current, int action);
+		void updateTempsC(float target, float current, int action);
+		void updateCoolzone(int mode, int action);
+		void enableCoolzone();
 		void set_celsius(int celsius) { this->celsius = celsius; }
 		climate::ClimateTraits traits() override;
 		void dump_config() override;
 	private:
 		int celsius = 0;
+		bool coolzone_ = false;
+		esphome::climate::ClimateAction mapAction(int action);
 		//template<class K, class V> std::set<V> map_values_as_set(std::map<K, V> map);
 	};
 

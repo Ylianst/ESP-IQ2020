@@ -661,6 +661,7 @@ The compressor can be idle, or run in either direction to heat or cool the
 water:
 
 ```
+0x00 - Off (assumed, not yet observed in captures)
 0x01 - Standby
 0x02 - Heating
 0x04 - Cooling
