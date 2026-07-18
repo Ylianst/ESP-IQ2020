@@ -18,7 +18,7 @@ If you don't already have a climate control, add one in the `climate:` section:
 
 ```yaml
 climate:
-  - platform: iq2020-dev
+  - platform: iq2020
     name: Temperature
 ```
 
