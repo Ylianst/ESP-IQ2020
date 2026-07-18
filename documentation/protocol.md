@@ -598,7 +598,7 @@ Return song/artist name
 Poll for heat pump status
 ```
 01 1F 40 1D07 FF
-1F 01 80 1D07 FFFF
+1F 01 80 1D07 0101
 ```
 
 Heat pump data is as follows
@@ -607,11 +607,104 @@ Heat pump data is as follows
 01        - Source IQ2020 (0x01).
 80        - Response (0x40 = Request, 0x80 = Response).
 1D07      - Command 0x1D07 Heat Pump Status
-FF        - Heat pump current operational status
-FF        - Heat pump current mode setting
+01        - Heat pump current mode setting
+01        - Heat pump current compressor state
 ```
+
+See the [Coolzone](#coolzone) section below for the full list of modes and
+compressor states.
 
 IQ2020 Reboot Command
 ```
 01 1F 40 0273 3487E5
+```
+
+# Coolzone
+
+The Coolzone is an optional heat pump that can be attached to the hot tub. In
+addition to heating the water, it can also actively cool it, which makes it
+useful in warm climates. On the RS485 bus the Coolzone module uses address
+`0x21`, but the mode is read and controlled by the IQ2020 controller through the
+Spa Connection Kit (`0x1F`) using command `0x1D07`.
+
+All Coolzone commands and responses use the `0x1D07` command. Requests are sent
+from the Spa Connection Kit (`0x1F`) to the IQ2020 controller (`0x01`) and the
+controller replies back to `0x1F`.
+
+## Response Format
+
+Every response is two data bytes following the command:
+
+```
+1F 01 80 1D07 aabb
+
+aa = Current heat pump mode
+bb = Current compressor state
+```
+
+The `aa` mode byte can be one of the following five values:
+
+```
+0x00 - Heat w/Boost
+0x01 - Heat Saver
+0x02 - Chill
+0x03 - Auto w/Boost
+0x04 - Auto Saver
+```
+
+The `bb` compressor state byte indicates what the compressor is currently doing.
+The compressor can be idle, or run in either direction to heat or cool the
+water:
+
+```
+0x01 - Standby
+0x02 - Heating
+0x04 - Cooling
+```
+
+If the response is `1F 01 80 1D07 FFFF` (both bytes `0xFF`), the Coolzone heat
+pump is not installed.
+
+## Polling the State
+
+To poll the current mode and compressor state, send the mode byte `0xFF`:
+
+```
+01 1F 40 1D07 FF      <-- Request current state
+1F 01 80 1D07 0101    <-- Response: mode 0x01 (Heat Saver), compressor 0x01 (Standby)
+```
+
+## Setting the Mode
+
+To set a mode, send the desired mode byte followed by `0x00`. The controller
+responds with the new mode and the current compressor state.
+
+Heat w/Boost
+```
+01 1F 40 1D07 0000    <-- Set mode 0x00 (Heat w/Boost)
+1F 01 80 1D07 0001    <-- Response: mode 0x00, compressor 0x01 (Standby)
+```
+
+Heat Saver
+```
+01 1F 40 1D07 0100    <-- Set mode 0x01 (Heat Saver)
+1F 01 80 1D07 0104    <-- Response: mode 0x01, compressor 0x04 (Cooling)
+```
+
+Chill
+```
+01 1F 40 1D07 0200    <-- Set mode 0x02 (Chill)
+1F 01 80 1D07 0204    <-- Response: mode 0x02, compressor 0x04 (Cooling)
+```
+
+Auto w/Boost
+```
+01 1F 40 1D07 0300    <-- Set mode 0x03 (Auto w/Boost)
+1F 01 80 1D07 0304    <-- Response: mode 0x03, compressor 0x04 (Cooling)
+```
+
+Auto Saver
+```
+01 1F 40 1D07 0400    <-- Set mode 0x04 (Auto Saver)
+1F 01 80 1D07 0404    <-- Response: mode 0x04, compressor 0x04 (Cooling)
 ```
