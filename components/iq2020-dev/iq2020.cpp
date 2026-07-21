@@ -179,7 +179,8 @@ void IQ2020Component::dump_config() {
 	ESP_LOGCONFIG(TAG, "  Address: %s:%u", esphome::network::get_use_address_to(use_address_buf), this->port_);
 #else
 	ESP_LOGCONFIG(TAG, "  Address: %s:%u", esphome::network::get_use_address(), this->port_);
-#endif	if (this->flow_control_pin_ != nullptr) {
+#endif
+	if (this->flow_control_pin_ != nullptr) {
 		ESP_LOGCONFIG(TAG, "  Flow Control Pin: ", this->flow_control_pin_);
 	}
 	if (this->trigger_poll_pin_ != nullptr) {
