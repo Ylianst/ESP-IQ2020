@@ -1057,7 +1057,7 @@ int IQ2020Component::processIQ2020Command() {
 				// Format and publish RTC datetime in ISO 8601 format
 #ifdef USE_TEXT_SENSOR
 				if (this->rtc_datetime_sensor_) {
-					char datetime_str[20];
+					char datetime_str[32];
 					snprintf(datetime_str, sizeof(datetime_str), "%04d-%02d-%02d %02d:%02d:%02d",
 						year, month, day, hours, minutes, seconds);
 					this->rtc_datetime_sensor_->publish_state(datetime_str);
