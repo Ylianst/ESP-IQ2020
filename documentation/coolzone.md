@@ -24,19 +24,19 @@ climate:
 
 ## Setting the mode and temperature
 
-With Coolzone enabled, the same climate control lets you set both the target temperature and the heat pump mode. The heat pump has 5 operating modes. Rather than a single long list, they are split into a **Mode** (Heat, Cool or Auto) and a **Preset** (Saver or Boost). The two combine to select the operating mode:
+With Coolzone enabled, the same climate control lets you set both the target temperature and the heat pump mode. The heat pump has 5 operating modes. Rather than a single long list, they are split into a **Mode** (Heat, Cool or Auto) and a **Preset** (Eco or Boost). The two combine to select the operating mode:
 
 | Mode | Preset | Coolzone mode |
 | ---- | ------ | ------------- |
 | Heat | Boost  | Heat w/Boost  |
-| Heat | Saver  | Heat Saver    |
+| Heat | Eco    | Heat Saver    |
 | Cool | (any)  | Chill         |
 | Auto | Boost  | Auto w/Boost  |
-| Auto | Saver  | Auto Saver    |
+| Auto | Eco    | Auto Saver    |
 
 Cooling combined with boost is not a valid combination, so when the mode is `Cool` the preset is ignored and the heat pump simply chills the water.
 
-The `Boost` preset allows the controller to use the hot tub's induction heating in addition to the heat pump. This heats the water faster at the cost of using more power. The `Saver` preset relies on the heat pump alone.
+The `Boost` preset allows the controller to use the hot tub's induction heating in addition to the heat pump. This heats the water faster at the cost of using more power. The `Eco` preset relies on the heat pump alone. (These use Home Assistant's built-in `Boost` and `Eco` presets, since a custom preset named "Boost" collides with a reserved Home Assistant preset name.)
 
 The climate control also reflects what the heat pump's compressor is doing right now. It shows **red** when the water is being heated (either by the heat pump or induction heating) and **blue** when the heat pump is actively cooling the water.
 

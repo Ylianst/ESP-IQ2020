@@ -6,7 +6,6 @@
 #include "esphome/components/climate/climate_mode.h"
 #include "iq2020_climate.h"
 #include "../iq2020.h"
-#include <cstring>
 
 extern IQ2020Component* g_iq2020_main;
 extern esphome::iq2020_climate::IQ2020Climate* g_iq2020_climate;
@@ -20,13 +19,12 @@ namespace iq2020_climate {
 	static const char *TAG = "iq2020.climate";
 
 	// The 5 coolzone modes are exposed as a combination of an HVAC mode (Heat/Cool/Auto)
-	// and a "Boost" or "Saver" preset:
-	//   Heat + Boost -> Heat w/Boost (0x00)   Heat + Saver -> Heat Saver (0x01)
+	// and a "Boost" or "Eco" (saver) preset. We use the built-in BOOST and ECO presets because
+	// a custom preset named "Boost" collides with Home Assistant's reserved BOOST preset name
+	// (ESPHome would interpret it as the standard preset and drop it as unsupported).
+	//   Heat + Boost -> Heat w/Boost (0x00)   Heat + Eco -> Heat Saver (0x01)
 	//   Cool         -> Chill        (0x02)   (cooling + boost is not possible)
-	//   Auto + Boost -> Auto w/Boost (0x03)   Auto + Saver -> Auto Saver (0x04)
-	static const char *const COOLZONE_PRESET_SAVER = "Saver";
-	static const char *const COOLZONE_PRESET_BOOST = "Boost";
-	static const char *const COOLZONE_PRESETS[] = { "Saver", "Boost" };
+	//   Auto + Boost -> Auto w/Boost (0x03)   Auto + Eco -> Auto Saver (0x04)
 
 	esphome::climate::ClimateAction IQ2020Climate::mapAction(int action) {
 		switch (action) {
@@ -37,10 +35,9 @@ namespace iq2020_climate {
 		}
 	}
 
-	// Returns true if the currently active preset is "Boost".
+	// Returns true if the currently active preset is Boost.
 	bool IQ2020Climate::currentPresetBoost() {
-		esphome::StringRef preset = this->get_custom_preset();
-		return strcmp(preset.c_str(), COOLZONE_PRESET_BOOST) == 0;
+		return this->preset.has_value() && (this->preset.value() == esphome::climate::CLIMATE_PRESET_BOOST);
 	}
 
 	// Maps an HVAC mode + boost flag to a coolzone mode byte (0x00 to 0x04), or -1 if not applicable.
@@ -64,20 +61,18 @@ namespace iq2020_climate {
 	// setup (which runs after the climate setup), so the coolzone config flag is known.
 	void IQ2020Climate::enableCoolzone() {
 		coolzone_ = true;
-		// Register the "Saver" and "Boost" presets on the same climate control.
-		this->set_supported_custom_presets(COOLZONE_PRESETS);
 	}
 
 	void IQ2020Climate::control(const climate::ClimateCall &call) {
 		if (call.get_target_temperature().has_value()) {
 			g_iq2020_main->setTempAction(call.get_target_temperature().value());
 		}
-		if (coolzone_ && (call.get_mode().has_value() || call.has_custom_preset())) {
-			// Combine the requested HVAC mode with the requested (or current) Boost/Saver preset.
+		if (coolzone_ && (call.get_mode().has_value() || call.get_preset().has_value())) {
+			// Combine the requested HVAC mode with the requested (or current) Boost/Eco preset.
 			esphome::climate::ClimateMode newMode = call.get_mode().has_value() ? call.get_mode().value() : this->mode;
 			bool boost = currentPresetBoost();
-			if (call.has_custom_preset()) {
-				boost = (strcmp(call.get_custom_preset().c_str(), COOLZONE_PRESET_BOOST) == 0);
+			if (call.get_preset().has_value()) {
+				boost = (call.get_preset().value() == esphome::climate::CLIMATE_PRESET_BOOST);
 			}
 			int cz = coolzoneModeFor(newMode, boost);
 			if (cz >= 0) { g_iq2020_main->setCoolzoneMode(cz); }
@@ -99,27 +94,27 @@ namespace iq2020_climate {
 	}
 
 	void IQ2020Climate::updateCoolzone(int mode, int action) {
-		// Map the reported coolzone mode back to an HVAC mode + Boost/Saver preset.
+		// Map the reported coolzone mode back to an HVAC mode + Boost/Eco preset.
 		switch (mode) {
 		case COOLZONE_MODE_HEAT_BOOST:
 			this->mode = esphome::climate::CLIMATE_MODE_HEAT;
-			this->set_custom_preset_(COOLZONE_PRESET_BOOST);
+			this->preset = esphome::climate::CLIMATE_PRESET_BOOST;
 			break;
 		case COOLZONE_MODE_HEAT_SAVER:
 			this->mode = esphome::climate::CLIMATE_MODE_HEAT;
-			this->set_custom_preset_(COOLZONE_PRESET_SAVER);
+			this->preset = esphome::climate::CLIMATE_PRESET_ECO;
 			break;
 		case COOLZONE_MODE_CHILL:
 			this->mode = esphome::climate::CLIMATE_MODE_COOL;
-			this->set_custom_preset_(COOLZONE_PRESET_SAVER); // Cooling has no boost
+			this->preset = esphome::climate::CLIMATE_PRESET_ECO; // Cooling has no boost
 			break;
 		case COOLZONE_MODE_AUTO_BOOST:
 			this->mode = esphome::climate::CLIMATE_MODE_AUTO;
-			this->set_custom_preset_(COOLZONE_PRESET_BOOST);
+			this->preset = esphome::climate::CLIMATE_PRESET_BOOST;
 			break;
 		case COOLZONE_MODE_AUTO_SAVER:
 			this->mode = esphome::climate::CLIMATE_MODE_AUTO;
-			this->set_custom_preset_(COOLZONE_PRESET_SAVER);
+			this->preset = esphome::climate::CLIMATE_PRESET_ECO;
 			break;
 		}
 		this->action = mapAction(action);
@@ -132,7 +127,7 @@ namespace iq2020_climate {
 
 		climate::ClimateModeMask heatingModes;
 		if (coolzone_) {
-			// Heat, Cool and Auto map to the 5 coolzone modes together with the Boost/Saver preset.
+			// Heat, Cool and Auto map to the 5 coolzone modes together with the Boost/Eco preset.
 			heatingModes.insert(climate::ClimateMode::CLIMATE_MODE_HEAT);
 			heatingModes.insert(climate::ClimateMode::CLIMATE_MODE_COOL);
 			heatingModes.insert(climate::ClimateMode::CLIMATE_MODE_AUTO);
@@ -141,6 +136,12 @@ namespace iq2020_climate {
 		}
 		traits.set_supported_modes(heatingModes);
 		traits.add_feature_flags(climate::CLIMATE_SUPPORTS_ACTION);
+
+		if (coolzone_) {
+			// Boost = Heat/Auto w/Boost, Eco = the saver variant.
+			traits.add_supported_preset(climate::ClimatePreset::CLIMATE_PRESET_BOOST);
+			traits.add_supported_preset(climate::ClimatePreset::CLIMATE_PRESET_ECO);
+		}
 
 		if (celsius) { // Celsius setup
 			traits.set_visual_min_temperature(26);
