@@ -12,7 +12,7 @@ iq2020:
    coolzone: true
 ```
 
-Once enabled, the integration will poll the Coolzone heat pump for its state and add the 5 Coolzone modes to your existing `climate:` control. If you don't specify `coolzone`, it's false by default and nothing changes.
+Once enabled, the integration will poll the Coolzone heat pump for its state and add the Coolzone modes to your existing `climate:` control. If you don't specify `coolzone`, it's false by default and nothing changes.
 
 If you don't already have a climate control, add one in the `climate:` section:
 
@@ -24,19 +24,21 @@ climate:
 
 ## Setting the mode and temperature
 
-With Coolzone enabled, the same climate control lets you set both the target temperature and the heat pump mode. The 5 modes are shown as presets on the control:
+With Coolzone enabled, the same climate control lets you set both the target temperature and the heat pump mode. The heat pump has 5 operating modes. Rather than a single long list, they are split into a **Mode** (Heat, Cool or Auto) and a **Preset** (Saver or Boost). The two combine to select the operating mode:
 
-```
-Heat w/Boost
-Heat Saver
-Chill
-Auto w/Boost
-Auto Saver
-```
+| Mode | Preset | Coolzone mode |
+| ---- | ------ | ------------- |
+| Heat | Boost  | Heat w/Boost  |
+| Heat | Saver  | Heat Saver    |
+| Cool | (any)  | Chill         |
+| Auto | Boost  | Auto w/Boost  |
+| Auto | Saver  | Auto Saver    |
 
-The `w/Boost` modes (Heat w/Boost and Auto w/Boost) allow the controller to use the hot tub's induction heating in addition to the heat pump. This heats the water faster at the cost of using more power. The other modes (Heat Saver, Chill and Auto Saver) rely on the heat pump alone.
+Cooling combined with boost is not a valid combination, so when the mode is `Cool` the preset is ignored and the heat pump simply chills the water.
 
-The climate control also reflects what the heat pump is doing right now. It shows **red** when the water is being heated (either by the heat pump or induction heating) and **blue** when the heat pump is actively cooling the water.
+The `Boost` preset allows the controller to use the hot tub's induction heating in addition to the heat pump. This heats the water faster at the cost of using more power. The `Saver` preset relies on the heat pump alone.
+
+The climate control also reflects what the heat pump's compressor is doing right now. It shows **red** when the water is being heated (either by the heat pump or induction heating) and **blue** when the heat pump is actively cooling the water.
 
 ## Coolzone raw sensors (optional)
 

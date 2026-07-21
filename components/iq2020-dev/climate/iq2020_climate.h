@@ -22,6 +22,8 @@ namespace iq2020_climate {
 		int celsius = 0;
 		bool coolzone_ = false;
 		esphome::climate::ClimateAction mapAction(int action);
+		bool currentPresetBoost();
+		int coolzoneModeFor(esphome::climate::ClimateMode mode, bool boost);
 		//template<class K, class V> std::set<V> map_values_as_set(std::map<K, V> map);
 	};
 
