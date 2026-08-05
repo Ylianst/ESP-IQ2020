@@ -49,7 +49,7 @@ The source address is 0x01 which is the address of the IQ2020 controller on the 
 0x29 - Freshwater Salt System
 0x33 - Audio/Music
 0x37 - Freshwater IQ
-0x38 - Unknown module
+0x38 - Water Clarity Sensor (optical/turbidity)
 0x1D - Audio/Music
 0x1F - Spa Connection Kit
 ```
@@ -158,6 +158,61 @@ This next command is completely unknown. It seems to contain 9 x 32 bit integers
 
 All values are unknown.
 ```
+
+# Water Clarity Sensor
+
+The module on address `0x38` appears to be an optical water clarity / turbidity
+sensor. In every capture the IQ2020 controller (`0x01`) polls it about every 5
+seconds with two commands. Only the first ever gets a reply:
+
+```
+<-- 38 01 40 2401      <-- Request (read sensor)
+<-- 01 38 80 2401...   <-- Response (data below)
+<-- 38 01 40 24050F    <-- Set command (param 0x0F), never answered
+```
+
+Command `0x2405` is never acknowledged in any capture, so it looks like a
+write/set command (possibly sensor gain, LED drive or sample configuration)
+rather than a query.
+
+The `0x2401` response is 50 bytes and decodes as follows:
+
+```
+01 38 80 2401 3234303130354631 0106 3C80 03C803C8...(x16) 008000D0
+
+2401              - Command echo.
+3234303130354631  - "240105F1" ASCII, the module model/part string (constant).
+0106              - Status / type header (constant).
+3C80              - 16-bit Big-Endian sum of the 16 samples below.
+03C8 x16          - 16 rolling sensor samples (16-bit Big-Endian, ~10-bit ADC).
+008000D0          - Trailer / flags (constant across all captures).
+```
+
+The leading 16-bit value is always exactly the sum of the 16 samples that follow
+(sum = 16 x sample), so it is a running accumulator used for averaging. The 16
+samples are individual noisy readings of a single sensor value (they jitter by
+1 LSB between each other in some captures).
+
+The measured value behaves like a ~10-bit ADC (full scale 1023) reading of an
+optical clarity / turbidity sensor:
+
+```
+Still standby water         ~968  (0x03C8)  - clear, undisturbed water
+Temperature / spa lock      ~938  (0x03AA)
+Scheduled clean cycle       ~960  (0x03C0)
+Jets / cleaning / heater on  ~84  (0x0054)  - aerated, bubbly water
+```
+
+The reading sits near full scale when the tub is in still standby and collapses
+by roughly 10x whenever the water is being circulated or aerated (jets, cleaning
+cycle, or heater/circulation pump running), consistent with bubbles and flow
+scattering the sensor's light path. Turning the tub lights on does not change
+the reading, so it is not an ambient/visible-light sensor.
+
+The exact physical unit and the meaning of the `0106` and `008000D0` constants
+are not yet confirmed; a capture where the reading sweeps through intermediate
+values (e.g. water gradually clearing after the jets stop) would help verify the
+scaling.
 
 # Spa Connection Kit
 
