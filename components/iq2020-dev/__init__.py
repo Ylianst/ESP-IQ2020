@@ -19,6 +19,7 @@ CONF_POLLING_RATE = "polling_rate"
 CONF_TRIGGER_POLL_PIN = "trigger_poll_pin"
 CONF_TEMP_UNIT = "temp_unit"
 CONF_ACTIVE = "active"
+CONF_DELAY_START = "delaystart"
 CONF_OLD_CLOCK = "old_clock"
 MULTI_CONF = False
 
@@ -50,6 +51,7 @@ CONFIG_SCHEMA = cv.All(
             cv.Optional(CONF_AUDIO_EMULATION, default = 'false'): cv.boolean,
             cv.Optional(CONF_COOLZONE, default = 'false'): cv.boolean,
             cv.Optional(CONF_ACTIVE, default = 'true'): cv.boolean,
+            cv.Optional(CONF_DELAY_START, default = 30): cv.positive_int,
             cv.Optional(CONF_OLD_CLOCK, default = 'false'): cv.boolean,
 
             cv.Optional(CONF_TRIGGER_POLL_PIN): pins.gpio_input_pin_schema,
@@ -70,6 +72,7 @@ async def to_code(config):
     cg.add(var.set_audio_emulation(config[CONF_AUDIO_EMULATION]))
     cg.add(var.set_coolzone_enabled(config[CONF_COOLZONE]))
     cg.add(var.set_active(config[CONF_ACTIVE]))
+    cg.add(var.set_delay_start(config[CONF_DELAY_START]))
     cg.add(var.set_old_clock(config[CONF_OLD_CLOCK]))
 
     if CONF_FLOW_CONTROL_PIN in config:

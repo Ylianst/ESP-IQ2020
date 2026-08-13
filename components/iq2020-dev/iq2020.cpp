@@ -100,6 +100,13 @@ void IQ2020Component::setup() {
 	// component's own setup(), so g_iq2020_climate is available here.
 	if (coolzone_enabled_ && (g_iq2020_climate != NULL)) { g_iq2020_climate->enableCoolzone(); }
 
+	// If configured active, hold off by starting inactive and switching active on after delay_start_ seconds.
+	if (active_ && (delay_start_ > 0)) {
+		active_ = false;
+		setSwitchState(SWITCH_ACTIVE, false);
+		activate_at_ = ::millis() + (delay_start_ * 1000);
+	}
+
 	// Send initial polling commands
 	next_poll = ::millis() + 5000;
 	pollState();
@@ -113,6 +120,11 @@ void IQ2020Component::loop() {
 	this->cleanup();
 
 	unsigned long now = ::millis();
+	// Startup delay expired: switch active on, same as an automation toggling it to true.
+	if ((activate_at_ != 0) && (now >= activate_at_)) {
+		activate_at_ = 0;
+		set_active(true);
+	}
 	// Check if there is any pending commands that need retry
 	if ((next_retry_count > 0) && (next_retry < now)) {
 		for (int switchid = 0; switchid < SWITCHCOUNT; switchid++) {

@@ -184,6 +184,7 @@ iq2020:
 #   flow_control_pin: GPIO0
    port: 1234
    active:true
+   delaystart: 30
    legacy_polling: false
    audio_emulation: false
    ace_emulation: false

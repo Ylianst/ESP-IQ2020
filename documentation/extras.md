@@ -241,6 +241,20 @@ mode: single
 
 Again, this should solve cases where the ESP32 is causing issues when active during hot tub startup.
 
+### Automatic start delay (`delaystart`)
+
+Instead of building an automation, you can use the built-in `delaystart` option. It makes the integration behave exactly as if `active` were off for the delay and then switched on automatically, so no `switch:` entry or Home Assistant automation is needed. Set the delay (in seconds) in the `iq2020` section:
+
+```yaml
+iq2020:
+   uart_id: SpaConnection
+   delaystart: 30
+```
+
+`delaystart` defaults to **30 seconds**, so you get this behavior even if you don't specify it. Newer hot tubs from 2025 onwards do not work right unless there is a delay at the start, so this default keeps them working out of the box.
+
+The delay only applies when the integration starts active. If you set `active: false`, the `delaystart` value is ignored and the ESP32 stays in listen-only mode until you switch it on yourself. To disable the delay entirely on an older tub that doesn't need it, set `delaystart: 0`.
+
 
 ## Logo Lights
 

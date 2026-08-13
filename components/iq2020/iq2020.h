@@ -68,6 +68,23 @@
 #define BUTTON_SALT_TEST 0
 #define BUTTON_RESET_CARTRIDGE 1
 #define BUTTON_CONFIRM_MANUAL_TEST 2
+
+// Coolzone heat pump modes (data byte 'aa' of command 0x1D07)
+#define COOLZONE_MODE_HEAT_BOOST 0x00
+#define COOLZONE_MODE_HEAT_SAVER 0x01
+#define COOLZONE_MODE_CHILL      0x02
+#define COOLZONE_MODE_AUTO_BOOST 0x03
+#define COOLZONE_MODE_AUTO_SAVER 0x04
+// Coolzone compressor states (data byte 'bb' of command 0x1D07)
+#define COOLZONE_STATE_OFF       0x00
+#define COOLZONE_STATE_STANDBY   0x01
+#define COOLZONE_STATE_HEATING   0x02
+#define COOLZONE_STATE_COOLING   0x04
+// Climate action codes passed to the climate component
+#define CLIMATE_ACT_OFF     0
+#define CLIMATE_ACT_IDLE    1
+#define CLIMATE_ACT_HEATING 2
+#define CLIMATE_ACT_COOLING 3
 #define NOT_SET -127
 
 class IQ2020Component : public esphome::Component, public esphome::api::CustomAPIDevice {
@@ -83,7 +100,10 @@ public:
 	void set_freshwater_emulation(bool freshwater_emulation) { this->freshwater_emulation_ = freshwater_emulation; }
 	void set_audio_emulation(bool audio_emulation) { this->audio_emulation_ = audio_emulation; }
 	void set_active(bool active) { this->active_ = active; setSwitchState(SWITCH_ACTIVE, active_); }
+	void set_delay_start(int delay_start) { this->delay_start_ = delay_start; }
 	void set_old_clock(bool old_clock) { this->old_clock_ = old_clock; }
+	void set_coolzone_enabled(bool coolzone_enabled) { this->coolzone_enabled_ = coolzone_enabled; }
+	bool isCoolzoneEnabled() { return this->coolzone_enabled_; }
 	void set_polling_rate(int polling_rate) { this->polling_rate_ = polling_rate; }
 #ifdef USE_BINARY_SENSOR
 	void set_connected_sensor(esphome::binary_sensor::BinarySensor *connected) { this->connected_sensor_ = connected; }
@@ -139,11 +159,13 @@ public:
 	void set_iq_va_sensor(esphome::sensor::Sensor *sensor) { this->iq_va_sensor_ = sensor; }
 	void set_iq_vb_sensor(esphome::sensor::Sensor *sensor) { this->iq_vb_sensor_ = sensor; }
 	void set_iq_vc_sensor(esphome::sensor::Sensor *sensor) { this->iq_vc_sensor_ = sensor; }
-	void set_iq_vd_sensor(esphome::sensor::Sensor *sensor) { this->iq_vd_sensor_ = sensor; }
+	void set_iq_orp_sensor(esphome::sensor::Sensor *sensor) { this->iq_orp_sensor_ = sensor; }
 	void set_iq_chlorine_sensor(esphome::sensor::Sensor *sensor) { this->iq_chlorine_sensor_ = sensor; }
 	void set_iq_ph_sensor(esphome::sensor::Sensor *sensor) { this->iq_ph_sensor_ = sensor; }
 	void set_iq_hoursleft_sensor(esphome::sensor::Sensor *sensor) { this->iq_hoursleft_sensor_ = sensor; }
 	void set_rtc_timestamp_sensor(esphome::sensor::Sensor *sensor) { this->rtc_timestamp_sensor_ = sensor; }
+	void set_coolzone_mode_raw_sensor(esphome::sensor::Sensor *sensor) { this->coolzone_mode_raw_sensor_ = sensor; }
+	void set_coolzone_state_raw_sensor(esphome::sensor::Sensor *sensor) { this->coolzone_state_raw_sensor_ = sensor; }
 	void set_salt_cartridge_age_days_sensor(esphome::sensor::Sensor *sensor) { this->salt_cartridge_age_days_sensor_ = sensor; }
 	void set_salt_days_since_manual_test_sensor(esphome::sensor::Sensor *sensor) { this->salt_days_since_manual_test_sensor_ = sensor; }
 	void set_salt_generation_hours_sensor(esphome::sensor::Sensor *sensor) { this->salt_generation_hours_sensor_ = sensor; }
@@ -175,6 +197,7 @@ public:
 	void numberAction(unsigned int numberid, int state);
 #endif
 	void setTempAction(float newtemp);
+	void setCoolzoneMode(int mode);
 	void setTime(int hour, int minute, int second, int year, int month, int day);
 
 protected:
@@ -212,7 +235,10 @@ protected:
 	bool freshwater_emulation_;
 	bool audio_emulation_;
 	bool active_;
+	int delay_start_ = 30;              // Seconds to keep active off at boot before switching it on
+	unsigned long activate_at_ = 0;     // millis timestamp to switch active on (0 = nothing scheduled)
 	bool old_clock_;
+	bool coolzone_enabled_ = false;
 	unsigned char audio_module_address = 0x33; // There are two audio modules at 0x33 or 0x1D.
 	int polling_rate_;
 
@@ -270,11 +296,13 @@ protected:
 	esphome::sensor::Sensor *iq_va_sensor_;
 	esphome::sensor::Sensor *iq_vb_sensor_;
 	esphome::sensor::Sensor *iq_vc_sensor_;
-	esphome::sensor::Sensor *iq_vd_sensor_;
+	esphome::sensor::Sensor *iq_orp_sensor_;
 	esphome::sensor::Sensor *iq_chlorine_sensor_;
 	esphome::sensor::Sensor *iq_ph_sensor_;
 	esphome::sensor::Sensor *iq_hoursleft_sensor_;
 	esphome::sensor::Sensor *rtc_timestamp_sensor_;
+	esphome::sensor::Sensor *coolzone_mode_raw_sensor_;
+	esphome::sensor::Sensor *coolzone_state_raw_sensor_;
 	esphome::sensor::Sensor *salt_cartridge_age_days_sensor_;
 	esphome::sensor::Sensor *salt_days_since_manual_test_sensor_;
 	esphome::sensor::Sensor *salt_generation_hours_sensor_;
@@ -309,6 +337,9 @@ protected:
 	int got_iq_data = 0;
 	bool temp_celsius = false;
 	int temp_action = NOT_SET;
+	int coolzone_mode = NOT_SET;    // Last known coolzone mode (0x00 to 0x04)
+	int coolzone_state = NOT_SET;  // Last known coolzone compressor state (0x00, 0x01, 0x02, 0x04)
+	int coolzone_present = NOT_SET; // -127 unknown, 0 not installed (FFFF), 1 installed
 	float target_temp = NOT_SET;
 	float current_temp = NOT_SET;
 	float outlet_temp = NOT_SET;
@@ -337,6 +368,7 @@ protected:
 	void setSelectState(unsigned int selectid, int state);
 	void setNumberState(unsigned int numberid, int value);
 	void pollState();
+	int climateActionCode();
 };
 
 extern IQ2020Component* g_iq2020_main;

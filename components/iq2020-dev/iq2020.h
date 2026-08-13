@@ -100,6 +100,7 @@ public:
 	void set_freshwater_emulation(bool freshwater_emulation) { this->freshwater_emulation_ = freshwater_emulation; }
 	void set_audio_emulation(bool audio_emulation) { this->audio_emulation_ = audio_emulation; }
 	void set_active(bool active) { this->active_ = active; setSwitchState(SWITCH_ACTIVE, active_); }
+	void set_delay_start(int delay_start) { this->delay_start_ = delay_start; }
 	void set_old_clock(bool old_clock) { this->old_clock_ = old_clock; }
 	void set_coolzone_enabled(bool coolzone_enabled) { this->coolzone_enabled_ = coolzone_enabled; }
 	bool isCoolzoneEnabled() { return this->coolzone_enabled_; }
@@ -234,6 +235,8 @@ protected:
 	bool freshwater_emulation_;
 	bool audio_emulation_;
 	bool active_;
+	int delay_start_ = 30;              // Seconds to keep active off at boot before switching it on
+	unsigned long activate_at_ = 0;     // millis timestamp to switch active on (0 = nothing scheduled)
 	bool old_clock_;
 	bool coolzone_enabled_ = false;
 	unsigned char audio_module_address = 0x33; // There are two audio modules at 0x33 or 0x1D.
