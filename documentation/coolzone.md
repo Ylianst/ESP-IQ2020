@@ -36,7 +36,7 @@ With Coolzone enabled, the same climate control lets you set both the target tem
 
 Cooling combined with boost is not a valid combination, so when the mode is `Cool` the preset is ignored and the heat pump simply chills the water.
 
-The `Boost` preset allows the controller to use the hot tub's induction heating in addition to the heat pump. This heats the water faster at the cost of using more power. The `Eco` preset relies on the heat pump alone. (These use Home Assistant's built-in `Boost` and `Eco` presets, since a custom preset named "Boost" collides with a reserved Home Assistant preset name.)
+The `Boost` preset allows the controller to use the hot tub's induction heating in addition to the heat pump. This heats the water faster at the cost of using more power. The `Eco` preset relies on the heat pump alone.
 
 The climate control also reflects what the heat pump's compressor is doing right now. It shows **red** when the water is being heated (either by the heat pump or induction heating) and **blue** when the heat pump is actively cooling the water.
 
