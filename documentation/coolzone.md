@@ -38,6 +38,8 @@ Cooling combined with boost is not a valid combination, so when the mode is `Coo
 
 The `Boost` preset allows the controller to use the hot tub's induction heating in addition to the heat pump. This heats the water faster at the cost of using more power. The `Eco` preset relies on the heat pump alone.
 
+<img width="300" alt="image" src="https://github.com/user-attachments/assets/01c6ddbb-0946-426b-a95f-e7b12daae857" />
+
 The climate control also reflects what the heat pump's compressor is doing right now. It shows **red** when the water is being heated (either by the heat pump or induction heating) and **blue** when the heat pump is actively cooling the water.
 
 ## Coolzone raw sensors (optional)
