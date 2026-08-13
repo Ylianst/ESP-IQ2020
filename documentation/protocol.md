@@ -143,7 +143,7 @@ Every hour, we see this `0x23D1` command. This seems to contain the Chlorine, Ph
 AA = Unknown, always zero.
 BB = Unknown, always zero.
 CC = Unknown, 32 bit small-endian.
-DD = Unknown, 32 bit small-endian.
+DD = ORP (Oxidation-Reduction Potential) in millivolts, 32 bit small-endian. Typical healthy range is roughly 650-750 mV.
 EE = Chlorine in 10ths of PPM, 32 bit small-endian, Convert to decimal and divide by 10.
 FF = Ph in 10ths, 32 bit small-endian, Convert to decimal and divide by 10.
 GG = Hours remaining count-down, 32 bit small-endian.

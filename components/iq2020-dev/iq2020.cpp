@@ -496,7 +496,7 @@ int IQ2020Component::processIQ2020Command() {
 		int iq_va = readCounterEx(processingBuffer, 7);  // Unknown value, always zero
 		int iq_vb = readCounterEx(processingBuffer, 11); // Unknown value, always zero
 		int iq_vc = readCounterEx(processingBuffer, 15); // Unknown value
-		int iq_vd = readCounterEx(processingBuffer, 19); // Unknown value
+		int iq_orp = readCounterEx(processingBuffer, 19); // ORP (Oxidation-Reduction Potential) in millivolts
 		int iq_ve = readCounterEx(processingBuffer, 23); // Chlorine level
 		int iq_vf = readCounterEx(processingBuffer, 27); // Ph Level
 		int iq_vg = readCounterEx(processingBuffer, 31); // Cartridge life countdown.
@@ -505,7 +505,7 @@ int IQ2020Component::processIQ2020Command() {
 		if (this->iq_va_sensor_) this->iq_va_sensor_->publish_state((float)iq_va);
 		if (this->iq_vb_sensor_) this->iq_vb_sensor_->publish_state((float)iq_vb);
 		if (this->iq_vc_sensor_) this->iq_vc_sensor_->publish_state((float)iq_vc);
-		if (this->iq_vd_sensor_) this->iq_vd_sensor_->publish_state((float)iq_vd);
+		if (this->iq_orp_sensor_) this->iq_orp_sensor_->publish_state((float)iq_orp);
 		if (this->iq_chlorine_sensor_) this->iq_chlorine_sensor_->publish_state(((float)iq_ve) / 10);
 		if (this->iq_ph_sensor_) this->iq_ph_sensor_->publish_state(((float)iq_vf) / 10);
 		if (this->iq_hoursleft_sensor_) this->iq_hoursleft_sensor_->publish_state((float)iq_vg);

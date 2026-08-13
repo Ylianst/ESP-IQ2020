@@ -158,7 +158,7 @@ public:
 	void set_iq_va_sensor(esphome::sensor::Sensor *sensor) { this->iq_va_sensor_ = sensor; }
 	void set_iq_vb_sensor(esphome::sensor::Sensor *sensor) { this->iq_vb_sensor_ = sensor; }
 	void set_iq_vc_sensor(esphome::sensor::Sensor *sensor) { this->iq_vc_sensor_ = sensor; }
-	void set_iq_vd_sensor(esphome::sensor::Sensor *sensor) { this->iq_vd_sensor_ = sensor; }
+	void set_iq_orp_sensor(esphome::sensor::Sensor *sensor) { this->iq_orp_sensor_ = sensor; }
 	void set_iq_chlorine_sensor(esphome::sensor::Sensor *sensor) { this->iq_chlorine_sensor_ = sensor; }
 	void set_iq_ph_sensor(esphome::sensor::Sensor *sensor) { this->iq_ph_sensor_ = sensor; }
 	void set_iq_hoursleft_sensor(esphome::sensor::Sensor *sensor) { this->iq_hoursleft_sensor_ = sensor; }
@@ -293,7 +293,7 @@ protected:
 	esphome::sensor::Sensor *iq_va_sensor_;
 	esphome::sensor::Sensor *iq_vb_sensor_;
 	esphome::sensor::Sensor *iq_vc_sensor_;
-	esphome::sensor::Sensor *iq_vd_sensor_;
+	esphome::sensor::Sensor *iq_orp_sensor_;
 	esphome::sensor::Sensor *iq_chlorine_sensor_;
 	esphome::sensor::Sensor *iq_ph_sensor_;
 	esphome::sensor::Sensor *iq_hoursleft_sensor_;

@@ -1,4 +1,6 @@
-﻿import esphome.codegen as cg
+﻿import logging
+
+import esphome.codegen as cg
 import esphome.config_validation as cv
 from esphome.components import sensor
 from esphome.const import (
@@ -23,8 +25,11 @@ from esphome.const import (
 )
 from . import ns, IQ2020Component
 
+_LOGGER = logging.getLogger(__name__)
+
 
 UNIT_FAHRENHEIT = "°F"
+UNIT_MILLIVOLT = "mV"
 CONF_SENSOR_CURRENT_F_TEMPERATURE = "current_f_temperature"
 CONF_SENSOR_TARGET_F_TEMPERATURE = "target_f_temperature"
 CONF_SENSOR_OUTLET_F_TEMPERATURE = "outlet_f_temperature"
@@ -75,7 +80,8 @@ CONF_SENSOR_LIGHTS_MAIN_LOOP_SPEED = "lights_main_loop_speed"
 CONF_SENSOR_IQ_VA = "iq_va"
 CONF_SENSOR_IQ_VB = "iq_vb"
 CONF_SENSOR_IQ_VC = "iq_vc"
-CONF_SENSOR_IQ_VD = "iq_vd"
+CONF_SENSOR_IQ_ORP = "iq_orp"
+CONF_SENSOR_IQ_VD = "iq_vd"  # Deprecated: renamed to iq_orp
 CONF_SENSOR_IQ_CHLORINE = "iq_chlorine"
 CONF_SENSOR_IQ_PH = "iq_ph"
 CONF_SENSOR_IQ_HOURSLEFT = "iq_hoursleft"
@@ -365,8 +371,17 @@ CONFIG_SCHEMA = cv.Schema(
         cv.Optional(CONF_SENSOR_IQ_VC): sensor.sensor_schema(
             accuracy_decimals=0
         ),
+        cv.Optional(CONF_SENSOR_IQ_ORP): sensor.sensor_schema(
+            unit_of_measurement=UNIT_MILLIVOLT,
+            accuracy_decimals=0,
+            state_class=STATE_CLASS_MEASUREMENT,
+            icon="mdi:flash",
+        ),
         cv.Optional(CONF_SENSOR_IQ_VD): sensor.sensor_schema(
-            accuracy_decimals=0
+            unit_of_measurement=UNIT_MILLIVOLT,
+            accuracy_decimals=0,
+            state_class=STATE_CLASS_MEASUREMENT,
+            icon="mdi:flash",
         ),
         cv.Optional(CONF_SENSOR_IQ_CHLORINE): sensor.sensor_schema(
             accuracy_decimals=1
@@ -596,9 +611,18 @@ async def to_code(config):
         sens = await sensor.new_sensor(config[CONF_SENSOR_IQ_VC])
         cg.add(server.set_iq_vc_sensor(sens))
 
+    if CONF_SENSOR_IQ_ORP in config:
+        sens = await sensor.new_sensor(config[CONF_SENSOR_IQ_ORP])
+        cg.add(server.set_iq_orp_sensor(sens))
+
     if CONF_SENSOR_IQ_VD in config:
+        _LOGGER.warning(
+            'The "iq_vd" sensor has been renamed to "iq_orp" (Oxidation-Reduction '
+            'Potential, in mV). Please rename it to "iq_orp" in your configuration; '
+            '"iq_vd" is deprecated and will be removed in a future release.'
+        )
         sens = await sensor.new_sensor(config[CONF_SENSOR_IQ_VD])
-        cg.add(server.set_iq_vd_sensor(sens))
+        cg.add(server.set_iq_orp_sensor(sens))
 
     if CONF_SENSOR_IQ_CHLORINE in config:
         sens = await sensor.new_sensor(config[CONF_SENSOR_IQ_CHLORINE])

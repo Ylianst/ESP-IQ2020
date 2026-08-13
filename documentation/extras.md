@@ -171,7 +171,7 @@ The Freshwater IQ module mesures the Chlorine and PH level of the water and repo
 
 ![image](https://github.com/user-attachments/assets/7c2b4de3-5e62-49e2-8c40-40a70ab0c0ef)
 
-I don't personally have this module, so, others have to give me information on how it works so I can add support for it. I have received log files and decoded some of the [protocol here](https://github.com/Ylianst/ESP-IQ2020/blob/main/documentation/protocol.md#freshwater-iq). We have some values we know what they are and some others we do not. Currently the integration allows you to see 7 values, 3 of which we likely know the signification. In the `sensor:` section, add the following `iq_` values:
+I don't personally have this module, so, others have to give me information on how it works so I can add support for it. I have received log files and decoded some of the [protocol here](https://github.com/Ylianst/ESP-IQ2020/blob/main/documentation/protocol.md#freshwater-iq). We have some values we know what they are and some others we do not. Currently the integration allows you to see 7 values, 4 of which we likely know the signification. In the `sensor:` section, add the following `iq_` values:
 
 ```yaml
 sensor:
@@ -183,8 +183,8 @@ sensor:
       name: IQ Unknown B
     iq_vc:
       name: IQ Salt
-    iq_vd:
-      name: IQ Unknown D
+    iq_orp:
+      name: IQ ORP
     iq_chlorine:
       name: IQ Chlorine
     iq_ph:
@@ -193,7 +193,7 @@ sensor:
       name: IQ Hours Left
 ```
 
-Chlorine level is in parts per million (PPM). Values A and B seem to always be 0 and so, you may want to just remove these sensors. For C and D, if you can find what they are, that would be great.
+Chlorine level is in parts per million (PPM). ORP (Oxidation-Reduction Potential) is reported in millivolts (mV) and reflects the actual sanitizing power of the water; a typical healthy target is roughly 650-750 mV. Values A and B seem to always be 0 and so, you may want to just remove these sensors. For C, if you can find what it is, that would be great.
 
 ## Delayed ESP32 start
 
