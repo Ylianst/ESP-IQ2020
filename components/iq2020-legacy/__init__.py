@@ -38,7 +38,7 @@ CONFIG_SCHEMA = cv.All(
     cv.Schema(
         {
             cv.GenerateID(): cv.declare_id(IQ2020Component),
-            cv.Optional(CONF_PORT, default = 0): cv.port,
+            cv.Optional(CONF_PORT, default = 0): cv.int_range(min = 0, max = 65535),
             cv.Optional(CONF_BUFFER_SIZE, default = 128): cv.All(cv.positive_int, validate_buffer_size),
             cv.Optional(CONF_FLOW_CONTROL_PIN): pins.gpio_output_pin_schema,
             cv.Optional(CONF_POLLING_RATE, default = 65): cv.All(cv.positive_int, validate_polling_rate),
