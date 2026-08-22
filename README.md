@@ -64,7 +64,8 @@ uart:
 iq2020:
    uart_id: SpaConnection
    polling_rate: 65
-   port: 1234
+   # A port may be configured to debug RS485 traffic as described in documentation/debugging.md.
+   # port: 1234
 
 # If using Celsius units on the hot tub remote, replace _f_ with _c_ in the three entries below.
 # Feel free to remove any sensor that are not relevant for your hot tub.
