@@ -62,7 +62,7 @@ void IQ2020Component::setup() {
 #ifdef USE_IQ2020_SELECT
 	for (int i = 0; i < SELECTCOUNT; i++) { select_state[i] = select_pending[i] = NOT_SET; }
 #endif
-#ifdef USE_IQ2020_SELECT
+#ifdef USE_IQ2020_NUMBER
 	for (int i = 0; i < NUMBERCOUNT; i++) { number_state[i] = number_pending[i] = NOT_SET; }
 #endif
 
