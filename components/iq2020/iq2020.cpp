@@ -417,10 +417,10 @@ int IQ2020Component::processIQ2020Command() {
 #endif
 			}
 			else if ((processingBuffer[6] == 0x00) && (cmdlen == 14)) { // Audio settings
-				// Power status could be determined here, but it's best set in the response from the Audio module
-				// processingBuffer[7] == 0x01 -- On
-				// processingBuffer[7] == 0x02 -- Off
-				//setSwitchState(SWITCH_AUDIO_POWER, (int)(processingBuffer[7] == 0x1));
+				// Power status is normally set from the Audio module response, but in emulation mode
+				// there is no module to respond, so set it here from the request instead.
+				// processingBuffer[7] == 0x01 -- On, 0x02 -- Off
+				if (audio_emulation_) { setSwitchState(SWITCH_AUDIO_POWER, (int)(processingBuffer[7] == 0x1)); }
 #ifdef USE_IQ2020_NUMBER
 				ESP_LOGD(TAG, "AUDIO - Power=%d, Volume=%d, Treble=%d, Bass=%d, Balance=%d, Subwoofer=%d", processingBuffer[7], processingBuffer[8], processingBuffer[9], processingBuffer[10], processingBuffer[11], processingBuffer[12]);
 				if (audio_module_address == 0x33) { // 0x33
