@@ -16,7 +16,7 @@ namespace iq2020_text {
 	}
 
 	void IQ2020Text::control(const std::string &value) {
-		ESP_LOGD(TAG, "Text:%d write state: %d", text_id, value.c_str());
+		ESP_LOGD(TAG, "Text:%d write state: %s", text_id, value.c_str());
 		text_value = value;
 		this->publish_state(value);
 	}
