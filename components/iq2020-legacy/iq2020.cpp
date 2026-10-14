@@ -158,12 +158,8 @@ void IQ2020Component::loop() {
 void IQ2020Component::dump_config() {
 	ESP_LOGCONFIG(TAG, "IQ2020:");
 	ESP_LOGCONFIG(TAG, "  Address: %s:%u", esphome::network::get_use_address().c_str(), this->port_);
-	if (this->flow_control_pin_ != nullptr) {
-		ESP_LOGCONFIG(TAG, "  Flow Control Pin: ", this->flow_control_pin_);
-	}
-	if (this->trigger_poll_pin_ != nullptr) {
-		ESP_LOGCONFIG(TAG, "  Trigger Poll Pin: ", this->trigger_poll_pin_);
-	}
+	LOG_PIN("  Flow Control Pin: ", this->flow_control_pin_);
+	LOG_PIN("  Trigger Poll Pin: ", this->trigger_poll_pin_);
 	if (this->ace_emulation_) { ESP_LOGCONFIG(TAG, "  Ace Emulation Enabled"); }
 	if (this->freshwater_emulation_) { ESP_LOGCONFIG(TAG, "  Freshwater Emulation Enabled"); }
 	if (this->audio_emulation_) { ESP_LOGCONFIG(TAG, "  Audio Emulation Enabled"); }
