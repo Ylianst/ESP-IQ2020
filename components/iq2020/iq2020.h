@@ -28,7 +28,7 @@
 #define FAN_JETS2 1
 #define FAN_JETS3 2
 #define FAN_JETS4 3
-#define SWITCHCOUNT 11
+#define SWITCHCOUNT 12
 #define SWITCH_RETRY_COUNT 3
 #define SWITCH_RETRY_TIME 200
 #define SWITCH_LIGHTS 0
@@ -42,6 +42,7 @@
 #define SWITCH_SALT_BOOST 8
 #define SWITCH_AUDIO_POWER 9
 #define SWITCH_ACTIVE 10               // Don't send anything on RS485 bus when disabled
+#define SWITCH_ECON 11                 // Economy / sleep mode (moon and star on Hot Spot panels), part of the 0241 filter settings
 #define SELECTCOUNT 6
 #define SELECT_AUDIO_SOURCE 0
 #define SELECT_LIGHTS1_COLOR 1         // Underwater lights color (0 to 7 for colors, 8 for cycle)
@@ -52,7 +53,7 @@
 #define TEXTCOUNT 2
 #define TEXT_SONG_TITLE 0              // Song title (Max 20 chars)
 #define TEXT_ARTIST_NAME 1             // Artist name (Max 20 chars)
-#define NUMBERCOUNT 11
+#define NUMBERCOUNT 13
 #define NUMBER_AUDIO_VOLUME 0          // Audio volume (0 to 100, steps of 4)
 #define NUMBER_AUDIO_TREBLE 1          // Audio treble (-5 to 5)
 #define NUMBER_AUDIO_BASS 2            // Audio base (-5 to 5)
@@ -64,6 +65,8 @@
 #define NUMBER_LIGHTS2_INTENSITY 8     // Bartop lights intensity (0 to 5)
 #define NUMBER_LIGHTS3_INTENSITY 9     // Pillow lights intensity (0 to 5)
 #define NUMBER_LIGHTS4_INTENSITY 10    // Exterior lights intensity (0 to 5)
+#define NUMBER_FILTER1_LENGTH 11       // Filter cycle 1 (F1) length in minutes (0 to 360, steps of 30)
+#define NUMBER_FILTER2_LENGTH 12       // Filter cycle 2 (F2) length in minutes (0 to 360, steps of 30)
 #define BUTTONCOUNT 3
 #define BUTTON_SALT_TEST 0
 #define BUTTON_RESET_CARTRIDGE 1

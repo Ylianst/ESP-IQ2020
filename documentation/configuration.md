@@ -391,6 +391,17 @@ number:
     id: salt_power
     name: Salt System Power
     datapoint: 5
+  #jacuzzi filter cycles, length in minutes (0 to 360, steps of 30)
+  - platform: iq2020
+    name: Filter Cycle 1
+    id: filter_cycle_1
+    unit_of_measurement: min
+    datapoint: 11
+  - platform: iq2020
+    name: Filter Cycle 2
+    id: filter_cycle_2
+    unit_of_measurement: min
+    datapoint: 12
 
 text:
   #audio sensors 
@@ -434,6 +445,12 @@ switch:
     id: summer_timer_switch
     icon: "mdi:sun-clock"
     datapoint: 4
+  - platform: iq2020
+    # Economy / sleep mode, the moon and star on Hot Spot panels
+    name: Economy Mode
+    id: econ_switch
+    icon: "mdi:weather-night"
+    datapoint: 11
 
 fan:
   #jacuzzi jet control

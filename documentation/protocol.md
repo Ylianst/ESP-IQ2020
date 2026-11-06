@@ -222,7 +222,7 @@ The Spa Connection Kit sends all it's commands from address 0x1F. Sending the co
 ```
 0100 - Get version string
 0109 - Change temperature
-0241 - Unknown (02413C001E0000)
+0241 - Get/Set filter settings: filter cycle 1 and 2 length and economy mode (02413C001E0000), see below
 024C - Unknown (024C1B0C110300E80701)
 0255 - Get status short
 0256 - Get status long
@@ -459,9 +459,9 @@ F700              - Voltage L2 (Big-Endian)
 F30E              - Power L2 wattage - Water heater wattage (Big-Endian)
 0000              - Power Jet 3 (Big-Endian)
 01                - Daily Clear Cycle
-3C00              - Filter Time 1
-1E00              - Filter Time 2
-00                - Flags: Hawk status econ / Hawk status circ
+3C00              - Filter Time 1 in minutes (Little-Endian)
+1E00              - Filter Time 2 in minutes (Little-Endian)
+00                - Flags: 0x01 = Hawk status econ (economy / sleep mode), 0x02 = Hawk status circ
 6A                - PCB temperature
 6F                - Peripheral Current
 00080800          - Real-Time-Clock SS:MM:HH Seconds (0 to 59), Minutes (0 to 59), Hours (0 to 24).
@@ -552,6 +552,36 @@ Get Versions
 ```
 --> 01 1F 40 0100
 <-- 1F 01 80 01005752342E30346465316345303032444B342E303006
+```
+
+Get Filter Settings
+```
+--> 01 1F 40 0241000000000000
+<-- 1F 01 80 02413C001E0000
+                 F1  F2  FL
+Encoded as:
+F1: Filter cycle 1 length in minutes (2 byte Little-Endian).
+F2: Filter cycle 2 length in minutes (2 byte Little-Endian).
+FL: Flags. 0x01 = Economy mode on (moon and star on Hot Spot panels), 0x02 = circulation flag.
+The same values are in the 0256 long status response (Filter Time 1, Filter Time 2 and the flags byte that follows), which is where the component reads them. A read with flags 0x00 has not been tested on hardware.
+Tested on a 2018 Hot Spot (1303401-2 REV.H, software 1.12T). The panel sets the lengths in steps of 30 minutes, 0 to 360.
+```
+
+Set Filter Cycle Lengths
+```
+--> 01 1F 40 02411E0000000080
+<-- 1F 01 80 02411E00000000
+
+Flags byte 0x80 writes F1 and F2, the economy flag is not changed. Both lengths are always written, so send the current value for the one you don't want to change.
+```
+
+Set Economy Mode
+```
+--> 01 1F 40 0241000000000041
+<-- 1F 01 80 02410000000001
+
+Flags byte 0x40 writes the economy flag from bit 0 (0x41 = on, 0x40 = off), the filter lengths are not changed.
+Leave bit 1 (0x02) cleared when writing, its effect is not known.
 ```
 
 Get Current Time
