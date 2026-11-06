@@ -749,6 +749,22 @@ int IQ2020Component::processIQ2020Command() {
 			setSwitchState(SWITCH_SUMMERTIMER, (processingBuffer[7] & 1));
 		}
 
+		if ((cmdlen == 13) && (processingBuffer[5] == 0x02) && (processingBuffer[6] == 0x41)) {
+			// Filter settings reply, bit 0 of the flag byte is economy / sleep mode
+			switch_pending[SWITCH_ECON] = NOT_SET;
+			setSwitchState(SWITCH_ECON, (processingBuffer[11] & 1));
+		}
+
+#ifdef USE_IQ2020_NUMBER
+		if ((cmdlen == 13) && (processingBuffer[5] == 0x02) && (processingBuffer[6] == 0x41)) {
+			// Filter cycle settings, includes the current F1 and F2 lengths in minutes
+			number_pending[NUMBER_FILTER1_LENGTH] = NOT_SET;
+			number_pending[NUMBER_FILTER2_LENGTH] = NOT_SET;
+			setNumberState(NUMBER_FILTER1_LENGTH, processingBuffer[7] + (processingBuffer[8] << 8));
+			setNumberState(NUMBER_FILTER2_LENGTH, processingBuffer[9] + (processingBuffer[10] << 8));
+		}
+#endif
+
 		// Confirmation that a Jets command was received which includes new state
 		if ((cmdlen == 9) && (processingBuffer[5] == 0x0B) && (processingBuffer[6] >= 0x02) && (processingBuffer[6] <= 0x05)) {
 			setSwitchState(processingBuffer[6] + 3, processingBuffer[7]);
@@ -1052,6 +1068,15 @@ int IQ2020Component::processIQ2020Command() {
 				if (this->pcb_f_temperature_sensor_) this->pcb_f_temperature_sensor_->publish_state((float)processingBuffer[128]);
 				if (this->pcb_c_temperature_sensor_) this->pcb_c_temperature_sensor_->publish_state((float)esphome::fahrenheit_to_celsius((float)processingBuffer[128]));
 
+				// Economy / sleep mode, bit 0 of the filter flag byte
+				setSwitchState(SWITCH_ECON, (processingBuffer[127] & 1));
+
+#ifdef USE_IQ2020_NUMBER
+				// Filter cycle lengths in minutes, F1 at 123-124 and F2 at 125-126 (little endian)
+				setNumberState(NUMBER_FILTER1_LENGTH, processingBuffer[123] + (processingBuffer[124] << 8));
+				setNumberState(NUMBER_FILTER2_LENGTH, processingBuffer[125] + (processingBuffer[126] << 8));
+#endif
+
 				// Read the real time clock, for example:
 				//   00312111 - Time hh:mm:ss, 17:33:49
 				//   0100EA07 - Date, 1-1-2026
@@ -1204,6 +1229,12 @@ void IQ2020Component::switchAction(unsigned int switchid, int state) {
 	case SWITCH_SUMMERTIMER: { // Summer Timer Switch
 		switch_pending[SWITCH_SUMMERTIMER] = state;
 		unsigned char cmd[] = { 0x0B, 0x1C, (state != 0) ? (unsigned char)0x02 : (unsigned char)0x01 };
+		sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd));
+		break;
+	}
+	case SWITCH_ECON: { // Economy / sleep mode, flag bit 6 = write bit 0, filter lengths untouched (bit 7 clear)
+		switch_pending[SWITCH_ECON] = state;
+		unsigned char cmd[] = { 0x02, 0x41, 0x00, 0x00, 0x00, 0x00, (state != 0) ? (unsigned char)0x41 : (unsigned char)0x40 };
 		sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd));
 		break;
 	}
@@ -1385,6 +1416,21 @@ void IQ2020Component::numberAction(unsigned int numberid, int value) {
 	case NUMBER_SALT_STATUS:
 	{
 		ace_status = value;
+		break;
+	}
+	case NUMBER_FILTER1_LENGTH:
+	case NUMBER_FILTER2_LENGTH:
+	{
+		// Both lengths are written together, so the other one must be known first
+		int other = (numberid == NUMBER_FILTER1_LENGTH) ? NUMBER_FILTER2_LENGTH : NUMBER_FILTER1_LENGTH;
+		int other_value = (number_pending[other] != NOT_SET) ? number_pending[other] : number_state[other];
+		if ((other_value == NOT_SET) || (value < 0) || (value > 360)) { number_pending[numberid] = NOT_SET; return; }
+		value = (value / 30) * 30;
+		number_pending[numberid] = value;
+		int f1 = (numberid == NUMBER_FILTER1_LENGTH) ? value : other_value;
+		int f2 = (numberid == NUMBER_FILTER2_LENGTH) ? value : other_value;
+		unsigned char cmd[] = { 0x02, 0x41, (unsigned char)(f1 & 0xFF), (unsigned char)(f1 >> 8), (unsigned char)(f2 & 0xFF), (unsigned char)(f2 >> 8), 0x80 };
+		sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Set filter cycle lengths
 		break;
 	}
 	case NUMBER_LIGHTS1_INTENSITY:

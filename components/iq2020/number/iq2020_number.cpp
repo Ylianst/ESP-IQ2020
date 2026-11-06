@@ -51,6 +51,12 @@ namespace iq2020_number {
 			this->traits.set_min_value(0);
 			this->traits.set_max_value(maximum ? maximum : 5);
 			break;
+		case NUMBER_FILTER1_LENGTH:
+		case NUMBER_FILTER2_LENGTH:
+			this->traits.set_min_value(0);
+			this->traits.set_max_value(360);
+			this->traits.set_step(30);
+			break;
 		}
 	}
 
