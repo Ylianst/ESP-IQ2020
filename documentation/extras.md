@@ -68,7 +68,24 @@ select:
     name: Color Cycle Speed
     id: lights_cycle_speed
     datapoint: 5
+```
 
+Selecting `Cycle` starts the color cycle and `Color Cycle Speed` sets its speed; `Off` stops the cycle and holds the current color. Some controllers ignore the cycle color command, so the cycle is also started with the "faster" light command when needed. Stopping the cycle freezes whatever color is showing. Any color select may list a 9th option, shown while the cycle is stopped mid-way or on the panel's wheel slot (for example a panel "Wheel off" setting). Selecting it stops the cycle:
+
+```
+    options:
+      - Violet
+      - Blue
+      - Cyan
+      - Green
+      - White
+      - Yellow
+      - Red
+      - Cycle
+      - Cycle Off
+```
+
+```
 number:
   - platform: iq2020
     id: lights1_intensity

@@ -783,51 +783,64 @@ int IQ2020Component::processIQ2020Command() {
 #endif
 
 #ifdef USE_IQ2020_SELECT
-			// Fix the lights cycle speed if needed
-			if (select_pending[SELECT_LIGHTS_CYCLE_SPEED] != NOT_SET) {
+			// Record the color cycle state of each light zone.
+			for (int i = 0; i < 4; i++) {
+				int on = (processingBuffer[12 + i] != 0);
+				// Stopping a running cycle freezes whatever color is showing, while the color byte keeps the
+				// cycle's base color. Remember that until a color is selected again.
+				if (lights_cycle_on[i] && !on) { lights_cycle_frozen[i] = 1; }
+				if (on) { lights_cycle_frozen[i] = 0; }
+				lights_cycle_on[i] = on;
+				lights_cycle_speed[i] = processingBuffer[16 + i];
+				lights_color_raw[i] = processingBuffer[20 + i];
+			}
+
+			// A cycle speed above "Off" with no cycle running starts the cycle on the first configured light zone.
+			if ((select_pending[SELECT_LIGHTS_CYCLE_SPEED] != NOT_SET) && (select_pending[SELECT_LIGHTS_CYCLE_SPEED] > 0)) {
+				int running = 0;
+				for (int i = 0; i < 4; i++) { if (lights_cycle_on[i] || (lights_cycle_request[i] != 0)) running = 1; }
+				if (!running) {
+					for (int i = 0; i < 4; i++) { if (g_iq2020_select[i + 1] != NULL) { lights_cycle_request[i] = 1; break; } }
+				}
+			}
+
+			// Move each light zone's cycle toward its target speed, one step per status update.
+			// Speed 0 stops the cycle and holds the current color. Some controllers ignore the
+			// "cycle" color command (0x08) and only start the cycle with the "faster" command (0x07).
+			{
 				int changes = 0;
+				int target = (select_pending[SELECT_LIGHTS_CYCLE_SPEED] != NOT_SET) ? select_pending[SELECT_LIGHTS_CYCLE_SPEED] : select_state[SELECT_LIGHTS_CYCLE_SPEED];
+				if ((target == NOT_SET) || (target < 0) || (target > 3)) target = 2;
 				for (int i = 0; i < 4; i++) {
 					if (g_iq2020_select[i + 1] == NULL) continue;
-					int cycleColor = (g_iq2020_select[i + 1]->traits.get_options().size() == 8); // SELECT_LIGHTS1_COLOR
-					if (!cycleColor || (processingBuffer[20 + i] == 8)) { // If cycling is enabled for these lights, turn off or fix the speed if needed
-						// Check if we need to fix cycling speed
-						int c = processingBuffer[16 + i]; // This is the speed of the cycling, c = 0 for pause, c = 3 for fast
-						while (c != select_pending[SELECT_LIGHTS_CYCLE_SPEED]) {
-							if ((c < select_pending[SELECT_LIGHTS_CYCLE_SPEED])) {
-								//ESP_LOGD(TAG, "** MOVE CYCLE UP %d from %d to %d", i, c, select_pending[SELECT_LIGHTS_CYCLE_SPEED]);
-								unsigned char cmd[] = { 0x17, 0x02, (unsigned char)i, 0x07 };
-								sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Faster cycle
-								next_poll = ::millis() + 100;
-								changes++;
-								c++;
-							}
-							else if ((c > select_pending[SELECT_LIGHTS_CYCLE_SPEED])) {
-								//ESP_LOGD(TAG, "** MOVE CYCLE DOWN %d from %d to %d", i, c, select_pending[SELECT_LIGHTS_CYCLE_SPEED]);
-								unsigned char cmd[] = { 0x17, 0x02, (unsigned char)i, 0x06 };
-								sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Slower cycle
-								next_poll = ::millis() + 100;
-								changes++;
-								c--;
-							}
-						}
-					}
+					int want;
+					if (lights_cycle_request[i] == 1) { want = (target > 0) ? target : 2; }
+					else if (lights_cycle_request[i] == -1) { want = 0; }
+					else if (lights_cycle_on[i] && (select_pending[SELECT_LIGHTS_CYCLE_SPEED] != NOT_SET)) { want = target; }
+					else continue;
+					int current = lights_cycle_on[i] ? lights_cycle_speed[i] : 0;
+					if (current == want) { lights_cycle_request[i] = 0; continue; }
+					unsigned char cmd[] = { 0x17, 0x02, (unsigned char)i, (unsigned char)((current < want) ? 0x07 : 0x06) };
+					sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Faster (0x07) or slower (0x06) cycle
+					next_poll = ::millis() + 300;
+					changes++;
 				}
-				// If no changes where made, we are done.
-				if (changes == 0) { select_pending[SELECT_LIGHTS_CYCLE_SPEED] = NOT_SET; }
+				if ((changes == 0) && (select_pending[SELECT_LIGHTS_CYCLE_SPEED] != NOT_SET)) { select_pending[SELECT_LIGHTS_CYCLE_SPEED] = NOT_SET; }
 			}
 
 			if (select_pending[SELECT_LIGHTS_CYCLE_SPEED] == NOT_SET) {
-				// Figure out the current cycling speed
-				// Finish with i = 0 since that is the main control
+				// Report the cycle speed of the first light zone with a running cycle, 0 if none.
 				int speed = 0;
-				for (int i = 3; i >= 0; i--) {
-					if (processingBuffer[12 + i] != 0) { speed = processingBuffer[16 + i]; }
-				}
+				for (int i = 3; i >= 0; i--) { if (lights_cycle_on[i]) { speed = lights_cycle_speed[i]; } }
 				setSelectState(SELECT_LIGHTS_CYCLE_SPEED, speed);
 			}
 
 			for (int i = SELECT_LIGHTS1_COLOR; i <= SELECT_LIGHTS4_COLOR; i++) {
-				int val = processingBuffer[19 + i];
+				int zone = i - 1;
+				int raw = lights_color_raw[zone];
+				// 8 = cycle running, 1-7 = solid color, LIGHTS_COLOR_CYCLE_OFF = cycle stopped on the cycle (8) or cycle off (0) slot.
+				int val = lights_cycle_on[zone] ? 8 : (((raw == 0) || (raw == 8) || lights_cycle_frozen[zone]) ? LIGHTS_COLOR_CYCLE_OFF : raw);
+				if (lights_cycle_request[zone] != 0) continue; // Cycle change in progress
 				if ((select_pending[i] != NOT_SET) && (val != select_pending[i])) {
 					select_state[i] = val;
 					selectAction(i, select_pending[i]);
@@ -1282,37 +1295,43 @@ void IQ2020Component::selectAction(unsigned int selectid, int state) {
 	case SELECT_LIGHTS3_COLOR:
 	case SELECT_LIGHTS4_COLOR:
 	{
-		// We have to move forward or back to get to the right color
 		if (select_state[selectid] == NOT_SET) return;
+		int zone = selectid - 1;
 		select_pending[selectid] = state;
-		int current = select_state[selectid];
-		int cmdsent = 0;
-		while (current != state) {
-			if ((state == 8) && (current < 8)) {
-				//ESP_LOGD(TAG, "** MOVE TO CYCLE %d", selectid);
-				unsigned char cmd[] = { 0x17, 0x02, (unsigned char)(selectid - 1), 0x08 };
-				sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Enable cycle state
-				cmdsent = 1;
-				current = state;
-				// If the cycle speed if off, change it to normal
-				if (select_state[SELECT_LIGHTS_CYCLE_SPEED] == 0) { select_pending[SELECT_LIGHTS_CYCLE_SPEED] = 2; }
+		if (state == 8) {
+			// Start the color cycle. Send the "cycle" command for controllers that support it; the
+			// status handler then uses "faster" (0x07) if the cycle has not started.
+			if (!lights_cycle_on[zone] && (lights_color_raw[zone] != 8)) {
+				unsigned char cmd[] = { 0x17, 0x02, (unsigned char)zone, 0x08 };
+				sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Cycle
 			}
-			else if (current > state) {
-				//ESP_LOGD(TAG, "** MOVE DOWN %d from %d to %d", selectid, current, select_pending[selectid]);
-				unsigned char cmd[] = { 0x17, 0x02, (unsigned char)(selectid - 1), 0x04 };
-				sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Previous color
-				cmdsent = 1;
-				current--;
-			}
-			else if (current < state) {
-				//ESP_LOGD(TAG, "** MOVE UP %d from %d to %d", selectid, current, select_pending[selectid]);
-				unsigned char cmd[] = { 0x17, 0x02, (unsigned char)(selectid - 1), 0x05 };
-				sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Next color
-				cmdsent = 1;
-				current++;
-			}
+			lights_cycle_request[zone] = 1;
+			next_poll = ::millis() + 300;
+			return;
 		}
-		if (cmdsent == 1) { next_poll = ::millis() + 100; }
+		if (state == LIGHTS_COLOR_CYCLE_OFF) {
+			// Stop the color cycle and hold the current color.
+			lights_cycle_request[zone] = lights_cycle_on[zone] ? -1 : 0;
+			next_poll = ::millis() + 100;
+			return;
+		}
+		// Solid color: stop a running cycle first, then step one color per status update.
+		if (lights_cycle_on[zone]) { lights_cycle_request[zone] = -1; next_poll = ::millis() + 100; return; }
+		int current = lights_color_raw[zone];
+		if ((current == state) && !lights_cycle_frozen[zone]) return;
+		// A frozen cycle shows another color than the color byte: step away from it, the next update steps back.
+		lights_cycle_frozen[zone] = 0;
+		if (current == state) {
+			unsigned char cmd[] = { 0x17, 0x02, (unsigned char)zone, (unsigned char)((state < 7) ? 0x05 : 0x04) };
+			sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Next or previous color
+			next_poll = ::millis() + 300;
+			return;
+		}
+		// Next/previous (0x05/0x04) step through colors 1-7. From the cycle slot (8) step back, from the cycle off slot (0) step forward.
+		unsigned char dir = (current == 0) ? 0x05 : ((current == 8) ? 0x04 : ((current > state) ? 0x04 : 0x05));
+		unsigned char cmd[] = { 0x17, 0x02, (unsigned char)zone, dir };
+		sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd)); // Previous or next color
+		next_poll = ::millis() + 300;
 		return; // Don't do the normal retry logic.
 	}
 	}
