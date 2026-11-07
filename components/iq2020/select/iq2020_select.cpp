@@ -71,8 +71,9 @@ namespace iq2020_select {
 				this->publish_state(this->traits.get_options()[value]);
 			}
 		} else {
+			if ((value == 9) && (this->traits.get_options().size() < 9)) { value = 8; } // "Cycle off" without a 9th option shows as Cycle
+			if (value == 0) { value = 8; } // Attempt to keep from going to negative index (??)
 			if (this->traits.get_options().size() >= value) {
-				if (value == 0) { value = 8; } // Attempt to keep from going to negative index (??)
 				this->publish_state(this->traits.get_options()[value - 1]);
 			}
 		}

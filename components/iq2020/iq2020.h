@@ -86,6 +86,7 @@
 #define CLIMATE_ACT_HEATING 2
 #define CLIMATE_ACT_COOLING 3
 #define NOT_SET -127
+#define LIGHTS_COLOR_CYCLE_OFF 9 // Select value for a paused color cycle (optional 9th color option)
 
 class IQ2020Component : public esphome::Component, public esphome::api::CustomAPIDevice {
 public:
@@ -327,6 +328,11 @@ protected:
 #ifdef USE_IQ2020_SELECT
 	int select_state[SELECTCOUNT];   // Current state of all selects
 	int select_pending[SELECTCOUNT]; // Desired state of all selects
+	int lights_cycle_on[4] = { 0, 0, 0, 0 };      // Per light zone: color cycle running (lights status byte 12+zone)
+	int lights_cycle_speed[4] = { 0, 0, 0, 0 };   // Per light zone: color cycle speed 0-3 (lights status byte 16+zone)
+	int lights_color_raw[4] = { 1, 1, 1, 1 };     // Per light zone: raw color byte, 1-7 colors, 8 = cycle, 0 = cycle off (lights status byte 20+zone)
+	int lights_cycle_request[4] = { 0, 0, 0, 0 }; // Per light zone: 1 = start/keep the cycle, -1 = stop it, 0 = no request
+	int lights_cycle_frozen[4] = { 0, 0, 0, 0 };  // Per light zone: cycle was stopped mid-way, so the shown color is not the color byte
 #endif
 #ifdef USE_IQ2020_NUMBER
 	int number_state[NUMBERCOUNT];   // Current state of all numbers
