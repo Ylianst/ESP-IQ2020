@@ -502,13 +502,13 @@ int IQ2020Component::processIQ2020Command() {
 	if ((processingBuffer[2] == 0x37) && (processingBuffer[4] == 0x80) && (cmdlen == 36) && (processingBuffer[5] == 0x23) && (processingBuffer[6] == 0xD1)) {
 		// This is a status command from Freshwater IQ
 		if (got_iq_data < 5) { got_iq_data = 5; pollState(); }
-		int iq_va = readCounterEx(processingBuffer, 7);  // Unknown value, always zero
-		int iq_vb = readCounterEx(processingBuffer, 11); // Unknown value, always zero
+		int iq_va = readCounterEx(processingBuffer, 7);  // Unknown raw field; nonzero values have been reported
+		int iq_vb = readCounterEx(processingBuffer, 11); // Unknown raw field; nonzero values have been reported
 		int iq_vc = readCounterEx(processingBuffer, 15); // Unknown value
 		int iq_orp = readCounterEx(processingBuffer, 19); // ORP (Oxidation-Reduction Potential) in millivolts
 		int iq_ve = readCounterEx(processingBuffer, 23); // Chlorine level
 		int iq_vf = readCounterEx(processingBuffer, 27); // Ph Level
-		int iq_vg = readCounterEx(processingBuffer, 31); // Cartridge life countdown.
+		int iq_vg = readCounterEx(processingBuffer, 31); // IQ measuring-sensor remaining hours; separate from salt-generator age.
 
 #ifdef USE_SENSOR
 		if (this->iq_va_sensor_) this->iq_va_sensor_->publish_state((float)iq_va);
@@ -1074,7 +1074,7 @@ int IQ2020Component::processIQ2020Command() {
 				}
 #endif
 
-				// Calculate and publish Unix timestamp (64-bit)
+				// Numeric sensors use float32; Unix epochs have coarse precision. Prefer rtc_datetime for seconds.
 #ifdef USE_SENSOR
 				if (this->rtc_timestamp_sensor_) {
 					// Unix timestamp calculation using 64-bit time_t
@@ -1088,8 +1088,8 @@ int IQ2020Component::processIQ2020Command() {
 					timeinfo.tm_sec = seconds;
 					timeinfo.tm_isdst = -1;          // Let mktime determine DST
 					time_t timestamp = mktime(&timeinfo);
-					// Cast to double to preserve full 64-bit precision
-					this->rtc_timestamp_sensor_->publish_state((double)timestamp);
+					// publish_state accepts float; a double cast cannot recover precision.
+					this->rtc_timestamp_sensor_->publish_state(static_cast<float>(timestamp));
 				}
 #endif
 			}

@@ -249,3 +249,6 @@ ModelManifest.xml
 
 **/.history
 
+# Local test environments and generated firmware fixtures
+.venv/
+tests/.work/
