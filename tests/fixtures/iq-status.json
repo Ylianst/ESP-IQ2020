@@ -1,0 +1,9 @@
+{
+  "provenance": "Public protocol.md 23D1 example at upstream 305ced65. Synthetic transport framing/checksum; no private spa capture.",
+  "model": "Unspecified in upstream example; not an Aria hardware validation",
+  "payload_hex": "23D100000000000000000000087A000003090000000F0000004B00001F2C",
+  "destination": 1,
+  "source": 55,
+  "operation": 128,
+  "expected": {"published": 1, "a": 0, "salt_raw": 2170, "orp": 777, "chlorine": 1.5, "ph": 7.5, "hours": 7980, "remaining": 0}
+}

@@ -1,0 +1,36 @@
+#include <cmath>
+#include <iostream>
+#include <string>
+#include <cstring>
+#define ESP_LOGD(...)
+struct FakeClimate {void updateTempsC(float,float,int){} void updateTempsF(float,float,int){}};
+FakeClimate *g_iq2020_climate=nullptr;
+struct IQ2020Component {
+  int climateActionCode(){return 0;}
+  unsigned char processingBuffer[140]{};
+  bool temp_celsius=false;
+  float target_temp=NOT_SET,current_temp=NOT_SET,outlet_temp=NOT_SET,pending_temp=NOT_SET,pending_temp_cmd=NOT_SET;
+  int pending_temp_retry=0,temp_action=NOT_SET;
+  void temperatures();
+};
+// PRODUCTION_METHODS
+int main(int argc,char**argv){
+  if(argc!=3)return 2;
+  std::string field=argv[2];
+  if(std::string(argv[1])=="packet"){
+    if(field.size()!=12)return 3;
+    IQ2020Component c;
+    memcpy(c.processingBuffer+90,field.data(),4);
+    memcpy(c.processingBuffer+94,field.data()+4,4);
+    memcpy(c.processingBuffer+36,field.data()+8,4);
+    c.temperatures();
+    auto number=[](float x){if(std::isnan(x))std::cout<<"null";else std::cout<<x;};
+    std::cout<<"{\"target\":";number(c.target_temp);
+    std::cout<<",\"current\":";number(c.current_temp);
+    std::cout<<",\"outlet\":";number(c.outlet_temp);std::cout<<"}\n";return 0;
+  }
+  if(field.size()!=4)return 3;
+  float result=parseTemperature(reinterpret_cast<const unsigned char*>(field.data()),std::string(argv[1])=="c");
+  if(std::isnan(result))std::cout<<"{\"valid\":false}\n";
+  else std::cout<<"{\"valid\":true,\"value\":"<<result<<"}\n";
+}

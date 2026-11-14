@@ -1,0 +1,2 @@
+# Reviewed compatibility baseline. Update deliberately alongside the build matrix.
+esphome==2026.10.2

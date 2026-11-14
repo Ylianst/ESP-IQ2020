@@ -1,0 +1,27 @@
+#include <iostream>
+#include <vector>
+#include <cstring>
+#define ESP_LOGE(...)
+struct FakePin { void digital_write(bool) {} };
+struct FakeStream {
+  std::vector<std::vector<unsigned char>> packets;
+  void write_array(unsigned char *p,int n){packets.emplace_back(p,p+n);}
+  void flush(){}
+};
+struct IQ2020Component {
+  bool active_=true;
+  FakePin *flow_control_pin_=nullptr;
+  FakeStream stream; FakeStream *stream_=&stream;
+  unsigned char outboundBuffer[IQ2020OUTBUFLEN];
+  void sendIQ2020Command(unsigned char,unsigned char,unsigned char,unsigned char*,int);
+};
+// PRODUCTION_METHODS
+int main(){
+  IQ2020Component c; unsigned char data[64]{};
+  c.sendIQ2020Command(1,31,64,data,59);
+  c.sendIQ2020Command(1,31,64,data,-1);
+  c.sendIQ2020Command(1,31,64,data,58);
+  std::cout<<"{\"packets\":"<<c.stream.packets.size()<<",\"wire\":[";
+  if(!c.stream.packets.empty()){auto &p=c.stream.packets.back();for(size_t i=0;i<p.size();i++){if(i)std::cout<<',';std::cout<<int(p[i]);}}
+  std::cout<<"]}\n";
+}

@@ -49,6 +49,24 @@ float fahrenheit_to_celsius(float f) { return (f - 32) * 5 / 9; }
 float celsius_to_fahrenheit(float c) { return c * 9 / 5 + 32; }
 int readCounter(unsigned char* data, int offset) { return (data[offset]) + (data[offset + 1] << 8) + (data[offset + 2] << 16) + (data[offset + 3] << 24); }
 int readCounterEx(unsigned char* data, int offset) { return (data[offset] << 24) + (data[offset + 1] << 16) + (data[offset + 2] << 8) + (data[offset + 3]); }
+// Fixed four-byte ASCII temperature fields; invalid text is unknown.
+float parseTemperature(const unsigned char *data, bool celsius) {
+	const int digits = celsius ? 2 : 3;
+	if (celsius ? data[2] != '.' : data[3] != 'F') return NAN;
+	int value = 0;
+	bool seen_digit = false;
+	for (int i = 0; i < digits; i++) {
+		if (data[i] == ' ' && !seen_digit) continue;
+		if (data[i] < '0' || data[i] > '9') return NAN;
+		seen_digit = true;
+		value = value * 10 + data[i] - '0';
+	}
+	if (!seen_digit) return NAN;
+	if (!celsius) return value;
+	if (data[3] < '0' || data[3] > '9') return NAN;
+	return value + (data[3] - '0') / 10.0f;
+}
+
 static const char *salt_level_friendly_text(int salt_level) {
 	if (salt_level <= 24) return "red-low";
 	if (salt_level <= 36) return "yellow-low";
@@ -336,6 +354,7 @@ void IQ2020Component::write() {
 }
 
 void IQ2020Component::processRawIQ2020Data(unsigned char* data, int len) {
+	if (len <= 0) return;
 	if ((len > IQ202BUFLEN) || ((processingBufferLen + len) > IQ202BUFLEN)) { ESP_LOGD(TAG, "Receive buffer is overflowing!"); processingBufferLen = 0; return; }
 	if (processingBufferLen == 0) { memset(processingBuffer, 0, IQ202BUFLEN); }
 	memcpy(processingBuffer + processingBufferLen, data, len);
@@ -343,7 +362,7 @@ void IQ2020Component::processRawIQ2020Data(unsigned char* data, int len) {
 	int processedData = 0;
 	while ((processedData = processIQ2020Command()) > 0) {
 		// Move the remaining data to the front of the buffer
-		if (processedData < processingBufferLen) { memcpy(processingBuffer, processingBuffer + processedData, processingBufferLen - processedData); }
+		if (processedData < processingBufferLen) { memmove(processingBuffer, processingBuffer + processedData, processingBufferLen - processedData); }
 		processingBufferLen -= processedData;
 	}
 }
@@ -368,6 +387,7 @@ int IQ2020Component::processIQ2020Command() {
 	if (processingBufferLen < 6) return 0; // Need more data
 	// operation flag 0x00 seen being sent to audio module when turning device off
 	if ((processingBuffer[0] != 0x1C) || ((processingBuffer[4] != 0x40) && (processingBuffer[4] != 0x80) && (processingBuffer[4] != 0x00))) { ESP_LOGD(TAG, "Receive buffer out of sync!"); return nextPossiblePacket(); } // Out of sync
+	if (processingBuffer[3] < 2) return nextPossiblePacket();
 	int cmdlen = 6 + processingBuffer[3];
 	if (processingBufferLen < cmdlen) return 0; // Need more data
 	unsigned char checksum = 0; // Compute the checksum
@@ -438,7 +458,7 @@ int IQ2020Component::processIQ2020Command() {
 				text[1] = 0x06;
 #ifdef USE_IQ2020_TEXT
 				if (g_iq2020_text[TEXT_SONG_TITLE] != NULL) {
-					text_len += g_iq2020_text[TEXT_SONG_TITLE]->text_value.size();
+					text_len += std::min<size_t>(g_iq2020_text[TEXT_SONG_TITLE]->text_value.size(), sizeof(text) - 2);
 					memcpy(text + 2, g_iq2020_text[TEXT_SONG_TITLE]->text_value.c_str(), text_len - 2);
 				}
 #endif
@@ -454,7 +474,7 @@ int IQ2020Component::processIQ2020Command() {
 				text[1] = 0x07;
 #ifdef USE_IQ2020_TEXT
 				if (g_iq2020_text[TEXT_ARTIST_NAME] != NULL) {
-					text_len += g_iq2020_text[TEXT_ARTIST_NAME]->text_value.size();
+					text_len += std::min<size_t>(g_iq2020_text[TEXT_ARTIST_NAME]->text_value.size(), sizeof(text) - 2);
 					memcpy(text + 2, g_iq2020_text[TEXT_ARTIST_NAME]->text_value.c_str(), text_len - 2);
 				}
 #endif
@@ -925,55 +945,18 @@ int IQ2020Component::processIQ2020Command() {
 			if (flags2 & 0x08) { jetState = 2; } // JETS2 FULL
 			setSwitchState(SWITCH_JETS2, jetState);
 
-			// Read temperatures
-			float _target_temp = 0, _current_temp = 0;
-			if (processingBuffer[93] == 'F') { // Fahrenheit
-				temp_celsius = false;
-
-				// Parse target temperature from fixed position (handles leading space for <100°F)
-				char target_temp_str[8];
-				memcpy(target_temp_str, &processingBuffer[90], 6);
-				target_temp_str[6] = '\0';
-				_target_temp = strtof(target_temp_str, nullptr);
-				if (std::isnan(_target_temp)) _target_temp = 0.0f;
-
-				// Parse current temperature from fixed position (handles leading space for <100°F)
-				char current_temp_str[8];
-				memcpy(current_temp_str, &processingBuffer[94], 6);
-				current_temp_str[6] = '\0';
-				_current_temp = strtof(current_temp_str, nullptr);
-				if (std::isnan(_current_temp)) _current_temp = 0.0f;
-
-				// Parse outlet temperature from fixed position
-				char outlet_temp_str[8];
-				memcpy(outlet_temp_str, &processingBuffer[36], 6);
-				outlet_temp_str[6] = '\0';
-				outlet_temp = strtof(outlet_temp_str, nullptr);
-				if (std::isnan(outlet_temp)) outlet_temp = 0.0f;
-			}
-			else if (processingBuffer[92] == '.') { // Celcius
-				temp_celsius = true;
-
-				// Parse target temperature from fixed position (handles leading space for <10°C)
-				char target_temp_str[8];
-				memcpy(target_temp_str, &processingBuffer[90], 4);
-				target_temp_str[5] = '\0';
-				_target_temp = strtof(target_temp_str, nullptr);
-				if (std::isnan(_target_temp)) _target_temp = 0.0f;
-
-				// Parse current temperature from fixed position (handles leading space for <10°C)
-				char current_temp_str[8];
-				memcpy(current_temp_str, &processingBuffer[94], 4);
-				current_temp_str[5] = '\0';
-				_current_temp = strtof(current_temp_str, nullptr);
-				if (std::isnan(_current_temp)) _current_temp = 0.0f;
-
-				// Parse outlet temperature from fixed position
-				char outlet_temp_str[8];
-				memcpy(outlet_temp_str, &processingBuffer[36], 4);
-				outlet_temp_str[5] = '\0';
-				outlet_temp = strtof(outlet_temp_str, nullptr);
-				if (std::isnan(outlet_temp)) outlet_temp = 0.0f;
+			// Detect units from an intact field; each field is validated independently.
+			const bool was_celsius = temp_celsius;
+			if (processingBuffer[93] == 'F') temp_celsius = false;
+			else if (processingBuffer[92] == '.') temp_celsius = true;
+			else if (processingBuffer[97] == 'F') temp_celsius = false;
+			else if (processingBuffer[96] == '.') temp_celsius = true;
+			const float _target_temp = parseTemperature(&processingBuffer[90], temp_celsius);
+			const float _current_temp = parseTemperature(&processingBuffer[94], temp_celsius);
+			outlet_temp = parseTemperature(&processingBuffer[36], temp_celsius);
+			if (temp_celsius != was_celsius) {
+				pending_temp = pending_temp_cmd = NOT_SET;
+				pending_temp_retry = 0;
 			}
 			ESP_LOGD(TAG, "Reported Current Temp: %.1f, Target Temp: %.1f, Outlet Temp: %.1f", _current_temp, _target_temp, outlet_temp);
 
@@ -1153,8 +1136,8 @@ void IQ2020Component::setTime(int hour, int minute, int second, int year, int mo
 
 void IQ2020Component::sendIQ2020Command(unsigned char dst, unsigned char src, unsigned char op, unsigned char* data, int len) {
 	if (!active_) return; // If not active, don't send anything
-	if (len + 5 > IQ2020OUTBUFLEN) {
-		ESP_LOGE(TAG, "IQ2020 Command too large: %d > %d (dst:%02x src:%02x op:%02x)", (len + 5), IQ2020OUTBUFLEN, dst, src, op);
+	if ((len < 0) || (len > IQ2020OUTBUFLEN - 6)) {
+		ESP_LOGE(TAG, "IQ2020 Command too large: %d > %d (dst:%02x src:%02x op:%02x)", (len + 6), IQ2020OUTBUFLEN, dst, src, op);
 		return;
 	}
 	outboundBuffer[0] = 0x1C;

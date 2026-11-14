@@ -18,6 +18,8 @@
 #endif
 
 #include <memory>
+#include <algorithm>
+#include <cmath>
 #include <string>
 #include <vector>
 
@@ -50,8 +52,8 @@
 #define SELECT_LIGHTS4_COLOR 4         // Exterior lights color (0 to 7 for colors, 8 for cycle)
 #define SELECT_LIGHTS_CYCLE_SPEED 5    // Lights cycle speed (0 to 3)
 #define TEXTCOUNT 2
-#define TEXT_SONG_TITLE 0              // Song title (Max 20 chars)
-#define TEXT_ARTIST_NAME 1             // Artist name (Max 20 chars)
+#define TEXT_SONG_TITLE 0              // Song title (Max 20 wire bytes)
+#define TEXT_ARTIST_NAME 1             // Artist name (Max 20 wire bytes)
 #define NUMBERCOUNT 11
 #define NUMBER_AUDIO_VOLUME 0          // Audio volume (0 to 100, steps of 4)
 #define NUMBER_AUDIO_TREBLE 1          // Audio treble (-5 to 5)
