@@ -1,4 +1,4 @@
-﻿import logging
+import logging
 
 import esphome.codegen as cg
 import esphome.config_validation as cv
@@ -218,16 +218,22 @@ CONFIG_SCHEMA = cv.Schema(
             icon=ICON_GAUGE
         ),
         cv.Optional(CONF_SENSOR_SALT_CARTRIDGE_AGE_DAYS): sensor.sensor_schema(
+            unit_of_measurement="d",
+            device_class=DEVICE_CLASS_DURATION,
             accuracy_decimals=0,
             state_class=STATE_CLASS_MEASUREMENT,
             icon=ICON_TIMER
         ),
         cv.Optional(CONF_SENSOR_SALT_DAYS_SINCE_MANUAL_TEST): sensor.sensor_schema(
+            unit_of_measurement="d",
+            device_class=DEVICE_CLASS_DURATION,
             accuracy_decimals=0,
             state_class=STATE_CLASS_MEASUREMENT,
             icon=ICON_TIMER
         ),
         cv.Optional(CONF_SENSOR_SALT_GENERATION_HOURS): sensor.sensor_schema(
+            unit_of_measurement="h",
+            device_class=DEVICE_CLASS_DURATION,
             accuracy_decimals=0,
             state_class=STATE_CLASS_TOTAL_INCREASING,
             icon=ICON_TIMER
@@ -390,7 +396,10 @@ CONFIG_SCHEMA = cv.Schema(
             accuracy_decimals=1
         ),
         cv.Optional(CONF_SENSOR_IQ_HOURSLEFT): sensor.sensor_schema(
-            accuracy_decimals=0
+            unit_of_measurement="h",
+            device_class=DEVICE_CLASS_DURATION,
+            accuracy_decimals=0,
+            state_class=STATE_CLASS_MEASUREMENT
         ),
         cv.Optional(CONF_SENSOR_RTC_TIMESTAMP): sensor.sensor_schema(
             unit_of_measurement="s",

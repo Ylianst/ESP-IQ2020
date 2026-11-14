@@ -134,21 +134,29 @@ This next command we know nothing about.
 <-- 01 37 80 23A300
 ```
 
-Every hour, we see this `0x23D1` command. This seems to contain the Chlorine, Ph and life remaining for the Freshwater IQ cartridge in hours. The command seems to return 7 x 32bit integers.
+The `0x23D1` response contains seven 32-bit big-endian fields. The IQ sensor measures hourly, but a polled or repeated response is not proof of a new measurement. Its remaining-life field describes the IQ measuring sensor, not the salt-generating cartridge.
 
 ```
 <-- 37 01 40 23D100
 <-- 01 37 80 23D100000000000000000000087A000003090000000F0000004B00001F2C
                  AAAAAAAABBBBBBBBCCCCCCCCDDDDDDDDEEEEEEEEFFFFFFFFGGGGGGGG
 
-AA = Unknown, always zero.
-BB = Unknown, always zero.
-CC = Unknown, 32 bit small-endian.
-DD = ORP (Oxidation-Reduction Potential) in millivolts, 32 bit small-endian. Typical healthy range is roughly 650-750 mV.
-EE = Chlorine in 10ths of PPM, 32 bit small-endian, Convert to decimal and divide by 10.
-FF = Ph in 10ths, 32 bit small-endian, Convert to decimal and divide by 10.
-GG = Hours remaining count-down, 32 bit small-endian.
+AA = Unknown raw field; nonzero values have been reported with sensor faults.
+BB = Unknown raw field; zero in this example.
+CC = Unknown, 32-bit big-endian.
+DD = ORP (Oxidation-Reduction Potential) in millivolts, 32-bit big-endian. Field identification is community-inferred; it is not a water-safety verdict.
+EE = Chlorine in 10ths of PPM, 32-bit big-endian, Convert to decimal and divide by 10.
+FF = Ph in 10ths, 32-bit big-endian, Convert to decimal and divide by 10.
+GG = Hours remaining count-down, 32-bit big-endian.
 ```
+
+In the example, G=`00001F2C` is **7980 hours**, E=`0000000F` is **1.5 ppm**,
+and F=`0000004B` is **7.5 pH**. A=4/G=0 was reported with an IQ sensor error in
+[issue #85](https://github.com/Ylianst/ESP-IQ2020/issues/85); this is one observation,
+not a complete error enumeration. Two owners report replacement at 508 remaining
+hours in [issue #42](https://github.com/Ylianst/ESP-IQ2020/issues/42). Preserve the raw
+countdown; a reserve is an optional estimate, not a controller-wide specification.
+The salt cartridge reset command does not reset IQ sensor life.
 
 This next command is completely unknown. It seems to contain 9 x 32 bit integers.
 
@@ -431,32 +439,32 @@ Main status decoding
 6054              - Lights timeout
 00000000          - Pump1 speed, pump2 speed, pump3 speed, blower speed
 31303346          - "103F" ASCII string, the heater outlet temperature.
-02937400          - Heater total runtime in seconds (Big-Endian)
-ABC90A00          - Jets 1 total runtime in seconds (Big-Endian)
-033CDC05          - Lifetime 1 runtime in seconds (Big-Endian)
-45000000          - Power on / Boot counter (Big-Endian)
+02937400          - Heater total runtime in seconds (Little-Endian)
+ABC90A00          - Jets 1 total runtime in seconds (Little-Endian)
+033CDC05          - Lifetime 1 runtime in seconds (Little-Endian)
+45000000          - Power on / Boot counter (Little-Endian)
 00000000          - Flags: stm_state, spa_lock_state, temp_lock_state, clean_lock_state
-7BD30C00          - Jets 2 total runtime in seconds (Big-Endian)
-00000000          - Jets 3 total runtime in seconds (Big-Endian)
+7BD30C00          - Jets 2 total runtime in seconds (Little-Endian)
+00000000          - Jets 3 total runtime in seconds (Little-Endian)
 00000000          - Blower total runtime in seconds (Big-Endian)
-B8AF0F00          - Lights total runtime in seconds (Big-Endian)
+B8AF0F00          - Lights total runtime in seconds (Little-Endian)
 02                - SPA state
 00                - SPA light state
-E902DC05          - Circulation pump runtime in seconds (Big-Endian)
-00000000          - Jets 1 low operation in seconds (Big-Endian)
-C2790A00          - Jets 2 low operation in seconds (Big-Endian)
+E902DC05          - Circulation pump runtime in seconds (Little-Endian)
+00000000          - Jets 1 low operation in seconds (Little-Endian)
+C2790A00          - Jets 2 low operation in seconds (Little-Endian)
 3130314631303246  - "101F102F" ASCII String, the target temp and current temp.
-7800              - Voltage L1 (Big-Endian)
-F700              - Voltage Heater (Big-Endian)
-F700              - Voltage L2 (Big-Endian)
+7800              - Voltage L1 (Little-Endian)
+F700              - Voltage Heater (Little-Endian)
+F700              - Voltage L2 (Little-Endian)
 0000              - Voltage Jet 3 (Big-Endian)
 0000              - Current L1 (Amps)
 0000              - Current Heater (Amps)
 0F00              - Current L2 (Heater power: 0x0000 = Off, 0x0F00 = 15 Amps)
 0000              - Current Jet 3 (Amps)
-0000              - Power L1 wattage (Big-Endian)
-5C00              - Power Heater wattage (Big-Endian)
-F30E              - Power L2 wattage - Water heater wattage (Big-Endian)
+0000              - Power L1 wattage (Little-Endian)
+5C00              - Power Heater wattage (Little-Endian)
+F30E              - Power L2 wattage - Water heater wattage (Little-Endian)
 0000              - Power Jet 3 (Big-Endian)
 01                - Daily Clear Cycle
 3C00              - Filter Time 1
@@ -465,7 +473,7 @@ F30E              - Power L2 wattage - Water heater wattage (Big-Endian)
 6A                - PCB temperature
 6F                - Peripheral Current
 00080800          - Real-Time-Clock SS:MM:HH Seconds (0 to 59), Minutes (0 to 59), Hours (0 to 24).
-1300D407          - Real-Time-Clock DD:MM:YYYY Days (1 to 31), Month (0 to 11), Year (2 byte Big-Endian).
+1300D407          - Real-Time-Clock DD:MM:YYYY Days (1 to 31), Month (0 to 11 with old_clock, otherwise 1 to 12), Year (2 byte Little-Endian).
 01                - Real-Time-Clock Status
 ```
 
@@ -561,7 +569,7 @@ Get Current Time
                  SSMMHHDDMMYYYY
 Encoded as:
 SS:MM:HH Seconds (0 to 59), Minutes (0 to 59), Hours (0 to 24).
-DD:MM:YYYY Days (1 to 31), Month (0 to 11), Year (2 byte Big-Endian).
+DD:MM:YYYY Days (1 to 31), Month (0 to 11 with old_clock, otherwise 1 to 12), Year (2 byte Little-Endian).
 ```
 
 Set Current Time
@@ -765,3 +773,20 @@ Auto Saver
 01 1F 40 1D07 0400    <-- Set mode 0x04 (Auto Saver)
 1F 01 80 1D07 0404    <-- Response: mode 0x04, compressor 0x04 (Cooling)
 ```
+
+## Runtime units and RTC precision
+
+The existing runtime entities retain their historical seconds metadata and raw
+values. Some older controllers increment about every 0.3 seconds per raw count;
+see [#93](https://github.com/Ylianst/ESP-IQ2020/issues/93) and
+[#116](https://github.com/Ylianst/ESP-IQ2020/issues/116). Confirm a controller's rate
+with timed raw deltas before configuring a conversion. Do not scale IQ hours using
+an equipment-runtime factor.
+
+`old_clock: false` uses months 1–12; `true` uses 0–11. Verify the actual controller
+instead of inferring it from spa year alone. `rtc_datetime` is local wall-clock
+text without an offset. `rtc_timestamp` uses the ESP's local timezone conversion,
+but ESPHome numeric sensors store float32: present-day Unix epochs have 128-second
+spacing. Casting to double before publishing cannot restore this precision. Use
+RTC text/raw bytes and an independently recorded timezone for second-level clock
+comparisons. No clock convention or runtime scale is changed by these fixes.
