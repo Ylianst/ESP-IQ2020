@@ -1,0 +1,23 @@
+#include <string>
+#include <vector>
+#include <cstring>
+#include <iostream>
+#include <algorithm>
+#define USE_IQ2020_TEXT
+#define USE_TEXT
+struct FakeText {std::string text_value;};
+FakeText* g_iq2020_text[TEXTCOUNT]{};
+bool audio_emulation_=true;
+unsigned char audio_module_address=0x33;
+std::vector<unsigned char> sent;
+void sendIQ2020Command(unsigned char,unsigned char,unsigned char,unsigned char*data,int size){sent.assign(data,data+size);}
+// PRODUCTION_METHODS
+int main(int argc,char**argv){
+  if(argc!=3)return 2;
+  FakeText text;
+  if(std::string(argv[2])=="utf8")for(int i=0;i<20;i++)text.text_value+="é";
+  else text.text_value=std::string(std::stoi(argv[2]),'a');
+  g_iq2020_text[TEXT_SONG_TITLE]=g_iq2020_text[TEXT_ARTIST_NAME]=&text;
+  if(std::string(argv[1])=="title")titleReply();else artistReply();
+  std::cout<<"{\"bytes\":"<<sent.size()<<"}\n";
+}

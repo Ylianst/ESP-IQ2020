@@ -1,4 +1,5 @@
 #include "iq2020.h"
+#include <algorithm>
 #include "iq2020_fan.h"
 #include "iq2020_switch.h"
 #ifdef USE_SELECT
@@ -307,7 +308,7 @@ void IQ2020Component::processRawIQ2020Data(unsigned char *data, int len) {
 	int processedData = 0;
 	while ((processedData = processIQ2020Command()) > 0) {
 		// Move the remaining data to the front of the buffer
-		if (processedData < processingBufferLen) { memcpy(processingBuffer, processingBuffer + processedData, processingBufferLen - processedData); }
+		if (processedData < processingBufferLen) { memmove(processingBuffer, processingBuffer + processedData, processingBufferLen - processedData); }
 		processingBufferLen -= processedData;
 	}
 }
@@ -401,7 +402,7 @@ int IQ2020Component::processIQ2020Command() {
 				text[1] = 0x06;
 #ifdef USE_TEXT
 				if (g_iq2020_text[TEXT_SONG_TITLE] != NULL) {
-					text_len += g_iq2020_text[TEXT_SONG_TITLE]->text_value.size();
+					text_len += std::min<size_t>(g_iq2020_text[TEXT_SONG_TITLE]->text_value.size(), sizeof(text) - 2);
 					memcpy(text + 2, g_iq2020_text[TEXT_SONG_TITLE]->text_value.c_str(), text_len - 2);
 				}
 #endif
@@ -417,7 +418,7 @@ int IQ2020Component::processIQ2020Command() {
 				text[1] = 0x07;
 #ifdef USE_TEXT
 				if (g_iq2020_text[TEXT_ARTIST_NAME] != NULL) {
-					text_len += g_iq2020_text[TEXT_ARTIST_NAME]->text_value.size();
+					text_len += std::min<size_t>(g_iq2020_text[TEXT_ARTIST_NAME]->text_value.size(), sizeof(text) - 2);
 					memcpy(text + 2, g_iq2020_text[TEXT_ARTIST_NAME]->text_value.c_str(), text_len - 2);
 				}
 #endif

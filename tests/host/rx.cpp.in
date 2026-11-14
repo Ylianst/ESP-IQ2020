@@ -1,0 +1,33 @@
+#include <cstdio>
+#include <cstring>
+#include <cstdint>
+#include <vector>
+#include <string>
+#include <cmath>
+#define USE_SENSOR
+#define ESP_LOGD(...)
+struct Sensor {float value=NAN;int count=0;void publish_state(float v){value=v;count++;}};
+struct IQ2020Component {
+  unsigned char processingBuffer[IQ202BUFLEN]{};int processingBufferLen=0,got_iq_data=0;
+  Sensor a,b,c,orp,chlorine,ph,hours;
+  Sensor *iq_va_sensor_=&a,*iq_vb_sensor_=&b,*iq_vc_sensor_=&c,*iq_orp_sensor_=&orp;
+  Sensor *iq_vd_sensor_=&orp; // Name used by the archived legacy component.
+  Sensor *iq_chlorine_sensor_=&chlorine,*iq_ph_sensor_=&ph,*iq_hoursleft_sensor_=&hours;
+  void pollState(){}
+  void processRawIQ2020Data(unsigned char*,int);int processIQ2020Command();int nextPossiblePacket();
+};
+// PRODUCTION_METHODS
+int main(int argc,char**argv){
+  if(argc!=3)return 2;
+  std::string mode=argv[1],hex=argv[2];std::vector<unsigned char> sample;
+  for(size_t i=0;i<hex.size();i+=2)sample.push_back(std::stoi(hex.substr(i,2),nullptr,16));
+  IQ2020Component c;
+  if(mode=="split") {c.processRawIQ2020Data(sample.data(),10);c.processRawIQ2020Data(sample.data()+10,sample.size()-10);}
+  else if(mode=="overlap") {std::vector<unsigned char> all;for(int i=0;i<3;i++)all.insert(all.end(),sample.begin(),sample.end());c.processRawIQ2020Data(all.data(),all.size());}
+  else if(mode=="bad_checksum") {sample.back()^=1;c.processRawIQ2020Data(sample.data(),sample.size());}
+  else if(mode=="resync") {std::vector<unsigned char> all{0,1,2,3,4,5,6};all.insert(all.end(),sample.begin(),sample.end());c.processRawIQ2020Data(all.data(),all.size());}
+  else if(mode=="normal") c.processRawIQ2020Data(sample.data(),sample.size());
+  else return 2;
+  if(!c.chlorine.count){std::printf("{\"published\":0}\n");return 0;}
+  std::printf("{\"published\":%d,\"a\":%g,\"salt_raw\":%g,\"orp\":%g,\"chlorine\":%g,\"ph\":%g,\"hours\":%g,\"remaining\":%d}\n",c.chlorine.count,c.a.value,c.c.value,c.orp.value,c.chlorine.value,c.ph.value,c.hours.value,c.processingBufferLen);
+}
