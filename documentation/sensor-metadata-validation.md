@@ -37,3 +37,18 @@ python tests/esphome/check.py --stage compile --case full
 ```
 
 Generated credentials are dummy values. These commands never upload firmware.
+
+## Companion contribution compatibility
+
+The independent protocol, control/platform and metadata branches were merged in
+a temporary validation tree without conflicts. That combined tree passes all
+38 native tests, five schema tests and a full-feature firmware build. Its 55
+maintained/legacy production files match the reviewed complete implementation
+(byte-for-byte except for a C++ helper relocation and comments). The source
+checkout and its uncommitted changes were preserved.
+
+Companion drafts: [protocol safety #135](https://github.com/Ylianst/ESP-IQ2020/pull/135),
+[control/platform #136](https://github.com/Ylianst/ESP-IQ2020/pull/136), and
+[metadata #137](https://github.com/Ylianst/ESP-IQ2020/pull/137). Each targets upstream
+`main` independently; shared test helpers are identical additions. Hardware
+validation above remains pending even when local or hosted checks pass.
