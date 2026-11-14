@@ -38,7 +38,7 @@ namespace iq2020_select {
 
 	void IQ2020Select::control(const std::string &value) {
 		ESP_LOGD(TAG, "Select:%d control state: %s", select_id, value.c_str());
-		this->publish_state(value);
+		if (select_id >= SELECTCOUNT) return;
 		if (g_iq2020_main == NULL) return;
 		if (select_id == SELECT_AUDIO_SOURCE) {
 			// Audio source: iPOD = 1, TV = 2, Aux = 3, Bluetooth = 4
@@ -60,22 +60,12 @@ namespace iq2020_select {
 	}
 
 	void IQ2020Select::publish_state_ex(int value) {
-		ESP_LOGD(TAG, "Select:%d publish_state_ex: %d", select_id, value);
-		if (select_id == SELECT_AUDIO_SOURCE) { // Audio Source, iPOD = 1, TV = 2, Aux = 3, Bluetooth = 4
-			if (value == 1) { this->publish_state("iPOD"); }
-			if (value == 2) { this->publish_state("TV"); }
-			if (value == 3) { this->publish_state("Aux"); }
-			if (value == 4) { this->publish_state("Bluetooth"); }
-		} if (select_id == SELECT_LIGHTS_CYCLE_SPEED) {
-			if (this->traits.get_options().size() > value) {
-				this->publish_state(this->traits.get_options()[value]);
-			}
-		} else {
-			if (this->traits.get_options().size() >= value) {
-				if (value == 0) { value = 8; } // Attempt to keep from going to negative index (??)
-				this->publish_state(this->traits.get_options()[value - 1]);
-			}
-		}
+		if (select_id >= SELECTCOUNT) return;
+		int index = value - 1;
+		if (select_id == SELECT_LIGHTS_CYCLE_SPEED) index = value;
+		else if (select_id != SELECT_AUDIO_SOURCE && value == 0) index = 7;
+		const auto &options = this->traits.get_options();
+		if (index >= 0 && static_cast<size_t>(index) < options.size()) this->publish_state(options[index]);
 	}
 
 	void IQ2020Select::dump_config() {

@@ -627,3 +627,68 @@ text_sensor:
 ![image](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/c5b25972-1409-4477-964a-1dc21645407e)
 
 ![image](https://github.com/Ylianst/ESP-IQ2020/assets/1319013/1561b409-8329-48f7-a581-f6841265b1d5)
+
+## Validated controls and optional platforms
+
+The platform datapoint ranges are: number 0–10, switch 0–10, select 0–5,
+text 0–1, button 0–2, and fan **0–2** (Jets 1–3). Fans support one or two speeds.
+Fan datapoint 3 is rejected: the former arithmetic route aliases salt boost and
+is not a supported fourth-jet command. Configure only jets present on the spa;
+accepting a datapoint does not establish hardware support on every model.
+
+Optional number `maximum` is a 1–5 brightness limit; 0 retains the default. Number requests must be
+finite integral values within the datapoint's range. Salt output accepts 0–10;
+zero uses the existing FreshWater or legacy ACE route according to the observed
+module. Wire construction is tested for both routes; actual controller behavior
+still requires hardware validation.
+
+`text_sensor.versionstr` is optional. RTC/status-only text configurations can omit
+it; startup polling skips unavailable version configuration and retains the
+existing ten-attempt fallback when a version sensor is configured. Any configured
+IQ measurement can trigger IQ discovery, including a pH-only configuration.
+Inactive mode and the startup delay do not consume discovery attempts for queries
+that were never transmitted.
+
+`sensor.salt_power` is a read-only reported output level from salt-module replies.
+It now has its generated setter and does not require a number platform. To control
+output, use `number` datapoint 5. This level is not salt concentration or cartridge
+condition.
+
+```yaml
+sensor:
+  - platform: iq2020
+    salt_power:
+      name: Salt Reported Output
+    iq_hoursleft:
+      name: IQ Remaining Hours
+text_sensor:
+  - platform: iq2020
+    rtc_datetime:
+      name: Spa Local Clock
+```
+
+## Command acknowledgement and retry behavior
+
+Controls use controller reports rather than optimistic number/select publication.
+A changed report updates the displayed actual value while preserving a different,
+newer requested value. A reply with no echoed value does not identify which
+request succeeded and cannot be used to publish the latest requested value.
+
+Each switch/absolute number/audio-source request receives three retries after its
+initial attempt, spaced by at least 200 ms. New user intent replaces that control's
+pending target and budget without consuming another control's budget. Expiry clears
+pending state; it does not claim success. Relative light retries require status
+feedback, are limited to three additional attempts, and expire after five seconds
+without settlement. No fresh status means no blind replay of light steps.
+
+Temperature deltas wait for actual status readback before a queued target is sent.
+A bare ACK only requests an earlier poll, so duplicate/delayed ACKs cannot overwrite
+a newer target. There are at most two further readback-driven delta attempts and a
+15-second overall request deadline. Invalid targets and requests while inactive are rejected; disabling active
+mode discards queued commands so reenabling it does not replay old user actions.
+
+The relay's TCP connection sensor describes relay clients, not spa-bus health.
+IQ response receipt is not an IQ sample timestamp. Automatic freshness alarms,
+module-absence timeouts and chemistry invalidation remain unimplemented pending
+controller-specific traffic evidence. No default silence interval is advertised
+as proof of a sensor fault.

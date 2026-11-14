@@ -16,7 +16,7 @@ IQ2020Text = iq2020_text_ns.class_('IQ2020Text', text.Text, cg.Component)
 CONFIG_SCHEMA = text.text_schema(IQ2020Text).extend({
     cv.GenerateID(): cv.declare_id(IQ2020Text)
 }).extend({
-	cv.Required(CONF_TEXT_DATAPOINT): cv.positive_int,
+	cv.Required(CONF_TEXT_DATAPOINT): cv.int_range(min=0, max=1),
 	cv.Optional(CONF_TEXT_VALUE): cv.string,
 }).extend(cv.COMPONENT_SCHEMA)
 

@@ -12,7 +12,7 @@ IQ2020Button = iq2020_button_ns.class_('IQ2020Button', button.Button, cg.Compone
 
 CONFIG_SCHEMA = button.button_schema(IQ2020Button).extend({
     cv.GenerateID(): cv.declare_id(IQ2020Button),
-    cv.Required(CONF_BUTTON_DATAPOINT): cv.positive_int,
+    cv.Required(CONF_BUTTON_DATAPOINT): cv.int_range(min=0, max=2),
 }).extend(cv.COMPONENT_SCHEMA)
 
 async def to_code(config):

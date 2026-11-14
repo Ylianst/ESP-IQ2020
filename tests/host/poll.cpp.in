@@ -1,0 +1,33 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#define USE_SENSOR
+#define USE_TEXT_SENSOR
+#define ESP_LOGD(...)
+#define ESP_LOGE(...)
+struct IQ2020Component {
+  bool active_=false,version_polling_done=false,legacy_polling_=false;
+  std::string versionstr;
+  int version_poll_count=0,got_iq_data=0;
+  int *version_sensor_=nullptr,*iq_va_sensor_=nullptr,*iq_vb_sensor_=nullptr,*iq_vc_sensor_=nullptr,*iq_orp_sensor_=nullptr;
+  int *iq_chlorine_sensor_=nullptr,*iq_ph_sensor_=nullptr,*iq_hoursleft_sensor_=nullptr;
+  std::vector<std::vector<unsigned char>> packets;
+  void sendIQ2020Command(int,int,int,unsigned char*p,int n){packets.emplace_back(p,p+n);}
+  void pollState();
+};
+// PRODUCTION_METHODS
+int main(int argc,char**argv){
+  if(argc!=2)return 2;
+  IQ2020Component c;int sensor=0;c.iq_ph_sensor_=&sensor;
+  std::string mode=argv[1];
+  if(mode=="delayed"){
+    for(int i=0;i<20;i++)c.pollState();
+    if(c.version_poll_count || c.got_iq_data || !c.packets.empty())return 3;
+    c.active_=true;c.pollState();
+  } else if(mode=="fallback"){
+    c.version_sensor_=&sensor;c.active_=true;
+    for(int i=0;i<11;i++)c.pollState();
+  } else return 2;
+  std::cout<<"{\"packets\":"<<c.packets.size()<<",\"version_attempts\":"<<c.version_poll_count<<",\"iq_attempts\":"<<c.got_iq_data<<",\"last_command\":";
+  auto&p=c.packets.back();std::cout<<((p[0]<<8)|p[1])<<"}\n";
+}

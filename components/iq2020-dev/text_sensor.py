@@ -1,4 +1,4 @@
-﻿import esphome.codegen as cg
+import esphome.codegen as cg
 import esphome.config_validation as cv
 from esphome.components import text_sensor
 from . import ns, IQ2020Component
@@ -12,7 +12,7 @@ CONF_SENSOR_SALT_LEVEL_FRIENDLY = "salt_level_friendly"
 CONFIG_SCHEMA = cv.Schema(
     {
         cv.GenerateID(CONF_IQ2020_SERVER): cv.use_id(IQ2020Component),
-        cv.Required(CONF_SENSOR_VERSION): text_sensor.text_sensor_schema(
+        cv.Optional(CONF_SENSOR_VERSION): text_sensor.text_sensor_schema(
             icon="mdi:information"
         ),
         cv.Optional(CONF_SENSOR_RTC_DATETIME): text_sensor.text_sensor_schema(

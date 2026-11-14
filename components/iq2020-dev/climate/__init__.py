@@ -13,10 +13,11 @@ IQ2020Climate = iq2020_climate_ns.class_('IQ2020Climate', climate.Climate, cg.Co
 CONFIG_SCHEMA = climate.climate_schema(IQ2020Climate).extend({
     cv.GenerateID(): cv.declare_id(IQ2020Climate)
 }).extend({
-	cv.Optional(CONF_CELSIUS) : cv.boolean,
+    cv.Optional(CONF_CELSIUS) : cv.boolean,
 }).extend(cv.COMPONENT_SCHEMA)
 
 async def to_code(config):
+    cg.add_define("USE_IQ2020_CLIMATE")
     server = cg.new_Pvariable(config[CONF_ID])
     await cg.register_component(server, config)
     await climate.register_climate(server, config)

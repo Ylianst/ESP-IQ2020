@@ -1,0 +1,20 @@
+#include <iostream>
+#include <string>
+#include <vector>
+struct Traits {std::vector<std::string> options;const std::vector<std::string>&get_options(){return options;}};
+struct IQ2020Select {
+  unsigned select_id=1;
+  Traits traits;
+  int published=0;
+  std::string shown;
+  void publish_state(const std::string &v){shown=v;published++;}
+  void publish_state_ex(int);
+};
+// PRODUCTION_METHODS
+int main(int argc,char**argv){
+  if(argc!=4)return 2;
+  IQ2020Select s;s.select_id=std::stoi(argv[1]);
+  for(int i=0;i<std::stoi(argv[2]);i++)s.traits.options.push_back(std::to_string(i));
+  s.publish_state_ex(std::stoi(argv[3]));
+  std::cout<<"{\"published\":"<<s.published<<",\"shown\":\""<<s.shown<<"\"}\n";
+}
