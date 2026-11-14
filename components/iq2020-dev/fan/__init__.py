@@ -14,19 +14,20 @@ iq2020_fan_ns = cg.esphome_ns.namespace('iq2020_fan')
 IQ2020Fan = iq2020_fan_ns.class_('IQ2020Fan', fan.Fan, cg.Component)
 
 CONFIG_SCHEMA = fan.fan_schema(IQ2020Fan).extend({
-	cv.GenerateID() : cv.declare_id(IQ2020Fan)
+    cv.GenerateID() : cv.declare_id(IQ2020Fan)
 }).extend({
-	cv.Required(CONF_FAN_DATAPOINT) : cv.positive_int,
-	cv.Required(CONF_FAN_SPEEDS) : cv.positive_int
+    cv.Required(CONF_FAN_DATAPOINT) : cv.int_range(min=0, max=2),
+    cv.Required(CONF_FAN_SPEEDS) : cv.int_range(min=1, max=2)
 }).extend(cv.COMPONENT_SCHEMA)
 
 async def to_code(config) :
-	server = cg.new_Pvariable(config[CONF_ID])
-	await cg.register_component(server, config)
-	await fan.register_fan(server, config)
+    cg.add_define("USE_IQ2020_FAN")
+    server = cg.new_Pvariable(config[CONF_ID])
+    await cg.register_component(server, config)
+    await fan.register_fan(server, config)
 
-	#    paren = await cg.get_variable(config[CONF_IQ2020_ID])
-	#    cg.add(server.set_iq2020_parent(paren))
-	#   cg.add(server.set_fan_id(config[CONF_ID]))
-	cg.add(server.set_fan_id(config[CONF_FAN_DATAPOINT]))
-	cg.add(server.set_fan_speeds(config[CONF_FAN_SPEEDS]))
+    #    paren = await cg.get_variable(config[CONF_IQ2020_ID])
+    #    cg.add(server.set_iq2020_parent(paren))
+    #   cg.add(server.set_fan_id(config[CONF_ID]))
+    cg.add(server.set_fan_id(config[CONF_FAN_DATAPOINT]))
+    cg.add(server.set_fan_speeds(config[CONF_FAN_SPEEDS]))

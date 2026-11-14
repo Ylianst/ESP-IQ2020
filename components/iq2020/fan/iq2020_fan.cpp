@@ -29,13 +29,13 @@ namespace iq2020_fan {
 
 	void IQ2020Fan::control(const esphome::fan::FanCall &call) {
 		ESP_LOGD(TAG, "IQ2020 fan %d control. State: %d, Speed: %d", fan_id, call.get_state().value_or(false) ? 1 : 0, call.get_speed().value_or(0));
-		state = call.get_state().value_or(false);
-		if (call.get_speed().has_value()) { speed = *(call.get_speed()); }
-		int xstate = 0;
-		if (call.get_state() == true) {
-			if (call.get_speed().has_value()) { xstate = *(call.get_speed()); } else { xstate = 1; }
-			if ((fan_speeds == 1) && (xstate == 1)) { xstate = 2; } // If this is a single speed jet, turn it on should send max speed command. 
-		}
+		if ((fan_id >= FANCOUNT) || (fan_speeds < 1) || (fan_speeds > 2) || (g_iq2020_main == nullptr)) return;
+		const bool requested_state = call.get_state().value_or(state);
+		const int requested_speed = call.get_speed().value_or(speed > 0 ? speed : 1);
+		if ((requested_speed < 1) || (requested_speed > fan_speeds)) return;
+		state = requested_state;
+		speed = requested_speed;
+		const int xstate = state ? (fan_speeds == 1 ? 2 : speed) : 0;
 		g_iq2020_main->switchAction(fan_id + SWITCH_JETS1, xstate);
 	};
 

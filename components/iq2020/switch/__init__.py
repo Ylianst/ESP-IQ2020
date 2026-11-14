@@ -14,9 +14,10 @@ IQ2020Switch = iq2020_switch_ns.class_('IQ2020Switch', switch.Switch, cg.Compone
 
 CONFIG_SCHEMA = switch.switch_schema(IQ2020Switch).extend({
     cv.GenerateID(): cv.declare_id(IQ2020Switch)
-}).extend({ cv.Required(CONF_SWITCH_DATAPOINT): cv.positive_int }).extend(cv.COMPONENT_SCHEMA)
+}).extend({ cv.Required(CONF_SWITCH_DATAPOINT): cv.int_range(min=0, max=10) }).extend(cv.COMPONENT_SCHEMA)
 
 async def to_code(config):
+    cg.add_define("USE_IQ2020_SWITCH")
     server = cg.new_Pvariable(config[CONF_ID])
     await cg.register_component(server, config)
     await switch.register_switch(server, config)

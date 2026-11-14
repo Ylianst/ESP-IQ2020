@@ -15,7 +15,7 @@ IQ2020Select = iq2020_select_ns.class_('IQ2020Select', select.Select, cg.Compone
 
 CONFIG_SCHEMA = select.select_schema(IQ2020Select).extend({
     cv.GenerateID(): cv.declare_id(IQ2020Select),
-    cv.Required(CONF_SELECT_DATAPOINT): cv.positive_int,
+    cv.Required(CONF_SELECT_DATAPOINT): cv.int_range(min=0, max=5),
     cv.Optional(CONF_OPTIONS): cv.ensure_list(cv.string)
 }).extend(cv.COMPONENT_SCHEMA)
 

@@ -1,6 +1,10 @@
 #include "iq2020.h"
+#ifdef USE_IQ2020_FAN
 #include "fan/iq2020_fan.h"
+#endif
+#ifdef USE_IQ2020_SWITCH
 #include "switch/iq2020_switch.h"
+#endif
 #ifdef USE_IQ2020_BUTTON
 #include "button/iq2020_button.h"
 #endif
@@ -13,7 +17,9 @@
 #ifdef USE_IQ2020_NUMBER
 #include "number/iq2020_number.h"
 #endif
+#ifdef USE_IQ2020_CLIMATE
 #include "climate/iq2020_climate.h"
+#endif
 
 #include "esphome/core/helpers.h"
 #include "esphome/core/log.h"
@@ -27,21 +33,27 @@ static const char* TAG = "iq2020";
 
 // These globals are ugly, but I can't figure out the correct system yet.
 IQ2020Component* g_iq2020_main = NULL;
+#ifdef USE_IQ2020_SWITCH
 esphome::iq2020_switch::IQ2020Switch* g_iq2020_switch[SWITCHCOUNT];
+#endif
 #ifdef USE_IQ2020_SELECT
 esphome::iq2020_select::IQ2020Select* g_iq2020_select[SELECTCOUNT];
 #endif
 #ifdef USE_IQ2020_TEXT
 esphome::iq2020_text::IQ2020Text* g_iq2020_text[TEXTCOUNT];
 #endif
+#ifdef USE_IQ2020_FAN
 esphome::iq2020_fan::IQ2020Fan* g_iq2020_fan[FANCOUNT];
+#endif
 #ifdef USE_IQ2020_NUMBER
 esphome::iq2020_number::IQ2020Number* g_iq2020_number[NUMBERCOUNT];
 #endif
 #ifdef USE_IQ2020_BUTTON
 esphome::iq2020_button::IQ2020Button* g_iq2020_button[BUTTONCOUNT];
 #endif
+#ifdef USE_IQ2020_CLIMATE
 esphome::iq2020_climate::IQ2020Climate* g_iq2020_climate = NULL;
+#endif
 
 using namespace esphome;
 
@@ -98,7 +110,11 @@ void IQ2020Component::setup() {
 
 	// Enable coolzone modes on the climate control if configured. This runs after the climate
 	// component's own setup(), so g_iq2020_climate is available here.
+
+#ifdef USE_IQ2020_CLIMATE
 	if (coolzone_enabled_ && (g_iq2020_climate != NULL)) { g_iq2020_climate->enableCoolzone(); }
+#endif
+
 
 	// If configured active, hold off by starting inactive and switching active on after delay_start_ seconds.
 	if (active_ && (delay_start_ > 0)) {
@@ -125,41 +141,37 @@ void IQ2020Component::loop() {
 		activate_at_ = 0;
 		set_active(true);
 	}
-	// Check if there is any pending commands that need retry
-	if ((next_retry_count > 0) && (next_retry < now)) {
-		for (int switchid = 0; switchid < SWITCHCOUNT; switchid++) {
-			if (switch_pending[switchid] != NOT_SET) {
-				ESP_LOGE(TAG, "Retry switch %d set to %d", switchid, switch_pending[switchid]);
-				switchAction(switchid, switch_pending[switchid]); // Try again
-				next_retry_count--; // Setup for the next retry
-				next_retry = ::millis() + SWITCH_RETRY_TIME;
-				break; // Only retry one command
-			}
+	// Each requested datapoint owns its retry budget. Replaying a request must
+	// not replenish it or consume another control's retries.
+	if ((int32_t)(now - next_retry) >= 0) {
+		next_retry = now + SWITCH_RETRY_TIME;
+		for (unsigned i = 0; i < SWITCHCOUNT; i++) {
+			if (switch_pending[i] == NOT_SET) continue;
+			if (active_ && switch_retry[i] > 0) switchAction(i, switch_pending[i], true);
+			else { switch_pending[i] = NOT_SET; switch_retry[i] = 0; setSwitchState(i, switch_state[i]); }
 		}
 #ifdef USE_IQ2020_SELECT
-		for (int selectid = 0; selectid < SELECTCOUNT; selectid++) {
-			if (select_pending[selectid] != NOT_SET) {
-				ESP_LOGE(TAG, "Retry select %d set to %d", selectid, select_pending[selectid]);
-				selectAction(selectid, select_pending[selectid]); // Try again
-				next_retry_count--; // Setup for the next retry
-				next_retry = ::millis() + SWITCH_RETRY_TIME;
-				break; // Only retry one command
-			}
+		for (unsigned i = 0; i < SELECTCOUNT; i++) {
+			if (select_pending[i] == NOT_SET) continue;
+			// Relative light commands need a fresh status before another step.
+			if (active_ && i != SELECT_AUDIO_SOURCE && (int32_t)(now - select_deadline[i]) < 0) continue;
+			if (active_ && i == SELECT_AUDIO_SOURCE && select_retry[i] > 0) selectAction(i, select_pending[i], true);
+			else { select_pending[i] = NOT_SET; select_retry[i] = 0; setSelectState(i, select_state[i]); }
 		}
 #endif
 #ifdef USE_IQ2020_NUMBER
-		for (int numberid = 0; numberid < NUMBERCOUNT; numberid++) {
-			if (number_pending[numberid] != NOT_SET) {
-				ESP_LOGE(TAG, "Retry number %d set to %d", numberid, number_pending[numberid]);
-				numberAction(numberid, number_pending[numberid]); // Try again
-				next_retry_count--; // Setup for the next retry
-				next_retry = ::millis() + SWITCH_RETRY_TIME;
-				break; // Only retry one command
-			}
+		for (unsigned i = 0; i < NUMBERCOUNT; i++) {
+			if (number_pending[i] == NOT_SET) continue;
+			if (active_ && i >= NUMBER_LIGHTS1_INTENSITY && (int32_t)(now - number_deadline[i]) < 0) continue;
+			if (active_ && i < NUMBER_LIGHTS1_INTENSITY && number_retry[i] > 0) numberAction(i, number_pending[i], true);
+			else { number_pending[i] = NOT_SET; number_retry[i] = 0; setNumberState(i, number_state[i]); }
 		}
 #endif
-		// No commands that need retry, clear the retry state
-		next_retry_count = 0;
+	}
+	if ((pending_temp != NOT_SET) && (!active_ || (int32_t)(now - temp_command_deadline_) >= 0)) {
+		ESP_LOGE(TAG, "Temperature request expired without confirmed readback");
+		pending_temp = pending_temp_cmd = NOT_SET;
+		pending_temp_retry = 0;
 	}
 
 	// Check if it's time to poll for state. We poll each 10 seconds, but add 50 seconds if we get status.
@@ -582,12 +594,15 @@ int IQ2020Component::processIQ2020Command() {
 		if ((processingBuffer[2] == 0x24) || (processingBuffer[2] == 0x29)) {
 			salt_module_address = processingBuffer[2];
 		}
-		if ((processingBuffer[7] <= 10) && (salt_power != processingBuffer[7])) {
+		if (processingBuffer[7] <= 10) {
 			salt_power = processingBuffer[7];
 #ifdef USE_IQ2020_NUMBER
 			setNumberState(NUMBER_SALT_POWER, salt_power);
 #endif
 		}
+#ifdef USE_SENSOR
+		if (this->salt_power_sensor_ && processingBuffer[7] <= 10) this->salt_power_sensor_->publish_state(processingBuffer[7]);
+#endif
 		int decoded_salt_content = processingBuffer[9];
 		// Preserve legacy ACE behavior (0x24) while using freshwater salt decoding for 0x29.
 		if (salt_module_address == 0x24) {
@@ -718,9 +733,13 @@ int IQ2020Component::processIQ2020Command() {
 				if (this->coolzone_mode_raw_sensor_) this->coolzone_mode_raw_sensor_->publish_state((float)coolzone_mode);
 				if (this->coolzone_state_raw_sensor_) this->coolzone_state_raw_sensor_->publish_state((float)coolzone_state);
 #endif
+
+#ifdef USE_IQ2020_CLIMATE
 				if (coolzone_enabled_ && (g_iq2020_climate != NULL)) {
 					g_iq2020_climate->updateCoolzone(coolzone_mode, climateActionCode());
 				}
+#endif
+
 			}
 		}
 
@@ -750,7 +769,7 @@ int IQ2020Component::processIQ2020Command() {
 		}
 
 		// Confirmation that a Jets command was received which includes new state
-		if ((cmdlen == 9) && (processingBuffer[5] == 0x0B) && (processingBuffer[6] >= 0x02) && (processingBuffer[6] <= 0x05)) {
+		if ((cmdlen == 9) && (processingBuffer[5] == 0x0B) && (processingBuffer[6] >= 0x02) && (processingBuffer[6] <= 0x04)) {
 			setSwitchState(processingBuffer[6] + 3, processingBuffer[7]);
 		}
 
@@ -771,20 +790,19 @@ int IQ2020Component::processIQ2020Command() {
 
 #ifdef USE_IQ2020_NUMBER
 			for (int i = 0; i < 4; i++) {
-				int val = processingBuffer[8 + i];
-				if ((number_pending[NUMBER_LIGHTS1_INTENSITY + i] != NOT_SET) && (val != number_pending[NUMBER_LIGHTS1_INTENSITY + i])) {
-					number_state[NUMBER_LIGHTS1_INTENSITY + i] = val;
-					numberAction(NUMBER_LIGHTS1_INTENSITY + i, number_pending[i]);
-				}
-				else {
-					setNumberState(NUMBER_LIGHTS1_INTENSITY + i, val);
-				}
+				const unsigned id = NUMBER_LIGHTS1_INTENSITY + i;
+				setNumberState(id, processingBuffer[8 + i]);
+				if (number_pending[id] != NOT_SET) numberAction(id, number_pending[id], true);
 			}
 #endif
 
 #ifdef USE_IQ2020_SELECT
 			// Fix the lights cycle speed if needed
-			if (select_pending[SELECT_LIGHTS_CYCLE_SPEED] != NOT_SET) {
+			if ((select_pending[SELECT_LIGHTS_CYCLE_SPEED] != NOT_SET) && active_) {
+				if (select_retry[SELECT_LIGHTS_CYCLE_SPEED] == 0) {
+					select_pending[SELECT_LIGHTS_CYCLE_SPEED] = NOT_SET;
+				} else {
+				select_retry[SELECT_LIGHTS_CYCLE_SPEED]--;
 				int changes = 0;
 				for (int i = 0; i < 4; i++) {
 					if (g_iq2020_select[i + 1] == NULL) continue;
@@ -814,6 +832,7 @@ int IQ2020Component::processIQ2020Command() {
 				}
 				// If no changes where made, we are done.
 				if (changes == 0) { select_pending[SELECT_LIGHTS_CYCLE_SPEED] = NOT_SET; }
+				}
 			}
 
 			if (select_pending[SELECT_LIGHTS_CYCLE_SPEED] == NOT_SET) {
@@ -827,14 +846,8 @@ int IQ2020Component::processIQ2020Command() {
 			}
 
 			for (int i = SELECT_LIGHTS1_COLOR; i <= SELECT_LIGHTS4_COLOR; i++) {
-				int val = processingBuffer[19 + i];
-				if ((select_pending[i] != NOT_SET) && (val != select_pending[i])) {
-					select_state[i] = val;
-					selectAction(i, select_pending[i]);
-				}
-				else {
-					setSelectState(i, val);
-				}
+				setSelectState(i, processingBuffer[19 + i]);
+				if (select_pending[i] != NOT_SET) selectAction(i, select_pending[i], true);
 			}
 #endif
 		}
@@ -853,25 +866,9 @@ int IQ2020Component::processIQ2020Command() {
 		}
 
 		if ((pending_temp != NOT_SET) && (cmdlen == 9) && (processingBuffer[5] == 0x01) && (processingBuffer[6] == 0x09) && (processingBuffer[7] == 0x06)) {
-			// Confirmation that the pending temperature change command was received
-			target_temp = pending_temp_cmd;
-			if (pending_temp == pending_temp_cmd) { pending_temp = NOT_SET; pending_temp_retry = 0; }
-			pending_temp = NOT_SET;
-			pending_temp_cmd = NOT_SET;
-			ESP_LOGD(TAG, "Temp Set Confirmation, Target Temp: %.1f", target_temp);
-#ifdef USE_SENSOR
-			if (temp_celsius) {
-				if (this->target_c_temp_sensor_) this->target_c_temp_sensor_->publish_state(target_temp);
-			}
-			else {
-				if (this->target_f_temp_sensor_) this->target_f_temp_sensor_->publish_state(target_temp);
-			}
-#endif
-			if (g_iq2020_climate != NULL) {
-				if (temp_celsius) { g_iq2020_climate->updateTempsC(target_temp, current_temp, climateActionCode()); }
-				else { g_iq2020_climate->updateTempsF(target_temp, current_temp, climateActionCode()); }
-			}
-			next_poll = ::millis() + 5000; // Perform state polling in the next 5 seconds to update heater status.
+			// The ACK contains no target or sequence number. Only a status reply
+			// can confirm the actual temperature and release the next queued delta.
+			next_poll = ::millis() + 100;
 		}
 
 		if (((cmdlen == 140) && (processingBuffer[5] == 0x02) && (processingBuffer[6] == 0x56)) || ((cmdlen == 123) && (processingBuffer[5] == 0x02) && (processingBuffer[6] == 0x55))) {
@@ -982,10 +979,14 @@ int IQ2020Component::processIQ2020Command() {
 				target_temp = _target_temp;
 				current_temp = _current_temp;
 				temp_action = (heaterActive != 0);
+
+#ifdef USE_IQ2020_CLIMATE
 				if (g_iq2020_climate != NULL) {
 					if (temp_celsius) { g_iq2020_climate->updateTempsC(target_temp, current_temp, climateActionCode()); }
 					else { g_iq2020_climate->updateTempsF(target_temp, current_temp, climateActionCode()); }
 				}
+#endif
+
 				ESP_LOGD(TAG, "Changed Current Temp: %.1f, Target Temp: %.1f, Action: %d", current_temp, target_temp, temp_action);
 			}
 
@@ -1108,28 +1109,7 @@ int IQ2020Component::processIQ2020Command() {
 			if (this->logo_lights_raw_sensor_) this->logo_lights_raw_sensor_->publish_state((float)processingBuffer[16]);
 #endif
 
-			if (pending_temp != NOT_SET) {
-				if (pending_temp == target_temp) {
-					pending_temp = NOT_SET;
-				}
-				else {
-					if (pending_temp_retry > 0) { // Try to adjust the temperature again
-						unsigned char deltaSteps = ((temp_celsius ? 2 : 1) * (pending_temp - target_temp));
-						ESP_LOGD(TAG, "Retry setTempAction: new=%f, target=%f, deltasteps=%d", pending_temp, target_temp, deltaSteps);
-						if (deltaSteps != 0) {
-							unsigned char changeTempCmd[] = { 0x01, 0x09, 0xFF, deltaSteps };
-							sendIQ2020Command(0x01, 0x1F, 0x40, changeTempCmd, 4); // Adjust temp
-							pending_temp_retry--;
-						}
-						else {
-							pending_temp = NOT_SET;
-						}
-					}
-					else {
-						pending_temp = NOT_SET; // Give up
-					}
-				}
-			}
+			reconcileTemperature();
 
 			if (connectionKit <= 1) {
 				// Poll lights state
@@ -1173,7 +1153,14 @@ void IQ2020Component::sendIQ2020Command(unsigned char dst, unsigned char src, un
 	//ESP_LOGD(TAG, "IQ2020 transmit, dst:%02x src:%02x op:%02x datalen:%d", outboundBuffer[1], outboundBuffer[2], outboundBuffer[4], outboundBuffer[3]);
 }
 
-void IQ2020Component::switchAction(unsigned int switchid, int state) {
+void IQ2020Component::switchAction(unsigned int switchid, int state, bool retry) {
+	if (switchid >= SWITCHCOUNT) return;
+	const int maximum = (switchid >= SWITCH_JETS1 && switchid <= SWITCH_JETS3) ? 2 : 1;
+	if (state < 0 || state > maximum) return;
+	if (switchid == SWITCH_ACTIVE) { set_active(state != 0); return; }
+	if (!active_) return;
+	if (retry) { if (switch_retry[switchid] == 0) return; switch_retry[switchid]--; }
+	else { switch_retry[switchid] = SWITCH_RETRY_COUNT; }
 	ESP_LOGD(TAG, "switchAction, switchid = %d, status = %d", switchid, state);
 	switch (switchid) {
 	case SWITCH_LIGHTS: { // Spa Lights Switch
@@ -1256,12 +1243,23 @@ void IQ2020Component::switchAction(unsigned int switchid, int state) {
 	default: { return; }
 	}
 	// If the command does not get confirmed, setup to try again
-	next_retry_count += SWITCH_RETRY_COUNT;
 	next_retry = ::millis() + SWITCH_RETRY_TIME;
 }
 
 #ifdef USE_IQ2020_SELECT
-void IQ2020Component::selectAction(unsigned int selectid, int state) {
+void IQ2020Component::selectAction(unsigned int selectid, int state, bool retry) {
+	if (selectid >= SELECTCOUNT || !active_) return;
+	const int minimum = selectid == SELECT_LIGHTS_CYCLE_SPEED ? 0 : 1;
+	const int maximum = selectid == SELECT_AUDIO_SOURCE ? 4 : (selectid == SELECT_LIGHTS_CYCLE_SPEED ? 3 : 8);
+	if (state < minimum || state > maximum) return;
+	if (selectid >= SELECT_LIGHTS1_COLOR && selectid <= SELECT_LIGHTS4_COLOR && select_state[selectid] == NOT_SET) return;
+	if (retry) {
+		if (select_retry[selectid] == 0) { select_pending[selectid] = NOT_SET; return; }
+		select_retry[selectid]--;
+	} else {
+		select_retry[selectid] = SWITCH_RETRY_COUNT;
+		select_deadline[selectid] = ::millis() + CONTROL_READBACK_TIMEOUT;
+	}
 	ESP_LOGD(TAG, "selectAction, selectid = %d, state = %d", selectid, state);
 	switch (selectid) {
 	case SELECT_AUDIO_SOURCE: // Audio Source
@@ -1295,7 +1293,7 @@ void IQ2020Component::selectAction(unsigned int selectid, int state) {
 				cmdsent = 1;
 				current = state;
 				// If the cycle speed if off, change it to normal
-				if (select_state[SELECT_LIGHTS_CYCLE_SPEED] == 0) { select_pending[SELECT_LIGHTS_CYCLE_SPEED] = 2; }
+				if (!retry && select_state[SELECT_LIGHTS_CYCLE_SPEED] == 0) { selectAction(SELECT_LIGHTS_CYCLE_SPEED, 2); }
 			}
 			else if (current > state) {
 				//ESP_LOGD(TAG, "** MOVE DOWN %d from %d to %d", selectid, current, select_pending[selectid]);
@@ -1317,13 +1315,33 @@ void IQ2020Component::selectAction(unsigned int selectid, int state) {
 	}
 	}
 	// If the command does not get confirmed, setup to try again
-	next_retry_count += SWITCH_RETRY_COUNT;
 	next_retry = ::millis() + SWITCH_RETRY_TIME;
 }
 #endif
 
 #ifdef USE_IQ2020_NUMBER
-void IQ2020Component::numberAction(unsigned int numberid, int value) {
+bool validNumberValue(unsigned numberid, int value) {
+	if (numberid >= NUMBERCOUNT) return false;
+	int minimum = 0, maximum = 5;
+	if (numberid == NUMBER_AUDIO_VOLUME) maximum = 100;
+	else if (numberid >= NUMBER_AUDIO_TREBLE && numberid <= NUMBER_AUDIO_BALANCE) { minimum = -5; maximum = 5; }
+	else if (numberid == NUMBER_AUDIO_SUBWOOFER) maximum = 11;
+	else if (numberid == NUMBER_SALT_POWER) maximum = 10;
+	else if (numberid == NUMBER_SALT_STATUS) maximum = 7;
+	return value >= minimum && value <= maximum;
+}
+
+void IQ2020Component::numberAction(unsigned int numberid, int value, bool retry) {
+	if (numberid >= NUMBERCOUNT || !active_) return;
+	if (!validNumberValue(numberid, value)) return;
+	if (numberid >= NUMBER_LIGHTS1_INTENSITY && number_state[numberid] == NOT_SET) return;
+	if (retry) {
+		if (number_retry[numberid] == 0) { number_pending[numberid] = NOT_SET; return; }
+		number_retry[numberid]--;
+	} else {
+		number_retry[numberid] = SWITCH_RETRY_COUNT;
+		number_deadline[numberid] = ::millis() + CONTROL_READBACK_TIMEOUT;
+	}
 	ESP_LOGD(TAG, "numberAction, numberid = %d, value = %d", numberid, value);
 	number_pending[numberid] = value;
 	switch (numberid) {
@@ -1370,7 +1388,7 @@ void IQ2020Component::numberAction(unsigned int numberid, int value) {
 	}
 	case NUMBER_SALT_POWER:
 	{
-		if (value < 1 || value > 10) return;
+		if (value < 0 || value > 10) return;
 		number_pending[NUMBER_SALT_POWER] = value;
 		if (salt_module_address == 0x29) {
 			unsigned char cmd[] = { 0x1E, 0x01, (unsigned char)value, 0x02, 0xFF, 0xFF, 0xFF, 0x00, 0xFF, 0x01, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
@@ -1385,7 +1403,8 @@ void IQ2020Component::numberAction(unsigned int numberid, int value) {
 	case NUMBER_SALT_STATUS:
 	{
 		ace_status = value;
-		break;
+		setNumberState(numberid, value);
+		return;
 	}
 	case NUMBER_LIGHTS1_INTENSITY:
 	case NUMBER_LIGHTS2_INTENSITY:
@@ -1419,7 +1438,6 @@ void IQ2020Component::numberAction(unsigned int numberid, int value) {
 	}
 
 	// If the command does not get confirmed, setup to try again
-	next_retry_count += SWITCH_RETRY_COUNT;
 	next_retry = ::millis() + SWITCH_RETRY_TIME;
 }
 #endif
@@ -1450,58 +1468,84 @@ void IQ2020Component::buttonAction(unsigned int buttonid) {
 #endif
 
 void IQ2020Component::setTempAction(float newtemp) {
-	//ESP_LOGD(TAG, "setTempAction: new=%f", newtemp);
-
-	if (temp_celsius) {
-		pending_temp = (std::round(newtemp * 2) / 2); // Round to the nearest .5
-	}
-	else {
-		pending_temp = std::round(esphome::celsius_to_fahrenheit(newtemp)); // Convert and round to the nearest integer
-	}
+	if (!active_ || !std::isfinite(newtemp) || !std::isfinite(target_temp) || target_temp == NOT_SET) return;
+	const float requested = temp_celsius ? std::round(newtemp * 2) / 2 : std::round(esphome::celsius_to_fahrenheit(newtemp));
+	const float minimum = temp_celsius ? (coolzone_enabled_ ? 15.5f : 26.0f) : (coolzone_enabled_ ? 60.0f : 80.0f);
+	if (requested < minimum || requested > (temp_celsius ? 40.0f : 104.0f)) return;
+	pending_temp = requested;
 	pending_temp_retry = 2;
+	temp_command_deadline_ = ::millis() + TEMP_READBACK_TIMEOUT;
+	// A newer request waits for an actual status reply to the in-flight delta.
+	if (pending_temp_cmd == NOT_SET) sendPendingTemperature();
+}
 
-	if (pending_temp_cmd == NOT_SET) { // If there are no outstanding temp commands in-flight, send one now.
-		unsigned char deltaSteps = ((temp_celsius ? 2 : 1) * (pending_temp - target_temp));
-		ESP_LOGD(TAG, "setTempAction: new=%f, target=%f, deltasteps=%d", pending_temp, target_temp, deltaSteps);
-		if (deltaSteps == 0) { pending_temp = NOT_SET; return; }
-		pending_temp_cmd = pending_temp;
-		unsigned char changeTempCmd[] = { 0x01, 0x09, 0xFF, deltaSteps };
-		sendIQ2020Command(0x01, 0x1F, 0x40, changeTempCmd, 4); // Adjust temp
+void IQ2020Component::sendPendingTemperature() {
+	if (!active_ || pending_temp == NOT_SET || !std::isfinite(target_temp) || target_temp == NOT_SET) return;
+	const int delta = (temp_celsius ? 2 : 1) * (pending_temp - target_temp);
+	if (delta == 0) { pending_temp = pending_temp_cmd = NOT_SET; pending_temp_retry = 0; return; }
+	if (delta < -128 || delta > 127) return;
+	pending_temp_cmd = pending_temp;
+	unsigned char cmd[] = { 0x01, 0x09, 0xFF, static_cast<unsigned char>(delta) };
+	sendIQ2020Command(0x01, 0x1F, 0x40, cmd, sizeof(cmd));
+	next_poll = ::millis() + 100;
+}
+
+void IQ2020Component::reconcileTemperature() {
+	if (!std::isfinite(target_temp) || target_temp == NOT_SET) return;
+	pending_temp_cmd = NOT_SET; // Only an authoritative status releases an in-flight delta.
+	if (pending_temp == NOT_SET) return;
+	if (target_temp == pending_temp || !active_ || pending_temp_retry == 0) {
+		pending_temp = NOT_SET;
+		pending_temp_retry = 0;
+		return;
 	}
+	pending_temp_retry--;
+	sendPendingTemperature();
 }
 
 // Update the state of a switch or jet from the hot tub.
 // If you set state to NOT_SET, that indicates that whatever state we wanted to go to, we got a confirmation.
 void IQ2020Component::setSwitchState(unsigned int switchid, int state) {
-	ESP_LOGD(TAG, "setSwitchState, switchid = %d, status = %d", switchid, state);
+	if (switchid >= SWITCHCOUNT) return;
 	if (state == NOT_SET) {
-		if (switch_pending[switchid] == NOT_SET) return;
-		state = switch_pending[switchid];
-		switch_pending[switchid] = NOT_SET;
+		// This ACK does not identify a value. Do not confirm the latest request.
+		next_poll = ::millis() + 100;
+		return;
 	}
-	if (state != switch_state[switchid]) {
-		switch_state[switchid] = state;
+	const int maximum = switchid >= SWITCH_JETS1 && switchid <= SWITCH_JETS3 ? 2 : 1;
+	if (state < 0 || state > maximum) return;
+	switch_state[switchid] = state;
+	if (switch_pending[switchid] == state) {
 		switch_pending[switchid] = NOT_SET;
-		if (g_iq2020_switch[switchid] != NULL) { g_iq2020_switch[switchid]->publish_state(state != 0); }
-		if ((switchid >= SWITCH_JETS1) && (switchid <= SWITCH_JETS3) && (g_iq2020_fan[switchid - SWITCH_JETS1] != NULL)) { g_iq2020_fan[switchid - SWITCH_JETS1]->updateState(state); }
+		switch_retry[switchid] = 0;
 	}
+#ifdef USE_IQ2020_SWITCH
+	if (g_iq2020_switch[switchid] != nullptr) g_iq2020_switch[switchid]->publish_state(state != 0);
+#endif
+#ifdef USE_IQ2020_FAN
+	if (switchid >= SWITCH_JETS1 && switchid <= SWITCH_JETS3 && g_iq2020_fan[switchid - SWITCH_JETS1] != nullptr)
+		g_iq2020_fan[switchid - SWITCH_JETS1]->updateState(state);
+#endif
 }
 
 // Update the state of a selector
 // If you set state to NOT_SET, that indicates that whatever state we wanted to go to, we got a confirmation.
 #ifdef USE_IQ2020_SELECT
 void IQ2020Component::setSelectState(unsigned int selectid, int state) {
-	ESP_LOGD(TAG, "setSelectState, selectid = %d, status = %d", selectid, state);
+	if (selectid >= SELECTCOUNT) return;
 	if (state == NOT_SET) {
-		if (select_pending[selectid] == NOT_SET) return;
-		state = select_pending[selectid];
-		select_pending[selectid] = NOT_SET;
+		// This ACK does not identify a value. Do not confirm the latest request.
+		next_poll = ::millis() + 100;
+		return;
 	}
-	if (state != select_state[selectid]) {
-		select_state[selectid] = state;
+	const int maximum = selectid == SELECT_AUDIO_SOURCE ? 4 : (selectid == SELECT_LIGHTS_CYCLE_SPEED ? 3 : 8);
+	if (state < (selectid == SELECT_AUDIO_SOURCE ? 1 : 0) || state > maximum) return;
+	select_state[selectid] = state;
+	if (select_pending[selectid] == state) {
 		select_pending[selectid] = NOT_SET;
-		if (g_iq2020_select[selectid] != NULL) { g_iq2020_select[selectid]->publish_state_ex(state); }
+		select_retry[selectid] = 0;
 	}
+	if (g_iq2020_select[selectid] != nullptr) g_iq2020_select[selectid]->publish_state_ex(state);
 }
 #endif
 
@@ -1509,17 +1553,19 @@ void IQ2020Component::setSelectState(unsigned int selectid, int state) {
 // If you set state to NOT_SET, that indicates that whatever state we wanted to go to, we got a confirmation.
 #ifdef USE_IQ2020_NUMBER
 void IQ2020Component::setNumberState(unsigned int numberid, int value) {
-	ESP_LOGD(TAG, "setNumberState, numberid = %d, value = %d", numberid, value);
+	if (numberid >= NUMBERCOUNT) return;
 	if (value == NOT_SET) {
-		if (number_pending[numberid] == NOT_SET) return;
-		value = number_pending[numberid];
-		number_pending[numberid] = NOT_SET;
+		// This ACK does not identify a value. Do not confirm the latest request.
+		next_poll = ::millis() + 100;
+		return;
 	}
-	if (value != number_state[numberid]) {
-		number_state[numberid] = value;
+	if (!validNumberValue(numberid, value)) return;
+	number_state[numberid] = value;
+	if (number_pending[numberid] == value) {
 		number_pending[numberid] = NOT_SET;
-		if (g_iq2020_number[numberid] != NULL) { g_iq2020_number[numberid]->publish_state(value); }
+		number_retry[numberid] = 0;
 	}
+	if (g_iq2020_number[numberid] != nullptr) g_iq2020_number[numberid]->publish_state(value);
 }
 #endif
 
@@ -1546,6 +1592,8 @@ void IQ2020Component::setCoolzoneMode(int mode) {
 }
 
 void IQ2020Component::pollState() {
+	// Startup delay/passive mode must not consume attempts for unsent queries.
+	if (!active_) return;
 	// If we don't have the version string, fetch it now.
 	if (versionstr.empty() && !version_polling_done) {
 #ifdef USE_TEXT_SENSOR
@@ -1582,7 +1630,8 @@ void IQ2020Component::pollState() {
 	}
 #endif
 
-	if ((got_iq_data < 3) && (this->iq_chlorine_sensor_)) {
+	#ifdef USE_SENSOR
+	if ((got_iq_data < 3) && (iq_va_sensor_ || iq_vb_sensor_ || iq_vc_sensor_ || iq_orp_sensor_ || iq_chlorine_sensor_ || iq_ph_sensor_ || iq_hoursleft_sensor_)) {
 		ESP_LOGD(TAG, "Poll Freshwater IQ");
 		got_iq_data++;
 		// Get Freshwater IQ status. No command can be sent after this one since this module will
@@ -1591,6 +1640,7 @@ void IQ2020Component::pollState() {
 		sendIQ2020Command(0x37, 0x1F, 0x40, cmd, sizeof(cmd));
 		return;
 	}
+#endif
 
 	if (legacy_polling_) {
 		ESP_LOGD(TAG, "LegacyPoll");

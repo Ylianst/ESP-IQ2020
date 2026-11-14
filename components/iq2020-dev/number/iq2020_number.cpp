@@ -56,8 +56,9 @@ namespace iq2020_number {
 
 	void IQ2020Number::control(float value) {
 		ESP_LOGD(TAG, "Number:%d write value: %.1f", number_id, value);
+		if ((number_id >= NUMBERCOUNT) || !std::isfinite(value)) return;
 		if ((maximum != 0) && (value > maximum)) { value = maximum; }
-		this->publish_state(value);
+		if ((value != std::round(value)) || (value < -5) || (value > 100)) return;
 		if (g_iq2020_main != NULL) { g_iq2020_main->numberAction(number_id, value); }
 	}
 

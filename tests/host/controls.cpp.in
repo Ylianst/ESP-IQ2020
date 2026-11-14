@@ -1,0 +1,118 @@
+// Only ESPHome/hardware boundaries are stubbed. Methods are inserted from source.py.
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <cstring>
+#include <optional>
+#include <cmath>
+#include <cstdint>
+#define ESP_LOGD(...)
+#define ESP_LOGE(...)
+#define ESP_LOGCONFIG(...)
+#define USE_IQ2020_NUMBER
+#define USE_IQ2020_SELECT
+#define USE_IQ2020_FAN
+unsigned long fake_millis=1000;
+unsigned long millis(){return fake_millis;}
+namespace esphome {
+float celsius_to_fahrenheit(float c){return c*9/5+32;}
+namespace fan {
+struct FanCall {
+  std::optional<bool> state; std::optional<int> speed;
+  std::optional<bool> get_state()const{return state;}
+  std::optional<int> get_speed()const{return speed;}
+};
+}}
+struct FakePin{void digital_write(bool){} bool digital_read(){return false;}};
+struct FakeStream{
+  std::vector<std::vector<unsigned char>> packets;
+  void write_array(unsigned char*p,int n){packets.emplace_back(p,p+n);} void flush(){}
+};
+struct FakeClimate {void updateTempsC(float,float,int){} void updateTempsF(float,float,int){}};
+FakeClimate* g_iq2020_climate=nullptr;
+class IQ2020Component;
+class IQ2020Number {
+public:
+  unsigned number_id=NUMBER_SALT_POWER; float maximum=0, shown=NOT_SET;
+  void publish_state(float v){shown=v;} void control(float);
+};
+class IQ2020Fan {
+public:
+  bool state=true; int speed=2; unsigned fan_id=0; int fan_speeds=2;
+  void control(const esphome::fan::FanCall &call);
+  void updateState(int s){state=s!=0;speed=s;}
+};
+struct IQ2020Select {int shown=NOT_SET; void publish_state_ex(int v){shown=v;}};
+IQ2020Select* g_iq2020_select[SELECTCOUNT]{};
+IQ2020Fan* g_iq2020_fan[FANCOUNT]{};
+IQ2020Component* g_iq2020_main=nullptr;
+IQ2020Number* g_iq2020_number[NUMBERCOUNT]{};
+class IQ2020Component {
+public:
+  int number_pending[NUMBERCOUNT],number_state[NUMBERCOUNT],switch_pending[SWITCHCOUNT],switch_state[SWITCHCOUNT]{};
+  int audio_module_address=0x33,salt_module_address=0x29,ace_status=0;
+  int select_pending[SELECTCOUNT],select_state[SELECTCOUNT];
+  uint8_t number_retry[NUMBERCOUNT]{},switch_retry[SWITCHCOUNT]{},select_retry[SELECTCOUNT]{};
+  unsigned long number_deadline[NUMBERCOUNT]{},select_deadline[SELECTCOUNT]{},temp_command_deadline_=0;
+  unsigned long next_retry=0,next_poll=10000000,activate_at_=0,connectionKit=1,last_pin_check_time=0;
+  bool active_=true,ace_emulation_=false,temp_celsius=false,coolzone_enabled_=false;
+  unsigned char ace_flags=1;
+  float target_temp=100,current_temp=100,pending_temp=NOT_SET,pending_temp_cmd=NOT_SET;
+  int pending_temp_retry=0;
+  FakePin* trigger_poll_pin_=nullptr; FakePin* flow_control_pin_=nullptr;
+  FakeStream stream; FakeStream* stream_=&stream; unsigned char outboundBuffer[IQ2020OUTBUFLEN];
+  IQ2020Component(){std::fill_n(number_pending,NUMBERCOUNT,NOT_SET);std::fill_n(number_state,NUMBERCOUNT,NOT_SET);std::fill_n(switch_pending,SWITCHCOUNT,NOT_SET);std::fill_n(select_pending,SELECTCOUNT,NOT_SET);std::fill_n(select_state,SELECTCOUNT,NOT_SET);}
+  void accept(){} void read(){} void flush(){} void write(){} void cleanup(){} void pollState(){}
+  void set_active(bool); int climateActionCode(){return 0;}
+  void setSwitchState(unsigned int,int);
+  void numberAction(unsigned int,int,bool=false); void setNumberState(unsigned int,int); void loop();
+  void switchAction(unsigned int,int,bool=false); void setTempAction(float); void acknowledgeTemperature();
+  void selectAction(unsigned int,int,bool=false); void setSelectState(unsigned int,int);
+  void sendPendingTemperature(); void reconcileTemperature();
+  void sendIQ2020Command(unsigned char,unsigned char,unsigned char,unsigned char*,int);
+};
+// PRODUCTION_METHODS
+int main(int argc,char**argv){
+  if(argc!=2)return 2;
+  std::string mode=argv[1]; IQ2020Component c; IQ2020Number n; IQ2020Fan f;
+  g_iq2020_main=&c; g_iq2020_number[NUMBER_SALT_POWER]=&n;
+  c.number_state[NUMBER_SALT_POWER]=3; n.publish_state(3);
+  if(mode=="zero") n.control(0);
+  else if(mode=="normal") n.control(4);
+  else if(mode=="retry") {n.control(4);for(int i=0;i<3;i++){fake_millis+=201;c.loop();}}
+  else if(mode=="pending") {n.control(4);n.publish_state(4);c.setNumberState(NUMBER_SALT_POWER,3);}
+  else if(mode=="inactive") {c.active_=false;n.control(6);}
+  else if(mode=="fan_alias") {f.fan_id=3;f.control({true,2});}
+  else if(mode=="fan_speed") f.control({std::nullopt,1});
+  else if(mode=="fan_on") f.control({true,std::nullopt});
+  else if(mode=="temperature") {c.setTempAction((101.0f-32)*5/9);c.setTempAction((102.0f-32)*5/9);c.acknowledgeTemperature();}
+  else if(mode=="invalid_id") {c.numberAction(999,4);}
+  else if(mode=="retry_expiry") {n.control(4);for(int i=0;i<20;i++){fake_millis+=201;c.loop();}}
+  else if(mode=="ack") {n.control(4);c.setNumberState(NUMBER_SALT_POWER,4);fake_millis+=201;c.loop();}
+  else if(mode=="newer_number") {n.control(4);n.control(6);c.setNumberState(NUMBER_SALT_POWER,4);fake_millis+=201;c.loop();}
+  else if(mode=="unlabelled_ack") {n.control(4);n.control(6);c.setNumberState(NUMBER_SALT_POWER,NOT_SET);}
+  else if(mode=="independent") {n.control(4);c.switchAction(SWITCH_TEMPLOCK,1);c.selectAction(SELECT_AUDIO_SOURCE,3);for(int i=0;i<20;i++){fake_millis+=201;c.loop();}}
+  else if(mode=="cancel_inactive") {n.control(4);c.set_active(false);c.set_active(true);fake_millis+=201;c.loop();}
+  else if(mode=="rejected_number") {n.control(11);n.control(NAN);n.control(INFINITY);n.control(4.5);}
+  else if(mode=="legacy_zero") {c.salt_module_address=0x24;n.control(0);}
+  else if(mode=="fan_single") {f.fan_speeds=1;f.speed=1;f.control({true,std::nullopt});}
+  else if(mode=="fan_off_speed") {f.state=false;f.control({std::nullopt,2});}
+  else if(mode=="fan_invalid") {f.control({true,3});}
+  else if(mode=="temperature_followup") {c.setTempAction((101.0f-32)*5/9);c.setTempAction((102.0f-32)*5/9);c.acknowledgeTemperature();c.target_temp=101;c.reconcileTemperature();c.acknowledgeTemperature();}
+  else if(mode=="temperature_confirm") {c.setTempAction((101.0f-32)*5/9);c.setTempAction((102.0f-32)*5/9);c.target_temp=101;c.reconcileTemperature();c.target_temp=102;c.reconcileTemperature();c.acknowledgeTemperature();}
+  else if(mode=="temperature_expiry") {c.setTempAction((101.0f-32)*5/9);fake_millis+=16000;c.loop();c.acknowledgeTemperature();}
+  else if(mode=="temperature_rejected") {c.setTempAction(NAN);c.setTempAction(INFINITY);c.setTempAction(90);c.active_=false;c.setTempAction(38);}
+  else if(mode=="temperature_retry") {c.setTempAction((101.0f-32)*5/9);for(int i=0;i<10;i++)c.reconcileTemperature();}
+  else if(mode=="temperature_negative") {c.setTempAction((99.0f-32)*5/9);}
+  else if(mode=="temperature_celsius") {c.temp_celsius=true;c.target_temp=37;c.setTempAction(37.5);}
+  else if(mode=="invalid_reports") {c.number_state[7]=1;c.select_state[1]=1;c.setNumberState(7,255);c.setSelectState(1,255);c.numberAction(7,2);c.selectAction(1,2);}
+  else if(mode=="invalid_setters") {c.setNumberState(999,3);c.setSwitchState(999,1);c.setSelectState(999,1);c.switchAction(999,1);c.selectAction(999,1);}
+  else if(mode=="outbound_capacity") {unsigned char data[64]{};c.sendIQ2020Command(1,31,64,data,59);c.sendIQ2020Command(1,31,64,data,-1);c.sendIQ2020Command(1,31,64,data,58);}
+  else if(mode=="light_budget") {c.number_state[7]=1;c.numberAction(7,2);for(int i=0;i<10;i++){c.setNumberState(7,1);if(c.number_pending[7]!=NOT_SET)c.numberAction(7,c.number_pending[7],true);}}
+  else if(mode=="light_no_reply") {c.number_state[7]=1;c.numberAction(7,2);for(int i=0;i<30;i++){fake_millis+=201;c.loop();}}
+  else if(mode=="color_budget") {c.select_state[1]=1;c.selectAction(1,2);for(int i=0;i<10;i++){c.setSelectState(1,1);if(c.select_pending[1]!=NOT_SET)c.selectAction(1,c.select_pending[1],true);}}
+  else return 2;
+  std::cout<<"{\"packets\":"<<c.stream.packets.size()<<",\"shown\":"<<n.shown<<",\"pending_temp\":"<<c.pending_temp<<",\"fan_on\":"<<f.state<<",\"number_pending\":"<<c.number_pending[5]<<",\"light_pending\":"<<c.number_pending[7]<<",\"color_pending\":"<<c.select_pending[1]<<",\"target\":"<<c.target_temp<<",\"inflight\":"<<c.pending_temp_cmd<<",\"wire\":[";
+  if(!c.stream.packets.empty()){auto&p=c.stream.packets.back();for(size_t i=0;i<p.size();i++){if(i)std::cout<<',';std::cout<<int(p[i]);}}
+  std::cout<<"]}\n";
+}

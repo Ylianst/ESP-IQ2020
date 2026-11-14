@@ -18,19 +18,22 @@
 #endif
 
 #include <memory>
+#include <algorithm>
+#include <cmath>
 #include <string>
 #include <vector>
 
 #define IQ202BUFLEN 512
 #define IQ2020OUTBUFLEN 64
-#define FANCOUNT 4
+#define FANCOUNT 3
 #define FAN_JETS1 0
 #define FAN_JETS2 1
 #define FAN_JETS3 2
-#define FAN_JETS4 3
 #define SWITCHCOUNT 11
 #define SWITCH_RETRY_COUNT 3
 #define SWITCH_RETRY_TIME 200
+#define CONTROL_READBACK_TIMEOUT 5000
+#define TEMP_READBACK_TIMEOUT 15000
 #define SWITCH_LIGHTS 0
 #define SWITCH_SPALOCK 1
 #define SWITCH_TEMPLOCK 2
@@ -99,7 +102,22 @@ public:
 	void set_ace_emulation(bool ace_emulation) { this->ace_emulation_ = ace_emulation; }
 	void set_freshwater_emulation(bool freshwater_emulation) { this->freshwater_emulation_ = freshwater_emulation; }
 	void set_audio_emulation(bool audio_emulation) { this->audio_emulation_ = audio_emulation; }
-	void set_active(bool active) { this->active_ = active; setSwitchState(SWITCH_ACTIVE, active_); }
+	void set_active(bool active) {
+		this->active_ = active;
+		activate_at_ = 0;
+		if (!active) {
+			for (unsigned i = 0; i < SWITCHCOUNT; i++) { switch_pending[i] = NOT_SET; switch_retry[i] = 0; }
+#ifdef USE_IQ2020_SELECT
+			for (unsigned i = 0; i < SELECTCOUNT; i++) { select_pending[i] = NOT_SET; select_retry[i] = 0; }
+#endif
+#ifdef USE_IQ2020_NUMBER
+			for (unsigned i = 0; i < NUMBERCOUNT; i++) { number_pending[i] = NOT_SET; number_retry[i] = 0; }
+#endif
+			pending_temp = pending_temp_cmd = NOT_SET;
+			pending_temp_retry = 0;
+		}
+		setSwitchState(SWITCH_ACTIVE, active_);
+	}
 	void set_delay_start(int delay_start) { this->delay_start_ = delay_start; }
 	void set_old_clock(bool old_clock) { this->old_clock_ = old_clock; }
 	void set_coolzone_enabled(bool coolzone_enabled) { this->coolzone_enabled_ = coolzone_enabled; }
@@ -132,6 +150,7 @@ public:
 	void set_jet2_low_total_runtime_sensor(esphome::sensor::Sensor *sensor) { this->jet2_low_total_runtime_sensor_ = sensor; }
 	void set_power_on_counter_sensor(esphome::sensor::Sensor *sensor) { this->power_on_counter_sensor_ = sensor; }
 	void set_salt_content_sensor(esphome::sensor::Sensor *sensor) { this->salt_content_sensor_ = sensor; }
+	void set_salt_power_sensor(esphome::sensor::Sensor *sensor) { this->salt_power_sensor_ = sensor; }
 	void set_voltage_l1_sensor(esphome::sensor::Sensor *sensor) { this->voltage_l1_sensor_ = sensor; }
 	void set_voltage_heater_sensor(esphome::sensor::Sensor *sensor) { this->voltage_heater_sensor_ = sensor; }
 	void set_voltage_l2_sensor(esphome::sensor::Sensor *sensor) { this->voltage_l2_sensor_ = sensor; }
@@ -189,14 +208,16 @@ public:
 	float get_setup_priority() const override { return esphome::setup_priority::AFTER_WIFI; }
 
 	void set_port(uint16_t port) { this->port_ = port; }
-	void switchAction(unsigned int switchid, int state);
+	void switchAction(unsigned int switchid, int state, bool retry = false);
 #ifdef USE_IQ2020_SELECT
-	void selectAction(unsigned int selectid, int state);
+	void selectAction(unsigned int selectid, int state, bool retry = false);
 #endif
 #ifdef USE_IQ2020_NUMBER
-	void numberAction(unsigned int numberid, int state);
+	void numberAction(unsigned int numberid, int state, bool retry = false);
 #endif
 	void setTempAction(float newtemp);
+	void sendPendingTemperature();
+	void reconcileTemperature();
 	void setCoolzoneMode(int mode);
 	void setTime(int hour, int minute, int second, int year, int month, int day);
 
@@ -243,76 +264,77 @@ protected:
 	int polling_rate_;
 
 #ifdef USE_BINARY_SENSOR
-	esphome::binary_sensor::BinarySensor *connected_sensor_;
-	esphome::binary_sensor::BinarySensor *connectionkit_sensor_;
-	esphome::binary_sensor::BinarySensor *salt_boost_sensor_;
-	esphome::binary_sensor::BinarySensor *salt_confirmed_sensor_;
-	esphome::binary_sensor::BinarySensor *status_state1_;
-	esphome::binary_sensor::BinarySensor *status_state2_;
+	esphome::binary_sensor::BinarySensor *connected_sensor_{nullptr};
+	esphome::binary_sensor::BinarySensor *connectionkit_sensor_{nullptr};
+	esphome::binary_sensor::BinarySensor *salt_boost_sensor_{nullptr};
+	esphome::binary_sensor::BinarySensor *salt_confirmed_sensor_{nullptr};
+	esphome::binary_sensor::BinarySensor *status_state1_{nullptr};
+	esphome::binary_sensor::BinarySensor *status_state2_{nullptr};
 #endif
 #ifdef USE_SENSOR
-	esphome::sensor::Sensor *current_f_temp_sensor_;
-	esphome::sensor::Sensor *target_f_temp_sensor_;
-	esphome::sensor::Sensor *outlet_f_temp_sensor_;
-	esphome::sensor::Sensor *current_c_temp_sensor_;
-	esphome::sensor::Sensor *target_c_temp_sensor_;
-	esphome::sensor::Sensor *outlet_c_temp_sensor_;
-	esphome::sensor::Sensor *connection_count_sensor_;
-	esphome::sensor::Sensor *heater_total_runtime_sensor_;
-	esphome::sensor::Sensor *jets1_total_runtime_sensor_;
-	esphome::sensor::Sensor *lifetime_runtime_sensor_;
-	esphome::sensor::Sensor *jets2_total_runtime_sensor_;
-	esphome::sensor::Sensor *jets3_total_runtime_sensor_;
-	esphome::sensor::Sensor *lights_total_runtime_sensor_;
-	esphome::sensor::Sensor *circ_pump_total_runtime_sensor_;
-	esphome::sensor::Sensor *jet1_low_total_runtime_sensor_;
-	esphome::sensor::Sensor *jet2_low_total_runtime_sensor_;
-	esphome::sensor::Sensor *power_on_counter_sensor_;
-	esphome::sensor::Sensor *salt_content_sensor_;
-	esphome::sensor::Sensor *voltage_l1_sensor_;
-	esphome::sensor::Sensor *voltage_heater_sensor_;
-	esphome::sensor::Sensor *voltage_l2_sensor_;
-	esphome::sensor::Sensor *current_l1_sensor_;
-	esphome::sensor::Sensor *current_heater_sensor_;
-	esphome::sensor::Sensor *current_l2_sensor_;
-	esphome::sensor::Sensor *power_l1_sensor_;
-	esphome::sensor::Sensor *power_heater_sensor_;
-	esphome::sensor::Sensor *power_l2_sensor_;
-	esphome::sensor::Sensor *pcb_f_temperature_sensor_;
-	esphome::sensor::Sensor *pcb_c_temperature_sensor_;
-	esphome::sensor::Sensor *buttons_sensor_;
-	esphome::sensor::Sensor *logo_lights_sensor_;
-	esphome::sensor::Sensor *logo_lights_raw_sensor_;
-	esphome::sensor::Sensor *lights_intensity_sensor_;
-	esphome::sensor::Sensor *lights_intensity_underwater_sensor_;
-	esphome::sensor::Sensor *lights_intensity_bartop_sensor_;
-	esphome::sensor::Sensor *lights_intensity_pillow_sensor_;
-	esphome::sensor::Sensor *lights_intensity_exterior_sensor_;
-	esphome::sensor::Sensor *lights_color_underwater_sensor_;
-	esphome::sensor::Sensor *lights_color_bartop_sensor_;
-	esphome::sensor::Sensor *lights_color_pillow_sensor_;
-	esphome::sensor::Sensor *lights_color_exterior_sensor_;
-	esphome::sensor::Sensor *lights_main_loop_speed_sensor_;
-	esphome::sensor::Sensor *iq_va_sensor_;
-	esphome::sensor::Sensor *iq_vb_sensor_;
-	esphome::sensor::Sensor *iq_vc_sensor_;
-	esphome::sensor::Sensor *iq_orp_sensor_;
-	esphome::sensor::Sensor *iq_chlorine_sensor_;
-	esphome::sensor::Sensor *iq_ph_sensor_;
-	esphome::sensor::Sensor *iq_hoursleft_sensor_;
-	esphome::sensor::Sensor *rtc_timestamp_sensor_;
-	esphome::sensor::Sensor *coolzone_mode_raw_sensor_;
-	esphome::sensor::Sensor *coolzone_state_raw_sensor_;
-	esphome::sensor::Sensor *salt_cartridge_age_days_sensor_;
-	esphome::sensor::Sensor *salt_days_since_manual_test_sensor_;
-	esphome::sensor::Sensor *salt_generation_hours_sensor_;
-	esphome::sensor::Sensor *salt_error_code_sensor_;
+	esphome::sensor::Sensor *current_f_temp_sensor_{nullptr};
+	esphome::sensor::Sensor *target_f_temp_sensor_{nullptr};
+	esphome::sensor::Sensor *outlet_f_temp_sensor_{nullptr};
+	esphome::sensor::Sensor *current_c_temp_sensor_{nullptr};
+	esphome::sensor::Sensor *target_c_temp_sensor_{nullptr};
+	esphome::sensor::Sensor *outlet_c_temp_sensor_{nullptr};
+	esphome::sensor::Sensor *connection_count_sensor_{nullptr};
+	esphome::sensor::Sensor *heater_total_runtime_sensor_{nullptr};
+	esphome::sensor::Sensor *jets1_total_runtime_sensor_{nullptr};
+	esphome::sensor::Sensor *lifetime_runtime_sensor_{nullptr};
+	esphome::sensor::Sensor *jets2_total_runtime_sensor_{nullptr};
+	esphome::sensor::Sensor *jets3_total_runtime_sensor_{nullptr};
+	esphome::sensor::Sensor *lights_total_runtime_sensor_{nullptr};
+	esphome::sensor::Sensor *circ_pump_total_runtime_sensor_{nullptr};
+	esphome::sensor::Sensor *jet1_low_total_runtime_sensor_{nullptr};
+	esphome::sensor::Sensor *jet2_low_total_runtime_sensor_{nullptr};
+	esphome::sensor::Sensor *power_on_counter_sensor_{nullptr};
+	esphome::sensor::Sensor *salt_content_sensor_{nullptr};
+	esphome::sensor::Sensor *salt_power_sensor_{nullptr};
+	esphome::sensor::Sensor *voltage_l1_sensor_{nullptr};
+	esphome::sensor::Sensor *voltage_heater_sensor_{nullptr};
+	esphome::sensor::Sensor *voltage_l2_sensor_{nullptr};
+	esphome::sensor::Sensor *current_l1_sensor_{nullptr};
+	esphome::sensor::Sensor *current_heater_sensor_{nullptr};
+	esphome::sensor::Sensor *current_l2_sensor_{nullptr};
+	esphome::sensor::Sensor *power_l1_sensor_{nullptr};
+	esphome::sensor::Sensor *power_heater_sensor_{nullptr};
+	esphome::sensor::Sensor *power_l2_sensor_{nullptr};
+	esphome::sensor::Sensor *pcb_f_temperature_sensor_{nullptr};
+	esphome::sensor::Sensor *pcb_c_temperature_sensor_{nullptr};
+	esphome::sensor::Sensor *buttons_sensor_{nullptr};
+	esphome::sensor::Sensor *logo_lights_sensor_{nullptr};
+	esphome::sensor::Sensor *logo_lights_raw_sensor_{nullptr};
+	esphome::sensor::Sensor *lights_intensity_sensor_{nullptr};
+	esphome::sensor::Sensor *lights_intensity_underwater_sensor_{nullptr};
+	esphome::sensor::Sensor *lights_intensity_bartop_sensor_{nullptr};
+	esphome::sensor::Sensor *lights_intensity_pillow_sensor_{nullptr};
+	esphome::sensor::Sensor *lights_intensity_exterior_sensor_{nullptr};
+	esphome::sensor::Sensor *lights_color_underwater_sensor_{nullptr};
+	esphome::sensor::Sensor *lights_color_bartop_sensor_{nullptr};
+	esphome::sensor::Sensor *lights_color_pillow_sensor_{nullptr};
+	esphome::sensor::Sensor *lights_color_exterior_sensor_{nullptr};
+	esphome::sensor::Sensor *lights_main_loop_speed_sensor_{nullptr};
+	esphome::sensor::Sensor *iq_va_sensor_{nullptr};
+	esphome::sensor::Sensor *iq_vb_sensor_{nullptr};
+	esphome::sensor::Sensor *iq_vc_sensor_{nullptr};
+	esphome::sensor::Sensor *iq_orp_sensor_{nullptr};
+	esphome::sensor::Sensor *iq_chlorine_sensor_{nullptr};
+	esphome::sensor::Sensor *iq_ph_sensor_{nullptr};
+	esphome::sensor::Sensor *iq_hoursleft_sensor_{nullptr};
+	esphome::sensor::Sensor *rtc_timestamp_sensor_{nullptr};
+	esphome::sensor::Sensor *coolzone_mode_raw_sensor_{nullptr};
+	esphome::sensor::Sensor *coolzone_state_raw_sensor_{nullptr};
+	esphome::sensor::Sensor *salt_cartridge_age_days_sensor_{nullptr};
+	esphome::sensor::Sensor *salt_days_since_manual_test_sensor_{nullptr};
+	esphome::sensor::Sensor *salt_generation_hours_sensor_{nullptr};
+	esphome::sensor::Sensor *salt_error_code_sensor_{nullptr};
 #endif
 #ifdef USE_TEXT_SENSOR
-	esphome::text_sensor::TextSensor *version_sensor_;
-	esphome::text_sensor::TextSensor *rtc_datetime_sensor_;
-	esphome::text_sensor::TextSensor *salt_module_status_sensor_;
-	esphome::text_sensor::TextSensor *salt_level_friendly_sensor_;
+	esphome::text_sensor::TextSensor *version_sensor_{nullptr};
+	esphome::text_sensor::TextSensor *rtc_datetime_sensor_{nullptr};
+	esphome::text_sensor::TextSensor *salt_module_status_sensor_{nullptr};
+	esphome::text_sensor::TextSensor *salt_level_friendly_sensor_{nullptr};
 #endif
 
 	std::unique_ptr<uint8_t[]> buf_{};
@@ -323,14 +345,19 @@ protected:
 	std::vector<Client> clients_{};
 	std::string versionstr;
 	int switch_state[SWITCHCOUNT];   // Current state of all switches
-	int switch_pending[SWITCHCOUNT]; // Desired state of all switches
+	int switch_pending[SWITCHCOUNT];
+	uint8_t switch_retry[SWITCHCOUNT]{};
 #ifdef USE_IQ2020_SELECT
 	int select_state[SELECTCOUNT];   // Current state of all selects
-	int select_pending[SELECTCOUNT]; // Desired state of all selects
+	int select_pending[SELECTCOUNT];
+	uint8_t select_retry[SELECTCOUNT]{};
+	unsigned long select_deadline[SELECTCOUNT]{};
 #endif
 #ifdef USE_IQ2020_NUMBER
 	int number_state[NUMBERCOUNT];   // Current state of all numbers
-	int number_pending[NUMBERCOUNT]; // Desired state of all numbers
+	int number_pending[NUMBERCOUNT];
+	uint8_t number_retry[NUMBERCOUNT]{};
+	unsigned long number_deadline[NUMBERCOUNT]{};
 #endif
 	unsigned long connectionKit = 0; // The time the spa connection kit was last seen
 	int version_poll_count = 0;     // Number of version poll attempts made
@@ -351,7 +378,7 @@ protected:
 	unsigned long next_poll = 0;
 	unsigned long next_retry = 0;
 	unsigned long last_pin_check_time = 0;
-	int next_retry_count = 0;
+	unsigned long temp_command_deadline_ = 0;
 	int salt_power = NOT_SET; // This is polled too frequently to send to HA each time.
 	int salt_content = NOT_SET; // This is polled too frequently to send to HA each time.
 	unsigned char salt_module_address = 0x29; // Last seen salt module address (0x24 legacy ACE, 0x29 freshwater salt).

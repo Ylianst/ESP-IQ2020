@@ -168,6 +168,7 @@ For added features and details:
   - [Variable Electric Rate Savings](https://github.com/Ylianst/ESP-IQ2020/blob/main/documentation/electric.md)
   - [Full configuration example](https://github.com/Ylianst/ESP-IQ2020/blob/main/documentation/configuration.md)
   - [Tested Hot Tubs](https://github.com/Ylianst/ESP-IQ2020/blob/main/documentation/tested.md)
+  - [Development tests and ESPHome build matrix](tests/README.md)
 
 Known Issues:
   - IQ2020 boards prior to 2014 will not work with this integration. See [Tested Hot Tubs](https://github.com/Ylianst/ESP-IQ2020/blob/main/documentation/tested.md) for details.
